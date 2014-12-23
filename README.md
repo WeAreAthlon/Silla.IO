@@ -9,6 +9,9 @@ http://silla.io
 
 * **Code Reference:** http://api.silla.io
 * **Demo:** http://demo.silla.io
+    * *Credentials*
+        * email: demo@silla.io
+        * password: demo
 
 ## Overview ##
 
