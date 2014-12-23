@@ -1,0 +1,62 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Silla CLI Task Manager.
+ *
+ * @package    Silla
+ * @subpackage Core
+ * @author     Kalin Stefanov <kalin@athlonsofia.com>
+ * @copyright  none
+ * @licence    GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+namespace Core;
+
+use Core\CLI;
+
+$currentDir = getSillaRootProjectPath();
+
+require_once $currentDir . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
+
+if ($argc > 1) {
+    $parts   = explode(':', $argv[1]);
+    $command = implode(':', array_slice($parts, 1));
+    $class   = 'Core\CLI\\' . $parts[0];
+
+    if('db' === $command) {
+        $migrations = array_map(function ($item) {
+            $name = substr($item, 0, -4);
+
+            return array(
+                'name' => $name,
+                'version' => substr($name, -10)
+            );
+        }, array_slice(
+            scandir(Config()->paths('root') . 'db' . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR),
+            2
+        ));
+
+        usort($migrations, function ($a, $b) {
+            return $a['version'] < $b['version'];
+        });
+
+        CLI\DB::$migrations = $migrations;
+    }
+
+    call_user_func_array(array($class, $command), array_slice($argv, 2));
+}
+
+function getSillaRootProjectPath()
+{
+    $cwd = getcwd();
+
+    while ($cwd !== DIRECTORY_SEPARATOR) {
+        if (file_exists($cwd . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php')) {
+            return $cwd;
+        } else {
+            $cwd = dirname($cwd);
+        }
+    }
+
+    return $cwd;
+}

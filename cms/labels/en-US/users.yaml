@@ -1,0 +1,100 @@
+# YAML file
+attributes:
+  general:
+    meta:
+      title     : General
+      icon      : cog
+      desc      : Mandatory user data.
+      serialize : false
+    fields:
+      name:
+        title   : Name
+        type    : text
+        desc    : Real name of the user.
+        icon    : user
+        length  : 100
+        filter  : true
+      email:
+        title   : Email
+        type    : email
+        desc    : Valid email of the user. The value will be used as a login value.
+        list    : false
+        length  : 150
+      role_id:
+        title   : User Role
+        type    : select
+        desc    : Chose a level of access from the list.
+        icon    : cog
+        filter  : true
+        export  : false
+      password:
+        title   : Password
+        type    : password
+        desc    : '<span class="label label-danger">Important</span> Use hard to guess passphrases: <em class="muted">lower + capital letters + numbers</em>'
+        list    : false
+        length  : 100
+        export  : false
+        hidden  : true
+      password_confirm:
+        title   : Password Confirm
+        type    : password
+        desc    : Confirm the new passphrase by entering it again.
+        list    : false
+        export  : false
+        hidden  : true
+      current_password:
+        title   : Current Password
+        type    : password
+        desc    : To ensure this action you must enter your current <abbr data-toggle="tooltip" data-placement="right" title="Password of the logged in user">password</abbr>.
+        list    : false
+        length  : 100
+        export  : false
+        hidden  : true
+      login_on:
+        title   : Last login
+        type    : datetime
+        desc    : Time of the last user login.
+        icon    : time
+        readonly: true
+        filter  : true
+      created_on:
+        title   : Registered on
+        type    : datetime
+        desc    : Date and time of registration.
+        icon    : time
+        readonly: true
+      updated_on:
+        title   : Updated on
+        desc    : Date and time of last update.
+        type    : datetime
+        icon    : time
+        readonly: true
+        list    : false
+        export  : false
+  settings:
+    meta:
+      title     : Settings
+      icon      : time
+      desc      : Additinal user settings.
+      serialize : false
+    fields:
+      timezone:
+        title   : Timezone
+        type    : select
+        desc    : Choose your timezone - <abbr data-toggle="tooltip" data-placement="bottom" title="Daylight Saving Time">DST</abbr> is automatically calculated based on the time of the year.
+        icon    : globe
+        list    : false
+
+profile:
+  title : Profile
+  desc  : Personal data management.
+
+messages:
+  create:
+    success: The user has been successfully added!
+  edit:
+    success: The user has been successfully amended!
+    account: Your user account profile has been successfully updated!
+  delete:
+    success: The selected user has been permanently deleted!
+    self   : The selected role cannot be deleted! You cannot delete yourself!

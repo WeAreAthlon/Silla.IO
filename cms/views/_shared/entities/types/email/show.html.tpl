@@ -1,0 +1,1 @@
+<a href="mailto:{$resource->$field}"><span class="glyphicon glyphicon-envelope"></span> {$resource->$field}</a>

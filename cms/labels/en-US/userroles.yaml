@@ -1,0 +1,64 @@
+# YAML file
+attributes:
+  general:
+    meta:
+      title     : General
+      icon      : cog
+      desc      : Define User Role attributes.
+      serialize : false
+    fields:
+      title:
+        title    : Title
+        type     : text
+        desc     : Name for the user role.
+        icon     : user
+        length   : 100
+      created_on:
+        title    : Created on
+        type     : datetime
+        desc     : Date and time of creation.
+        icon     : time
+        readonly : true
+        list     : false
+      updated_on:
+        title    : Updated on
+        type     : datetime
+        desc     : Date and time of last update.
+        icon     : time
+        readonly : true
+      users:
+        title    : Users
+        type     : custom
+        icon     : signal
+        readonly : true
+        export   : false
+        sort     : false
+      current_password:
+        title   : Current Password
+        type    : password
+        desc    : To ensure this action you must enter your current <abbr href="#" data-toggle="tooltip" data-placement="right" title="Password of the logged in user">password</abbr>.
+        list    : false
+        length  : 100
+        export  : false
+        hidden  : true
+  permissions:
+    meta:
+      title     : Permissions
+      icon      : eye-open
+      desc      : Define access to the available CMS modules.
+      serialize : false
+    fields:
+      has_access_to:
+        title    : Has access to
+        type     : custom
+        list     : false
+        export   : false
+
+messages:
+  create:
+    success: The User Role has been successfully added!
+  edit:
+    success: The selected User Role has been successfully amended!
+  delete:
+    success: The selected User Role has been permanently deleted!
+    self   : The selected User Role cannot be deleted! Your account belongs to this role!

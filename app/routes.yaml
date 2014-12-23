@@ -1,0 +1,18 @@
+# Routes
+
+# Home
+- route: /
+  maps:
+    controller: home
+    action    : index
+
+- route: /:controller
+  maps:
+    controller: *
+    action    : index
+
+# Default Route
+- route: /:controller/:action
+  maps:
+    controller: *
+    action    : *

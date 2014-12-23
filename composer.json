@@ -1,0 +1,89 @@
+{
+    "name": "athlon-production/silla",
+    "version" : "1.0.0",
+    "description" : "PHP Framework with CMS mode",
+    "repositories" : [
+        {
+            "type": "package",
+            "package" : {
+                "name": "smarty/smarty",
+                "version": "3.1.21",
+                "dist": {
+                    "url": "http://www.smarty.net/files/Smarty-3.1.21.zip",
+                    "type": "zip"
+                },
+                "require": {
+                    "php": ">=5.2"
+                },
+                "autoload": {
+                    "classmap": [
+                        "libs/Smarty.class.php",
+                        "libs/sysplugins/smarty_security.php"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "tcpdf/tcpdf",
+                "version": "6",
+                "description": "TCPDF is a PHP class for generating PDF documents.",
+                "homepage": "http://www.tcpdf.org/",
+                "dist": {
+                    "url": "https://staging.athlonproduction.com/cdn/silla.io/vendor/tcpdf_min_6_0_094.zip",
+                    "type": "zip"
+                },
+                "autoload": {
+                    "classmap": [
+                        "fonts",
+                        "config",
+                        "include",
+                        "tcpdf.php",
+                        "tcpdf_parser.php",
+                        "tcpdf_import.php",
+                        "tcpdf_barcodes_1d.php",
+                        "tcpdf_barcodes_2d.php",
+                        "include/tcpdf_colors.php",
+                        "include/tcpdf_filters.php",
+                        "include/tcpdf_font_data.php",
+                        "include/tcpdf_fonts.php",
+                        "include/tcpdf_images.php",
+                        "include/tcpdf_static.php",
+                        "include/barcodes/datamatrix.php",
+                        "include/barcodes/pdf417.php",
+                        "include/barcodes/qrcode.php"
+                    ]
+                }
+            }
+        }
+    ],
+    "require": {
+        "php"                   : ">=5.3.7",
+        "ext-PDO"               : "*",
+        "smarty/smarty"         : "3.1.21",
+        "phpmailer/phpmailer"   : "v5.2.7",
+        "mustangostang/spyc"    : "0.5.1",
+        "imagine/imagine"       : "v0.5.0",
+        "tcpdf/tcpdf"           : "6",
+        "recaptcha/php5"        : "v1.0.0",
+        "kriswallsmith/assetic" : "1.2.0",
+        "lmammino/jsmin4assetic": "1.0.0",
+        "natxet/CssMin"         : "3.0.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit"           : "4.3.*",
+        "phploc/phploc"             : "*",
+        "sebastian/phpcpd"          : "*",
+        "squizlabs/php_codesniffer" : "2.*",
+        "pdepend/pdepend"           : "@stable",
+        "phpmd/phpmd"               : "@stable",
+        "apigen/apigen"             : "2.8.1",
+        "mikey179/vfsStream"        : "1.*",
+        "predis/predis"             : "1.1.*@dev"
+    },
+    "suggest": {
+        "predis/predis" : "1.1.*@dev",
+        "leafo/lessphp" : "v0.4.0"
+    }
+}

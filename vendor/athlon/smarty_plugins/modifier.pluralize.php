@@ -1,0 +1,28 @@
+<?php
+/**
+ * Smarty plugin.
+ *
+ * @package    Smarty
+ * @subpackage Vendor\Athlon\SmartyPlugins
+ * @author     Kalin Stefanov <kalin@athlonsofia.com>
+ * @copyright  none
+ * @licence    GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+/**
+ * Smarty pluralize modifier plugin.
+ *
+ * Type:     modifier<br>
+ * Name:     pluralize<br>
+ * Purpose:  pluralize words in the string
+ *
+ * @param string $string Input string to pluralize.
+ *
+ * @return string
+ */
+function smarty_modifier_pluralize($string)
+{
+    $inflector = new \Vendor\Athlon\Inflector();
+
+    return $inflector->pluralize($string);
+}

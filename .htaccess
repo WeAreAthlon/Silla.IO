@@ -1,0 +1,22 @@
+# Silla Framework
+
+# Environment configuration
+<IfModule mod_env.c>
+    SetEnv HTTP_ENV_SILLA_ENVIRONMENT 'development'
+#   SetEnv HTTP_ENV_SILLA_ENVIRONMENT 'staging'
+#   SetEnv HTTP_ENV_SILLA_ENVIRONMENT 'production'
+</IfModule>
+
+# Rewrite rules
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # RewritBase /<path-to-silla>
+
+    RewriteCond %{REQUEST_FILENAME} !(/public/)
+    RewriteRule ^(.*)$ index.php?_path=$1 [QSA,L]
+</IfModule>
+
+# Error Documents
+ErrorDocument 403 '<h2>403 Application Forbidden</h2>'
+ErrorDocument 500 '<h2>Application error</h2>Application failed to start properly'

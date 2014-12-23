@@ -1,0 +1,70 @@
+/*!
+ * Bootstrap v3.0.2 Theme
+ * Copyright 2013 Athlon Production, Inc.
+ * Author Plamen Nikolov <plamen@athlonsofia.com>
+ */
+
+.no-margin         { margin: 0 !important; }
+.no-margin-top     { margin-top: 0 !important; }
+.no-margin-bottom  { margin-bottom: 0 !important; }
+.no-margin-left    { margin-left: 0 !important; }
+.no-margin-right   { margin-right: 0 !important; }
+.no-padding        { padding: 0 !important; }
+.no-padding-top    { padding-top: 0 !important; }
+.no-padding-bottom { padding-bottom: 0 !important; }
+.no-padding-left   { padding-left: 0 !important; }
+.no-padding-right  { padding-right: 0 !important; }
+.no-border         { border: 0 !important; }
+.no-border-radius  { border-radius: 0 !important; }
+.no-box-shadow     { box-shadow: none !important; }
+.no-outline        { outline: none !important; }
+.no-background     { background: none !important; }
+.clear             { clear: both !important; }
+.clear-right       { clear: right !important; }
+.clear-left        { clear: left !important; }
+.block             { display: block !important; }
+.display-hidden    { display: none; }
+.text-thin         { font-weight: 200 !important; }
+.text-thinner      { font-weight: 100 !important; }
+.clip              { overflow: hidden !important; }
+.width-full        { width: 100%;  }
+.height-full       { height: 100%; }
+.position-fixed    { position: fixed; }
+.font-size-smaller { font-size: 12px !important; }
+.font-size-normal  { font-size: 14px !important; }
+.font-size-bigger  { font-size: 16px !important; }
+.font-weight-normal{ font-weight: normal !important; }
+
+body, input, textarea, select, button { font-family: 'Helvetica Neue', 'Open Sans', Helvetica, Arial, sans-serif; }
+a, .btn-link      { color: #ED1F4E; }
+a:active, a:focus { text-decoration: none; }
+a:hover, a:focus, .btn-link:hover, .btn-link:focus { color: #040707; }
+.btn-default { background-image: linear-gradient(to bottom, #FFFFFF 0px, #E6E6E6 100%); background-repeat: repeat-x; border-color: #CCCCCC; text-shadow: 0 1px 0 #FFFFFF; }
+.btn-default:hover, .btn-default:focus { background-color: #E6E6E6; background-position: 0 -15px; }
+.btn-danger, .has-error .btn-default { background-image: linear-gradient(to bottom, #D9534F 0px, #C12E2A 100%); background-repeat: repeat-x; border-color: #B92C28; }
+.btn-danger:hover, .has-error .btn-default:hover, .btn-primary:focus, .has-error .btn-default:focus { background-color: #C12E2A; background-position: 0 -15px; }
+.btn-success { background-image: linear-gradient(to bottom, #5cb85c 0px, #419641 100%); background-repeat: repeat-x; border-color: #3e8f3e; }
+.btn-success:hover, .btn-success:focus { background-color: #419641; background-position: 0 -15px; }
+.has-error .btn-default { color: #FFFFFF; text-shadow: none !important; }
+.btn-primary { background-image: linear-gradient(to bottom, #428BCA 0px, #2D6CA2 100%); background-repeat: repeat-x; border-color: #2B669A;}
+.btn-primary:hover, .btn-primary:focus { background-color: #2D6CA2; background-position: 0 -15px; }
+.navbar-default { background-image: linear-gradient(to bottom, #FFFFFF 0px, #F8F8F8 15%); background-repeat: repeat-x; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 1px 5px rgba(0, 0, 0, 0.075); }
+
+.bordered           { border: 1px solid #D4D4D4; }
+.border-rounded     { border-radius: 3px; }
+.padding-horizontal { padding: 0 8px !important; }
+.padding-vertical   { padding: 8px 0 !important; }
+.padding-full       { padding: 8px !important;   }
+.padding-left       { padding: 0 0 0 8px !important; }
+.padding-right      { padding: 0 8px 0 0 !important; }
+.margin-horizontal  { margin: 0 8px !important; }
+.margin-vertical    { margin: 8px 0 !important; }
+.margin-full        { margin: 8px !important;   }
+
+/* Accents */
+.accent, .panel-default .panel-heading { background: #FAFAFA linear-gradient(to bottom, #FFFFFF, #F2F2F2) repeat-x; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067); }
+.accent-inverse { background: #FAFAFA; background: linear-gradient(to bottom, #F2F2F2, #FFFFFF) repeat-x; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067); }
+.accent-cta { color: #428BCA; }
+.accent-light { background: #FFFFFF; background: linear-gradient(to bottom, #ffffff 0%,#F2F2F2 50%,#F0F0F0 60%,#ffffff 100%); }
+.navbar-header .breadcrumb { line-height: 20px; padding: 15px 0; white-space: nowrap; }
+.navbar-header .breadcrumb a:hover { text-decoration: none; }
