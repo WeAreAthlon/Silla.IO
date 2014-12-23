@@ -8,7 +8,7 @@ http://silla.io
 ## Reference ##
 
 * **Code Reference:** http://api.silla.io
-* **Demo:** http://demo.silla.io
+* **Demo:** http://demo.silla.io/cms/
     * *Credentials*
         * email: demo@silla.io
         * password: demo
