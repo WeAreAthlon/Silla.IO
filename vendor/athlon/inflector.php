@@ -8,7 +8,7 @@
  * @package    Silla
  * @subpackage Vendor\Athlon
  * @author     Bermi Ferrer Martinez <bermi a.t bermilabs c.om>
- * @copyright  none
+ * @copyright  Copyright (c) 2015, Bermi Ferrer Martinez
  * @license    GNU Lesser General Public License <http://www.gnu.org/copyleft/lesser.html>
  */
 

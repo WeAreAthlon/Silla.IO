@@ -5,8 +5,8 @@
  * @package    Silla
  * @subpackage Core\Modules\DB\Interfaces
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
- * @copyright  none
- * @licence    GPL http://www.gnu.org/copyleft/gpl.html
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
 namespace Core\Modules\DB\Interfaces;

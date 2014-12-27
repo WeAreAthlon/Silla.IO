@@ -6,8 +6,7 @@
  * @subpackage Vendor\Athlon\SmartyPlugins
  * @author     Monte Ohrt <monte at ohrt dot com>
  * @author     Ralf Strehle (minor optimization) <ralf dot strehle at yahoo dot de>
- * @copyright  none
- * @licence    GPL http://www.gnu.org/copyleft/gpl.html
+ * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
 /**
