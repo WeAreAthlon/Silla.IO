@@ -1,14 +1,13 @@
-# Silla #
-## Athlon Production PHP CMS Framework ##
+# Silla.IO #
+## PHP CMS Framework by Athlon ##
 
 http://silla.io
 
 ----
-
 ## Reference ##
 
 * **Code Reference:** http://api.silla.io
-* **Demo:** http://demo.silla.io/cms/
+* **Demo of the CMS app:** http://demo.silla.io/cms/
     * *Credentials*
         * email: demo@silla.io
         * password: demo
@@ -16,12 +15,12 @@ http://silla.io
 ## Overview ##
 
 _MVC-L_ lightweight PHP CMS Framework for managing bespoke PHP projects.
-The framework incorporates _CMS application_ to enable building user defined content management systems.
+The framework includes _CMS application_ to enable building content management systems.
 
 The code-base features _Model-View-Controller_ pattern with additional support for:
 
 * Configuration per environment
-* ORM feature for persistent data
+* ORM feature for managing persistent data
 * Template engine for views
 * Pretty URL Routing
 * Base Resource for consolidation of `CRUD` operations
@@ -29,21 +28,20 @@ The code-base features _Model-View-Controller_ pattern with additional support f
 * Cache API
 * Session API
 * Crypt API
-* Silla CLI task manager
+* CLI task manager
 
 ## Server Software Requirements ##
 
 * **Apache** web server or compatible
     * *Modules*
-        * `mod_rewrite`
-        * `mod_env`
+        * `mod_rewrite` - *in order to have custom(pretty) URLs*
+        * `mod_env` - *in order to easily switch configuration environments*
 * **PHP 5.3.7+**
     * *Configuration*
-        * `memory_limit 16M` ( _at least_ )
+        * `memory_limit 32M` ( _at least_ )
     * *Extensions*
-        * `PDO`, `PDO_mysql`
-        * `GD`
-        * `cURL`
+        * `PDO`, `PDO_mysql`, `mysql`, `SQLite` - *depends on on the configured database driver*
+        * `GD` - *in order to manage images*
 * **MySQL 5+**
 * **Writable directories**
     * `/temp`
@@ -61,7 +59,7 @@ The code-base features _Model-View-Controller_ pattern with additional support f
 * Edit `configurations/<environment>/environment.php`
 * Choose run environment in `.htaccess`
 * To enable the CMS application
-    * Import database schema and user credentials from `vendor/athlon/db/schema.sql`
+    * Import the database schema and user credentials from `vendor/athlon/db/schema.sql`
     * Navigate to `/cms`
 
 ----
