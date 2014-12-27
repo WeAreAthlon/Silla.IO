@@ -71,10 +71,7 @@ class Users extends CMS
     protected function beforeDelete(Base\Model $resource, Request $request)
     {
         /* Request current user password before deletion of any users */
-
         if (!$request->post('password') || !Crypt::hashCompare($this->user->password, $request->post('password'))) {
-            d($this->user->password);
-            d($request->post('password'));
             if (!$request->is('xhr')) {
                 $labelsGeneral = Core\Helpers\YAML::get('general');
                 Helpers\FlashMessage::setMessage($labelsGeneral['not_authorized'], 'danger');
