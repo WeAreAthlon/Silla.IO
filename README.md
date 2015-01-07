@@ -1,6 +1,5 @@
-# Silla.IO #
+# Silla.IO - PHP Framework by Athlon#
 [![Build Status](http://jenkins.athlonsofia.com/view/Silla/job/Silla/badge/icon)](http://jenkins.athlonsofia.com/view/Silla/job/Silla/)
-## PHP CMS Framework by Athlon ##
 
 http://silla.io
 
