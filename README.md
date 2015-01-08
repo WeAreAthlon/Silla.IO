@@ -1,6 +1,6 @@
 # Silla.IO - PHP Framework by Athlon#
-[![Build Status](https://img.shields.io/jenkins/s/http/jenkins.athlonsofia.com/Silla.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
-[![Tests Status](https://img.shields.io/jenkins/t/http/jenkins.athlonsofia.com/Silla.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
+[![Build Status](https://img.shields.io/jenkins/s/http/jenkins.athlonsofia.com/silla.io.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
+[![Tests Status](https://img.shields.io/jenkins/t/http/jenkins.athlonsofia.com/silla.io.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
 [![Github Issues](https://img.shields.io/github/issues/WeAreAthlon/silla.io.svg?style=flat-square)](https://github.com/WeAreAthlon/silla.io/issues)
 [![Release](https://img.shields.io/github/release/WeAreAthlon/silla.io.svg?style=flat-square)] (https://github.com/WeAreAthlon/silla.io/releases)
 [![License](https://img.shields.io/badge/license-GPL-blue.svg?style=flat-square)](https://github.com/WeAreAthlon/silla.io/blob/master/LICENSE.txt)
