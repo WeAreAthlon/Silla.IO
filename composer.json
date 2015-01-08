@@ -1,7 +1,50 @@
 {
-    "name": "athlon-production/silla",
-    "version" : "1.0.0",
-    "description" : "PHP Framework with CMS mode",
+    "name": "weareathlon/silla.io",
+    "description": "The Silla.IO Application Development Framework.",
+    "keywords": ["framework", "silla.io", "cms"],
+    "homepage": "http://silla.io/",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Plamen Nikolov",
+            "email": "plamen@athlonsofia.com",
+            "role": "Maintainer"
+        },
+        {
+            "name": "Kalin Stefanov",
+            "email": "kalin@athlonsofia.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Krum Motsov",
+            "email": "krum@athlonsofia.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Rozaliya Stoilova",
+            "email": "rozalia@athlonsofia.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Delyan Mihaylov",
+            "email": "delyan@athlonsofia.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Aleksandar Krastev",
+            "email": "aleksandar.krastev@athlonsofia.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Silla.IO Community",
+            "homepage": "https://github.com/WeAreAthlon/silla.io/graphs/contributors"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/WeAreAthlon/silla.io",
+        "issues": "https://github.com/WeAreAthlon/silla.io/issues",
+        "wiki": "https://github.com/WeAreAthlon/silla.io/wiki"
+    },
     "repositories" : [
         {
             "type": "package",
@@ -85,5 +128,8 @@
     "suggest": {
         "predis/predis" : "1.1.*@dev",
         "leafo/lessphp" : "v0.4.0"
-    }
+    },
+    "bin": [
+        "silla"
+    ]
 }
