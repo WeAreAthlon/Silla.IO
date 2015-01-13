@@ -520,12 +520,12 @@
             "version": "v2.8.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/apigen/apigen.git",
+                "url": "https://github.com/apigen/ApiGen.git",
                 "reference": "bca0954e92621a48c6870be57115026a8d032706"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apigen/apigen/zipball/bca0954e92621a48c6870be57115026a8d032706",
+                "url": "https://api.github.com/repos/apigen/ApiGen/zipball/bca0954e92621a48c6870be57115026a8d032706",
                 "reference": "bca0954e92621a48c6870be57115026a8d032706",
                 "shasum": ""
             },
