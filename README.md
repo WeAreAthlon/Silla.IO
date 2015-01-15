@@ -1,4 +1,4 @@
-# Silla.IO - PHP Framework by Athlon#
+## Silla.IO - PHP Application Development Framework#
 [![Build Status](https://img.shields.io/jenkins/s/http/jenkins.athlonsofia.com/silla.io.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
 [![Tests Status](https://img.shields.io/jenkins/t/http/jenkins.athlonsofia.com/silla.io.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
 [![Github Issues](https://img.shields.io/github/issues/WeAreAthlon/silla.io.svg?style=flat-square)](https://github.com/WeAreAthlon/silla.io/issues)
@@ -6,10 +6,11 @@
 [![License](https://img.shields.io/badge/license-GPL-blue.svg?style=flat-square)](https://github.com/WeAreAthlon/silla.io/blob/master/LICENSE.txt)
 [![Packagist](https://img.shields.io/packagist/dt/weareathlon/silla.io.svg?style=flat-square)](https://packagist.org/packages/weareathlon/silla.io)
 
-http://silla.io
+http://silla.io by [Athlon](http://weareathlon.com)
 
-----
-## Reference ##
+***
+
+### Reference
 
 * **Code Reference:** http://api.silla.io
 * **Demo of the CMS app:** http://demo.silla.io/cms/
@@ -17,7 +18,9 @@ http://silla.io
         * email: demo@silla.io
         * password: demo
 
-## Overview ##
+***
+
+### Overview
 
 _MVC-L_ lightweight PHP CMS Framework for managing bespoke PHP projects.
 The framework includes _CMS application_ to enable building content management systems.
@@ -35,7 +38,9 @@ The code-base features _Model-View-Controller_ pattern with additional support f
 * Crypt API
 * CLI task manager
 
-## Server Software Requirements ##
+***
+
+### Server Software Requirements
 
 * **Apache** web server or compatible
     * *Modules*
@@ -54,8 +59,9 @@ The code-base features _Model-View-Controller_ pattern with additional support f
 * **Composer** - _recommended_
 * **Bower** - _recommended_
 
-----
-## Installation ##
+***
+
+### Installation
 * Place files on the virtual host document root
     * For better security place only contents of `public` directory and configure the application(via `.htaccess` to load the framework core from non-public directory)
 * Run `composer install --no-dev`
@@ -67,14 +73,16 @@ The code-base features _Model-View-Controller_ pattern with additional support f
     * Import the database schema and user credentials from `vendor/athlon/db/schema.sql`
     * Navigate to `/cms`
 
-----
-## Dependency manager ##
+***
+
+### Dependency manager
 
 * [Composer](https://getcomposer.org/)
 * [Bower](http://bower.io/)
 
-----
-## Third-party Libraries managed via `Composer` ##
+***
+
+### Third-party Libraries managed via `Composer`
 
 * [Smarty](http://www.smarty.net/)
 * [TCPDF](http://www.tcpdf.org/)
@@ -82,8 +90,9 @@ The code-base features _Model-View-Controller_ pattern with additional support f
 * [Imagine](https://imagine.readthedocs.org)
 * [PHPMailer](http://phpmailer.worxware.com/)
 
-----
-## Front-end libraries managed via `Bower` ##
+***
+
+### Front-end libraries managed via `Bower`
 
 * [jQuery](http://jquery.com/download/)
 * [Chosen - drop-down select](https://github.com/harvesthq/chosen/)
@@ -95,8 +104,9 @@ The code-base features _Model-View-Controller_ pattern with additional support f
 * [Daterangepicker](https://github.com/dangrossman/bootstrap-daterangepicker)
 * [Spin.js](http://fgnass.github.io/spin.js/)
 
-----
-## Fonts used in the CMS namespace ##
+***
+
+### Fonts used in the CMS namespace
 
 * Helvetica Neue
 * [Open Sans](http://www.google.com/fonts/specimen/Open+Sans)
