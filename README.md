@@ -12,7 +12,7 @@ http://silla.io by [Athlon](http://weareathlon.com)
 
 ### Reference
 
-* **Code Reference:** http://api.silla.io
+* **Code API Reference:** http://api.silla.io
 * **Demo of the CMS app:** http://demo.silla.io/cms/
     * *Credentials*
         * email: demo@silla.io
@@ -22,53 +22,61 @@ http://silla.io by [Athlon](http://weareathlon.com)
 
 ### Overview
 
-_MVC-L_ lightweight PHP CMS Framework for managing bespoke PHP projects.
-The framework includes _CMS application_ to enable building content management systems.
+Silla.IO is a PHP application development framework based on the *MVC* software architectural pattern. The framework includes *CMS Application* to enable building content management systems.
 
-The code-base features _Model-View-Controller_ pattern with additional support for:
-
+The code-base features *Model-View-Controller* pattern with additional support for:
 * Configuration per environment
-* ORM feature for managing persistent data
-* Template engine for views
-* Pretty URL Routing
-* Base Resource for consolidation of `CRUD` operations
+* ORM feature for persistent data management
+* Template rendering engine support for output management
+* Custom URL Routing
+* `Base\Resource` for consolidation of `CRUD` operations
 * Mailer API
 * Cache API
 * Session API
 * Crypt API
 * CLI task manager
+* ... *any many more*
 
 ***
 
 ### Server Software Requirements
 
-* **Apache** web server or compatible
-    * *Modules*
-        * `mod_rewrite` - *in order to have custom(pretty) URLs*
-        * `mod_env` - *in order to easily switch configuration environments*
-* **PHP 5.3.7+**
-    * *Configuration*
-        * `memory_limit 32M` ( _at least_ )
+* **Operating system**
+  * *Type*: `*nix`, `Windows`
+* **Web server**
+  * *Type:* `Apache`, `nginx` or compatible
+  * *Modules:* (*below are `Apache` module names. Each of them has equivalent for `nginx`*)
+    * `mod_rewrite` - *in order to have custom(pretty) URLs*
+    * `mod_env` - *in order to easily switch configuration environments*
+* **PHP**
+  * *Type:* Standard (*SAPI - Apache Handler or FCGI*)
+  * *Version:* `5.3.7` (*or newer*)
+  * *Configuration:*
+    * Runtime change enabeled via `ini_set()`
     * *Extensions*
-        * `PDO`, `PDO_mysql`, `mysql`, `SQLite` - *depends on on the configured database driver*
-        * `GD` - *in order to manage images*
-* **MySQL 5+**
-* **Writable directories**
-    * `/temp`
-    * `/public` - _applicable only when uploading assets via the application_
-* **Composer** - _recommended_
-* **Bower** - _recommended_
+      * `PDO`, `PDO_mysql`, `mysql`, `SQLite` (*depends on on the configured database driver*)
+      * `GD` - *in order to work with media*
+* **Database**
+  * *Type:* `MySQL` (*depends on on the configured database driver*)
+  * *Version:* `5` (*or newer, recommended `5.5+`*)
+* **File system**
+  * *Type:* Standard file system(*all `PHP` file function should work as expected*)
+  * *Permissions:* `Writable` directories:
+    * *`/temp`*
+    * *`/public`*
+* **Package managers**
+  * *`Composer`* - PHP package manager
+  * *`Bower`* - Front-end Assets package manager
 
 ***
 
 ### Installation
-* Place files on the virtual host document root
-    * For better security place only contents of `public` directory and configure the application(via `.htaccess` to load the framework core from non-public directory)
-* Run `composer install --no-dev`
-* Run `bower install` in `/app` and `/cms`
-* Edit `configurations/<environment>/configuration.php`
-* Edit `configurations/<environment>/environment.php`
-* Choose run environment in `.htaccess`
-* To enable the CMS application
-    * Import the database schema and user credentials from `vendor/athlon/db/schema.sql`
-    * Navigate to `/cms`
+* Place files on the virtual host document root.
+* Run `composer install --no-dev` command.
+* Run `bower install` command in `/app` and `/cms` directories.
+* Amend `configurations/<environment>/configuration.php` file.
+* Amend `configurations/<environment>/environment.php` file.
+* Choose `Silla.IO` run environment by amending the `.htaccess` file.
+* To enable the `CMS Application`:
+    * Import the database schema and user credentials from *`vendor/athlon/db/schema.sql`*
+    * Navigate to *`/cms`*
