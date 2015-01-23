@@ -16,11 +16,11 @@
 
 <div class="input-group clear">
     <span class="input-group-btn">
-        <span class="btn btn-default btn-file">
-            <i class="glyphicon glyphicon-file"></i> {$_labels.files.select} <input type="file" id="{$attr.id}" name="{$attr.name}" />
+        <span class="btn btn-default btn-file{$attr.disabled}">
+            <i class="glyphicon glyphicon-file"></i> {$_labels.files.select} <input type="file" id="{$attr.id}" name="{$attr.name}"{$attr.disabled}/>
         </span>
         {if $attr.default}
-            <span class="btn btn-danger btn-file-remove">
+            <span class="btn btn-danger btn-file-remove{$attr.disabled}">
             <i class="glyphicon glyphicon-remove-circle"></i> {$_labels.files.remove}
         </span>
         {/if}

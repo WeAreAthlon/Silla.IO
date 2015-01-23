@@ -1,1 +1,1 @@
-<a href="mailto:{$resource->$field}"><span class="glyphicon glyphicon-envelope"></span> {$resource->$field}</a>
+<a href="mailto:{$attr.default}"><span class="glyphicon glyphicon-envelope"></span> {$attr.default}</a>

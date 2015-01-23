@@ -1,4 +1,4 @@
-<select id="{$attr.id}" name="{$attr.name}" class="form-control" data-placeholder="{$_labels.general.select|escape}...">
+<select id="{$attr.id}" name="{$attr.name}" class="form-control" data-placeholder="{$_labels.general.select|escape}..."{$attr.disabled}>
     <option value=""></option>
     {if isset($attr.value) and $attr.value|is_array}
         {html_options options=$attr.value selected=$attr.default}

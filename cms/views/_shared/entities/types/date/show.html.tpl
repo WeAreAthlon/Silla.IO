@@ -1,1 +1,1 @@
-<span class="glyphicon glyphicon-calendar"></span> {$resource->$field|date_format:#date#}
+<span class="glyphicon glyphicon-calendar"></span> {$attr.default|date_format:#date#}

@@ -1,1 +1,1 @@
-<a href="{$resource->$field}" target="_blank"><span class="glyphicon glyphicon-globe"></span> {$resource->$field}</a>
+<a href="{$attr.default}" target="_blank"><span class="glyphicon glyphicon-globe"></span> {$attr.default}</a>

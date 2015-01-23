@@ -10,7 +10,12 @@
             {$attr.default = $resource->{$field}}
         {/if}
 
+        {$attr.disabled = $attr.disabled|default:false}
         {$attr.id = "{$section}-{$field}"}
+
+        {if $attr.disabled}
+            {$attr.disabled = ' disabled'}
+        {/if}
 
         {$has_custom_template = false}
         {if "{$_controller}/_form/fields/{$section}/{$field}.html.tpl"|template_exists}

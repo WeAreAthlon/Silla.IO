@@ -1,1 +1,1 @@
-<span class="badge">{$resource->$field}</span>
+<span class="badge">{$attr.default}</span>
