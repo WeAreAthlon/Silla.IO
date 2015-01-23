@@ -152,6 +152,7 @@ final class Router
             }
 
             $mode = isset($options['_mode']) ? Core\Config()->modes($options['_mode']) : $this->request->mode();
+            $mode['url'] = $mode['url'] ? $mode['url'] . Core\Config()->ROUTER['separator'] : '';
 
             $_cache[$_cache_key] =
                 $_prefix . $mode['url'] . Core\Config()->ROUTER['separator'] . rtrim(
