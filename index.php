@@ -1,6 +1,6 @@
 <?php
 /**
- * Silla HTTP Requests dispatcher loader.
+ * Silla.IO HTTP Requests dispatcher loader.
  *
  * Execution entry point.
  *
@@ -17,7 +17,7 @@ use Core;
 use Core\Modules\Router;
 
 /**
- * Define Silla framework variables.
+ * Define Silla.IO framework variables.
  */
 define(
     'SILLA_ENVIRONMENT',
@@ -25,7 +25,7 @@ define(
 );
 
 /**
- * Require Silla boot loader.
+ * Require Silla.IO boot loader.
  */
 require __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
 
@@ -37,7 +37,7 @@ unset($_GET['_path']);
 
 try {
     /**
-     * Detect Silla Mode.
+     * Detect Silla.IO Mode.
      */
     $mode = Router\Router::getMode($requestString);
     Config()->setMode($mode);

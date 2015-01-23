@@ -27,7 +27,7 @@ final class Routes
     private $routes = array();
 
     /**
-     * Representation of the Silla mode.
+     * Representation of the Silla.IO mode.
      *
      * @var array
      */
@@ -36,7 +36,7 @@ final class Routes
     /**
      * Init Routes.
      *
-     * @param array $mode Silla mode.
+     * @param array $mode Silla.IO mode.
      *
      * @uses Core\Cache()
      *
@@ -212,7 +212,7 @@ final class Routes
     /**
      * Load router routing routes.
      *
-     * @param array $mode Silla mode.
+     * @param array $mode Silla.IO mode.
      *
      * @access private
      * @static

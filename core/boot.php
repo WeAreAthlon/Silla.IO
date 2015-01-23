@@ -1,6 +1,6 @@
 <?php
 /**
- * Silla Boot loader and entry point.
+ * Silla.IO Boot loader and entry point.
  *
  * @package    Silla.IO
  * @subpackage Core
@@ -12,7 +12,7 @@
 namespace Core;
 
 if (version_compare(PHP_VERSION, '5.3.7', '<')) {
-    exit("Sorry, Silla framework will only run on PHP version 5.3.7 or greater!\n");
+    exit("Sorry, Silla.IO framework will only run on PHP version 5.3.7 or greater!\n");
 }
 
 if (!defined('SILLA_ENVIRONMENT')) {

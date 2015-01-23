@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * Silla CLI Task Manager.
+ * Silla.IO CLI Task Manager.
  *
  * @package    Silla.IO
  * @subpackage Core

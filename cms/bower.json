@@ -1,5 +1,5 @@
 {
-    "name": "Silla CMS",
+    "name": "Silla.IO CMS Application",
     "version": "1.0.0",
     "dependencies": {
         "jquery"   : "1.11.1",

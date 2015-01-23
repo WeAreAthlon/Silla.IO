@@ -1,5 +1,5 @@
 /**
- * Silla Init JS.
+ * Silla.IO Init JS.
  *
  * @package    Silla.IO
  * @subpackage Core
