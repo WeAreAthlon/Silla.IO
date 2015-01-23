@@ -22,19 +22,19 @@ http://silla.io by [Athlon](http://weareathlon.com)
 
 ### Overview
 
-Silla.IO is a PHP application development framework based on the *MVC* software architectural pattern. The framework includes *CMS Application* to enable building content management systems.
+Silla.IO is a PHP application development framework based on the *MVC* software architectual pattern. The framework includes *CMS Application* to provide assistance building custom content management systems.
 
 The code-base features *Model-View-Controller* pattern with additional support for:
-* Configuration per environment
-* ORM feature for persistent data management
-* Template rendering engine support for output management
-* Custom URL Routing
+* `Configuration per environment`
+* `ORM` layer for persistent data management
+* `Template rendering` engine support for output management
+* `URL Routing`
 * `Base\Resource` for consolidation of `CRUD` operations
-* Mailer API
-* Cache API
-* Session API
-* Crypt API
-* CLI task manager
+* `Mailer API`
+* `Cache API`
+* `Session API`
+* `Crypt API`
+* `CLI` task manager
 * ... *any many more*
 
 ***
@@ -67,16 +67,3 @@ The code-base features *Model-View-Controller* pattern with additional support f
 * **Package managers**
   * *`Composer`* - PHP package manager
   * *`Bower`* - Front-end Assets package manager
-
-***
-
-### Installation
-* Place files on the virtual host document root.
-* Run `composer install --no-dev` command.
-* Run `bower install` command in `/app` and `/cms` directories.
-* Amend `configurations/<environment>/configuration.php` file.
-* Amend `configurations/<environment>/environment.php` file.
-* Choose `Silla.IO` run environment by amending the `.htaccess` file.
-* To enable the `CMS Application`:
-    * Import the database schema and user credentials from *`vendor/athlon/db/schema.sql`*
-    * Navigate to *`/cms`*
