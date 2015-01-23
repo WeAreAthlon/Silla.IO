@@ -15,16 +15,17 @@ http://silla.io by [Athlon](http://weareathlon.com)
 * **Code API Reference:** http://api.silla.io
 * **Demo of the CMS app:** http://demo.silla.io/cms/
     * *Credentials*
-        * email: demo@silla.io
-        * password: demo
+        * **email:** _demo@silla.io_
+        * **password:** _demo_
 
 ***
 
 ### Overview
 
-Silla.IO is a PHP application development framework based on the *MVC* software architectual pattern. The framework includes *CMS Application* to provide assistance building custom content management systems.
+_Silla.IO_ is a PHP application development framework based on the *MVC* software architecture pattern. 
+The framework includes *CMS Application* to provide assistance building custom content management systems.
 
-The code-base features *Model-View-Controller* pattern with additional support for:
+The code base features *Model-View-Controller* pattern with additional support for:
 * `Configuration per environment`
 * `ORM` layer for persistent data management
 * `Template rendering` engine support for output management
@@ -52,7 +53,7 @@ The code-base features *Model-View-Controller* pattern with additional support f
   * *Type:* Standard (*SAPI - Apache Handler or FCGI*)
   * *Version:* `5.3.7` (*or newer*)
   * *Configuration:*
-    * Runtime change enabeled via `ini_set()`
+    * Runtime change enabled via `ini_set()`
     * *Extensions*
       * `PDO`, `PDO_mysql`, `mysql`, `SQLite` (*depends on on the configured database driver*)
       * `GD` - *in order to work with media*
