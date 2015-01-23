@@ -2,11 +2,11 @@
 /**
  * HTML Object Options Function.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Vendor\Athlon\SmartyPlugins
  * @author     Monte Ohrt <monte at ohrt dot com>
  * @author     Ralf Strehle (minor optimization) <ralf dot strehle at yahoo dot de>
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 /**

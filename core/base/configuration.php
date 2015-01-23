@@ -2,11 +2,11 @@
 /**
  * Settings and configuration variables of the framework.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core\Base
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace Core\Base;
@@ -171,16 +171,16 @@ abstract class Configuration
     /**
      * @var array $PATHS File Paths definition.
      *
-     * @example root    Path to Silla files location on the file system.
-     * @example app     Path to Silla components location.
-     * @example labels  Path to Silla localisation labels location.
-     * @example cache   Path to Silla file caches on the server.
-     * @example tmp     Path to Silla temorary file storage location.
-     * @example public  Path to Silla public accessible location.
-     * @example uploads Path to Silla uploads storage location.
-     * @example vendor  Path to Silla vendor files location.
-     * @example assets  Path to Silla assets storage location['source', 'distribution'].
-     * @example views   Path to Silla views['templates', 'compiled', 'config', 'cache'].
+     * @example root    Path to Silla.IO files location on the file system.
+     * @example mode    Path to Silla.IO current mode location.
+     * @example labels  Path to Silla.IO localisation labels location.
+     * @example cache   Path to Silla.IO file caches on the server.
+     * @example tmp     Path to Silla.IO temorary file storage location.
+     * @example public  Path to Silla.IO public accessible location.
+     * @example uploads Path to Silla.IO uploads storage location.
+     * @example vendor  Path to Silla.IO vendor files location.
+     * @example assets  Path to Silla.IO assets storage location['source', 'distribution'].
+     * @example views   Path to Silla.IO views['templates', 'compiled', 'config', 'cache'].
      */
     protected $PATHS = array(
         'root'    => null,
@@ -198,8 +198,8 @@ abstract class Configuration
     /**
      * @var string[] $URLS URLS paths definition.
      *
-     * @example full     Full URL path for the current Silla instance.
-     * @example relative Relative URL path for the current Silla instance.
+     * @example full     Full URL path for the current Silla.IO instance.
+     * @example relative Relative URL path for the current Silla.IO instance.
      * @example protocol Current URL request protocol type.
      * @example public   URL path to the public accessible location.
      * @example assets   URL path to the assets storage location.
@@ -215,7 +215,7 @@ abstract class Configuration
     );
 
     /**
-     * @var array $MODES Silla Runtime Modes. Array representation of supported Silla modes.
+     * @var array $MODES Silla.IO Runtime Modes. Array representation of supported Silla.IO modes.
      *      Default mode(most common) is the last element the array.
      *
      * @example name     Semantic name of the mode.
@@ -315,7 +315,7 @@ abstract class Configuration
     /**
      * Setup mode configuration variables.
      *
-     * @param array $mode Silla mode data.
+     * @param array $mode Silla.IO mode data.
      *
      * @return void
      */
@@ -386,7 +386,7 @@ abstract class Configuration
     }
 
     /**
-     * Retrieves Silla modes.
+     * Retrieves Silla.IO modes.
      *
      * @param string $name Name of the mode.
      *
@@ -406,7 +406,7 @@ abstract class Configuration
     }
 
     /**
-     * Retrieves current Silla mode.
+     * Retrieves current Silla.IO mode.
      *
      * @param string $segment Segment name of the mode.
      *
@@ -447,9 +447,9 @@ abstract class Configuration
     }
 
     /**
-     * Format and setup Silla modes.
+     * Format and setup Silla.IO modes.
      *
-     * @param array $modes Array of Silla modes to setup.
+     * @param array $modes Array of Silla.IO modes to setup.
      *
      * @return array
      */
