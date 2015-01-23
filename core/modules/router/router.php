@@ -155,7 +155,7 @@ final class Router
             $mode['url'] = $mode['url'] ? $mode['url'] . Core\Config()->ROUTER['separator'] : '';
 
             $_cache[$_cache_key] =
-                $_prefix . $mode['url'] . Core\Config()->ROUTER['separator'] . rtrim(
+                $_prefix . $mode['url'] . rtrim(
                     implode(
                         Core\Config()->ROUTER['separator'],
                         $route['pattern']
