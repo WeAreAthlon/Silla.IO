@@ -224,16 +224,6 @@ abstract class Configuration
      */
     private $MODES = array(
         array(
-            'name'     => 'api_v1',
-            'location' => 'api/v1/',
-            'url'      => '/api/v1/',
-        ),
-        array(
-            'name'     => 'api_v2',
-            'location' => 'api/v2/',
-            'url'      => '/api/v2/',
-        ),
-        array(
             'name'     => 'cms',
             'location' => 'cms/',
             'url'      => 'cms/',
