@@ -144,7 +144,12 @@ final class Generate
     private static function parseTemplate($template, array $params)
     {
         $tpl = new \Smarty();
-        $tpl->addPluginsDir(Core\Config()->paths('vendor') . 'athlon' . DIRECTORY_SEPARATOR . 'smarty_plugins');
+        $config = Core\Config()->paths('views');
+
+        $tpl->setCompileDir($config['compiled'])
+            ->setCacheDir($config['cache'])
+            ->setConfigDir($config['config'])
+            ->addPluginsDir(Core\Config()->paths('vendor') . 'athlon' . DIRECTORY_SEPARATOR . 'smarty_plugins');
 
         foreach ($params as $key => $value) {
             $tpl->assign($key, $value);

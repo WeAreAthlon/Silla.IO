@@ -1,10 +1,10 @@
 <?php
 /**
- * {$controller|camelize} Controller.
+ * {$migration_name|camelize} Migration.
  *
  * @package    Silla.IO
  * @subpackage DB\Migrations
- * @author     Plamen Nikolov <plamen@athlonsofia.com>
+ * @author     Author <author@website.com>
  * @copyright  Copyright (c) 2015, Silla.io
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
@@ -30,8 +30,9 @@ class {$migration_name|camelize} extends DB\Migration
 {foreach from=$fields item=field}
     '{$field.0}' => 'type:{$field.1}',
 {/foreach}
-));
-}
+        ));
+    }
+
     /**
      * Down method.
      *
@@ -56,8 +57,9 @@ class {$migration_name|camelize} extends DB\Migration
         {foreach from=$fields item=field}
             '{$field.0}' => 'type:{$field.1}',
         {/foreach}
-        ));
+            ));
         }
+
         /**
          * Down method.
          *
