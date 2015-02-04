@@ -1,5 +1,6 @@
 {
     "name": "weareathlon/silla.io",
+    "type": "project",
     "description": "The Silla.IO Application Development Framework.",
     "keywords": ["framework", "silla.io", "cms"],
     "homepage": "http://silla.io/",
