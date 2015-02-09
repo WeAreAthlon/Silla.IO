@@ -282,7 +282,7 @@ final class Router
     {
         if (Core\Config()->mode('url')) {
             $httpRequestString = trim(
-                Core\Utils::replaceFirstOccurance(Core\Config()->mode('url'), '', $httpRequestString),
+                Core\Utils::replaceFirstOccurrence(Core\Config()->mode('url'), '', $httpRequestString),
                 Core\Config()->ROUTER['separator']
             );
         } else {

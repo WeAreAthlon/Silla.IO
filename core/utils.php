@@ -170,7 +170,7 @@ final class Utils
      *
      * @return string
      */
-    public static function replaceFirstOccurance($search, $replace, $subject)
+    public static function replaceFirstOccurrence($search, $replace, $subject)
     {
         $pos = strpos($subject, $search);
         if ($pos !== false) {
@@ -178,5 +178,62 @@ final class Utils
         }
 
         return $subject;
+    }
+
+    /**
+     * Convert the $_FILES array to the cleaner (IMHO) array.
+     *
+     * @param array $files Array of files ($_FILES compatible array).
+     *
+     * @return array Reformatted array.
+     */
+    public static function formatArrayOfFiles(array &$files) {
+
+        $result = array();
+        $count = count($files['name']);
+        $keys = array_keys($files);
+
+        for ($i = 0; $i < $count; $i++) {
+            foreach ($keys as $key) {
+                $result[$i][$key] = $files[$key][$i];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Convert PHP defined Size to Bytes.
+     *
+     * This function transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in this case).
+     *
+     * @param mixed $sSize Size notation.
+     *
+     * @return integer
+     */
+    public static function convertPHPSizeToBytes($sSize)
+    {
+        if ( is_numeric( $sSize) ) {
+            return $sSize;
+        }
+
+        $sSuffix = substr($sSize, -1);
+        $iValue = substr($sSize, 0, -1);
+
+        switch (strtoupper($sSuffix)) {
+            case 'P':
+                $iValue *= 1024;
+            case 'T':
+                $iValue *= 1024;
+            case 'G':
+                $iValue *= 1024;
+            case 'M':
+                $iValue *= 1024;
+            case 'K':
+                $iValue *= 1024;
+                break;
+        }
+
+        return $iValue;
     }
 }
