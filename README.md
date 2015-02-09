@@ -1,4 +1,4 @@
-## Silla.IO - PHP Application Development Framework#
+## Silla.IO - PHP Application Development Framework
 [![Build Status](https://img.shields.io/jenkins/s/http/jenkins.athlonsofia.com/silla.io.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
 [![Tests Status](https://img.shields.io/jenkins/t/http/jenkins.athlonsofia.com/silla.io.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
 [![Github Issues](https://img.shields.io/github/issues/WeAreAthlon/silla.io.svg?style=flat-square)](https://github.com/WeAreAthlon/silla.io/issues)
@@ -7,7 +7,6 @@
 [![Packagist](https://img.shields.io/packagist/dt/weareathlon/silla.io.svg?style=flat-square)](https://packagist.org/packages/weareathlon/silla.io)
 
 http://silla.io by [Athlon](http://weareathlon.com)
-
 ***
 
 ### Reference
@@ -42,9 +41,9 @@ The code base features *Model-View-Controller* pattern with additional support f
 
 ### Server Software Requirements
 
-* **Operating system**
+* **Operating System**
   * *Type*: `*nix`, `Windows`
-* **Web server**
+* **Web Server**
   * *Type:* `Apache`, `nginx` or compatible
   * *Modules:* (*below are `Apache` module names. Each of them has equivalent for `nginx`*)
     * `mod_rewrite` - *in order to have custom(pretty) URLs*
@@ -55,16 +54,16 @@ The code base features *Model-View-Controller* pattern with additional support f
   * *Configuration:*
     * Runtime change enabled via `ini_set()`
     * *Extensions*
-      * `PDO`, `PDO_mysql`, `mysql`, `SQLite` (*depends on on the configured database driver*)
+      * `PDO`, `PDO_mysql`, `mysql`, `SQLite` (*depends on on the configured database adapter*)
       * `GD` - *in order to work with media*
 * **Database**
-  * *Type:* `MySQL` (*depends on on the configured database driver*)
+  * *Type:* `MySQL` (*depends on on the configured database adapter*)
   * *Version:* `5` (*or newer, recommended `5.5+`*)
-* **File system**
-  * *Type:* Standard file system(*all `PHP` file function should work as expected*)
+* **File System**
+  * *Type:* Standard file system(*all `PHP` file functions should work as expected*)
   * *Permissions:* `Writable` directories:
     * *`/temp`*
     * *`/public`*
-* **Package managers**
+* **Package Managers**
   * *`Composer`* - PHP package manager
   * *`Bower`* - Front-end Assets package manager
