@@ -162,6 +162,34 @@ final class Utils
     }
 
     /**
+     * Executes a shell command.
+     *
+     * @param string $command Shell code to execute.
+     *
+     * @access public
+     * @see    putenv
+     * @static
+     *
+     * @return string The result from the command execution.
+     */
+    public static function execute_shell_command($command)
+    {
+        /* remove newlines and convert single quotes to double to prevent errors */
+        $command = str_replace(array("\n", "'"), array('', '"'), $command);
+
+        /* replace multiple spaces with one */
+        $command = preg_replace('#(\s){2,}#is', ' ', $command);
+
+        /* escape shell meta characters */
+        $command = escapeshellcmd($command);
+
+        /* Export used system paths */
+        putenv('PATH="/usr/lib/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$PATH"');
+
+        return shell_exec($command);
+    }
+
+    /**
      * Replaces first occurrence of the search string with the replacement string.
      *
      * @param string $search  The value being searched for, otherwise known as the needle.
