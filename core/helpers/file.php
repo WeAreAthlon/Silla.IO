@@ -359,14 +359,15 @@ class File
         array $allowedTypes = array(),
         $maxAllowedSize = 5120
     ) {
-        /* validate */
+        /* Validation process */
         $result = true;
+
         if (!$skipValidation) {
             $result = self::validate($file, $allowedTypes, $maxAllowedSize);
         }
 
         if ($result) {
-            /* create the directory if it does not exists */
+            /* Create the directory if it does not exists */
             if (!is_dir($directory)) {
                 $result = (Directory::create($directory)) ? self::processUpload($file, $directory, $saveName) : false;
             } else {
@@ -540,12 +541,12 @@ class File
     /**
      * Uploads a file.
      *
-     * @param array  $file      Value from $_FILES.
-     * @param string $directory Full path to storage.
-     * @param string $saveName  Filename in storage.
+     * @param array  $file      Value from the $_FILES array.
+     * @param string $directory Full path to the storage location.
+     * @param string $saveName  Name of the file in the storage location.
      *
      * @throws \InvalidArgumentException If a non-existing directory was supplied.
-     * @throws \UnexpectedValueException If errors occured while uploading file.
+     * @throws \UnexpectedValueException If errors occurred while uploading file.
      *
      * @return boolean Result of the operation.
      */
@@ -561,7 +562,7 @@ class File
         $path = rtrim($directory, '\/') . DIRECTORY_SEPARATOR . $saveName;
 
         if (!$result = move_uploaded_file($file['tmp_name'], $path)) {
-            throw new \UnexpectedValueException('Errors occured while uploading file. Result was: ' . $result);
+            throw new \UnexpectedValueException('Errors occurred while uploading file. Result was: ' . $result);
         }
 
         return $result;
@@ -593,7 +594,7 @@ class File
      * @param string $filename     Name of the file to format.
      * @param string $uploadedFile Name of the file that is currently uploading.
      *
-     * @return string Formated filename.
+     * @return string Formatted filename.
      */
     public static function formatFilename($filename, $uploadedFile)
     {
@@ -618,7 +619,7 @@ class File
      * @param string $filename Name of the file.
      *
      * @todo Perhaps use is_uploaded_file().
-     *  But accepts tmp_name only.
+     * But accepts tmp_name only.
      *
      * @return boolean Result of the operation.
      */
@@ -653,7 +654,7 @@ class File
      *
      * @param string $path File path.
      *
-     * @uses Core\Base\Configuration::paths To get root path of framework.
+     * @uses Core\Base\Configuration::paths To get root path of the framework.
      *
      * @return string Full path.
      */
@@ -663,5 +664,20 @@ class File
         $path = Core\Config()->paths('root') . $path;
 
         return $path;
+    }
+
+    /**
+     * Retrieves the maximum possible file upload size.
+     *
+     * @uses Core\Utils::convertPHPSizeToBytes To extract the correct file size.
+     *
+     * @return integer Size in bytes.
+     */
+    public static function getMaximumUploadSize()
+    {
+        return min(
+            Core\Utils::convertPHPSizeToBytes(ini_get('post_max_size')),
+            Core\Utils::convertPHPSizeToBytes(ini_get('upload_max_filesize'))
+        );
     }
 }

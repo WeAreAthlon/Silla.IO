@@ -75,6 +75,10 @@ table.data-table tbody tr    { cursor: pointer; }
 .image-preview   { margin-right: 20px; margin-bottom: 20px; }
 .image-preview a { display: block; }
 
+/* Dropzone */
+.dropzone { border: 1px dashed #CCCCCC; border-radius: 3px; }
+.dropzone .dz-preview .dz-image { box-shadow: 0 0 5px #CCCCCC; }
+
 /* Colorpicker */
 .colorpicker-component .input-group-addon i { border-radius: 3px; }
 

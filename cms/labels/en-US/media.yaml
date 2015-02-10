@@ -1,0 +1,58 @@
+# YAML file
+attributes:
+  general:
+    meta:
+      title     : General
+      icon      : picture
+      desc      : Mandatory asset data.
+    fields:
+      name:
+        title   : Name
+        type    : text
+        desc    : Real name of the user.
+        icon    : user
+        length  : 100
+        filter  : true
+      login_on:
+        title   : Last login
+        type    : datetime
+        desc    : Time of the last user login.
+        icon    : time
+        readonly: true
+        filter  : true
+      created_on:
+        title   : Registered on
+        type    : datetime
+        desc    : Date and time of registration.
+        icon    : time
+        readonly: true
+      updated_on:
+        title   : Updated on
+        desc    : Date and time of last update.
+        type    : datetime
+        icon    : time
+        readonly: true
+        list    : false
+        export  : false
+
+messages:
+  create:
+    success: The media have been successfully added!
+  edit:
+    success: The media have been successfully amended!
+  delete:
+    success: The selected media have been permanently deleted!
+
+dropzone:
+  default      : Drop files here or click to upload.
+  size         : Current server supports files no more than %s MB.
+  fallback     : Your browser does not support drag'n'drop file uploads.
+  fallbackText : Please use the fallback form below to upload your files like in the olden days.
+  invalid      : File type is not supported.
+  toobig       : File({{filesize}}) exceeds filesystem size limit({{maxFilesize}}).
+  response     : Server responded with an internal error code - {{statusCode}}.
+  cancel       : Cancel the process
+  cancel_confirmation: Are you sure you want to cancel the upload process?
+  remove       : Remove file?
+  max          : Max number of simultaneous file uploads is exceeded.
+

@@ -15,7 +15,8 @@
         "html5shiv"    : "3.7.2",
         "respond"      : "1.4.2",
         "spin.js"      : "2.0.1",
-        "bootbox"      : "4.3.0"
+        "bootbox"      : "4.3.0",
+        "dropzone"     : "v4.0.0"
     },
     "private": true
 }
