@@ -26,7 +26,7 @@ class File
     /**
      * @var array Mime types list.
      */
-    public static $mimetypeList = array(
+    public static $mimeTypeList = array(
         '323' => 'text/h323',
         'acx' => 'application/internet-property-stream',
         'ai' => 'application/postscript',
@@ -345,9 +345,9 @@ class File
      * @param array   $allowedTypes   Allowed MIME types of the file.
      * @param integer $maxAllowedSize Maximum allowed file size in kilobytes.
      *
-     * @uses self::validate To validate the file by MIME type and size.
-     * @uses Directory::create To create a directory for the file, if necessary.
-     * @uses self::processUpload To upload the file.
+     * @uses self::validate()      To validate the file by MIME type and size.
+     * @uses Directory::create()   To create a directory for the file, if necessary.
+     * @uses self::processUpload() To upload the file.
      *
      * @return boolean Result of the operation.
      */
@@ -388,8 +388,7 @@ class File
      *
      * @todo Distinct the errors from size and type.
      *
-     * @return boolean TRUE if file is within allowed max size
-     *      and MIME types, FALSE otherwise.
+     * @return boolean TRUE if file is within allowed max size and MIME types, FALSE otherwise.
      */
     public static function validate(array $file, array $allowedTypes, $maxAllowedSize)
     {
@@ -430,7 +429,7 @@ class File
      */
     private static function isValidMimeType(array $file, $type)
     {
-        $valid_mime_types = array(
+        $validMimeTypes = array(
             'flash_video' => array('video/x-flv'),
             'flash'       => array('application/x-shockwave-flash'),
             'photo'       => array('image/jpeg', 'image/gif', 'image/png'),
@@ -501,8 +500,7 @@ class File
      * @param array $file Value from $_FILES.
      *
      * @throws \InvalidArgumentException If path does not lead to a file.
-     * @see    http://php.net/manual/en/fileinfo.installation.php
-     *      If using PHP versions prior to 5.3+.
+     * @see    http://php.net/manual/en/fileinfo.installation.php If using PHP versions prior to 5.3+.
      *
      * @return string MIME Type.
      */
@@ -520,12 +518,12 @@ class File
             $mimeType = $fileInfo->buffer(file_get_contents($file['tmp_name']));
         } elseif (function_exists('finfo_open')) {
             /* for >= PHP 5.3.0 and activated PHP extension fileinfo procedural variation */
-            $fhandle = finfo_open(FILEINFO_MIME);
-            $mimeType = finfo_file($fhandle, $file['tmp_name']);
+            $fileHandle = finfo_open(FILEINFO_MIME);
+            $mimeType = finfo_file($fileHandle, $file['tmp_name']);
         } else {
             /* for < PHP 5.3.0 or not activated fileinfo */
             $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-            $mimeType = self::$mimetypeList[$extension];
+            $mimeType = self::$mimeTypeList[$extension];
         }
 
         if ($mimeType && ($pos = strpos($mimeType, ' '))) {
@@ -545,7 +543,7 @@ class File
      * @param string $saveName  Filename in storage.
      *
      * @throws \InvalidArgumentException If a non-existing directory was supplied.
-     * @throws \UnexpectedValueException If errors occured while uploading file.
+     * @throws \UnexpectedValueException If errors occurred while uploading file.
      *
      * @return boolean Result of the operation.
      */
@@ -553,7 +551,7 @@ class File
     {
         $saveName = $saveName ? $saveName : self::filterFilename($file['name']);
 
-        /* Check in case Directory::create didn't work */
+        /* Check in case Directory::create() did not work */
         if (!is_dir($directory)) {
             throw new \InvalidArgumentException('A non-existing directory was supplied: ' . $directory);
         }
@@ -561,7 +559,7 @@ class File
         $path = rtrim($directory, '\/') . DIRECTORY_SEPARATOR . $saveName;
 
         if (!$result = move_uploaded_file($file['tmp_name'], $path)) {
-            throw new \UnexpectedValueException('Errors occured while uploading file. Result was: ' . $result);
+            throw new \UnexpectedValueException('Errors occurred while uploading file. Result was: ' . $result);
         }
 
         return $result;
@@ -593,7 +591,7 @@ class File
      * @param string $filename     Name of the file to format.
      * @param string $uploadedFile Name of the file that is currently uploading.
      *
-     * @return string Formated filename.
+     * @return string Formatted filename.
      */
     public static function formatFilename($filename, $uploadedFile)
     {
