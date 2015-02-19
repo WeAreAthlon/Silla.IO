@@ -545,14 +545,14 @@ abstract class Model
     private function updateFields(array $params)
     {
         if (array_key_exists('updated_on', $this->fields)) {
-            $params = array_merge(array('updated_on' => gmdate('Y-m-d H:i:s')), $params);
+            $params = array_merge(array('updated_on' => date('Y-m-d H:i:s')), $params);
         }
 
         $this->populateFields($params);
 
         /* Automatic date value */
         if (empty($this->created_on) && array_key_exists('created_on', $this->fields)) {
-            $this->created_on = gmdate('Y-m-d H:i:s');
+            $this->created_on = date('Y-m-d H:i:s');
         }
     }
 
