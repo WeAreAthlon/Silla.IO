@@ -216,7 +216,7 @@ final class Utils
      * @return array Reformatted array.
      */
     public static function formatArrayOfFiles(array &$files)
-	{
+    {
         $result = array();
         $count = count($files['name']);
         $keys = array_keys($files);
@@ -241,7 +241,7 @@ final class Utils
      */
     public static function convertPHPSizeToBytes($sSize)
     {
-        if (is_numeric( $sSize)) {
+        if (is_numeric($sSize)) {
             return $sSize;
         }
 
@@ -250,17 +250,18 @@ final class Utils
 
         switch (strtoupper($sSuffix)) {
             /* Fall through the next value */
-			case 'P':
+            case 'P':
                 $iValue *= 1024;
-			/* Fall through the next value */
-			case 'T':
+            /* Fall through the next value */
+            case 'T':
                 $iValue *= 1024;
-			/* Fall through the next value */
+            /* Fall through the next value */
             case 'G':
                 $iValue *= 1024;
-			/* Fall through the next value */
-			case 'M':
+            /* Fall through the next value */
+            case 'M':
                 $iValue *= 1024;
+            /* Fall through the next value */
             case 'K':
                 $iValue *= 1024;
                 break;
