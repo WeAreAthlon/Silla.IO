@@ -72,7 +72,8 @@ ENGINE = MyISAM;
 -- Data for table `cms_userroles`
 -- -----------------------------------------------------
 
-INSERT INTO `cms_userroles` (`id`, `title`, `created_on`, `updated_on`, `permissions`) VALUES (1, 'Administrator', '2012-06-19 00:00:00', '2013-02-12 18:02:18', '{\"help\":[\"index\"],\"userroles\":[\"add\",\"edit\",\"delete\",\"index\"],\"users\":[\"add\",\"edit\",\"delete\",\"account\",\"index\"]}');
+INSERT INTO `cms_userroles` (`id`, `title`, `created_on`, `updated_on`, `permissions`) VALUES
+  (1, 'Administrator', '2015-02-20 03:00:00', '2015-02-20 14:20:01', '{"help":["index"],"userroles":["show","create","edit","delete","export","index"],"users":["account","show","create","edit","delete","export","index"]}');
 
 -- -----------------------------------------------------
 -- Data for table `cms_users`

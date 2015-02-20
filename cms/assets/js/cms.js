@@ -108,7 +108,7 @@ var CMS = {
             });
 
             /* LightBox */
-            $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+            $('*[data-toggle="lightbox"]').one('click', function(event) {
                 event.preventDefault(); $(this).ekkoLightbox();
             });
 
