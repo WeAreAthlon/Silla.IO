@@ -437,6 +437,19 @@ abstract class Configuration
     }
 
     /**
+     * Retrieves media storage location.
+     *
+     * Here you can configure the media files storage location. Setup a path to the local file system or
+     * configure and connect to an external file system or CDN.
+     *
+     * @return string
+     */
+    public function getMediaStorageLocation()
+    {
+        return $this->PATHS['root'] . 'media' . DIRECTORY_SEPARATOR;
+    }
+
+    /**
      * Format and setup Silla.IO modes.
      *
      * @param array $modes Array of Silla.IO modes to setup.

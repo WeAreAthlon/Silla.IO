@@ -2,7 +2,7 @@
     <div class="dz-message">
         <p class="text-muted font-size-bigger text-thin">
             <span class="glyphicon glyphicon-paperclip"></span><br /> {$_labels.dropzone.default} <br />
-            <span class="font-size-smaller">{$_labels.dropzone.size|sprintf:{$limitations.upload_file_size / 1048576}}</span>
+            <span class="font-size-smaller">{$_labels.dropzone.size|sprintf:{$limitations.size / 1048576}}</span>
         </p>
     </div>
     <input type="hidden" name="_token" value="{$_request->token()}" />
@@ -12,10 +12,9 @@
     $(".dropzone").dropzone({
         paramName: 'media',
         filesizeBase: 1024,
-        uploadMultiple: true,
-        acceptedFiles: 'image/*, video/*, application/pdf',
-        maxFilesize: {$limitations.upload_file_size / 1048576},
-        maxFiles   : {$limitations.upload_file_count},
+        uploadMultiple: false,
+        acceptedFiles: '{', '|implode:$limitations.mimeType}',
+        maxFilesize: {$limitations.size / 1048576},
         dictDefaultMessage : "{$_labels.dropzone.default}",
         dictFallbackMessage: "{$_labels.dropzone.fallback}",
         dictFallbackText   : "{$_labels.dropzone.fallbackText}",

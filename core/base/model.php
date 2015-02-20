@@ -136,7 +136,14 @@ abstract class Model
      * @access protected
      * @static
      */
-    protected static $i18nLocaleField = 'i18nLocale';
+    protected static $i18nLocaleField = 'locale';
+
+    /**
+     * Query instance.
+     *
+     * @var DB\Query
+     */
+    protected $query;
 
     /**
      * Constructor method.
@@ -157,6 +164,10 @@ abstract class Model
         if (static::$isI18n) {
             if (!static::$i18nLocale) {
                 static::$i18nLocale = Core\Config()->I18N['support'][Core\Registry()->get('locale')];
+            }
+
+            if (!static::$i18nTableName) {
+                static::$i18nTableName = static::$tableName . '_i18n';
             }
         }
 
@@ -1022,6 +1033,10 @@ abstract class Model
         if (static::$isI18n) {
             if (!static::$i18nLocale) {
                 static::$i18nLocale = Core\Config()->I18N['support'][Core\Registry()->get('locale')];
+            }
+
+            if (!static::$i18nTableName) {
+                static::$i18nTableName = static::$tableName . '_i18n';
             }
 
             return $query

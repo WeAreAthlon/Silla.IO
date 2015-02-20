@@ -13,6 +13,7 @@ namespace CMS\Controllers;
 
 use Core;
 use Core\Base;
+use CMS\Helpers;
 use Core\Modules\Router\Request;
 
 /**
@@ -28,34 +29,57 @@ class Media extends CMS
     protected $model = 'CMS\Models\Medium';
 
     /**
+     * Media limitations container.
+     *
+     * @var array
+     */
+    protected $limitations = array();
+
+    /**
      * Create resource - saves model into the database.
      *
      * @param Request $request Current router request.
      *
      * @access public
      * @throws \InvalidArgumentException Uploaded media files missing.
-     * @uses   Helpers\FlashMessage, Core\Helpers\File, Core\Utils
+     * @uses   Helpers\FlashMessage, Core\Helpers\File, Core\Helpers\YAML, Core\Utils
      *
      * @return void
      */
     public function create(Request $request)
     {
+        $isMediaCreated = false;
         $this->renderer->setLayout(null);
         $this->limitations = array(
-            'upload_file_count' => ini_get('max_file_uploads'),
-            'upload_file_size'  => Core\Helpers\File::getMaximumUploadSize(),
+            'size' => Core\Helpers\File::getMaxUploadSize(),
+            'type' => Helpers\Media::getSupportedMediaTypes(),
+            'mimeType' => Helpers\Media::getSupportedMimeTypes(),
         );
 
-        if ($request->is('post')) {
-            if ($request->files('media')) {
-                $files = $request->files('media');
-                $files = Core\Utils::formatArrayOfFiles($files);
+        if ($request->is('post') && $request->files('media')) {
+            $file = $request->files('media');
 
-                foreach ($files as $file) {
-                    #Core\Helpers\File::upload($file, );
+            if (Core\Helpers\File::validate($file, $this->limitations['type'], $this->limitations['size'])) {
+                $fileName = Helpers\Media::generateFileName($file);
+                $medium = new $this->model;
+                $medium->save(array(
+                    'cmsuser_id' => $this->user->id,
+                    'size'       => $file['size'],
+                    'filename'   => $fileName,
+                    'mimetype'   => Core\Helpers\File::getMimeType($file),
+                    'title'      => $fileName,
+                ));
+
+                if (!$medium->errors) {
+                    $storagePath = Core\Config()->getMediaStorageLocation() . Helpers\Media::getSavePath($medium);
+                    if (Core\Helpers\File::upload($file, $storagePath, $medium->filename, true)) {
+                        $isMediaCreated = true;
+                    }
                 }
-            } else {
-                throw new \InvalidArgumentException('Uploaded media files missing.');
+            }
+
+            if (!$isMediaCreated) {
+
             }
         }
     }

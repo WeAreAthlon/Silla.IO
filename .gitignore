@@ -12,7 +12,7 @@
 Thumbs.db
 
 # Ignore all log files and temp files.
-/temp
+/temp/*
 
 # Ignore all build files and configurations
 /build/*
@@ -26,6 +26,9 @@ Thumbs.db
 # Ignore vendor libraries
 /vendor/*
 !/vendor/athlon/
+
+# Ignore media directory
+/media/*
 
 # Ignore uploads directories
 /public/*/uploads

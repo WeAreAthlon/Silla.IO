@@ -3,37 +3,72 @@ attributes:
   general:
     meta:
       title     : General
-      icon      : picture
-      desc      : Mandatory asset data.
+      icon      : file
+      desc      : Mandatory media data.
     fields:
-      name:
-        title   : Name
+      title:
+        title   : Title
         type    : text
-        desc    : Real name of the user.
-        icon    : user
-        length  : 100
-        filter  : true
-      login_on:
-        title   : Last login
+        desc    : Title of the asset.
+        icon    : file
+        length  : 255
+      description:
+        title   : Description
         type    : datetime
-        desc    : Time of the last user login.
-        icon    : time
-        readonly: true
-        filter  : true
-      created_on:
-        title   : Registered on
-        type    : datetime
-        desc    : Date and time of registration.
-        icon    : time
-        readonly: true
+        desc    : Description of the asset.
+  details:
+    meta:
+      title     : Details
+      icon      : th
+      desc      : Additional data for the asset.
+    fields:
+      filename:
+        title   : File name
+        type    : text
+        desc    : Name of the asset file.
+      size:
+        title   : Size
+        type    : number
+        desc    : File size of the asset.
+      relative_path:
+        title   : Path
+        type    : text
+        desc    : Location of the asset.
+      mimetype:
+        title   : Type
+        type    : text
+        desc    : Mimetype of the asset.
       updated_on:
         title   : Updated on
         desc    : Date and time of last update.
         type    : datetime
         icon    : time
         readonly: true
-        list    : false
-        export  : false
+      created_on:
+        title   : Created on
+        type    : datetime
+        desc    : Date and time of creation.
+        icon    : time
+        readonly: true
+  meta:
+    meta:
+      title     : Meta
+      icon      : th
+      desc      : Additional meta data of the file.
+    fields:
+      meta:
+        title   : Updated on
+        desc    : Meta data.
+        type    : custom
+        readonly: true
+
+restrictions:
+  type:
+    - photo
+    - documents
+    - video
+    - archive
+    - audio
 
 messages:
   create:

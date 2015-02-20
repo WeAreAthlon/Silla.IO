@@ -10,8 +10,10 @@
 */
 
 namespace CMS\Models;
+
 use Core;
 use Core\Base;
+use CMS;
 
 /**
  * Medium class definition.
@@ -24,4 +26,41 @@ class Medium extends Base\Model
      * @var string
      */
     public static $tableName = 'media';
+
+    /**
+     * Whether the table we're looking at has a corresponding table, holding internationalized values.
+     *
+     * @var boolean
+     * @access public
+     * @static
+     */
+    public static $isI18n = true;
+
+    /**
+     * Before save Hook.
+     */
+    public function beforeSave()
+    {
+
+    }
+
+    /**
+     * After save Hook.
+     */
+    public function afterSave()
+    {
+
+    }
+
+    /**
+     * After delete Hook.
+     */
+    public function afterDelete()
+    {
+        /* Delete the asset from the storage */
+        try {
+            $storagePath = Core\Config()->getMediaStorageLocation() . CMS\Helpers\Media::getSavePath($this);
+            Core\Helpers\Directory::delete($storagePath);
+        } catch (\Exception $e) {}
+    }
 }

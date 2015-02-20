@@ -3,7 +3,7 @@
  * File Helper.
  *
  * @package    Silla.IO
- * @subpackage Core\Helpers;
+ * @subpackage Core\Helpers
  * @author     Krum Motsov <krum@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
@@ -20,14 +20,17 @@ class File
 {
     /**
      * @var array Errors container.
+     * @static
      */
     protected static $errors = array();
 
     /**
      * @var array Mime types list.
+     * @static
      */
-    public static $mimetypeList = array(
+    public static $mimeTypeList = array(
         '323' => 'text/h323',
+        'aac' => 'audio/aac',
         'acx' => 'application/internet-property-stream',
         'ai' => 'application/postscript',
         'aif' => 'audio/x-aiff',
@@ -103,6 +106,8 @@ class File
         'm13' => 'application/x-msmediaview',
         'm14' => 'application/x-msmediaview',
         'm3u' => 'audio/x-mpegurl',
+        'm4a' => 'audio/mp4',
+        'm4v' => 'video/mp4',
         'man' => 'application/x-troff-man',
         'mdb' => 'application/x-msaccess',
         'me' => 'application/x-troff-me',
@@ -114,6 +119,7 @@ class File
         'movie' => 'video/x-sgi-movie',
         'mp2' => 'video/mpeg',
         'mp3' => 'audio/mpeg',
+        'mp4' => 'video/mp4',
         'mpa' => 'video/mpeg',
         'mpe' => 'video/mpeg',
         'mpeg' => 'video/mpeg',
@@ -124,6 +130,7 @@ class File
         'mvb' => 'application/x-msmediaview',
         'nws' => 'message/rfc822',
         'oda' => 'application/oda',
+        'ogv' => 'video/ogg',
         'p10' => 'application/pkcs10',
         'p12' => 'application/x-pkcs12',
         'p7b' => 'application/x-pkcs7-certificates',
@@ -194,6 +201,7 @@ class File
         'vcf' => 'text/x-vcard',
         'vrml' => 'x-world/x-vrml',
         'wav' => 'audio/x-wav',
+        'webm' => 'video/webm',
         'wcm' => 'application/vnd.ms-works',
         'wdb' => 'application/vnd.ms-works',
         'wks' => 'application/vnd.ms-works',
@@ -218,6 +226,79 @@ class File
     );
 
     /**
+     * @var array MimeType groups.
+     * @static
+     */
+    private static $mediaMimeTypes = array(
+        'flash_video' => array('video/x-flv'),
+        'flash'       => array('application/x-shockwave-flash'),
+        'audio'       => array('audio/aac', 'audio/mp4', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm'),
+        'photo'       => array('image/jpeg', 'image/gif', 'image/png'),
+        'video'       => array('video/mp4', 'video/ogg', 'video/webm'),
+        'zip'         => array(
+            'application/x-compressed',
+            'application/x-zip-compressed',
+            'application/zip',
+            'multipart/x-zip'
+        ),
+        'gzip'        => array('application/x-gzip', 'multipart/x-gzip'),
+        'pdf'         => array('application/pdf'),
+        'ms_word'     => array('application/msword'),
+        'ms_excel'    => array(
+            'application/excel',
+            'application/vnd.ms-excel',
+            'application/x-excel',
+            'application/x-msexcel'
+        ),
+        'rtf'         => array(
+            'application/rtf',
+            'application/x-rtf',
+            'text/richtext',
+            'text/plain',
+            'text/rtf'
+        ),
+        /* composite types */
+        'documents'   => array('pdf', 'ms_word', 'ms_excel', 'rtf'),
+        'archive'     => array('zip', 'gzip'),
+        'banner'      => array('photo', 'flash'),
+        'newsletter_attachment' => array(
+            'pdf',
+            'ms_word',
+            'ms_excel',
+            'rtf',
+            'photo',
+            'flash',
+            'zip',
+            'gzip'
+        )
+    );
+
+    /**
+     * Retrieves MimeTypes for the provided media type.
+     *
+     * @param string $type Media type.
+     *
+     * @return array MimeType list.
+     */
+    public static function getMimeTypesForMediaType($type)
+    {
+        $validateAgainst = array();
+
+        /* Manage composite mime-types */
+        foreach (self::$mediaMimeTypes[$type] as $key) {
+            if (array_key_exists($key, self::$mediaMimeTypes)) {
+                $validateAgainst = array_merge($validateAgainst, self::$mediaMimeTypes[$key]);
+            }
+        }
+
+        if (!$validateAgainst) {
+            $validateAgainst = self::$mediaMimeTypes[$type];
+        }
+
+        return $validateAgainst;
+    }
+
+    /**
      * Write a string to a file.
      *
      * @param string $path    Full or relative path to file.
@@ -236,9 +317,7 @@ class File
             Directory::create(dirname($path));
         }
 
-        $result = file_put_contents($path, $content);
-
-        return $result;
+        return file_put_contents($path, $content);
     }
 
     /**
@@ -345,9 +424,9 @@ class File
      * @param array   $allowedTypes   Allowed MIME types of the file.
      * @param integer $maxAllowedSize Maximum allowed file size in kilobytes.
      *
-     * @uses self::validate To validate the file by MIME type and size.
-     * @uses Directory::create To create a directory for the file, if necessary.
-     * @uses self::processUpload To upload the file.
+     * @uses self::validate()      To validate the file by MIME type and size.
+     * @uses Directory::create()   To create a directory for the file, if necessary.
+     * @uses self::processUpload() To upload the file.
      *
      * @return boolean Result of the operation.
      */
@@ -359,15 +438,14 @@ class File
         array $allowedTypes = array(),
         $maxAllowedSize = 5120
     ) {
-        /* Validation process */
+        /* validate */
         $result = true;
-
         if (!$skipValidation) {
             $result = self::validate($file, $allowedTypes, $maxAllowedSize);
         }
 
         if ($result) {
-            /* Create the directory if it does not exists */
+            /* create the directory if it does not exists */
             if (!is_dir($directory)) {
                 $result = (Directory::create($directory)) ? self::processUpload($file, $directory, $saveName) : false;
             } else {
@@ -379,18 +457,17 @@ class File
     }
 
     /**
-     * Validates a file by allowed size and MIME types.
+     * Validates a file by media types and allowed size.
      *
      * @param array   $file           Value from $_FILES.
-     * @param array   $allowedTypes   Allowed MIME types of the file.
+     * @param array   $allowedTypes   Allowed media types of the file.
      * @param integer $maxAllowedSize Maximum allowed file size in kilobytes.
      *
-     * @uses self::isValidMimeType To check if file is one of the allowed MIME types.
+     * @uses self::isValidMimeType() To check if file is one of the allowed MIME types.
      *
      * @todo Distinct the errors from size and type.
      *
-     * @return boolean TRUE if file is within allowed max size
-     *      and MIME types, FALSE otherwise.
+     * @return boolean TRUE if file is within allowed max size and MIME types, FALSE otherwise.
      */
     public static function validate(array $file, array $allowedTypes, $maxAllowedSize)
     {
@@ -422,78 +499,24 @@ class File
     /**
      * Checks if a file is of certain MIME type.
      *
-     * @param array  $file Value from $_FILES.
-     * @param string $type MIME type to check against.
+     * @param array $file Value from $_FILES.
+     * @param mixed $type Media type to check against.
      *
-     * @uses self::getMimeType To retrieve the MIME type of the file.
+     * @uses self::getMimeType() To retrieve the MIME type of the file.
      *
      * @return boolean Result of the operation.
      */
     private static function isValidMimeType(array $file, $type)
     {
-        $valid_mime_types = array(
-            'flash_video' => array('video/x-flv'),
-            'flash'       => array('application/x-shockwave-flash'),
-            'photo'       => array('image/jpeg', 'image/gif', 'image/png'),
-            'zip'         => array(
-                'application/x-compressed',
-                'application/x-zip-compressed',
-                'application/zip',
-                'multipart/x-zip'
-            ),
-            'gzip'        => array('application/x-gzip', 'multipart/x-gzip'),
-            'pdf'         => array('application/pdf'),
-            'ms_word'     => array('application/msword'),
-            'ms_excel'    => array(
-                'application/excel',
-                'application/vnd.ms-excel',
-                'application/x-excel',
-                'application/x-msexcel'
-            ),
-            'rtf'         => array(
-                'application/rtf',
-                'application/x-rtf',
-                'text/richtext',
-                'text/plain',
-                'text/rtf'
-            ),
-            /* composite types */
-            'documents'   => array('pdf', 'ms_word', 'ms_excel', 'rtf'),
-            'archive'     => array('zip', 'gzip'),
-            'banner'      => array('photo', 'flash'),
-            'newsletter_attachment' => array(
-                'pdf',
-                'ms_word',
-                'ms_excel',
-                'rtf',
-                'photo',
-                'flash',
-                'zip',
-                'gzip'
-            )
-        );
-
         if (!is_file($file['tmp_name'])) {
             return false;
         }
 
-        /* Get the mime type of the file */
+        /* Get the MIME type of the file */
         $mimeType = self::getMimeType($file);
+        $possibleValues = self::getMimeTypesForMediaType($type);
 
-        $validateAgainst = array();
-
-        /* Manage composite mime-types */
-        foreach ($validMimeTypes[$type] as $key) {
-            if (array_key_exists($key, $validMimeTypes)) {
-                $validateAgainst = array_merge($validateAgainst, $validMimeTypes[$key]);
-            }
-        }
-
-        if (!$validateAgainst) {
-            $validateAgainst = $validMimeTypes[$type];
-        }
-
-        return in_array($mimeType, $validateAgainst, true);
+        return in_array($mimeType, $possibleValues, true);
     }
 
     /**
@@ -502,8 +525,7 @@ class File
      * @param array $file Value from $_FILES.
      *
      * @throws \InvalidArgumentException If path does not lead to a file.
-     * @see    http://php.net/manual/en/fileinfo.installation.php
-     *      If using PHP versions prior to 5.3+.
+     * @see    http://php.net/manual/en/fileinfo.installation.php If using PHP versions prior to 5.3+.
      *
      * @return string MIME Type.
      */
@@ -521,12 +543,12 @@ class File
             $mimeType = $fileInfo->buffer(file_get_contents($file['tmp_name']));
         } elseif (function_exists('finfo_open')) {
             /* for >= PHP 5.3.0 and activated PHP extension fileinfo procedural variation */
-            $fhandle = finfo_open(FILEINFO_MIME);
-            $mimeType = finfo_file($fhandle, $file['tmp_name']);
+            $fileHandle = finfo_open(FILEINFO_MIME);
+            $mimeType = finfo_file($fileHandle, $file['tmp_name']);
         } else {
             /* for < PHP 5.3.0 or not activated fileinfo */
             $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-            $mimeType = self::$mimetypeList[$extension];
+            $mimeType = self::$mimeTypeList[$extension];
         }
 
         if ($mimeType && ($pos = strpos($mimeType, ' '))) {
@@ -539,11 +561,23 @@ class File
     }
 
     /**
+     * Gets the MIME type of a file.
+     *
+     * @param string $mimeType MIME type to check.
+     *
+     * @return string Media Type.
+     */
+    public static function getMediaTypeByMimeType($mimeType)
+    {
+        return array_search($mimeType, self::$mimeTypeList);
+    }
+
+    /**
      * Uploads a file.
      *
-     * @param array  $file      Value from the $_FILES array.
-     * @param string $directory Full path to the storage location.
-     * @param string $saveName  Name of the file in the storage location.
+     * @param array  $file      Value from $_FILES.
+     * @param string $directory Full path to storage.
+     * @param string $saveName  Filename in storage.
      *
      * @throws \InvalidArgumentException If a non-existing directory was supplied.
      * @throws \UnexpectedValueException If errors occurred while uploading file.
@@ -554,7 +588,7 @@ class File
     {
         $saveName = $saveName ? $saveName : self::filterFilename($file['name']);
 
-        /* Check in case Directory::create didn't work */
+        /* Check in case Directory::create() did not work */
         if (!is_dir($directory)) {
             throw new \InvalidArgumentException('A non-existing directory was supplied: ' . $directory);
         }
@@ -619,17 +653,17 @@ class File
      * @param string $filename Name of the file.
      *
      * @todo Perhaps use is_uploaded_file().
-     * But accepts tmp_name only.
+     *  But accepts tmp_name only.
      *
      * @return boolean Result of the operation.
      */
     public static function uploadedFileExists($filename)
     {
         return isset($_FILES[$filename]) &&
-            is_array($_FILES[$filename]) &&
-            !empty($_FILES[$filename]['name']) &&
-            !empty($_FILES[$filename]['tmp_name']) &&
-            !empty($_FILES[$filename]['size']);
+        is_array($_FILES[$filename]) &&
+        !empty($_FILES[$filename]['name']) &&
+        !empty($_FILES[$filename]['tmp_name']) &&
+        !empty($_FILES[$filename]['size']);
     }
 
     /**
@@ -654,7 +688,7 @@ class File
      *
      * @param string $path File path.
      *
-     * @uses Core\Base\Configuration::paths To get root path of the framework.
+     * @uses Core\Base\Configuration::paths To get root path of framework.
      *
      * @return string Full path.
      */
@@ -673,7 +707,7 @@ class File
      *
      * @return integer Size in bytes.
      */
-    public static function getMaximumUploadSize()
+    public static function getMaxUploadSize()
     {
         return min(
             Core\Utils::convertPHPSizeToBytes(ini_get('post_max_size')),

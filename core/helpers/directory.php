@@ -55,16 +55,15 @@ class Directory
     public static function delete($path)
     {
         $success = true;
-        $rootPath = Core\Config()->paths('root');
         $path = File::getRestrictedPath($path);
 
-        if (empty($path) || !is_dir($rootPath . $path)) {
+        if (empty($path) || !is_dir($path)) {
             throw new \InvalidArgumentException('No directory with the given path found.');
         }
 
         /* Get all items in the specified diectory */
-        $items = glob($rootPath . $path . DIRECTORY_SEPARATOR . '*');
-        $hiddenItems = glob($rootPath . $path . DIRECTORY_SEPARATOR . '.*');
+        $items = glob($path . DIRECTORY_SEPARATOR . '*');
+        $hiddenItems = glob($path . DIRECTORY_SEPARATOR . '.*');
         $fsItems = $items || $hiddenItems ? array_merge((array)$items, (array)$hiddenItems) : false;
 
         if ($fsItems) {
@@ -84,7 +83,7 @@ class Directory
             }
         }
 
-        return $success && is_dir($rootPath . $path) ? rmdir($rootPath . $path) : $success;
+        return $success && is_dir($path) ? rmdir($path) : $success;
     }
 
     /**
