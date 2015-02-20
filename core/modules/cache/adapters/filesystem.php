@@ -62,16 +62,13 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
                 list($expire, $value) = json_decode($content, true);
             }
         } catch (\Exception $e) {
-            var_log($e->getMessage());
             return null;
         }
 
         if ($expire && $expire < time()) {
             try {
                 File::delete($file);
-            } catch (\Exception $e) {
-                var_log($e->getMessage());
-            }
+            } catch (\Exception $e) {}
 
             return null;
         }

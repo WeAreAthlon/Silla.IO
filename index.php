@@ -43,7 +43,7 @@ try {
     Config()->setMode($mode);
 
     /**
-     * Setup Router varibles.
+     * Setup Router variables.
      */
     $routes  = new Router\Routes($mode);
     $request = new Router\Request($mode, Router\Router::parseRequestQueryString($requestString, $routes), $GLOBALS);
