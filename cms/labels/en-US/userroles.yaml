@@ -33,14 +33,6 @@ attributes:
         readonly : true
         export   : false
         sort     : false
-      current_password:
-        title   : Current Password
-        type    : password
-        desc    : To ensure this action you must enter your current <abbr href="#" data-toggle="tooltip" data-placement="right" title="Password of the logged in user">password</abbr>.
-        list    : false
-        length  : 100
-        export  : false
-        hidden  : true
   permissions:
     meta:
       title     : Permissions
@@ -53,6 +45,14 @@ attributes:
         type     : custom
         list     : false
         export   : false
+      current_password:
+        title   : Current Password
+        type    : password
+        desc    : To ensure this action you must enter your current <abbr href="#" data-toggle="tooltip" data-placement="right" title="Password of the logged in user">password</abbr>.
+        list    : false
+        length  : 100
+        export  : false
+        hidden  : true
 
 messages:
   create:
