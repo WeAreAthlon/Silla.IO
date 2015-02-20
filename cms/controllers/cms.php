@@ -113,7 +113,7 @@ class CMS extends Core\Base\Resource
                 Core\Session()->set('user_logged', 1);
                 Core\Session()->remove('login_error');
 
-                /* Regenrate CSRF token for prevent fixation */
+                /* Regenerate CSRF token for prevent fixation */
                 Core\Session()->remove('_token');
                 $request->regenerateToken();
 

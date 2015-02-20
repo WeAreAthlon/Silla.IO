@@ -172,7 +172,7 @@ final class Utils
      *
      * @return string The result from the command execution.
      */
-    public static function execute_shell_command($command)
+    public static function executeShellCommand($command)
     {
         /* remove newlines and convert single quotes to double to prevent errors */
         $command = str_replace(array("\n", "'"), array('', '"'), $command);
@@ -215,8 +215,8 @@ final class Utils
      *
      * @return array Reformatted array.
      */
-    public static function formatArrayOfFiles(array &$files) {
-
+    public static function formatArrayOfFiles(array &$files)
+    {
         $result = array();
         $count = count($files['name']);
         $keys = array_keys($files);
@@ -241,7 +241,7 @@ final class Utils
      */
     public static function convertPHPSizeToBytes($sSize)
     {
-        if ( is_numeric( $sSize) ) {
+        if (is_numeric($sSize)) {
             return $sSize;
         }
 
@@ -249,14 +249,19 @@ final class Utils
         $iValue = substr($sSize, 0, -1);
 
         switch (strtoupper($sSuffix)) {
+            /* Fall through the next value */
             case 'P':
                 $iValue *= 1024;
+            /* Fall through the next value */
             case 'T':
                 $iValue *= 1024;
+            /* Fall through the next value */
             case 'G':
                 $iValue *= 1024;
+            /* Fall through the next value */
             case 'M':
                 $iValue *= 1024;
+            /* Fall through the next value */
             case 'K':
                 $iValue *= 1024;
                 break;
