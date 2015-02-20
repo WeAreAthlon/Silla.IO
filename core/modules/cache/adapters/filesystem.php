@@ -68,7 +68,8 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
         if ($expire && $expire < time()) {
             try {
                 File::delete($file);
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
 
             return null;
         }
