@@ -506,7 +506,7 @@ class File
      *
      * @return string MIME Type.
      */
-    public static function getMimeType(array $file)
+    private static function getMimeType(array $file)
     {
         $mimeType = null;
 
@@ -546,6 +546,7 @@ class File
      *
      * @throws \InvalidArgumentException If a non-existing directory was supplied.
      * @throws \UnexpectedValueException If errors occured while uploading file.
+     * @uses self::filterFilename To filter the filename used in storage.
      *
      * @return boolean Result of the operation.
      */
@@ -558,9 +559,9 @@ class File
             throw new \InvalidArgumentException('A non-existing directory was supplied: ' . $directory);
         }
 
-        $path = rtrim($directory, '\/') . DIRECTORY_SEPARATOR . $saveName;
+        $destination = rtrim($directory, '\/') . DIRECTORY_SEPARATOR . $saveName;
 
-        if (!$result = move_uploaded_file($file['tmp_name'], $path)) {
+        if (!$result = move_uploaded_file($file['tmp_name'], $destination)) {
             throw new \UnexpectedValueException('Errors occured while uploading file. Result was: ' . $result);
         }
 

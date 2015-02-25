@@ -86,7 +86,7 @@ class FileTest extends PHPUnit_Framework_TestCase
     public function testUploadedFileDoesNotExist()
     {
         unset($_FILES['test']['name']);
-        $this->assertFalse(File::uploadedFileExists('test'));
+        $this->assertFalse(File::uploadedFileExists($this->basename));
     }
 
     /**
