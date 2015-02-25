@@ -1,18 +1,18 @@
 <?php
 /**
- * Silla Boot loader and entry point.
+ * Silla.IO Boot loader and entry point.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace Core;
 
 if (version_compare(PHP_VERSION, '5.3.7', '<')) {
-    exit("Sorry, Silla framework will only run on PHP version 5.3.7 or greater!\n");
+    exit("Sorry, Silla.IO framework will only run on PHP version 5.3.7 or greater!\n");
 }
 
 if (!defined('SILLA_ENVIRONMENT')) {

@@ -5,7 +5,7 @@
  * This file is part of the Akelos Framework.
  * See LICENSE and CREDITS for details.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Vendor\Athlon
  * @author     Bermi Ferrer Martinez <bermi a.t bermilabs c.om>
  * @copyright  Copyright (c) 2015, Bermi Ferrer Martinez

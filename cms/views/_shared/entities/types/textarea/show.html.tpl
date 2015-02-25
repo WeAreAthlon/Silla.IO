@@ -1,1 +1,1 @@
-{$resource->$field}
+{$attr.default}

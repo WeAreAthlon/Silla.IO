@@ -2,11 +2,11 @@
 /**
  * Router class definition.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core\Modules\Router
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace Core\Modules\Router;
@@ -152,9 +152,10 @@ final class Router
             }
 
             $mode = isset($options['_mode']) ? Core\Config()->modes($options['_mode']) : $this->request->mode();
+            $mode['url'] = $mode['url'] ? $mode['url'] . Core\Config()->ROUTER['separator'] : '';
 
             $_cache[$_cache_key] =
-                $_prefix . $mode['url'] . Core\Config()->ROUTER['separator'] . rtrim(
+                $_prefix . $mode['url'] . rtrim(
                     implode(
                         Core\Config()->ROUTER['separator'],
                         $route['pattern']
@@ -281,7 +282,7 @@ final class Router
     {
         if (Core\Config()->mode('url')) {
             $httpRequestString = trim(
-                Core\Utils::replaceFirstOccurance(Core\Config()->mode('url'), '', $httpRequestString),
+                Core\Utils::replaceFirstOccurrence(Core\Config()->mode('url'), '', $httpRequestString),
                 Core\Config()->ROUTER['separator']
             );
         } else {

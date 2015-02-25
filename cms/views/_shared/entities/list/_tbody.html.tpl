@@ -58,7 +58,7 @@
 {if $resources->getCount()}
     <tr>
         <td colspan="{1 + $fields_to_display|@count}" class="table-summary text-thin accent text-muted">
-            {assign var=per_page value={$_get.query.pagination.limit}|default:current($_labels.pagination.limits)}
+            {assign var=per_page value={$_get.query.pagination.limit|default:current($_labels.pagination.limits)}}
             {$_labels.datatable.totals|sprintf:{max(($resources->paginate()->current()->pageNumber - 1) * $per_page + 1, 1)}:{min($resources->paginate()->current()->pageNumber * $per_page, $resources->paginate()->totalItems())}:{$resources->paginate()->totalItems()}}
         </td>
     </tr>

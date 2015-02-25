@@ -2,14 +2,14 @@
 /**
  * {$controller|camelize} Controller.
  *
- * @package    Silla
- * @subpackage {$mode}\Controllers
- * @author     Plamen Nikolov <plamen@athlonsofia.com>
+ * @package    Silla.IO
+ * @subpackage {$mode|upper}\Controllers
+ * @author     Author <author@website.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
-namespace {$mode}\Controllers;
+namespace {$mode|upper}\Controllers;
 use Core;
 use Core\Base;
 use Core\Modules\Router\Request;

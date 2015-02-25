@@ -1,11 +1,11 @@
 /**
  * DataTable component.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 /**
@@ -18,21 +18,28 @@ var DataTable = function(table) {
     'use strict';
     var self = this;
 
-    self.table       = table;
+    self.table = table;
+
+    /*
+     * Unique identifier of the current user session.
+     * Useful when more than one user is using the same browser(sessionStorage)
+     */
+    self.session = Silla.token;
+
     self.preferences = window.sessionStorage;
 
     var preferences = {};
 
-    if (self.preferences.getItem('sorting')) {
-        preferences['sorting'] = JSON.parse(self.preferences.getItem('sorting'))[table.data('controller')] || null;
+    if (self.preferences.getItem(self.session + 'sorting')) {
+        preferences['sorting'] = JSON.parse(self.preferences.getItem(self.session + 'sorting'))[table.data('controller')] || null;
     }
 
-    if (self.preferences.getItem('pagination')) {
-        preferences['pagination'] = JSON.parse(self.preferences.getItem('pagination'))[table.data('controller')] || null;
+    if (self.preferences.getItem(self.session + 'pagination')) {
+        preferences['pagination'] = JSON.parse(self.preferences.getItem(self.session + 'pagination'))[table.data('controller')] || null;
     }
 
-    if (self.preferences.getItem('filtering')) {
-        preferences['filtering'] = JSON.parse(self.preferences.getItem('filtering'))[table.data('controller')] || null;
+    if (self.preferences.getItem(self.session + 'filtering')) {
+        preferences['filtering'] = JSON.parse(self.preferences.getItem(self.session + 'filtering'))[table.data('controller')] || null;
     }
 
     self.params = {
@@ -97,7 +104,7 @@ DataTable.prototype.enable = function(functionality) {
                 self.params.sorting.field = handler.parent().data('field');
 
                 preferences[self.table.data('controller')] = self.params.sorting;
-                self.preferences.setItem('sorting', JSON.stringify(preferences));
+                self.preferences.setItem(self.session + 'sorting', JSON.stringify(preferences));
 
                 $('.sort, .sort-btn', self.table).removeClass('asc desc accent-cta glyphicon-chevron-down glyphicon-chevron-up');
 
@@ -116,7 +123,7 @@ DataTable.prototype.enable = function(functionality) {
                 self.params.pagination.page = handler.data('page');
 
                 preferences[self.table.data('controller')] = self.params.pagination;
-                self.preferences.setItem('pagination', JSON.stringify(preferences));
+                self.preferences.setItem(self.session + 'pagination', JSON.stringify(preferences));
 
                 if ( !handler_wrapper.hasClass('disabled') ) {
                     self._populate();
@@ -194,7 +201,7 @@ DataTable.prototype.enable = function(functionality) {
                 self.params.pagination.page = 1;
 
                 preferences[self.table.data('controller')] = self.params.filtering;
-                self.preferences.setItem('filtering', JSON.stringify(preferences));
+                self.preferences.setItem(self.session + 'filtering', JSON.stringify(preferences));
 
                 self._populate();
 
@@ -232,7 +239,7 @@ DataTable.prototype.enable = function(functionality) {
 
                     var preferences = {};
                     preferences[self.table.data('controller')] = self.params.filtering;
-                    self.preferences.setItem('filtering', JSON.stringify(preferences));
+                    self.preferences.setItem(self.session + 'filtering', JSON.stringify(preferences));
 
                     self._populate();
                 }, default_values);
@@ -249,7 +256,7 @@ DataTable.prototype.enable = function(functionality) {
 
                 var preferences = {};
                 preferences[self.table.data('controller')] = self.params.pagination;
-                self.preferences.setItem('pagination', JSON.stringify(preferences));
+                self.preferences.setItem(self.session + 'pagination', JSON.stringify(preferences));
 
                 self._populate();
             });

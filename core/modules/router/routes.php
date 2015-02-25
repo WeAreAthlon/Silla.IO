@@ -2,11 +2,11 @@
 /**
  * Routes Routes.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core\Modules\Router
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace Core\Modules\Router;
@@ -27,7 +27,7 @@ final class Routes
     private $routes = array();
 
     /**
-     * Representation of the Silla mode.
+     * Representation of the Silla.IO mode.
      *
      * @var array
      */
@@ -36,7 +36,7 @@ final class Routes
     /**
      * Init Routes.
      *
-     * @param array $mode Silla mode.
+     * @param array $mode Silla.IO mode.
      *
      * @uses Core\Cache()
      *
@@ -212,7 +212,7 @@ final class Routes
     /**
      * Load router routing routes.
      *
-     * @param array $mode Silla mode.
+     * @param array $mode Silla.IO mode.
      *
      * @access private
      * @static

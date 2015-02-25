@@ -2,11 +2,11 @@
 /**
  * Router Request.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core\Modules\Router
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace Core\Modules\Router;
@@ -117,7 +117,7 @@ final class Request
     /**
      * Retrieves the GET request params - $context[_GET] contents.
      *
-     * @param string $key Name of the paramater(optional).
+     * @param string $key Name of the parameter(optional).
      *
      * @access public
      *
@@ -135,7 +135,7 @@ final class Request
     /**
      * Retrieves the POST request params - $context[_POST] contents.
      *
-     * @param string $key Name of the paramater(optional).
+     * @param string $key Name of the parameter(optional).
      *
      * @access public
      *
@@ -151,9 +151,27 @@ final class Request
     }
 
     /**
+     * Retrieves the FILES request params - $context[_FILES] contents.
+     *
+     * @param string $key Name of the parameter(optional).
+     *
+     * @access public
+     *
+     * @return mixed
+     */
+    public function files($key = null)
+    {
+        if ($key) {
+            return isset($this->context['_FILES'][$key]) ? $this->context['_FILES'][$key] : null;
+        }
+
+        return $this->context['_FILES'];
+    }
+
+    /**
      * Retrieves the Request meta params - $context[_SERVER] contents.
      *
-     * @param string $key Name of the paramater(optional).
+     * @param string $key Name of the parameter(optional).
      *
      * @return mixed
      */
@@ -169,7 +187,7 @@ final class Request
     /**
      * Retrieves all Request variables params - $context[_REQUEST] contents.
      *
-     * @param string $key Name of the paramater(optional).
+     * @param string $key Name of the parameter(optional).
      *
      * @return mixed
      */
@@ -185,7 +203,7 @@ final class Request
     /**
      * Retrieves all Request variables params - $context[_COOKIE] contents.
      *
-     * @param string $key Name of the paramater(optional).
+     * @param string $key Name of the parameter(optional).
      *
      * @return mixed
      */

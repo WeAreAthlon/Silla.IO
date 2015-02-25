@@ -164,6 +164,9 @@ js:
    general : General Server Error
    access  : Permission denied
 
+credits:
+  author: powered by
+
 navigation_groups:
   cms_settings:
     title: CMS Settings

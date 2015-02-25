@@ -2,11 +2,11 @@
 /**
  * Users Controller.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage CMS\Controllers;
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace CMS\Controllers;
@@ -49,7 +49,7 @@ class Users extends CMS
             if ($user->save($data)) {
                 /* Reloads user info */
                 $resource = new $this->model;
-                $resource = $resource->find()->where('id = ?', array($user->id))->first();
+                $resource = $resource::find()->where('id = ?', array($user->id))->first();
                 Core\Session()->set('user_info', rawurlencode(serialize($resource)));
             }
 
@@ -106,7 +106,7 @@ class Users extends CMS
         /* Reloads user info */
         if ($resource->id === $this->user->id) {
             $resource = new $this->model;
-            $resource = $resource->find()->where('id = ?', array($this->user->id))->first();
+            $resource = $resource::find()->where('id = ?', array($this->user->id))->first();
             Core\Session()->set('user_info', rawurlencode(serialize($resource)));
         }
 

@@ -2,11 +2,11 @@
 /**
  * Timezone Awareness Decorator.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core\Modules\DB\Decorators
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace Core\Modules\DB\Decorators;
@@ -54,21 +54,16 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
      * Removes timezone effect.
      *
      * @param Base\Model $resource Currently processed resource.
-     * @param array      $params   Additional parameters.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function remove(Base\Model $resource, array $params)
+    public static function remove(Base\Model $resource)
     {
-        if (date_default_timezone_get() !== 'UTC' && $params && is_array($params)) {
-            foreach ($params as $field => $value) {
-                if ($value && in_array($field, self::$timezoneAwareFields, true)) {
-                    $resource->{$field} = Helpers\DateTime::removeTimezoneOffset($value);
-                }
-            }
+        if (date_default_timezone_get() !== 'UTC') {
+            self::removeTimezoneEffect($resource);
         }
     }
 
@@ -90,7 +85,7 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
     }
 
     /**
-     * Calculates timezone offset.
+     * Calculates timezone offset which needs to be added.
      *
      * @param Base\Model $resource Currently processed resource.
      *
@@ -104,6 +99,25 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
         foreach (self::$timezoneAwareFields as $datetime_field) {
             if ($resource->{$datetime_field}) {
                 $resource->{$datetime_field} = Helpers\DateTime::applyTimezoneOffset($resource->{$datetime_field});
+            }
+        }
+    }
+
+    /**
+     * Calculates timezone offset which needs to be removed.
+     *
+     * @param Base\Model $resource Currently processed resource.
+     *
+     * @static
+     * @access private
+     *
+     * @return void
+     */
+    private static function removeTimezoneEffect(Base\Model $resource)
+    {
+        foreach (self::$timezoneAwareFields as $datetime_field) {
+            if ($resource->{$datetime_field}) {
+                $resource->{$datetime_field} = Helpers\DateTime::removeTimezoneOffset($resource->{$datetime_field});
             }
         }
     }

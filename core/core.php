@@ -2,11 +2,11 @@
 /**
  * Core. Setup all settings and configurations for the application.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 /**

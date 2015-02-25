@@ -1,14 +1,14 @@
 <?php
 /**
- * Silla HTTP Requests dispatcher loader.
+ * Silla.IO HTTP Requests dispatcher loader.
  *
  * Execution entry point.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace Core;
@@ -17,7 +17,7 @@ use Core;
 use Core\Modules\Router;
 
 /**
- * Define Silla framework variables.
+ * Define Silla.IO framework variables.
  */
 define(
     'SILLA_ENVIRONMENT',
@@ -25,7 +25,7 @@ define(
 );
 
 /**
- * Require Silla boot loader.
+ * Require Silla.IO boot loader.
  */
 require __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
 
@@ -37,13 +37,13 @@ unset($_GET['_path']);
 
 try {
     /**
-     * Detect Silla Mode.
+     * Detect Silla.IO Mode.
      */
     $mode = Router\Router::getMode($requestString);
     Config()->setMode($mode);
 
     /**
-     * Setup Router varibles.
+     * Setup Router variables.
      */
     $routes  = new Router\Routes($mode);
     $request = new Router\Request($mode, Router\Router::parseRequestQueryString($requestString, $routes), $GLOBALS);

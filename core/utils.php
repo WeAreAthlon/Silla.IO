@@ -2,11 +2,11 @@
 /**
  * Utility functions for common use.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace Core;
@@ -162,6 +162,34 @@ final class Utils
     }
 
     /**
+     * Executes a shell command.
+     *
+     * @param string $command Shell code to execute.
+     *
+     * @access public
+     * @see    putenv
+     * @static
+     *
+     * @return string The result from the command execution.
+     */
+    public static function executeShellCommand($command)
+    {
+        /* remove newlines and convert single quotes to double to prevent errors */
+        $command = str_replace(array("\n", "'"), array('', '"'), $command);
+
+        /* replace multiple spaces with one */
+        $command = preg_replace('#(\s){2,}#is', ' ', $command);
+
+        /* escape shell meta characters */
+        $command = escapeshellcmd($command);
+
+        /* Export used system paths */
+        putenv('PATH="/usr/lib/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$PATH"');
+
+        return shell_exec($command);
+    }
+
+    /**
      * Replaces first occurrence of the search string with the replacement string.
      *
      * @param string $search  The value being searched for, otherwise known as the needle.
@@ -170,7 +198,7 @@ final class Utils
      *
      * @return string
      */
-    public static function replaceFirstOccurance($search, $replace, $subject)
+    public static function replaceFirstOccurrence($search, $replace, $subject)
     {
         $pos = strpos($subject, $search);
         if ($pos !== false) {
@@ -178,5 +206,67 @@ final class Utils
         }
 
         return $subject;
+    }
+
+    /**
+     * Convert the $_FILES array to the cleaner (IMHO) array.
+     *
+     * @param array $files Array of files ($_FILES compatible array).
+     *
+     * @return array Reformatted array.
+     */
+    public static function formatArrayOfFiles(array &$files)
+    {
+        $result = array();
+        $count = count($files['name']);
+        $keys = array_keys($files);
+
+        for ($i = 0; $i < $count; $i++) {
+            foreach ($keys as $key) {
+                $result[$i][$key] = $files[$key][$i];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Convert PHP defined Size to Bytes.
+     *
+     * This function transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in this case).
+     *
+     * @param mixed $sSize Size notation.
+     *
+     * @return integer
+     */
+    public static function convertPHPSizeToBytes($sSize)
+    {
+        if (is_numeric($sSize)) {
+            return $sSize;
+        }
+
+        $sSuffix = substr($sSize, -1);
+        $iValue = substr($sSize, 0, -1);
+
+        switch (strtoupper($sSuffix)) {
+            /* Fall through the next value */
+            case 'P':
+                $iValue *= 1024;
+            /* Fall through the next value */
+            case 'T':
+                $iValue *= 1024;
+            /* Fall through the next value */
+            case 'G':
+                $iValue *= 1024;
+            /* Fall through the next value */
+            case 'M':
+                $iValue *= 1024;
+            /* Fall through the next value */
+            case 'K':
+                $iValue *= 1024;
+                break;
+        }
+
+        return $iValue;
     }
 }

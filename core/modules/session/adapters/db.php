@@ -2,11 +2,11 @@
 /**
  * Session handler wrapping the $_SESSION using the database storage engine.
  *
- * @package    Silla
+ * @package    Silla.IO
  * @subpackage Core\Modules\Session\Adapters
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
- * @license    http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
 namespace Core\Modules\Session\Adapters;
