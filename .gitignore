@@ -14,12 +14,6 @@ Thumbs.db
 # Ignore all log files and temp files.
 /temp
 
-# Ignore all build files and configurations
-/build/*
-!/build/configurations
-!/build/build.sh
-!/build/precommit.sh
-
 # Ignore front-end vendor assets
 /*/assets/vendor
 
