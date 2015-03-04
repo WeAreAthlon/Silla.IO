@@ -13,7 +13,7 @@ namespace CMS\Models;
 
 use Core;
 use Core\Base;
-use CMS;
+use Core\Helpers;
 
 /**
  * Medium class definition.
@@ -24,6 +24,8 @@ class Medium extends Base\Model
      * Table storage name.
      *
      * @var string
+     * @static
+     * @access public
      */
     public static $tableName = 'media';
 
@@ -37,19 +39,92 @@ class Medium extends Base\Model
     public static $isI18n = true;
 
     /**
-     * Before save Hook.
+     * Asset file details.
+     *
+     * $_FILES[file] like array. The file should be already uploaded on the server.
+     *
+     * @var array
+     * @access protected
      */
-    public function beforeSave()
-    {
+    protected $processedAssetFile;
 
+    /**
+     * Constructor method.
+     *
+     * @param array $fields Array of fields and their values.
+     */
+    public function __construct(array $fields = array())
+    {
+        if (isset($fields['tmp_name']) && is_uploaded_file($fields['tmp_name'])) {
+            $this->processedAssetFile = $fields;
+
+            $cmsUser = Core\Registry()->get('current_user');
+            $fileName = Helpers\Media::generateFileName($this->processedAssetFile);
+            $fields = array(
+                'cmsuser_id' => $cmsUser->id,
+                'size'       => $this->processedAssetFile['size'],
+                'filename'   => $fileName,
+                'mimetype'   => Helpers\File::getMimeType($this->processedAssetFile),
+                'title'      => $fileName,
+            );
+        }
+
+        parent::__construct($fields);
+    }
+    /**
+     * Before validate Hook.
+     */
+    public function beforeValidate() {
+        $limitations = array(
+            'size' => Core\Helpers\File::getMaxUploadSize(),
+            'type' => Core\Helpers\Media::getSupportedMediaTypes(),
+        );
+
+        if ($this->processedAssetFile) {
+            if (!Helpers\File::isValidBySize($this->processedAssetFile, $limitations['size'])) {
+                $this->errors['size'] = 'max_length_exceeded';
+            }
+
+            if (!Helpers\File::isValidByType($this->processedAssetFile, $limitations['type'])) {
+                $this->errors['mimetype'] = 'invalid_format';
+            }
+        }
     }
 
     /**
-     * After save Hook.
+     * After validate Hook.
      */
-    public function afterSave()
+    public function afterValidate()
     {
+        if (!$this->errors && $this->processedAssetFile) {
+            $storagePath = Core\Config()->getMediaStorageLocation() . Helpers\Media::getSavePath($this->id);
 
+            /* Move the file to the storage path destination */
+            if( !Helpers\File::upload($this->processedAssetFile, $storagePath, $this->filename, true)) {
+                $this->errors['filename'] = 'denied';
+            }
+        }
+    }
+
+    /**
+     * Before validate Hook.
+     *
+     * @TODO extract media meta data.
+     */
+    public function beforeSave()
+    {
+        $storagePath = Core\Config()->getMediaStorageLocation() . Helpers\Media::getSavePath($this->id);
+        $file = $storagePath . $this->filename;
+        list($this->width, $this->height) = getimagesize($file);
+
+        switch ($this->mimetype) {
+            case 'image/jpeg':
+
+                break;
+            case 'image/gif':
+
+                break;
+        }
     }
 
     /**
@@ -59,8 +134,9 @@ class Medium extends Base\Model
     {
         /* Delete the asset from the storage */
         try {
-            $storagePath = Core\Config()->getMediaStorageLocation() . CMS\Helpers\Media::getSavePath($this);
-            Core\Helpers\Directory::delete($storagePath);
-        } catch (\Exception $e) {}
+            $storagePath = Core\Config()->getMediaStorageLocation() . Helpers\Media::getSavePath($this->id);
+            Helpers\Directory::delete($storagePath);
+        } catch (\Exception $e) {
+        }
     }
 }

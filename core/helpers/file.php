@@ -335,7 +335,7 @@ class File
         $path = self::getFullPath($path);
 
         if (!is_file($path)) {
-            throw new \InvalidArgumentException('Given path does not lead to a file.');
+            throw new \InvalidArgumentException('Given path does not lead to a file. Path: ' . $path);
         }
 
         return file_get_contents($path);
@@ -388,7 +388,7 @@ class File
         $path = self::getFullPath($path);
 
         if (!is_file($path)) {
-            throw new \InvalidArgumentException('Given path does not lead to a file.');
+            throw new \InvalidArgumentException('Given path does not lead to a file. Path: ' . $path);
         } else {
             return unlink($path);
         }
@@ -463,25 +463,50 @@ class File
      * @param array   $allowedTypes   Allowed media types of the file.
      * @param integer $maxAllowedSize Maximum allowed file size in kilobytes.
      *
-     * @uses self::isValidMimeType() To check if file is one of the allowed MIME types.
+     * @uses self::isValidBySize() To check if file is within the allowed file size.
+     * @uses self::isValidByType() To check if file is one of the allowed Media types.
      *
-     * @todo Distinct the errors from size and type.
-     *
-     * @return boolean TRUE if file is within allowed max size and MIME types, FALSE otherwise.
+     * @return boolean TRUE if file is within allowed max size and Media types, FALSE otherwise.
      */
     public static function validate(array $file, array $allowedTypes, $maxAllowedSize)
     {
-        $isValidMimeType = false;
-        $result = false;
+        return self::isValidBySize($file, $maxAllowedSize) && self::isValidByType($file, $allowedTypes);
+    }
 
-        /* Check the size of the file */
+    /**
+     * Validates a file by allowed size.
+     *
+     * @param array   $file           Value from $_FILES like array.
+     * @param integer $maxAllowedSize Maximum allowed file size in kilobytes.
+     *
+     * @return bool TRUE if file is within allowed max size, FALSE otherwise.
+     */
+    public static function isValidBySize(array $file, $maxAllowedSize)
+    {
         if ($maxAllowedSize < ($file['size'] / 1024)) {
             return false;
         }
 
-        /* Check if the mime-type is correct */
+        return true;
+    }
+
+    /**
+     * Validates a file by media types.
+     *
+     * @param array   $file           Value from $_FILES like array.
+     * @param array   $allowedTypes   Allowed media types of the file.
+     *
+     * @uses self::isValidMimeType() To check if file is one of the allowed MIME types.
+     *
+     * @return boolean TRUE if file is within allowed Media types, FALSE otherwise.
+     */
+    public static function isValidByType(array $file, array $allowedTypes)
+    {
+        $isValidMimeType = false;
+        $result = false;
+
         foreach ($allowedTypes as $type) {
-            $isValidMimeType = self::isValidMimeType($file, $type);
+            $isValidMimeType = self::isValidByMimeType($file, $type);
 
             if ($isValidMimeType) {
                 $result = true;
@@ -506,7 +531,7 @@ class File
      *
      * @return boolean Result of the operation.
      */
-    private static function isValidMimeType(array $file, $type)
+    private static function isValidByMimeType(array $file, $type)
     {
         if (!is_file($file['tmp_name'])) {
             return false;
@@ -537,16 +562,16 @@ class File
             throw new \InvalidArgumentException('Given path does not lead to a file.');
         }
 
-        /* for >= PHP 5.3.0 and activated PHP extension fileinfo OOP variation */
+        /* for >= PHP 5.3.0 and activated PHP extension FileInfo OOP variation */
         if (class_exists('\finfo')) {
             $fileInfo = new \finfo(FILEINFO_MIME);
             $mimeType = $fileInfo->buffer(file_get_contents($file['tmp_name']));
         } elseif (function_exists('finfo_open')) {
-            /* for >= PHP 5.3.0 and activated PHP extension fileinfo procedural variation */
+            /* for >= PHP 5.3.0 and activated PHP extension FileInfo procedural variation */
             $fileHandle = finfo_open(FILEINFO_MIME);
             $mimeType = finfo_file($fileHandle, $file['tmp_name']);
         } else {
-            /* for < PHP 5.3.0 or not activated fileinfo */
+            /* for < PHP 5.3.0 or not activated FileInfo */
             $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
             $mimeType = self::$mimeTypeList[$extension];
         }
@@ -648,25 +673,6 @@ class File
     }
 
     /**
-     * Check uploaded file exists.
-     *
-     * @param string $filename Name of the file.
-     *
-     * @todo Perhaps use is_uploaded_file().
-     *  But accepts tmp_name only.
-     *
-     * @return boolean Result of the operation.
-     */
-    public static function uploadedFileExists($filename)
-    {
-        return isset($_FILES[$filename]) &&
-        is_array($_FILES[$filename]) &&
-        !empty($_FILES[$filename]['name']) &&
-        !empty($_FILES[$filename]['tmp_name']) &&
-        !empty($_FILES[$filename]['size']);
-    }
-
-    /**
      * Fetches a restricted path.
      *
      * @param string $path Path to file.
@@ -705,7 +711,7 @@ class File
      *
      * @uses Core\Utils::convertPHPSizeToBytes To extract the correct file size.
      *
-     * @return integer Size in bytes.
+     * @return integer File size in bytes.
      */
     public static function getMaxUploadSize()
     {

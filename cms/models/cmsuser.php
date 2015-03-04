@@ -74,6 +74,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
                 }
             }
         }
+
         if ($this->password !== $this->password_confirm) {
             $this->errors['password_confirm'] = 'mismatch';
         }

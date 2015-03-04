@@ -42,46 +42,49 @@ class Media extends CMS
      *
      * @access public
      * @throws \InvalidArgumentException Uploaded media files missing.
-     * @uses   Helpers\FlashMessage, Core\Helpers\File, Core\Helpers\YAML, Core\Utils
+     * @uses   Helpers\FlashMessage, Core\Helpers\File, Core\Helpers\YAML, Core\Helpers\Media, Core\Utils
      *
      * @return void
      */
     public function create(Request $request)
     {
-        $isMediaCreated = false;
         $this->renderer->setLayout(null);
         $this->limitations = array(
             'size' => Core\Helpers\File::getMaxUploadSize(),
-            'type' => Helpers\Media::getSupportedMediaTypes(),
-            'mimeType' => Helpers\Media::getSupportedMimeTypes(),
+            'type' => Core\Helpers\Media::getSupportedMediaTypes(),
+            'mimeType' => Core\Helpers\Media::getSupportedMimeTypes(),
         );
 
         if ($request->is('post') && $request->files('media')) {
-            $file = $request->files('media');
+            $this->renderer->setView(null);
+            $this->renderer->setLayout(null);
 
-            if (Core\Helpers\File::validate($file, $this->limitations['type'], $this->limitations['size'])) {
-                $fileName = Helpers\Media::generateFileName($file);
-                $medium = new $this->model;
-                $medium->save(array(
-                    'cmsuser_id' => $this->user->id,
-                    'size'       => $file['size'],
-                    'filename'   => $fileName,
-                    'mimetype'   => Core\Helpers\File::getMimeType($file),
-                    'title'      => $fileName,
-                ));
+            $medium = new $this->model($request->files('media'));
+            $medium->save($_POST);
 
-                if (!$medium->errors) {
-                    $storagePath = Core\Config()->getMediaStorageLocation() . Helpers\Media::getSavePath($medium);
-                    if (Core\Helpers\File::upload($file, $storagePath, $medium->filename, true)) {
-                        $isMediaCreated = true;
-                    }
+            if ($medium->errors) {
+                $message  = array();
+                $messages = Core\Helpers\YAML::get('errors');
+
+                foreach($medium->errors as $attribute => $error) {
+                    $attribute = ucfirst($attribute);
+                    $message[] = "{$attribute}: {$messages[$error]}";
                 }
-            }
 
-            if (!$isMediaCreated) {
-
+                $this->renderer->setOutput(implode("\n", $message));
+                Core\Router()->response->setHttpResponseCode(400);
             }
         }
+    }
+
+    /**
+     * Retrieve a file
+     *
+     * @param Request $request Current router request.
+     */
+    public function assets(Request $request)
+    {
+
     }
 
     /**

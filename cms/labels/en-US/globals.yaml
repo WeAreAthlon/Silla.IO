@@ -94,6 +94,7 @@ errors:
   invalid_type     : Incompatible value type
   enum_no_match    : The value is not allowed
   max_length_exceeded : The value exceeds the system limit
+  denied           : The system has denied the value
 
 status:
   "0" : 'No'

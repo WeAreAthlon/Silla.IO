@@ -152,10 +152,9 @@ abstract class Model
      *
      * @access public
      * @uses   Core\Config()
-     * @final
      * @throws \LogicException Each instance must have a public static $tableName value.
      */
-    final public function __construct(array $params = array())
+    public function __construct(array $params = array())
     {
         if (!static::$tableName) {
             throw new \LogicException(get_class($this) . ' must have a public static $tableName value.');
