@@ -12,7 +12,7 @@ reset:
   instructions: Written instruction how to change your password will be sended to the provided email
   send    : Send Instructions
   success : Insructions how to change your password were have been send. Check the provided email.
-  error   : Invalid email prorevided
+  error   : Invalid email provided
 
 captcha :
   text : Enter the words above
