@@ -84,7 +84,21 @@ class Media extends CMS
      */
     public function assets(Request $request)
     {
+        $this->renderer->setLayout(null);
+        $this->renderer->setView(null);
 
+        $asset = new $this->model;
+        $asset = $asset::find()->where('filename = ?', array($request->get('id')));
+        $media = $asset->getThumbnail(160, 100, true);
+
+        if($asset) {
+            Core\Router()->response->addHeaders(array(
+                'Content-Type:' .$asset->mimetype,
+                'Content-Length: ' . filesize($media),
+            ));
+
+            $this->renderer->setOutput(file_get_contents($media));
+        }
     }
 
     /**

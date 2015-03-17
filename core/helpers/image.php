@@ -12,9 +12,7 @@
 namespace Core\Helpers;
 
 use Core;
-use \Imagine\Gd\Imagine;
-use \Imagine\Image\Box;
-use \Imagine\Image\ImageInterface;
+use \Imagine;
 
 /**
  * Class Image Helper definition.
@@ -22,107 +20,98 @@ use \Imagine\Image\ImageInterface;
 class Image
 {
     /**
-     * Generate one or more cropped thumbnails of the input image.
+     * Crops an image.
      *
-     * @param string  $path_to_image Path to the input image file.
-     * @param array   $thumbs_sizes  Array with needed thumb sizes it looks like: ['150x150', '240x320', '640x480'].
-     * @param integer $quality       Image compression quality(only for JPG).
+     * @param string $source  Path to the image source.
+     * @param string $target  Path to the image thumbnail target location.
+     * @param integer $width   Width of the newly created image.
+     * @param integer $height  Height of the newly created image.
+     * @param integer $quality Image compression quality. Applicable only for JPG.
      *
-     * @access public
-     * @static
-     * @throws \Exception Generic exception.
-     *
-     * @return void
+     * @return string Path to the cropped image.
      */
-    public static function createThumbnailExact($path_to_image, array $thumbs_sizes, $quality = 95)
+    public static function crop($source, $target, $width, $height, $quality = 85)
     {
-        $meta = pathinfo($path_to_image);
+        $imagine = new Imagine\Gd\Imagine();
+        $mode = Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
 
-        $imagine = new Imagine();
-        $imagine = $imagine->open($path_to_image);
+        $size = new Imagine\Image\Box($width, $height);
+        $imagine->open($source)->thumbnail($size, $mode)->save($target, array('quality' => $quality));
 
-        foreach ($thumbs_sizes as $size) {
-            preg_match_all('/(\d+)/', $size, $thumb_size);
-
-            $size = new Box($thumb_size[0][0], $thumb_size[0][1]);
-            $size_name = "{$thumb_size[0][0]}x{$thumb_size[0][1]}";
-
-            $imagine = $imagine->thumbnail($size, ImageInterface::THUMBNAIL_INSET);
-            $imagine->save(
-                $meta['dirname'] . DIRECTORY_SEPARATOR . "{$size_name}-{$meta['filename']}.{$meta['extension']}",
-                array('quality' => $quality)
-            );
-        }
+        return $target;
     }
 
     /**
-     * Generate one or more scaled thumbnails of the input image.
+     * Re-sizes an image.
      *
-     * @param string  $path_to_image Path to the input image file.
-     * @param array   $thumbs_sizes  Array with needed thumb sizes it looks like: ['150x150', '240x320', '640x480'].
-     * @param integer $quality       Image compression quality(only for JPG).
+     * @param string $source  Path to the image source.
+     * @param string $target  Path to the image thumbnail target location.
+     * @param integer $width   Width of the newly created image.
+     * @param integer $height  Height of the newly created image.
+     * @param integer $quality Image compression quality. Applicable only for JPG.
      *
-     * @access public
-     * @static
-     * @throws \Exception Generic exception.
-     *
-     * @return void
+     * @return string Path to the cropped image.
      */
-    public static function createThumbnailScaled($path_to_image, array $thumbs_sizes, $quality = 95)
+    public static function resize($source, $target, $width, $height, $quality = 85)
     {
-        $meta = pathinfo($path_to_image);
+        $imagine = new Imagine\Gd\Imagine();
+        $mode = Imagine\Image\ImageInterface::THUMBNAIL_INSET;
 
-        $imagine = new Imagine();
-        $imagine = $imagine->open($path_to_image);
+        $size = new Imagine\Image\Box($width, $height);
+        $imagine->open($source)->thumbnail($size, $mode)->save($target, array('quality' => $quality));
 
-        foreach ($thumbs_sizes as $size) {
-            preg_match_all('/(\d+)/', $size, $thumb_size);
-
-            $size = new Box($thumb_size[0][0], $thumb_size[0][1]);
-            $size_name = "{$thumb_size[0][0]}x{$thumb_size[0][1]}";
-
-            $imagine = $imagine->thumbnail($size, ImageInterface::THUMBNAIL_OUTBOUND);
-            $imagine->save(
-                $meta['dirname'] . DIRECTORY_SEPARATOR . "{$size_name}-{$meta['filename']}.{$meta['extension']}",
-                array('quality' => $quality)
-            );
-        }
-    }
-
-    /**
-     * Calculates scale.
-     *
-     * @param integer $n     Parameter to be scaled.
-     * @param integer $ratio Scale ratio.
-     *
-     * @access public
-     * @static
-     *
-     * @return integer
-     */
-    public static function scaleSize($n, $ratio)
-    {
-        return floor($n * $ratio);
+        return $target;
     }
 
     /**
      * Calculates image dimensions.
      *
-     * @param string $path_to_image Image file path.
+     * @param string $filename Image file path.
      *
      * @access public
      * @static
      *
      * @return array Example [width, height, aspect ratio].
      */
-    public static function getDimensions($path_to_image)
+    public static function getDimensions($filename)
     {
-        $dimensions = getimagesize($path_to_image);
+        $dimensions = getimagesize($filename);
 
         return array(
             'width' => $dimensions[0],
             'height' => $dimensions[1],
             'aspect_ratio' => $dimensions[0] / $dimensions[1]
         );
+    }
+
+    /**
+     * Verify if an image is animated (GIF).
+     *
+     * An animated gif contains multiple "frames", with each frame having a header made up of:
+     * - a static 4-byte sequence (\x00\x21\xF9\x04)
+     * - 4 variable bytes
+     * - a static 2-byte sequence (\x00\x2C)
+     * We read through the file til we reach the end of the file, or we've found at least 2 frame headers.
+     *
+     * @param string $filename Image file path.
+     *
+     * @return boolean Whether the image is animated or not.
+     */
+    public static function is_animated($filename)
+    {
+        if (!($fh = @fopen($filename, 'rb'))) {
+            return false;
+        }
+
+        $count = 0;
+
+        while (!feof($fh) && $count < 2) {
+            $chunk = fread($fh, 1024 * 100); /* Read 100kb at a time */
+            $count += preg_match_all('#\x00\x21\xF9\x04.{4}\x00\x2C#s', $chunk, $matches);
+        }
+
+        fclose($fh);
+
+        return $count > 1;
     }
 }

@@ -94,9 +94,9 @@ class File
         'ins' => 'application/x-internet-signup',
         'isp' => 'application/x-internet-signup',
         'jfif' => 'image/pipeg',
-        'jpe' => 'image/jpeg',
         'jpeg' => 'image/jpeg',
         'jpg' => 'image/jpeg',
+        'jpe' => 'image/jpeg',
         'js' => 'application/x-javascript',
         'latex' => 'application/x-latex',
         'lha' => 'application/octet-stream',
@@ -345,8 +345,7 @@ class File
      * Fetches an external file.
      *
      * @param string $url         URI of the file resource.
-     * @param array  $credentials Optional parameter to deal
-     *      with Basic Authentication ['user' => '', 'password' => ''].
+     * @param array  $credentials Optional parameter to deal with Basic Authentication ['user' => '', 'password' => ''].
      *
      * @throws \UnexpectedValueException If PHP extension cURL is not enabled.
      *
@@ -537,7 +536,6 @@ class File
             return false;
         }
 
-        /* Get the MIME type of the file */
         $mimeType = self::getMimeType($file);
         $possibleValues = self::getMimeTypesForMediaType($type);
 
@@ -594,7 +592,16 @@ class File
      */
     public static function getMediaTypeByMimeType($mimeType)
     {
-        return array_search($mimeType, self::$mimeTypeList);
+        $result = '';
+
+        foreach (self::$mediaMimeTypes as $mediaType => $mimeTypes) {
+            if ( false !== array_search($mimeType, $mimeTypes)) {
+                $result = $mediaType;
+                break;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -648,7 +655,8 @@ class File
 
     /**
      * Adds an extension to a filename, if not present.
-     *      The file extension is taken from uploadedFile.
+     *
+     * The file extension is taken from uploadedFile.
      *
      * @param string $filename     Name of the file to format.
      * @param string $uploadedFile Name of the file that is currently uploading.
@@ -677,7 +685,7 @@ class File
      *
      * @param string $path Path to file.
      *
-     * @uses self::getFullPath To format path to file.
+     * @uses getFullPath() To format path to file.
      *
      * @return string Restricted path.
      */
@@ -694,7 +702,7 @@ class File
      *
      * @param string $path File path.
      *
-     * @uses Core\Base\Configuration::paths To get root path of framework.
+     * @uses Core\Base\Configuration::paths To get the root path of the Silla.IO instance.
      *
      * @return string Full path.
      */

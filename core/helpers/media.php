@@ -12,6 +12,7 @@
 namespace Core\Helpers;
 
 use Core;
+use Core\Helpers;
 use CMS\Models;
 
 /**
@@ -22,15 +23,15 @@ class Media
     /**
      * Generates a Unique file name.
      *
-     * @param array  $file   Standard array representation of $_FILES array.
+     * @param array $file Standard array representation of $_FILES array.
      *
-     * @uses CMS\Models\Medium                   Querying the storage engine.
-     * @uses Core\Helpers\File::filterFileName() Filtering the file name.
+     * @uses CMS\Models\Medium::find()      Querying the storage engine.
+     * @uses Helpers\File::filterFileName() Filtering the file name.
      *
      * @return string The generated file name.
      */
     public static function generateFileName(array $file) {
-        $fileName = Core\Helpers\File::filterFileName($file['name']);
+        $fileName = Helpers\File::filterFileName($file['name']);
 
         if (Models\Medium::find()->where('filename = ?', array($fileName))->first()) {
             $fileMeta = pathinfo($fileName);
@@ -88,9 +89,23 @@ class Media
         $supportedMediaTypes = self::getSupportedMediaTypes();
 
         foreach ($supportedMediaTypes as $mediaType) {
-            $supportedMimeTypes = array_merge($supportedMimeTypes, Core\Helpers\File::getMimeTypesForMediaType($mediaType));
+            $supportedMimeTypes = array_merge($supportedMimeTypes, Helpers\File::getMimeTypesForMediaType($mediaType));
         }
 
         return $supportedMimeTypes;
+    }
+
+    /**
+     * Retrieve Media type for a mime-type.
+     *
+     * @param string $mimeType Mime-type to analyze.
+     *
+     * @uses Core\Helpers\File::getMediaTypeByMimeType() To retrieve the supported media types.
+     *
+     * @return string Media type(photo|documents|video|archive|audio).
+     */
+    public static function getMediaType($mimeType)
+    {
+        return Helpers\File::getMediaTypeByMimeType($mimeType);
     }
 }

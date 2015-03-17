@@ -82,6 +82,7 @@ sections:
   manage    : Manage
   export    : Export
   upload    : Upload
+  assets    : View Thumbnails
 
 errors:
   general          : The following errors have prevented the record from being saved

@@ -3,7 +3,7 @@
  * Medium Model.
  *
  * @package    Silla.IO
- * @subpackage cms\Models
+ * @subpackage CMS\Models
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
@@ -14,11 +14,12 @@ namespace CMS\Models;
 use Core;
 use Core\Base;
 use Core\Helpers;
+use Core\Modules\DB\Decorators\Interfaces;
 
 /**
  * Medium class definition.
  */
-class Medium extends Base\Model
+class Medium extends Base\Model implements Interfaces\TimezoneAwareness
 {
     /**
      * Table storage name.
@@ -49,6 +50,15 @@ class Medium extends Base\Model
     protected $processedAssetFile;
 
     /**
+     * Storage locations.
+     *
+     * @example Array of ['source': '', 'thumbnails': ''].
+     *
+     * @var array
+     */
+    protected $storage = array();
+
+    /**
      * Constructor method.
      *
      * @param array $fields Array of fields and their values.
@@ -71,8 +81,65 @@ class Medium extends Base\Model
 
         parent::__construct($fields);
     }
+
     /**
-     * Before validate Hook.
+     * Retrieve the medium file.
+     *
+     * @return string Path to the file.
+     */
+    public function getFile()
+    {
+        $file = $this->storage['source'] . $this->filename;
+
+        return is_file($file) ? $file : '';
+    }
+
+    /**
+     * Retrieve image thumbnail.
+     *
+     * @param int     $width  Width of the thumbnail in pixes.
+     * @param int     $height Height of the thumbnail in pixes.
+     * @param boolean $exact  Whether to [resize] or [resize & crop] to the requested image dimensions.
+     *
+     * @uses getFile() To retrieve the source file.
+     *
+     * @return string Path to the file.
+     */
+    public function getThumbnail($width, $height, $exact = false)
+    {
+        $source = $this->getFile();
+        $result = '';
+
+        if ($source && 'photo' === Helpers\Media::getMediaType($this->mimetype)) {
+            $medium = pathinfo($this->filename);
+            $thumbnailFileName = "{$medium['filename']}-{$width}x{$height}.{$medium['extension']}";
+            $thumbnail = $this->storage['thumbnails'] . $thumbnailFileName;
+
+            if (!is_file($thumbnail)) {
+                if ($exact) {
+                    Core\Helpers\Image::crop($this->getFile(), $thumbnail, $width, $height);
+                } else {
+                    Core\Helpers\Image::resize($this->getFile(), $thumbnail, $width, $height);
+                }
+            }
+
+            $result = $thumbnail;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Setup file storage paths.
+     */
+    public function afterCreate()
+    {
+        $this->storage['source'] = Core\Config()->getMediaStorageLocation() . Helpers\Media::getSavePath($this->id);
+        $this->storage['thumbnails'] = $this->storage['source'] . 'thumbnails' . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Validate medium file contents.
      */
     public function beforeValidate() {
         $limitations = array(
@@ -92,30 +159,13 @@ class Medium extends Base\Model
     }
 
     /**
-     * After validate Hook.
-     */
-    public function afterValidate()
-    {
-        if (!$this->errors && $this->processedAssetFile) {
-            $storagePath = Core\Config()->getMediaStorageLocation() . Helpers\Media::getSavePath($this->id);
-
-            /* Move the file to the storage path destination */
-            if( !Helpers\File::upload($this->processedAssetFile, $storagePath, $this->filename, true)) {
-                $this->errors['filename'] = 'denied';
-            }
-        }
-    }
-
-    /**
      * Before validate Hook.
      *
      * @TODO extract media meta data.
      */
     public function beforeSave()
     {
-        $storagePath = Core\Config()->getMediaStorageLocation() . Helpers\Media::getSavePath($this->id);
-        $file = $storagePath . $this->filename;
-        list($this->width, $this->height) = getimagesize($file);
+        list($this->width, $this->height) = getimagesize($this->getFile());
 
         switch ($this->mimetype) {
             case 'image/jpeg':
@@ -128,14 +178,28 @@ class Medium extends Base\Model
     }
 
     /**
-     * After delete Hook.
+     * Move the file to the storage path destination.
+     */
+    public function afterSave()
+    {
+        if (!$this->errors && $this->processedAssetFile) {
+            $this->afterCreate();
+
+            Helpers\File::upload($this->processedAssetFile, $this->storage['source'], $this->filename, true);
+
+            if('photo' === Helpers\Media::getMediaType($this->mimetype)) {
+                Helpers\Directory::create($this->storage['thumbnails']);
+            }
+        }
+    }
+
+    /**
+     * Delete the asset from the storage.
      */
     public function afterDelete()
     {
-        /* Delete the asset from the storage */
         try {
-            $storagePath = Core\Config()->getMediaStorageLocation() . Helpers\Media::getSavePath($this->id);
-            Helpers\Directory::delete($storagePath);
+            Helpers\Directory::delete($this->storage['source']);
         } catch (\Exception $e) {
         }
     }

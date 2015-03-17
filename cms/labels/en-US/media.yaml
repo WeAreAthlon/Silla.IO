@@ -6,6 +6,13 @@ attributes:
       icon      : file
       desc      : Mandatory media data.
     fields:
+      preview:
+        title   : Preview
+        type    : custom
+        desc    : Asset preview.
+        icon    : picture
+        export  : false
+        sort    : false
       title:
         title   : Title
         type    : text
