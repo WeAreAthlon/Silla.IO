@@ -9,20 +9,20 @@ login:
 reset:
   title   : Forgotten password
   email   : Email upon registration...
-  instructions: Written instruction how to change your password will be sended to the provided email
+  instructions: Written instruction how to change your password will be send to the provided email
   send    : Send Instructions
-  success : Insructions how to change your password were have been send. Check the provided email.
+  success : Instructions how to change your password were have been send. Check the provided email.
   error   : Invalid email provided
 
 captcha :
   text : Enter the words above
   audio: Enter the numbers you hear
-  error: Invalid captcha code
+  error: Invalid CAPTCHA code
 
 reset_access:
   title    : Reset user access to the CMS
   success  : Your password has been reset successfully.
-  new_password: The following passphrase has been assigned to your user profile
+  new_password: The following pass-phrase has been assigned to your user profile
 
 mails:
  reset:
@@ -30,4 +30,4 @@ mails:
    greeting     : Dear
    reason       : A request has been issued for resetting access to
    instructions : Please visit this URL to reset your password
-   note         : Note that this link <b>will expire after 1 hour</b>
+   note         : 'Note that this link <b>will expire after 1 hour</b>'

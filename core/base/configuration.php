@@ -241,7 +241,7 @@ abstract class Configuration
     private $MODE = array();
 
     /**
-     * @var Configuration $instance Reference to the current instance of the Config object.
+     * @var Configuration $instance Reference to the current instance of the Configuration object.
      */
     protected static $instance = null;
 
@@ -266,6 +266,8 @@ abstract class Configuration
                 '',
                 $current_dir . '/'
             );
+            
+            $this->URLS['relative'] = str_replace(DIRECTORY_SEPARATOR, '/', $this->URLS['relative']);
         }
 
         /* Check if the request is sent over HTTPS */

@@ -101,7 +101,7 @@ class CMS extends Core\Base\Resource
             }
 
             $user = Models\CMSUser::find()->where('email = ?', array($request->post('email')))->first();
-
+    
             if ($user && Crypt::hashCompare($user->password, $request->post('password'))) {
                 /* Update the user login time */
                 $user->save(array('login_on' => gmdate('Y-m-d H:i:s')), true);
@@ -112,7 +112,7 @@ class CMS extends Core\Base\Resource
                 Core\Session()->set('user_info', rawurlencode(serialize($user)));
                 Core\Session()->set('user_logged', 1);
                 Core\Session()->remove('login_error');
-
+               
                 /* Regenerate CSRF token for prevent fixation */
                 Core\Session()->remove('_token');
                 $request->regenerateToken();
@@ -350,8 +350,8 @@ class CMS extends Core\Base\Resource
             'vendor/jquery/dist/jquery.min.js',
             'vendor/bootstrap/dist/js/bootstrap.min.js',
             'vendor/bootstrap/dist/css/bootstrap.css',
-            'vendor/bootstrap-chosen/js/chosen.jquery.min.js',
-            'vendor/bootstrap-chosen/css/chosen.min.css',
+            'vendor/pnikolov-bootstrap-chosen/chosen.jquery.min.js',
+            'vendor/pnikolov-bootstrap-chosen/chosen.min.css',
             'vendor/ekko-lightbox/dist/ekko-lightbox.min.js',
             'vendor/ekko-lightbox/dist/ekko-lightbox.min.css',
             'vendor/bootbox/bootbox.js',

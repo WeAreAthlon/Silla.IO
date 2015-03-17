@@ -80,7 +80,8 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                     $cached_asset = 'css' . DIRECTORY_SEPARATOR . $assets_id . '.css';
 
                     if (file_exists($dist_path . $cached_asset)) {
-                        $result[] = sprintf('<link href="%s" rel="%s" type="%s" media="%s" />', $dist_url . $cached_asset, $rel, $mimetype, $media);
+                        $target = str_replace(DIRECTORY_SEPARATOR, '/', $cached_asset);
+                        $result[] = sprintf('<link href="%s" rel="%s" type="%s" media="%s" />', $dist_url . $target, $rel, $mimetype, $media);
                     } else {
                         $assets_to_process = $assets;
                     }
@@ -88,7 +89,8 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                     $cached_asset = 'js' . DIRECTORY_SEPARATOR . $assets_id . '.js';
 
                     if (file_exists($dist_path . $cached_asset)) {
-                        $result[] = sprintf('<script src="%s"></script>', $dist_url . $cached_asset);
+                        $target = str_replace(DIRECTORY_SEPARATOR, '/', $cached_asset);
+                        $result[] = sprintf('<script src="%s"></script>', $dist_url . $target);
                     } else {
                         $assets_to_process = $assets;
                     }
@@ -107,7 +109,8 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                                 $cached_asset = 'css' . DIRECTORY_SEPARATOR . $filename . '.css';
 
                                 if (file_exists($dist_path . $cached_asset)) {
-                                    $result[] = sprintf('<link href="%s" rel="%s" type="%s" media="%s" />', $dist_url . $cached_asset, $rel, $mimetype, $media);
+                                    $target = str_replace(DIRECTORY_SEPARATOR, '/', $cached_asset); 
+                                    $result[] = sprintf('<link href="%s" rel="%s" type="%s" media="%s" />', $dist_url . $target, $rel, $mimetype, $media);
                                 } else {
                                     $assets_to_process[$type][] = $file;
                                 }
@@ -122,7 +125,8 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                                 $cached_asset = 'js' . DIRECTORY_SEPARATOR . $filename . '.js';
 
                                 if (file_exists($dist_path . $cached_asset)) {
-                                    $result[] = sprintf('<script src="%s"></script>', $dist_url . $cached_asset);
+                                    $target = str_replace(DIRECTORY_SEPARATOR, '/', $cached_asset);
+                                    $result[] = sprintf('<script src="%s"></script>', $dist_url . $target);
                                 } else {
                                     $assets_to_process[$type][] = $file;
                                 }
@@ -178,8 +182,8 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                     $am->set('styles', $styles);
 
                     $writer->writeManagerAssets($am);
-
-                    $result[] = sprintf('<link href="%s" rel="%s" type="%s" media="%s" />', $dist_url . $styles->getTargetPath(), $rel, $mimetype, $media);
+                    $target = str_replace(DIRECTORY_SEPARATOR, '/', $styles->getTargetPath());
+                    $result[] = sprintf('<link href="%s" rel="%s" type="%s" media="%s" />', $dist_url . $target, $rel, $mimetype, $media);
                 }
 
                 if ($scripts->all()) {
@@ -189,7 +193,8 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                     $am->set('scripts', $scripts);
 
                     $writer->writeManagerAssets($am);
-                    $result[] = sprintf('<script src="%s"></script>', $dist_url . $scripts->getTargetPath());
+                    $target = str_replace(DIRECTORY_SEPARATOR, '/', $scripts->getTargetPath());
+                    $result[] = sprintf('<script src="%s"></script>', $dist_url . $target);
                 }
             } else {
                 foreach ($styles->all() as $style) {
@@ -200,8 +205,9 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                     $style->setTargetPath('css' . DIRECTORY_SEPARATOR . $filename . '.css');
 
                     $writer->writeAsset($style);
-
-                    $result[] = sprintf('<link href="%s" rel="%s" type="%s" media="%s" />', $dist_url . $style->getTargetPath(), $rel, $mimetype, $media);
+                    
+                    $target = str_replace(DIRECTORY_SEPARATOR, '/', $style->getTargetPath());
+                    $result[] = sprintf('<link href="%s" rel="%s" type="%s" media="%s" />', $dist_url . $target, $rel, $mimetype, $media);
                 }
 
                 foreach ($scripts->all() as $script) {
@@ -211,8 +217,8 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                     $script->setTargetPath('js' . DIRECTORY_SEPARATOR . $filename . '.js');
 
                     $writer->writeAsset($script);
-
-                    $result[] = sprintf('<script src="%s"></script>', $dist_url . $script->getTargetPath());
+                    $target = str_replace(DIRECTORY_SEPARATOR, '/', $script->getTargetPath());
+                    $result[] = sprintf('<script src="%s"></script>', $dist_url . $target);
                 }
             }
         }

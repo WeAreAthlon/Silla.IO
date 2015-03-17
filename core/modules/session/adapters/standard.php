@@ -122,7 +122,7 @@ final class Standard implements Interfaces\Adapter
                 true
             );
 
-            session_cache_limiter('must-revalidate');
+            session_cache_limiter('nocache');
             session_start();
 
             $this->sessionKey = session_id();
@@ -234,7 +234,8 @@ final class Standard implements Interfaces\Adapter
         $this->sessionKey = null;
 
         unset($_COOKIE[Core\Config()->SESSION['name']]);
-
+        self::$started = false;
+        
         return true;
     }
 
@@ -332,18 +333,7 @@ final class Standard implements Interfaces\Adapter
      */
     public function regenerateKey()
     {
-        /* Delete associated data */
-        session_regenerate_id(true);
-
-        /* Closes the old session */
-        session_write_close();
-
-        /* Generates new key */
-        $this->sessionKey = $this->generateKey();
-
-        /* Opens new session */
-        session_id($this->sessionKey);
-        session_cache_limiter('must-revalidate');
-        session_start();
+        $this->destroy();
+        $this->start();
     }
 }
