@@ -31,6 +31,35 @@ class Users extends CMS
     protected $model = 'CMS\Models\CMSUser';
 
     /**
+     * Additional validation rules to ensure user is authorized to edit this resource.
+     *
+     * @param Base\Model $resource Currently processed resource.
+     * @param Request    $request  Current router request.
+     *
+     * @access protected
+     *
+     * @return void
+     */
+    protected function beforeEdit(Base\Model $resource, Request $request)
+    {
+        if ($request->is('post')) {
+            if (!$request->post('current_password')) {
+                $resource->errors['current_password'] = 'not_empty';
+            } else {
+                $user = Core\Registry()->get('current_user');
+
+                if (!Crypt::hashCompare($user->password, $request->post('current_password'))) {
+                    $resource->errors['current_password'] = 'mismatch';
+                }
+            }
+
+            if ($request->post('password') !== $request->post('password_confirm')) {
+                $resource->errors['password_confirm'] = 'mismatch';
+            }
+        }
+    }
+
+    /**
      * Account action.
      *
      * @param Request $request Current router request.
@@ -40,7 +69,7 @@ class Users extends CMS
     public function account(Request $request)
     {
         $user = $this->user;
-        parent::beforeEdit($user, $request);
+        $this->beforeEdit($user, $request);
 
         if ($request->is('post')) {
             unset($_POST['role_id']);

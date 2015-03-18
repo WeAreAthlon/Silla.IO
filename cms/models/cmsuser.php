@@ -61,23 +61,6 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
      */
     public function afterValidate()
     {
-        if (!$this->isNewRecord()) {
-            if (!$this->current_password) {
-                $this->errors['current_password'] = 'not_empty';
-            } else {
-                $user = Core\Registry()->get('current_user');
-                $user = self::find()->where('id = ?', array($user->id))->first();
-                $passwordsMatch = Crypt::hashCompare($user->password, $this->current_password);
-
-                if (!$passwordsMatch) {
-                    $this->errors['current_password'] = 'mismatch';
-                }
-            }
-        }
-        if ($this->password !== $this->password_confirm) {
-            $this->errors['password_confirm'] = 'mismatch';
-        }
-
         if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             $this->errors['email'] = 'invalid_format';
         }

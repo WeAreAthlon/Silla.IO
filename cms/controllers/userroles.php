@@ -50,6 +50,31 @@ class UserRoles extends CMS
     }
 
     /**
+     * Additional validation rules to ensure user is authorized to edit this resource.
+     *
+     * @param Base\Model $resource Currently processed resource.
+     * @param Request    $request  Current router request.
+     *
+     * @access protected
+     *
+     * @return void
+     */
+    protected function beforeEdit(Base\Model $resource, Request $request)
+    {
+        if ($request->is('post')) {
+            if (!$request->post('current_password')) {
+                $resource->errors['current_password'] = 'not_empty';
+            } else {
+                $currentUser = Core\Registry()->get('current_user');
+
+                if (!Crypt::hashCompare($currentUser->password, $request->post('current_password'))) {
+                    $resource->errors['current_password'] = 'mismatch';
+                }
+            }
+        }
+    }
+
+    /**
      * Verifies the current user cannot delete his role.
      *
      * @param Base\Model $resource Currently processed resource.

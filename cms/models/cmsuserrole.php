@@ -55,25 +55,4 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
             'permissions' => 'json'
         );
     }
-
-    /**
-     * Before validation hook.
-     *
-     * @return void
-     */
-    public function afterValidate()
-    {
-        if (!$this->isNewRecord()) {
-            if (!$this->current_password) {
-                $this->errors['current_password'] = 'not_empty';
-            } else {
-                $currentUser = Core\Registry()->get('current_user');
-                $passwordsMatch = Crypt::hashCompare($currentUser->password, $this->current_password);
-
-                if (!$passwordsMatch) {
-                    $this->errors['current_password'] = 'mismatch';
-                }
-            }
-        }
-    }
 }
