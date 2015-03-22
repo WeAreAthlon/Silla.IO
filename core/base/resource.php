@@ -250,7 +250,7 @@ abstract class Resource extends Controller
                 $request->redirectTo('index');
             }
         } else {
-            Core\Router()->response->addHeader($request->type() . ' 403 Forbidden');
+            Core\Router()->response->setHttpResponseCode(403);
         }
     }
 

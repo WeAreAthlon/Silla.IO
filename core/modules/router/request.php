@@ -349,7 +349,7 @@ final class Request
         $type = strtoupper($type);
 
         if ($type === 'XHR') {
-            return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+            return 'XMLHttpRequest' === $this->meta('HTTP_X_REQUESTED_WITH');
         }
 
         return strtoupper($type) === $this->method();

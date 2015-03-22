@@ -55,7 +55,7 @@ try {
 
 } catch(\Exception $e) {
     if (!Core\Router()->response->hasContent()) {
-        Core\Router()->response->addHeader(Core\Router()->request->type() . ' 500 Internal Server Error', true, 500);
+        Core\Router()->response->setHttpResponseCode(500);
     }
     $message = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
     if ('on' === strtolower(ini_get('display_errors'))) {

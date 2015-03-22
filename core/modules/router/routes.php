@@ -136,11 +136,11 @@ final class Routes
                 }
             }
 
-            $_controller = $this->mode['namespace'] . "\\Controllers\\{$test_route['controller']}";
+            $_controller = $this->mode['namespace'] . '\Controllers\\' . $test_route['controller'];
 
             if (!class_exists($_controller)) {
                 $route = next($routes);
-                $_controller = $this->mode['namespace'] . "\\Controllers\\{$route['maps_to']['controller']}";
+                $_controller = $this->mode['namespace'] . '\Controllers\\' . $route['maps_to']['controller'];
 
                 if (!method_exists($_controller, $test_route['controller'])) {
                     $route = next($routes);

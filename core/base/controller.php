@@ -176,7 +176,7 @@ abstract class Controller
             $this->renderer->set('_action', '404');
             $this->renderer->set('_labels', Core\Helpers\YAML::getAll('globals'));
 
-            Core\Router()->response->addHeader($request->type() . ' 404 Not Found');
+            Core\Router()->response->setHttpResponseCode(404);
         }
     }
 
@@ -210,7 +210,7 @@ abstract class Controller
             $renderer->setView(null);
             $output = $renderer->render();
 
-            Core\Router()->response->addHeader($request->type() . ' 404 Not Found');
+            Core\Router()->response->setHttpResponseCode(404);
             Core\Router()->response->setContent($output);
         }
     }

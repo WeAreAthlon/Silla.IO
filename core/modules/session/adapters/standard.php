@@ -96,8 +96,8 @@ final class Standard implements Interfaces\Adapter
 
             header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
 
-            self::$ip = $_SERVER['REMOTE_ADDR'];
-            self::$userAgent = $_SERVER['HTTP_USER_AGENT'];
+            self::$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+            self::$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
             if (Core\Config()->SESSION['transparency']) {
                 $_COOKIE[Core\Config()->SESSION['name']] =

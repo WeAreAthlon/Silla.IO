@@ -349,7 +349,7 @@ final class Router
     {
         if ($request->is('post') || $request->is('put') || $request->is('delete') || $request->is('patch')) {
             if (!$request->variables('_token') || $request->variables('_token') !== Core\Session()->get('_token')) {
-                Core\Router()->response->addHeader($request->type() . ' 403 Forbidden', true, 403);
+                Core\Router()->response->setHttpResponseCode(403);
 
                 throw new \UnexpectedValueException('Request token does not match.');
             }
