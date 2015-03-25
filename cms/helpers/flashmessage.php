@@ -30,11 +30,11 @@ class FlashMessage
      *
      * @access private
      * @static
-     * @uses   Core\Registry()
+     * @uses   Core\Session()
      *
      * @return array
      */
-    private static function fetchMessage()
+    private static function fetch()
     {
         if (null === self::$message) {
             $message = Core\Session()->get('flash_message');
@@ -53,12 +53,13 @@ class FlashMessage
     /**
      * Returns flash message data.
      *
+     * @uses fetch() To fetch the flash message from the user session.
      * @access public
      * @static
      *
      * @return string
      */
-    public static function getMessage()
+    public static function get()
     {
         $message_types = array(
             'success',
@@ -66,7 +67,7 @@ class FlashMessage
             'danger',
         );
 
-        $message = self::fetchMessage();
+        $message = self::fetch();
 
         if (isset($message) && !empty($message)) {
             $layout = in_array($message['context'], $message_types, true) ? $message['context'] : 'info';
@@ -95,11 +96,11 @@ class FlashMessage
      *
      * @access public
      * @static
-     * @uses   Core\Registry()
+     * @uses   Core\Session()
      *
      * @return void
      */
-    public static function setMessage($message, $context = 'default', array $additional = array())
+    public static function set($message, $context = 'default', array $additional = array())
     {
         Core\Session()->set(
             'flash_message',

@@ -88,17 +88,17 @@ class UserRoles extends CMS
         if (!$request->post('password') || !Crypt::hashCompare($this->user->password, $request->post('password'))) {
             if (!$request->is('xhr')) {
                 $labelsGeneral = Core\Helpers\YAML::get('general');
-                Helpers\FlashMessage::setMessage($labelsGeneral['not_authorized'], 'danger');
+                Helpers\FlashMessage::set($labelsGeneral['not_authorized'], 'danger');
             }
 
             $request->redirectTo('index');
         }
 
         /* Prevent user role self deletion */
-        if ($this->user->role_id === $resource->id) {
+        if ($this->user->role_id == $resource->id) {
             if (!$request->is('xhr')) {
                 $labelsErrors = Core\Helpers\YAML::get('messages', $this->labels);
-                Helpers\FlashMessage::setMessage($labelsErrors['delete']['self'], 'danger');
+                Helpers\FlashMessage::set($labelsErrors['delete']['self'], 'danger');
             }
 
             $request->redirectTo('index');

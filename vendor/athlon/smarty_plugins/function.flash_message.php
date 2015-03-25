@@ -21,6 +21,6 @@
  */
 function smarty_function_flash_message(array $options, Smarty_Internal_Template $template)
 {
-    $template->assign('flash', \CMS\Helpers\FlashMessage::getMessage());
+    $template->assign('flash', \CMS\Helpers\FlashMessage::get());
     $template->display('_shared/flash-message.html.tpl');
 }

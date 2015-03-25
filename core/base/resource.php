@@ -129,7 +129,7 @@ abstract class Resource extends Controller
 
         if (!$resource) {
             $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::setMessage($labelsErrors['not_exists'], 'danger');
+            Helpers\FlashMessage::set($labelsErrors['not_exists'], 'danger');
 
             $request->redirectTo('index');
         } else {
@@ -196,7 +196,7 @@ abstract class Resource extends Controller
 
         if (!$resource) {
             $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::setMessage($labelsErrors['not_exists'], 'danger');
+            Helpers\FlashMessage::set($labelsErrors['not_exists'], 'danger');
 
             $request->redirectTo('index');
         }
@@ -244,7 +244,7 @@ abstract class Resource extends Controller
             } else {
                 if (!$request->is('xhr')) {
                     $labelsErrors = Core\Helpers\YAML::get('errors');
-                    Helpers\FlashMessage::setMessage($labelsErrors['not_exists'], 'danger');
+                    Helpers\FlashMessage::set($labelsErrors['not_exists'], 'danger');
                 }
 
                 $request->redirectTo('index');
@@ -336,10 +336,10 @@ abstract class Resource extends Controller
     {
         if (!empty($resource->errors)) {
             $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::setMessage($labelsErrors['general'], 'danger', $resource->errors);
+            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $resource->errors);
         } else {
             $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-            Helpers\FlashMessage::setMessage($labelsMessages['create']['success'], 'success');
+            Helpers\FlashMessage::set($labelsMessages['create']['success'], 'success');
 
             $request->redirectTo('index');
         }
@@ -373,10 +373,10 @@ abstract class Resource extends Controller
     {
         if (!empty($resource->errors)) {
             $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::setMessage($labelsErrors['general'], 'danger', $resource->errors);
+            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $resource->errors);
         } else {
             $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-            Helpers\FlashMessage::setMessage($labelsMessages['edit']['success'], 'success');
+            Helpers\FlashMessage::set($labelsMessages['edit']['success'], 'success');
         }
     }
 
@@ -408,7 +408,7 @@ abstract class Resource extends Controller
     {
         if (!$request->is('xhr')) {
             $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-            Helpers\FlashMessage::setMessage($labelsMessages['delete']['success'], 'warning');
+            Helpers\FlashMessage::set($labelsMessages['delete']['success'], 'warning');
         }
 
         $request->redirectTo('index');

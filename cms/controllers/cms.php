@@ -94,7 +94,7 @@ class CMS extends Core\Base\Resource
         if ($request->is('post')) {
             if (Core\Session()->get('login_error') && !Core\Session()->get('captcha')->check()->isValid()) {
                 $labelsCaptcha = Core\Helpers\YAML::get('captcha', $this->labels);
-                Helpers\FlashMessage::setMessage($labelsCaptcha['error'], 'danger');
+                Helpers\FlashMessage::set($labelsCaptcha['error'], 'danger');
                 $this->captcha = Core\Session()->get('captcha')->html();
 
                 return;
@@ -124,7 +124,7 @@ class CMS extends Core\Base\Resource
                 }
             } else {
                 $labels_login = Core\Helpers\YAML::get('login', $this->labels);
-                Helpers\FlashMessage::setMessage($labels_login['error'], 'danger');
+                Helpers\FlashMessage::set($labels_login['error'], 'danger');
 
                 $captcha = new Captcha\Captcha();
                 $captcha->setPublicKey(Core\Config()->CAPTCHA['public_key']);
@@ -210,11 +210,11 @@ class CMS extends Core\Base\Resource
                 );
 
                 Core\Helpers\Mailer::send($mailForPasswordReset);
-                Helpers\FlashMessage::setMessage($labelsReset['success'], 'success');
+                Helpers\FlashMessage::set($labelsReset['success'], 'success');
                 Core\Session()->remove('password_reset_error');
             } else {
                 $message = isset($this->errors['email']) ? $labelsReset['error'] : $labelsCaptcha['error'];
-                Helpers\FlashMessage::setMessage($message, 'danger');
+                Helpers\FlashMessage::set($message, 'danger');
 
                 $captcha = new Captcha\Captcha();
                 $captcha->setPublicKey(Core\Config()->CAPTCHA['public_key']);
@@ -313,7 +313,7 @@ class CMS extends Core\Base\Resource
 
         if (!Helpers\CMSUsers::userCan(array('controller' => $controller, 'action' => $action))) {
             $labelsGeneral = Core\Helpers\YAML::get('general');
-            Helpers\FlashMessage::setMessage($labelsGeneral['no_access'], 'danger');
+            Helpers\FlashMessage::set($labelsGeneral['no_access'], 'danger');
 
             $request->redirectTo(array('controller' => 'users', 'action' => 'account'));
         }

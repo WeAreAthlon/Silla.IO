@@ -103,17 +103,17 @@ class Users extends CMS
         if (!$request->post('password') || !Crypt::hashCompare($this->user->password, $request->post('password'))) {
             if (!$request->is('xhr')) {
                 $labelsGeneral = Core\Helpers\YAML::get('general');
-                Helpers\FlashMessage::setMessage($labelsGeneral['not_authorized'], 'danger');
+                Helpers\FlashMessage::set($labelsGeneral['not_authorized'], 'danger');
             }
 
             $request->redirectTo('index');
         }
 
         /* Prevent self deletion */
-        if ($resource->id === $this->user->id) {
+        if ($resource->id == $this->user->id) {
             if (!$request->is('xhr')) {
                 $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-                Helpers\FlashMessage::setMessage($labelsMessages['delete']['self'], 'danger');
+                Helpers\FlashMessage::set($labelsMessages['delete']['self'], 'danger');
             }
 
             $request->redirectTo('index');
@@ -133,7 +133,7 @@ class Users extends CMS
     protected function afterEdit(Base\Model $resource, Request $request)
     {
         /* Reloads user info */
-        if ($resource->id === $this->user->id) {
+        if ($resource->id == $this->user->id) {
             $resource = new $this->model;
             $resource = $resource::find()->where('id = ?', array($this->user->id))->first();
             Core\Session()->set('user_info', rawurlencode(serialize($resource)));
