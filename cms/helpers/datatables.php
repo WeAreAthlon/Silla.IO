@@ -160,7 +160,7 @@ class DataTables
                                     $query = $query->join(
                                         "{$related['table']} as {$related['table']}{$v}",
                                         "{$prefix}{$obj::$tableName}.{$primaryKey} = " .
-                                            "{$related['table']}{$v}.{$related['key']}" .
+                                        "{$related['table']}{$v}.{$related['key']}" .
                                         ' AND ' .
                                         "{$related['table']}{$v}.{$related['relative_key']} = {$v}"
                                     );

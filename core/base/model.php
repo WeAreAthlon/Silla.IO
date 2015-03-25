@@ -375,7 +375,7 @@ abstract class Model
             ->join(
                 $relation_table,
                 "{$prefix}{$relation_table}.{$relative_key} = {$prefix}{$mdl::$tableName}." .
-                    $class_name::primaryKeyField()
+                $class_name::primaryKeyField()
             )
             ->where("{$prefix}{$relation_table}.{$key} = ?", array($this->{static::$primaryKeyField}));
 

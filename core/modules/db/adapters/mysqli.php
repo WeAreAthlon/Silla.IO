@@ -371,7 +371,7 @@ class Mysqli implements Interfaces\Adapter
      * @param string $sql         SQL Query.
      * @param array  $bind_params Parameters.
      *
-     * @throws \Exception The number of values passed and placeholders mismatch.
+     * @throws \InvalidArgumentException The number of values passed and placeholders mismatch.
      *
      * @return \mysqli_stmt|false
      */
@@ -381,11 +381,14 @@ class Mysqli implements Interfaces\Adapter
             throw new \InvalidArgumentException('The number of values passed and placeholders mismatch');
         }
 
-        if($stmt = $this->link->prepare($sql)) {
+        if ($stmt = $this->link->prepare($sql)) {
             $reflection = new \ReflectionClass('mysqli_stmt');
             $method = $reflection->getMethod('bind_param');
 
-            $param_types = array_reduce($bind_params, function($carry) { $carry .= 's'; return $carry; });
+            $param_types = array_reduce($bind_params, function($carry) {
+                $carry .= 's';
+                return $carry;
+            });
             array_unshift($bind_params, $param_types);
             $method->invokeArgs($stmt, Core\Utils::arrayToRefValues($bind_params));
         } else {
