@@ -126,7 +126,7 @@ final class DB
                     $instance->setCharset();
                     break;
                 case 'slqlite':
-                    $instance = new Adapters\Sqlite($dsn['host'] . '.db3');
+                    $instance = new Adapters\SQLite($dsn['host'] . '.db3');
                     $instance->setCharset();
                     break;
                 default:

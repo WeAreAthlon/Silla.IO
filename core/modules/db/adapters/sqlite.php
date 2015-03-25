@@ -18,7 +18,7 @@ use Core\Modules\DB\Interfaces;
 /**
  * Database management driver wrapping SQL Lite 3 extension.
  */
-class Sqlite extends \SQLite3 implements Interfaces\Adapter
+class SQLite extends \SQLite3 implements Interfaces\Adapter
 {
     /**
      * DB Cache instance.
@@ -76,32 +76,19 @@ class Sqlite extends \SQLite3 implements Interfaces\Adapter
      */
     public function query($sql, array $bind_params = array())
     {
-        try {
-            if (count($bind_params) > 0) {
-                $stmt = $this->prepare($sql);
+        if (count($bind_params) > 0) {
+            $stmt = $this->prepare($sql);
 
-                foreach ($bind_params as $key => $val) {
-                    $stmt->bindValue($key + 1, $val);
-                }
-
-                $resource = $stmt->execute();
-            } else {
-                $resource = parent::query($sql);
+            foreach ($bind_params as $key => $val) {
+                $stmt->bindValue($key + 1, $val);
             }
 
-            $result = $this->fetchAll($resource);
-        } catch (\Exception $e) {
-            $backtrace = debug_backtrace();
-            next($backtrace);
-            $callee = next($backtrace);
-            trigger_error(
-                "SQL {$callee['class']}->{$callee['function']} on {$callee['line']} line.<br />" . $e->getMessage(),
-                E_USER_ERROR
-            );
-            exit;
+            $resource = $stmt->execute();
+        } else {
+            $resource = parent::query($sql);
         }
 
-        return $result;
+        return $this->fetchAll($resource);
     }
 
     /**
@@ -114,26 +101,15 @@ class Sqlite extends \SQLite3 implements Interfaces\Adapter
      */
     public function execute($sql, array $bind_params = array())
     {
-        try {
-            if (count($bind_params) > 0) {
-                $stmt = $this->prepare($sql);
-                foreach ($bind_params as $key => $val) {
-                    $stmt->bindValue($key + 1, $val);
-                }
-
-                $result = $stmt->execute();
-            } else {
-                $result = $this->exec($sql);
+        if (count($bind_params) > 0) {
+            $stmt = $this->prepare($sql);
+            foreach ($bind_params as $key => $val) {
+                $stmt->bindValue($key + 1, $val);
             }
-        } catch (\Exception $e) {
-            $backtrace = debug_backtrace();
-            next($backtrace);
-            $callee = next($backtrace);
-            trigger_error(
-                "SQL {$callee['class']}->{$callee['function']} on {$callee['line']} line.<br />" . $e->getMessage(),
-                E_USER_ERROR
-            );
-            exit;
+
+            $result = $stmt->execute();
+        } else {
+            $result = $this->exec($sql);
         }
 
         return $result;

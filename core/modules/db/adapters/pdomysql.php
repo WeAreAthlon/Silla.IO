@@ -78,36 +78,22 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
      */
     public function query($sql, array $bind_params = array())
     {
-        try {
-            if (count($bind_params) > 0) {
-                $stmt = $this->prepare($sql);
-                $stmt->execute($bind_params);
-            } else {
-                $stmt = parent::query($sql);
-            }
-
-            if (!$stmt->columnCount()) {
-                if ($stmt->rowCount()) {
-                    return true;
-                }
-
-                return false;
-            }
-
-            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\PDOException $e) {
-            $backtrace = debug_backtrace();
-            next($backtrace);
-            $callee = next($backtrace);
-            trigger_error(
-                "SQL '{$sql}'. Occured in {$callee['class']}->{$callee['function']} on {$callee['line']} line.<br />" .
-                $e->getMessage(),
-                E_USER_ERROR
-            );
-
-            exit;
+        if (count($bind_params) > 0) {
+            $stmt = $this->prepare($sql);
+            $stmt->execute($bind_params);
+        } else {
+            $stmt = parent::query($sql);
         }
-        return $result;
+
+        if (!$stmt->columnCount()) {
+            if ($stmt->rowCount()) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -120,23 +106,11 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
      */
     public function execute($sql, array $bind_params = array())
     {
-        try {
-            if (count($bind_params) > 0) {
-                $stmt = $this->prepare($sql);
-                $result = $stmt->execute($bind_params);
-            } else {
-                $result = $this->exec($sql);
-            }
-        } catch (\PDOException $e) {
-            $backtrace = debug_backtrace();
-            next($backtrace);
-            $callee = next($backtrace);
-            trigger_error(
-                "SQL '{$sql}'. Occured in {$callee['class']}->{$callee['function']} on {$callee['line']} line.<br />" .
-                $e->getMessage(),
-                E_USER_ERROR
-            );
-            exit;
+        if (count($bind_params) > 0) {
+            $stmt = $this->prepare($sql);
+            $result = $stmt->execute($bind_params);
+        } else {
+            $result = $this->exec($sql);
         }
 
         return $result;
@@ -254,15 +228,15 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
     }
 
     /**
-     * Builds SQL part of the query.
+     * Builds the SQL part of the query.
      *
-     * @param string $query Query string.
+     * @param DB\Query $query Query object.
      *
      * @throws \DomainException DB Adapter does not support the required JOIN type.
      *
      * @return string
      */
-    private function buildSql($query)
+    private function buildSql(DB\Query $query)
     {
         $sql = array();
 

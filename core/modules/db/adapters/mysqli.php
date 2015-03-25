@@ -18,7 +18,7 @@ use Core\Modules\DB\Interfaces;
 /**
  * Database management driver wrapping mysql extension.
  */
-class Mysqli implements Interfaces\Adapter
+class MySQLi implements Interfaces\Adapter
 {
     /**
      * DB Cache instance.
@@ -96,37 +96,24 @@ class Mysqli implements Interfaces\Adapter
      */
     public function query($sql, array $bind_params = array())
     {
-        try {
-            $resource = false;
-            if (count($bind_params) > 0) {
-                $stmt = $this->prepare($sql, $bind_params);
+        $resource = false;
+        if (count($bind_params) > 0) {
+            $stmt = $this->prepare($sql, $bind_params);
 
-                if ($stmt) {
-                    $stmt->execute();
-                    $resource = $stmt->get_result();
-                    $stmt->close();
-                }
-            } else {
-                $resource = $this->link->query($sql);
+            if ($stmt) {
+                $stmt->execute();
+                $resource = $stmt->get_result();
+                $stmt->close();
             }
-
-            if (!is_object($resource)) {
-                return !!$this->link->affected_rows;
-            }
-
-            $result = $this->fetchAll($resource);
-        } catch (\Exception $e) {
-            $backtrace = debug_backtrace();
-            next($backtrace);
-            $callee = next($backtrace);
-            trigger_error(
-                "SQL {$callee['class']}->{$callee['function']} on {$callee['line']} line.<br />" . $e->getMessage(),
-                E_USER_ERROR
-            );
-            exit;
+        } else {
+            $resource = $this->link->query($sql);
         }
 
-        return $result;
+        if (!is_object($resource)) {
+            return !!$this->link->affected_rows;
+        }
+
+        return $this->fetchAll($resource);
     }
 
     /**
@@ -139,25 +126,14 @@ class Mysqli implements Interfaces\Adapter
      */
     public function execute($sql, array $bind_params = array())
     {
-        try {
-            if (count($bind_params) > 0) {
-                $stmt = $this->prepare($sql, $bind_params);
-                $stmt->execute();
+        if (count($bind_params) > 0) {
+            $stmt = $this->prepare($sql, $bind_params);
+            $stmt->execute();
 
-                $result = $stmt->get_result();
-                $stmt->close();
-            } else {
-                $result = $this->link->query($sql);
-            }
-        } catch (\Exception $e) {
-            $backtrace = debug_backtrace();
-            next($backtrace);
-            $callee = next($backtrace);
-            trigger_error(
-                "SQL {$callee['class']}->{$callee['function']} on {$callee['line']} line.<br />" . $e->getMessage(),
-                E_USER_ERROR
-            );
-            exit;
+            $result = $stmt->get_result();
+            $stmt->close();
+        } else {
+            $result = $this->link->query($sql);
         }
 
         return empty($this->link->error) || $result;
@@ -372,6 +348,7 @@ class Mysqli implements Interfaces\Adapter
      * @param array  $bind_params Parameters.
      *
      * @throws \InvalidArgumentException The number of values passed and placeholders mismatch.
+     * @throws \LogicException           Error in the prepared statement.
      *
      * @return \mysqli_stmt|false
      */
@@ -392,7 +369,7 @@ class Mysqli implements Interfaces\Adapter
             array_unshift($bind_params, $param_types);
             $method->invokeArgs($stmt, Core\Utils::arrayToRefValues($bind_params));
         } else {
-            trigger_error($this->link->error);
+            throw new \LogicException($this->link->error);
         }
 
         return $stmt;

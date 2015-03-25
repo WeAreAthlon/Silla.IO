@@ -91,34 +91,21 @@ class MySQL implements Interfaces\Adapter
      */
     public function query($sql, array $bind_params = array())
     {
-        try {
-            if (count($bind_params) > 0) {
-                $stmt = $this->prepare($sql, $bind_params);
-                $resource = mysql_query($stmt);
-            } else {
-                $resource = mysql_query($sql);
-            }
-
-            if (gettype($resource) != 'resource') {
-                if (mysql_affected_rows()) {
-                    return true;
-                }
-                return false;
-            }
-
-            $result = $this->fetchAll($resource);
-        } catch (\Exception $e) {
-            $backtrace = debug_backtrace();
-            next($backtrace);
-            $callee = next($backtrace);
-            trigger_error(
-                "SQL {$callee['class']}->{$callee['function']} on {$callee['line']} line.<br />" . $e->getMessage(),
-                E_USER_ERROR
-            );
-            exit;
+        if (count($bind_params) > 0) {
+            $stmt = $this->prepare($sql, $bind_params);
+            $resource = mysql_query($stmt);
+        } else {
+            $resource = mysql_query($sql);
         }
 
-        return $result;
+        if (gettype($resource) != 'resource') {
+            if (mysql_affected_rows()) {
+                return true;
+            }
+            return false;
+        }
+
+        return $this->fetchAll($resource);
     }
 
     /**
@@ -131,22 +118,11 @@ class MySQL implements Interfaces\Adapter
      */
     public function execute($sql, array $bind_params = array())
     {
-        try {
-            if (count($bind_params) > 0) {
-                $stmt = $this->prepare($sql, $bind_params);
-                $result = mysql_query($stmt);
-            } else {
-                $result = mysql_query($sql);
-            }
-        } catch (\Exception $e) {
-            $backtrace = debug_backtrace();
-            next($backtrace);
-            $callee = next($backtrace);
-            trigger_error(
-                "SQL {$callee['class']}->{$callee['function']} on {$callee['line']} line.<br />" . $e->getMessage(),
-                E_USER_ERROR
-            );
-            exit;
+        if (count($bind_params) > 0) {
+            $stmt = $this->prepare($sql, $bind_params);
+            $result = mysql_query($stmt);
+        } else {
+            $result = mysql_query($sql);
         }
 
         return $result;
