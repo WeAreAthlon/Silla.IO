@@ -21,7 +21,7 @@ http://silla.io by [Athlon](http://weareathlon.com)
 
 ### Overview
 
-_Silla.IO_ is a PHP application development framework based on the *MVC* software architecture pattern. 
+_Silla.IO_ is a lightweight PHP application development framework based on the *MVC* software architecture pattern. 
 The framework includes *CMS Application* to provide assistance building custom content management systems.
 
 The code base features *Model-View-Controller* pattern with additional support for:
@@ -34,6 +34,7 @@ The code base features *Model-View-Controller* pattern with additional support f
 * `Cache API`
 * `Session API`
 * `Crypt API`
+* `i18n`
 * `CLI` task manager
 * ... *any many more*
 
@@ -44,17 +45,17 @@ The code base features *Model-View-Controller* pattern with additional support f
 * **Operating System**
   * *Type*: `*nix`, `Windows`
 * **Web Server**
-  * *Type:* `Apache`, `nginx` or compatible
+  * *Type:* `Apache`, `nginx` or compatible(`PHP built-in web server`)
   * *Modules:* (*below are `Apache` module names. Each of them has equivalent for `nginx`*)
     * `mod_rewrite` - *in order to have custom(pretty) URLs*
     * `mod_env` - *in order to easily switch configuration environments*
 * **PHP**
-  * *Type:* Standard (*SAPI - Apache Handler or FCGI*)
+  * *Type:* Standard (*SAPI - Apache Handler or CLI/CGI/FCGI*)
   * *Version:* `5.3.7` (*or newer*)
   * *Configuration:*
     * Runtime change enabled via `ini_set()`
     * *Extensions*
-      * `PDO`, `PDO_mysql`, `mysql`, `SQLite` (*depends on on the configured database adapter*)
+      * `PDO`, `PDO_mysql`, `mysqli`, `SQLite3` (*depends on on the configured database adapter*)
       * `GD` - *in order to work with media*
 * **Database**
   * *Type:* `MySQL` (*depends on on the configured database adapter*)
@@ -67,3 +68,4 @@ The code base features *Model-View-Controller* pattern with additional support f
 * **Package Managers**
   * *`Composer`* - PHP package manager
   * *`Bower`* - Front-end Assets package manager
+    * *`BowerPHP` - can be also used
