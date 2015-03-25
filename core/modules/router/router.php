@@ -98,6 +98,7 @@ final class Router
             }
 
             $this->response->setContent($controller->renderer->getOutput());
+            $this->response->addHeader('Content-Type: ' . $controller->renderer->getOutputContentType());
         } else {
             Core\Base\Controller::resourceNotFound($request);
         }

@@ -74,7 +74,7 @@ abstract class Resource extends Controller
             );
 
             $this->renderer->setOutput(json_encode($response));
-            Core\Router()->response->addHeader('Content-Type: application/json');
+            $this->renderer->setOutputContentType('application/json');
         } else {
             if ($this->getModelName()) {
                 $resource = new $this->model;

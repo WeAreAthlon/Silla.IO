@@ -62,6 +62,13 @@ final class Render
     private $filesExtension;
 
     /**
+     * Rendered content type(MIME type).
+     *
+     * @var string
+     */
+    private $contentType;
+
+    /**
      * Output render container.
      *
      * @var string
@@ -84,7 +91,9 @@ final class Render
     {
         $this->configuration  = Core\Config()->paths('views');
         $this->setAdapter($adapter);
-        $this->filesExtension = $this->render->getDefaultTemplatesFileExtension();
+        $this->filesExtension = $this->render->getTemplatesFileExtension();
+        $this->contentType = $this->render->getRenderedContentType();
+
         $this->assets  = new Assets;
     }
 
@@ -152,7 +161,7 @@ final class Render
     }
 
     /**
-     * Removes an assignend template variable.
+     * Removes an assigned template variable.
      *
      * @param string $variable Name of the variable.
      *
@@ -259,6 +268,28 @@ final class Render
     public function getTemplateExtension()
     {
         return $this->filesExtension;
+    }
+
+    /**
+     * Retrieves template content type(MIME type).
+     *
+     * @return string
+     */
+    public function getOutputContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * Sets template content type(MIME type).
+     *
+     * @param string $mimeType Content type.
+     *
+     * @return void
+     */
+    public function setOutputContentType($mimeType)
+    {
+        $this->contentType = $mimeType;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Base Controller implementation.
+ * Controller implementation.
  *
  * @package    Silla.IO
  * @subpackage Core\Base
@@ -238,7 +238,7 @@ abstract class Controller
     protected static function setOutputDefaultHeaders()
     {
         Core\Router()->response->addHeaders(array(
-            'X-Powered-By: Athlon Silla',
+            'X-Powered-By: Silla.IO',
             'X-Frame-Options: SAMEORIGIN',
         ));
     }
@@ -390,7 +390,7 @@ abstract class Controller
      * @param string $action Current action.
      *
      * @access private
-     * @throws \BadMethodCallException When specifing non-existing method.
+     * @throws \BadMethodCallException When specifying non-existing method.
      *
      * @return void
      */
@@ -429,7 +429,7 @@ abstract class Controller
      * @param string $action Current action.
      *
      * @access private
-     * @throws \BadMethodCallException When specifing non-existing method.
+     * @throws \BadMethodCallException When specifying non-existing method.
      *
      * @return void
      */
@@ -523,7 +523,7 @@ abstract class Controller
     }
 
     /**
-     * Assigns commont template engine vars.
+     * Assigns common template engine vars.
      *
      * @param Modules\Render\Render $renderer Render module object.
      *

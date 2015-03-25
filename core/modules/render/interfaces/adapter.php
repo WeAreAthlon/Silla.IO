@@ -54,9 +54,16 @@ interface Adapter
     public function parse($template);
 
     /**
-     * Retrieves default templates file extension.
+     * Retrieves rendered templates file extension.
      *
      * @return string
      */
-    public function getDefaultTemplatesFileExtension();
+    public function getTemplatesFileExtension();
+
+    /**
+     * Retrieves rendered content type(MIME type).
+     *
+     * @return string
+     */
+    public function getRenderedContentType();
 }

@@ -93,12 +93,22 @@ class Smarty implements Core\Modules\Render\Interfaces\Adapter
     }
 
     /**
-     * Retrieves default templates file extension.
+     * Retrieves rendered templates file extension.
      *
      * @return string
      */
-    public function getDefaultTemplatesFileExtension()
+    public function getTemplatesFileExtension()
     {
         return 'html.tpl';
+    }
+
+    /**
+     * Retrieves rendered content type(MIME type).
+     *
+     * @return string
+     */
+    public function getRenderedContentType()
+    {
+        return 'text/html';
     }
 }
