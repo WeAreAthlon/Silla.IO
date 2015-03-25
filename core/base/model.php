@@ -374,7 +374,8 @@ abstract class Model
         $query = $mdl::find($prefix . $class_name::$tableName . '.*' . $_fieldsI18n)
             ->join(
                 $relation_table,
-                "{$prefix}{$relation_table}.{$relative_key} = {$prefix}{$mdl::$tableName}." . $class_name::primaryKeyField()
+                "{$prefix}{$relation_table}.{$relative_key} = {$prefix}{$mdl::$tableName}." .
+                    $class_name::primaryKeyField()
             )
             ->where("{$prefix}{$relation_table}.{$key} = ?", array($this->{static::$primaryKeyField}));
 
@@ -1045,7 +1046,6 @@ abstract class Model
         $query = new DB\Query(get_called_class());
 
         if (static::$isI18n) {
-
             if (!static::$i18nLocale) {
                 $_locale = Core\Registry()->get('locale');
                 static::$i18nLocale =

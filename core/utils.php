@@ -273,11 +273,11 @@ final class Utils
     /**
      * Convert array of values to array of refs.
      *
-     * @param array $array Array to be converted
+     * @param array $array Array to be converted.
      *
      * @return array Refs.
      */
-    public static function ArrayToRefValues(array $array)
+    public static function arrayToRefValues(array $array)
     {
         $refs = array();
 

@@ -1,10 +1,10 @@
 <?php
 /**
- * MySQL adapter.
+ * MySQLi adapter.
  *
  * @package    Silla.IO
  * @subpackage Core\Modules\DB\Adapters
- * @author     Kalin Stefanov <kalin@athlonsofia.com>
+ * @author     Plamen Nikolov <kalin@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
@@ -18,7 +18,7 @@ use Core\Modules\DB\Interfaces;
 /**
  * Database management driver wrapping mysql extension.
  */
-class MySQL implements Interfaces\Adapter
+class Mysqli implements Interfaces\Adapter
 {
     /**
      * DB Cache instance.
@@ -28,17 +28,23 @@ class MySQL implements Interfaces\Adapter
     public $cache;
 
     /**
+     * MySQLi object. Represents a connection between PHP and a MySQL database.
+     *
+     * @var \mysqli
+     */
+    protected $link;
+
+    /**
      * Init actions.
      *
      * @param string $host     Host of the storage engine.
      * @param string $database Name of the database.
      * @param string $username Username to access the database.
-     * @param string $password Passphrase for the user.
+     * @param string $password Password phrase for the user.
      */
     public function __construct($host, $database, $username, $password)
     {
-        mysql_connect($host, $username, $password);
-        mysql_select_db($database);
+        $this->link = new \MySQLi($host, $username, $password, $database);
     }
 
     /**
@@ -66,7 +72,6 @@ class MySQL implements Interfaces\Adapter
 
         if ($query->type === 'select') {
             $res = $this->query($sql, $query->bind_params);
-
             Core\DbCache()->setCache($query_cache_name, $query_hash, $res);
 
             return $res;
@@ -87,23 +92,26 @@ class MySQL implements Interfaces\Adapter
      * @param string $sql         SQL string query.
      * @param array  $bind_params Array of parameter values.
      *
-     * @return mixed
+     * @return array
      */
     public function query($sql, array $bind_params = array())
     {
         try {
+            $resource = false;
             if (count($bind_params) > 0) {
                 $stmt = $this->prepare($sql, $bind_params);
-                $resource = mysql_query($stmt);
+
+                if ($stmt) {
+                    $stmt->execute();
+                    $resource = $stmt->get_result();
+                    $stmt->close();
+                }
             } else {
-                $resource = mysql_query($sql);
+                $resource = $this->link->query($sql);
             }
 
-            if (gettype($resource) != 'resource') {
-                if (mysql_affected_rows()) {
-                    return true;
-                }
-                return false;
+            if (!is_object($resource)) {
+                return !!$this->link->affected_rows;
             }
 
             $result = $this->fetchAll($resource);
@@ -127,16 +135,19 @@ class MySQL implements Interfaces\Adapter
      * @param string $sql         SQL string query.
      * @param array  $bind_params Parameter to bind.
      *
-     * @return resource
+     * @return boolean
      */
     public function execute($sql, array $bind_params = array())
     {
         try {
             if (count($bind_params) > 0) {
                 $stmt = $this->prepare($sql, $bind_params);
-                $result = mysql_query($stmt);
+                $stmt->execute();
+
+                $result = $stmt->get_result();
+                $stmt->close();
             } else {
-                $result = mysql_query($sql);
+                $result = $this->link->query($sql);
             }
         } catch (\Exception $e) {
             $backtrace = debug_backtrace();
@@ -149,7 +160,7 @@ class MySQL implements Interfaces\Adapter
             exit;
         }
 
-        return $result;
+        return empty($this->link->error) || $result;
     }
 
     /**
@@ -221,9 +232,7 @@ class MySQL implements Interfaces\Adapter
      */
     public function getLastInsertId()
     {
-        $result = $this->query('SELECT LAST_INSERT_ID()');
-
-        return $result[0][0];
+        return $this->link->insert_id;
     }
 
     /**
@@ -235,7 +244,7 @@ class MySQL implements Interfaces\Adapter
      */
     public function escapeString($value)
     {
-        return mysql_real_escape_string($value);
+        return $this->link->escape_string($value);
     }
 
     /**
@@ -321,7 +330,7 @@ class MySQL implements Interfaces\Adapter
             $sql[] = '(' . implode(',', $query->db_fields) . ')';
             $sql[] = 'VALUES';
 
-            if (is_array(current($query->bind_params))) {
+            if (isset($query->bind_params[0]) && is_array($query->bind_params[0])) {
                 $sql[] = implode(',', array_map(function ($item) {
                     return '(' . implode(',', array_map(function () {
                         return '?';
@@ -364,39 +373,40 @@ class MySQL implements Interfaces\Adapter
      *
      * @throws \Exception The number of values passed and placeholders mismatch.
      *
-     * @return mixed
+     * @return \mysqli_stmt|false
      */
     private function prepare($sql, array $bind_params = array())
     {
         if (substr_count($sql, '?') !== count($bind_params)) {
-            throw new \Exception('The number of values passed and placeholders mismatch');
+            throw new \InvalidArgumentException('The number of values passed and placeholders mismatch');
         }
 
-        $keys = array();
-        $values = array();
+        if($stmt = $this->link->prepare($sql)) {
+            $reflection = new \ReflectionClass('mysqli_stmt');
+            $method = $reflection->getMethod('bind_param');
 
-        foreach ($bind_params as $value) {
-            $keys[] = '/\{\{param' . count($values) . '\}\}/';
-            $sql = preg_replace('/\?/', '{{param' . count($values) . '}}', $sql, 1);
-            $values[] = '"' . mysql_real_escape_string($value) . '"';
+            $param_types = array_reduce($bind_params, function($carry) { $carry .= 's'; return $carry; });
+            array_unshift($bind_params, $param_types);
+            $method->invokeArgs($stmt, Core\Utils::arrayToRefValues($bind_params));
+        } else {
+            trigger_error($this->link->error);
         }
-        $res = preg_replace($keys, $values, $sql, 1);
 
-        return $res;
+        return $stmt;
     }
 
     /**
      * Fetch all rows satisfying the query.
      *
-     * @param resource $resource Resource source.
+     * @param \mysqli_result $resource Resource source.
      *
      * @return array
      */
-    private function fetchAll($resource)
+    private function fetchAll(\mysqli_result $resource)
     {
         $result = array();
 
-        while ($row = mysql_fetch_assoc($resource)) {
+        while ($row = $resource->fetch_assoc()) {
             $result[] = $row;
         }
 

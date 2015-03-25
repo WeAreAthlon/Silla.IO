@@ -159,7 +159,8 @@ class DataTables
                                 foreach ($value as $v) {
                                     $query = $query->join(
                                         "{$related['table']} as {$related['table']}{$v}",
-                                        "{$prefix}{$obj::$tableName}.{$primaryKey} = {$related['table']}{$v}.{$related['key']}" .
+                                        "{$prefix}{$obj::$tableName}.{$primaryKey} = " .
+                                            "{$related['table']}{$v}.{$related['key']}" .
                                         ' AND ' .
                                         "{$related['table']}{$v}.{$related['relative_key']} = {$v}"
                                     );

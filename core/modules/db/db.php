@@ -117,12 +117,14 @@ final class DB
                     $instance->setCharset();
                     $instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
                     break;
-
-                case 'mysql':
-                    $instance = new Adapters\Mysql($dsn['host'], $dsn['name'], $dsn['user'], $dsn['password']);
+                case 'mysqli':
+                    $instance = new Adapters\MySQLi($dsn['host'], $dsn['name'], $dsn['user'], $dsn['password']);
                     $instance->setCharset();
                     break;
-
+                case 'mysql':
+                    $instance = new Adapters\MySQL($dsn['host'], $dsn['name'], $dsn['user'], $dsn['password']);
+                    $instance->setCharset();
+                    break;
                 case 'slqlite':
                     $instance = new Adapters\Sqlite($dsn['host'] . '.db3');
                     $instance->setCharset();
