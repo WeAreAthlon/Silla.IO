@@ -150,16 +150,26 @@ class SQLite extends \SQLite3 implements Interfaces\Adapter
     public function getTableSchema($table, $schema)
     {
         $columns = $this->query("PRAGMA table_info({$table})");
+        $indexes_list = $this->query("PRAGMA index_list({$table})");
+        $indexes = array();
+        foreach ($indexes_list as $index) {
+            $indexes_info = $this->query("PRAGMA index_info({$index['name']})");
+            foreach ($indexes_info as $index_info) {
+                $indexes[$index_info['name']] = $index['unique'];
+            }
+        }
+
         $res = array();
 
         foreach ($columns as $column) {
+            $column_index = isset($indexes[$column['name']]) ? $indexes[$column['name']] : '';
             $res[] = array(
                 'COLUMN_NAME' => $column['name'],
                 'DATA_TYPE' => $column['type'],
                 'IS_NULLABLE' => $column['notnull'] ? 'NO' : 'YES',
                 'COLUMN_DEFAULT' => $column['dflt_value'],
-                'COLUMN_KEY' => $column['pk'],
-                'CHARACTER_MAXIMUM_LENGTH' => 255,
+                'COLUMN_KEY' => $column_index ? 'UNI' : '',
+                'CHARACTER_MAXIMUM_LENGTH' => 2147483647,
                 'EXTRA' => $column['pk'] ? 'auto_increment' : ''
             );
         }
@@ -185,7 +195,7 @@ class SQLite extends \SQLite3 implements Interfaces\Adapter
     }
 
     /**
-     * Retrieval of the last instered id.
+     * Retrieval of the last inserted id.
      *
      * @return integer
      */
@@ -276,7 +286,7 @@ class SQLite extends \SQLite3 implements Interfaces\Adapter
             $sql[] = $query->table;
             $sql[] = '(' . implode(',', $query->db_fields) . ')';
 
-            if (is_array(current($query->bind_params))) {
+            if (isset($query->bind_params[0]) && is_array($query->bind_params[0])) {
                 $sql[] = 'SELECT ' . implode(',', array_map(function ($item) {
                     return '? as ' . $item;
                 }, $query->db_fields));

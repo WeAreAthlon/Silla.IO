@@ -103,8 +103,8 @@ class Configuration extends Core\Base\Configuration
     /**
      * @var (int|string)[] $DB DSN (Data source name).
      *
-     * @example adapter        Adapter type (pdo_mysql|mysql|sqllite).
-     * @example host           Connection host name.
+     * @example adapter        Adapter type (pdo_mysql|mysqli|mysql|sqlite).
+     * @example host           Connection host name, or sqlite db file location.
      * @example port           Connection host port.
      * @example user           User name.
      * @example password       Password phrase.

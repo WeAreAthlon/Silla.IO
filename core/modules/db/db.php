@@ -125,8 +125,8 @@ final class DB
                     $instance = new Adapters\MySQL($dsn['host'], $dsn['name'], $dsn['user'], $dsn['password']);
                     $instance->setCharset();
                     break;
-                case 'slqlite':
-                    $instance = new Adapters\SQLite($dsn['host'] . '.db3');
+                case 'sqlite':
+                    $instance = new Adapters\SQLite($dsn['host']);
                     $instance->setCharset();
                     break;
                 default:
