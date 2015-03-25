@@ -76,6 +76,13 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     );
 
     /**
+     * Whether tables names prefix has been appended.
+     *
+     * @var boolean
+     */
+    private $tablesPrefixAppended = false;
+
+    /**
      * Init actions.
      *
      * @param string $class_name Name of the class.
@@ -730,5 +737,20 @@ class Query implements \ArrayAccess, \Countable, \Iterator
         $this->run();
 
         return in_array($item, $this->items);
+    }
+
+    /**
+     * Appends table name prefix.
+     *
+     * @param string $prefix Prefix contents.
+     *
+     * @return void
+     */
+    public function appendTablesPrefix($prefix)
+    {
+        if (!$this->tablesPrefixAppended) {
+            $this->query_options['table'] = $prefix . $this->query_options['table'];
+            $this->tablesPrefixAppended = true;
+        }
     }
 }

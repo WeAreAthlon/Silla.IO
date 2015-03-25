@@ -19,7 +19,7 @@
         {if "{$_controller}/_list/fields/{$field}.html.tpl"|template_exists}
             {include file="{$_controller}/_list/fields/{$field}.html.tpl"}
         {else}
-            {if $resource->{$field}|default:false}
+            {if $resource->{$field}|default:false || isset($resource->hasAndBelongsToMany.$field)}
                 {if "_shared/entities/types/{$type}/list.html.tpl"|template_exists}
                     {include file="_shared/entities/types/{$type}/list.html.tpl"}
                 {else}

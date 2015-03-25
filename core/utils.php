@@ -269,4 +269,21 @@ final class Utils
 
         return $iValue;
     }
+
+    /**
+     * Convert array of values to array of refs.
+     *
+     * @param array $array Array to be converted
+     *
+     * @return array Refs.
+     */
+    public static function ArrayToRefValues(array $array)
+    {
+        $refs = array();
+
+        foreach ($array as $key => $value) {
+            $refs[$key] = &$array[$key];
+        }
+        return $refs;
+    }
 }

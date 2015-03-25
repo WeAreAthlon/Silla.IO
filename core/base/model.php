@@ -65,25 +65,25 @@ abstract class Model
      * Stores all relations of type "belongs to".
      *
      * @var array
-     * @access protected
+     * @access public
      */
-    protected $belongsTo = array();
+    public $belongsTo = array();
 
     /**
      * Stores all relations of type "has many".
      *
      * @var array
-     * @access protected
+     * @access public
      */
-    protected $hasMany = array();
+    public $hasMany = array();
 
     /**
      * Stores all relations of type "has and belongs to many" (habtm).
      *
      * @var array
-     * @access protected
+     * @access public
      */
-    protected $hasAndBelongsToMany = array();
+    public $hasAndBelongsToMany = array();
 
     /**
      * Whether the table we're looking at has a corresponding table, holding internationalized values.
@@ -136,7 +136,24 @@ abstract class Model
      * @access protected
      * @static
      */
-    protected static $i18nLocaleField = 'i18nLocale';
+    protected static $i18nLocaleField = 'locale';
+
+    /**
+     * Suffix to be appended to the corresponding i18n table if not i18nTableName presented.
+     *
+     * @var string
+     * @access protected
+     * @static
+     */
+    protected static $i18nTableNameSuffix = '_i18n';
+
+    /**
+     * Query object to be used for communication with the DB layer.
+     *
+     * @var DB\Query
+     * @access protected
+     */
+    protected $query;
 
     /**
      * Constructor method.
@@ -156,7 +173,13 @@ abstract class Model
 
         if (static::$isI18n) {
             if (!static::$i18nLocale) {
-                static::$i18nLocale = Core\Config()->I18N['support'][Core\Registry()->get('locale')];
+                $_locale = Core\Registry()->get('locale');
+                static::$i18nLocale =
+                    isset(Core\Config()->I18N['locales'][$_locale]) ? $_locale : Core\Config()->I18N['default'];
+            }
+
+            if (!static::$i18nTableName) {
+                static::$i18nTableName = static::$tableName . static::$i18nTableNameSuffix;
             }
         }
 
@@ -221,7 +244,7 @@ abstract class Model
     }
 
     /**
-     * Isset method, needed for all internal __set and __get calls.
+     * Isset method, needed for all internal __set() and __get() calls.
      *
      * @param string $field Field to check.
      *
@@ -338,6 +361,7 @@ abstract class Model
      */
     private function hasAndBelongsToMany(array $relation, $name)
     {
+        $prefix = Core\Config()->DB['tables_prefix'];
         $relation_table = $relation['table'];
         $key = $relation['key'];
         $relative_key = $relation['relative_key'];
@@ -346,12 +370,13 @@ abstract class Model
         $mdl = new $class_name();
 
         $_fieldsI18n = $class_name::$isI18n ? ', ' . $class_name::$i18nTableName . '.*' : '';
-        $query = $mdl::find($class_name::$tableName . '.*' . $_fieldsI18n)
+
+        $query = $mdl::find($prefix . $class_name::$tableName . '.*' . $_fieldsI18n)
             ->join(
                 $relation_table,
-                "{$relation_table}.{$relative_key} = {$mdl::$tableName}." . $class_name::primaryKeyField()
+                "{$prefix}{$relation_table}.{$relative_key} = {$prefix}{$mdl::$tableName}." . $class_name::primaryKeyField()
             )
-            ->where("{$relation_table}.{$key} = ?", array($this->{static::$primaryKeyField}));
+            ->where("{$prefix}{$relation_table}.{$key} = ?", array($this->{static::$primaryKeyField}));
 
         return $this->$name = $query;
     }
@@ -642,9 +667,11 @@ abstract class Model
                 list($fields, $values) = $this->extractFieldsI18n(true);
                 $query_i18n = new DB\Query();
                 $query_i18n = $query_i18n->insert($fields, $values)->into(static::$i18nTableName);
+
+                Core\DB()->run($query_i18n);
             }
 
-            return $result && Core\DB()->run($query_i18n);
+            return $result;
         }
 
         return $result;
@@ -771,14 +798,12 @@ abstract class Model
                     }
 
                     break;
-
                 case 'int':
                     if ($value && !is_numeric($value)) {
                         $this->errors[$field] = 'invalid_type';
                     }
 
                     break;
-
                 case 'enum':
                     if ($value && !in_array($value, $schema[$field]['values'])) {
                         $this->errors[$field] = 'enum_no_match';
@@ -1020,20 +1045,29 @@ abstract class Model
         $query = new DB\Query(get_called_class());
 
         if (static::$isI18n) {
+
             if (!static::$i18nLocale) {
-                static::$i18nLocale = Core\Config()->I18N['support'][Core\Registry()->get('locale')];
+                $_locale = Core\Registry()->get('locale');
+                static::$i18nLocale =
+                    isset(Core\Config()->I18N['locales'][$_locale]) ? $_locale : Core\Config()->I18N['default'];
             }
+
+            if (!static::$i18nTableName) {
+                static::$i18nTableName = static::$tableName . static::$i18nTableNameSuffix;
+            }
+
+            $prefix = Core\Config()->DB['tables_prefix'];
 
             return $query
                 ->select($fields)
                 ->from(static::$tableName)
                 ->join(
                     static::$i18nTableName,
-                    static::$tableName . '.' . static::$primaryKeyField
+                    $prefix . static::$tableName . '.' . static::$primaryKeyField
                     . ' = '
-                    . static::$i18nTableName . '.' . static::$i18nForeignKeyField
+                    . $prefix . static::$i18nTableName . '.' . static::$i18nForeignKeyField
                     . ' AND '
-                    . static::$i18nTableName . '.' . static::$i18nLocaleField
+                    . $prefix . static::$i18nTableName . '.' . static::$i18nLocaleField
                     . ' = "'
                     . static::$i18nLocale . '"'
                 );
@@ -1156,5 +1190,25 @@ abstract class Model
     public static function timezoneAwareFields()
     {
         return array('created_on', 'updated_on');
+    }
+
+    /**
+     * Exposes object DB fields.
+     *
+     * @return array Fields.
+     */
+    public function fields()
+    {
+        return $this->fields;
+    }
+
+    /**
+     * Exposes object internationalized DB fields.
+     *
+     * @return array Fields.
+     */
+    public function fieldsI18N()
+    {
+        return $this->fieldsI18n;
     }
 }

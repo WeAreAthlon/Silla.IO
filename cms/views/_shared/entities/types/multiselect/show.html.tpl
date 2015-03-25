@@ -1,4 +1,5 @@
 {* Analyze resource hasAndBelonsToMany relations *}
+{$values = []}
 {if isset($resource->hasAndBelongsToMany.$field)}
     {* If the field is part of a relation assign the relation title/name values *}
     {foreach from=$resource->$field()->all() item=related_resource}
@@ -14,4 +15,6 @@
 {* Show the assigned values *}
 {foreach from=$values item=value}
     <span class="label label-default">{$value}</span>
+{foreachelse}
+    <em class="text-muted">{$_labels.general.never}</em>
 {/foreach}

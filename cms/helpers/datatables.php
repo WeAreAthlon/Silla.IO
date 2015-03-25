@@ -85,13 +85,13 @@ class DataTables
     private static function assignOrder(DB\Query $query, array $params)
     {
         if (isset($params['sorting']['field'], $params['sorting']['order'])
-            && array_key_exists($params['sorting']['field'], $query->getObject()->fields)
+            && array_key_exists($params['sorting']['field'], $query->getObject()->fields())
             && in_array(strtolower($params['sorting']['order']), array('asc', 'desc'), true)) {
             return $query->order($params['sorting']['field'], $params['sorting']['order']);
         } else {
             $resource = $query->getObject();
 
-            return $query->order($resource::$tableName . '.' . $resource::primaryKeyField(), 'desc');
+            return $query->order($resource::primaryKeyField(), 'desc');
         }
     }
 
@@ -154,11 +154,12 @@ class DataTables
                                 $related = $query->getObject()->hasAndBelongsToMany[$field];
                                 $obj = $query->getObject();
                                 $primaryKey = $obj->primaryKeyField();
+                                $prefix = Core\Config()->DB['tables_prefix'];
 
                                 foreach ($value as $v) {
                                     $query = $query->join(
                                         "{$related['table']} as {$related['table']}{$v}",
-                                        "{$obj::$tableName}.{$primaryKey} = {$related['table']}{$v}.{$related['key']}" .
+                                        "{$prefix}{$obj::$tableName}.{$primaryKey} = {$related['table']}{$v}.{$related['key']}" .
                                         ' AND ' .
                                         "{$related['table']}{$v}.{$related['relative_key']} = {$v}"
                                     );

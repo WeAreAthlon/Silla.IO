@@ -36,6 +36,8 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
      */
     public function run(DB\Query $query)
     {
+        $query->appendTablesPrefix(Core\Config()->DB['tables_prefix']);
+
         $sql = $this->buildSql($query);
         $query_hash = md5(serialize(array('query' => $sql, 'bind_params' => $query->bind_params)));
 
@@ -183,7 +185,7 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
     public function getTableSchema($table, $schema)
     {
         $query = 'SELECT COLUMN_NAME,
-                      DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_nullABLE, EXTRA, COLUMN_DEFAULT, COLUMN_KEY, COLUMN_TYPE
+                      DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, EXTRA, COLUMN_DEFAULT, COLUMN_KEY, COLUMN_TYPE
                   FROM INFORMATION_SCHEMA.COLUMNS
                   WHERE table_name = ? AND table_schema = ?';
         $this->storeQueries($query, array($table, $schema));
@@ -279,7 +281,7 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
 
                     $sql[] = $join['type'];
                     $sql[] = 'JOIN';
-                    $sql[] = $join['table'];
+                    $sql[] = Core\Config()->DB['tables_prefix'] . $join['table'];
 
                     if ($join['condition']) {
                         $sql[] = 'ON (' . $join['condition'] . ')';

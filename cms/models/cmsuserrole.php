@@ -33,7 +33,7 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
      *
      * @var array
      */
-    protected $hasMany = array(
+    public $hasMany = array(
         'users' => array(
             'table' => 'cms_users',
             'key' => 'id',

@@ -256,7 +256,7 @@ final class DbCache
      */
     public function getSchema($table)
     {
-        return $this->schema[$table];
+        return $this->schema[Core\Config()->DB['tables_prefix'] . $table];
     }
 
     /**
@@ -305,7 +305,7 @@ final class DbCache
 
         foreach ($results as $result) {
             $fields_meta[$result['COLUMN_NAME']]['type'] = $this->associateType($result['DATA_TYPE']);
-            $fields_meta[$result['COLUMN_NAME']]['is_null'] = $result['IS_nullABLE'];
+            $fields_meta[$result['COLUMN_NAME']]['is_null'] = $result['IS_NULLABLE'];
             $fields_meta[$result['COLUMN_NAME']]['extra'] = $result['EXTRA'];
             $fields_meta[$result['COLUMN_NAME']]['default'] = $result['COLUMN_DEFAULT'];
             $fields_meta[$result['COLUMN_NAME']]['unique'] = $result['COLUMN_KEY'] == 'UNI';

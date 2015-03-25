@@ -18,7 +18,7 @@ use Core\Modules\DB\Interfaces;
 /**
  * Database management driver wrapping mysql extension.
  */
-class Mysql implements Interfaces\Adapter
+class MySQL implements Interfaces\Adapter
 {
     /**
      * DB Cache instance.
@@ -50,6 +50,7 @@ class Mysql implements Interfaces\Adapter
      */
     public function run(DB\Query $query)
     {
+        $query->appendTablesPrefix(Core\Config()->DB['tables_prefix']);
         $sql = $this->buildSql($query);
         $query_hash = md5(serialize(array('query' => $sql, 'bind_params' => $query->bind_params)));
 
@@ -189,9 +190,9 @@ class Mysql implements Interfaces\Adapter
     {
         return $this->query(
             "SELECT COLUMN_NAME,
-                DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_nullABLE, EXTRA, COLUMN_DEFAULT, COLUMN_KEY, COLUMN_TYPE
+                DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, EXTRA, COLUMN_DEFAULT, COLUMN_KEY, COLUMN_TYPE
              FROM INFORMATION_SCHEMA.COLUMNS
-             WHERE tableName = ? AND table_schema = ?",
+             WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?",
             array($table, $schema)
         );
     }
@@ -234,7 +235,7 @@ class Mysql implements Interfaces\Adapter
      */
     public function escapeString($value)
     {
-        return mysql_real_escapeString($value);
+        return mysql_real_escape_string($value);
     }
 
     /**
@@ -258,13 +259,13 @@ class Mysql implements Interfaces\Adapter
     /**
      * Builds a sql query.
      *
-     * @param string $query SQL Query.
+     * @param DB\Query $query SQL Query.
      *
      * @throws \DomainException DB Adapter does not support the required JOIN type.
      *
      * @return string
      */
-    private function buildSql($query)
+    private function buildSql(DB\Query $query)
     {
         $sql = array();
 
@@ -283,7 +284,7 @@ class Mysql implements Interfaces\Adapter
 
                     $sql[] = $join['type'];
                     $sql[] = 'JOIN';
-                    $sql[] = $join['table'];
+                    $sql[] = Core\Config()->DB['tables_prefix'] . $join['table'];
 
                     if ($join['condition']) {
                         $sql[] = 'ON (' . $join['condition'] . ')';
@@ -377,7 +378,7 @@ class Mysql implements Interfaces\Adapter
         foreach ($bind_params as $value) {
             $keys[] = '/\{\{param' . count($values) . '\}\}/';
             $sql = preg_replace('/\?/', '{{param' . count($values) . '}}', $sql, 1);
-            $values[] = '"' . mysql_real_escapeString($value) . '"';
+            $values[] = '"' . mysql_real_escape_string($value) . '"';
         }
         $res = preg_replace($keys, $values, $sql, 1);
 

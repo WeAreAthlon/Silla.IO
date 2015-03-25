@@ -5,6 +5,7 @@
     {else}
         {if isset($resource->hasAndBelongsToMany.$field) and $resource->hasAndBelongsToMany.$field|is_array}
             {custom_class var=related_obj class=$resource->hasAndBelongsToMany.$field.class_name}
+            {$related_object_ids = []}
             {foreach from=$resource->$field()->all() item=related_object}
                 {append var='related_object_ids' value=$related_object->id}
             {/foreach}

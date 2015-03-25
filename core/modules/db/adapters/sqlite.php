@@ -36,6 +36,7 @@ class Sqlite extends \SQLite3 implements Interfaces\Adapter
      */
     public function run(DB\Query $query)
     {
+        $query->appendTablesPrefix(Core\Config()->DB['tables_prefix']);
         $sql = $this->buildSql($query);
         $query_hash = md5(serialize(array('query' => $sql, 'bind_params' => $query->bind_params)));
 
@@ -163,7 +164,7 @@ class Sqlite extends \SQLite3 implements Interfaces\Adapter
     }
 
     /**
-     * Retrives table schema.
+     * Retrieves table schema.
      *
      * @param string $table  Table name.
      * @param mixed  $schema Schema contents.
@@ -179,7 +180,7 @@ class Sqlite extends \SQLite3 implements Interfaces\Adapter
             $res[] = array(
                 'COLUMN_NAME' => $column['name'],
                 'DATA_TYPE' => $column['type'],
-                'IS_nullABLE' => $column['notnull'] ? 'NO' : 'YES',
+                'IS_NULLABLE' => $column['notnull'] ? 'NO' : 'YES',
                 'COLUMN_DEFAULT' => $column['dflt_value'],
                 'COLUMN_KEY' => $column['pk'],
                 'CHARACTER_MAXIMUM_LENGTH' => 255,
@@ -238,13 +239,13 @@ class Sqlite extends \SQLite3 implements Interfaces\Adapter
     /**
      * SQL builder method.
      *
-     * @param string $query Query string.
+     * @param DB\Query $query Query string.
      *
      * @throws \DomainException DB Adapter does not support the required JOIN type.
      *
      * @return string
      */
-    private function buildSql($query)
+    private function buildSql(DB\Query $query)
     {
         $sql = array();
 
@@ -263,7 +264,7 @@ class Sqlite extends \SQLite3 implements Interfaces\Adapter
 
                     $sql[] = $join['type'];
                     $sql[] = 'JOIN';
-                    $sql[] = $join['table'];
+                    $sql[] = Core\Config()->DB['tables_prefix'] . $join['table'];
 
                     if ($join['condition']) {
                         $sql[] = 'ON (' . $join['condition'] . ')';

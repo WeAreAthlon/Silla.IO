@@ -9,7 +9,7 @@
         "bootstrap-maxlength"               : "1.4.0",
         "pnikolov-bootstrap-daterangepicker": "*",
         "pnikolov-bootstrap-colorpicker"    : "*",
-        "pnikolov-bootstrap-chosen"         : "*",
+        "pnikolov-bootstrap-chosen"         : "v1.1.2.1",
         "ekko-lightbox"                     : "3.1.2",
         "jquery-serialize-object"           : "v2.4.3",
         "html5shiv"    : "3.7.2",

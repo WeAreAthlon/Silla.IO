@@ -33,7 +33,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
      *
      * @var array
      */
-    protected $belongsTo = array(
+    public $belongsTo = array(
         'role' => array(
             'table' => 'cms_userroles',
             'key' => 'role_id',
