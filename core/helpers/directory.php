@@ -23,21 +23,28 @@ class Directory
      *
      * @param string $path Full or relative path to directory.
      *
-     * @throws \InvalidArgumentException If directory already exists.
+     * @throws \DomainException If directory already exists.
+     * @throws \DomainException If directory could not be created.
      * @uses   File::getFullPath To format path to file.
      *
      * @return boolean Result of the operation.
      */
     public static function create($path)
     {
-        $path = File::getFullPath($path);
+        $fullPath = File::getFullPath($path);
 
-        if (file_exists($path)) {
-            throw new \InvalidArgumentException('Directory exists.');
+        if (is_dir($fullPath)) {
+            throw new \DomainException('Directory exists.');
         }
 
-        /* path, 0777 is the default mode, true for recursive creation */
-        return mkdir($path, 0777, true);
+        /* 0777 is the default mode, true for recursive creation */
+        $created = mkdir($fullPath, 0777, true);
+
+        if (!is_dir($fullPath)) {
+            throw new \DomainException('Directory could not be created.');
+        }
+
+        return $created;
     }
 
     /**

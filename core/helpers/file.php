@@ -236,9 +236,7 @@ class File
             Directory::create(dirname($path));
         }
 
-        $result = file_put_contents($path, $content);
-
-        return $result;
+        return file_put_contents($path, $content);
     }
 
     /**
@@ -249,7 +247,7 @@ class File
      * @throws \InvalidArgumentException If path does not lead to a file.
      * @uses self::getFullPath To format path to file.
      *
-     * @return string The read data or FALSE on failure.
+     * @return string The read data.
      */
     public static function getContents($path)
     {
@@ -271,7 +269,7 @@ class File
      *
      * @throws \UnexpectedValueException If PHP extension cURL is not enabled.
      *
-     * @return string Binary representation of the file.
+     * @return string Content of the file.
      */
     public static function getContentsCurl($url, array $credentials = array())
     {
@@ -338,43 +336,31 @@ class File
     /**
      * Uploads a file.
      *
-     * @param array   $file           Value from $_FILES.
-     * @param string  $directory      Full path to storage.
-     * @param string  $saveName       Filename in storage.
-     * @param boolean $skipValidation Whether to skip file validations.
-     * @param array   $allowedTypes   Allowed MIME types of the file.
-     * @param integer $maxAllowedSize Maximum allowed file size in kilobytes.
+     * @param array  $file      Value from $_FILES.
+     * @param string $directory Full path to storage.
+     * @param string $saveName  Filename in storage.
      *
-     * @uses self::validate()      To validate the file by MIME type and size.
-     * @uses Directory::create()   To create a directory for the file, if necessary.
-     * @uses self::processUpload() To upload the file.
+     * @throws \DomainException If upload file is not valid or cannot be moved.
+     * @uses self::filterFilename To filter the filename used in storage.
+     * @uses Directory::create()  To create a directory for the file, if necessary.
      *
-     * @return boolean Result of the operation.
+     * @return boolean If the file was successfully uploaded.
      */
-    public static function upload(
-        array $file,
-        $directory,
-        $saveName = null,
-        $skipValidation = false,
-        array $allowedTypes = array(),
-        $maxAllowedSize = 5120
-    ) {
-        /* validate */
-        $result = true;
-        if (!$skipValidation) {
-            $result = self::validate($file, $allowedTypes, $maxAllowedSize);
+    public static function upload(array $file, $directory, $saveName = null)
+    {
+        if (is_null($saveName)) {
+            $saveName = self::filterFilename($file['name']);
         }
 
-        if ($result) {
-            /* create the directory if it does not exists */
-            if (!is_dir($directory)) {
-                $result = (Directory::create($directory)) ? self::processUpload($file, $directory, $saveName) : false;
-            } else {
-                $result = self::processUpload($file, $directory, $saveName);
-            }
+        if (!is_dir($directory)) {
+            Directory::create($directory);
         }
 
-        return $result;
+        $destination = rtrim($directory, '\/') . DIRECTORY_SEPARATOR . $saveName;
+
+        $uploaded = move_uploaded_file($file['tmp_name'], $destination);
+
+        return $uploaded;
     }
 
     /**
@@ -384,6 +370,7 @@ class File
      * @param array   $allowedTypes   Allowed MIME types of the file.
      * @param integer $maxAllowedSize Maximum allowed file size in kilobytes.
      *
+     * @throws \InvalidArgumentException If path does not lead to a file.
      * @uses self::isValidMimeType To check if file is one of the allowed MIME types.
      *
      * @todo Distinct the errors from size and type.
@@ -394,6 +381,10 @@ class File
     {
         $isValidMimeType = false;
         $result = false;
+
+        if (!is_file($file['tmp_name'])) {
+            throw new \InvalidArgumentException('Given path does not lead to a file.');
+        }
 
         /* Check the size of the file */
         if ($maxAllowedSize < ($file['size'] / 1024)) {
@@ -423,6 +414,7 @@ class File
      * @param array  $file Value from $_FILES.
      * @param string $type MIME type to check against.
      *
+     * @throws \InvalidArgumentException If invalid MIME type is provided.
      * @uses self::getMimeType To retrieve the MIME type of the file.
      *
      * @return boolean Result of the operation.
@@ -471,14 +463,14 @@ class File
             )
         );
 
-        if (!is_file($file['tmp_name'])) {
-            return false;
-        }
-
         /* Get the mime type of the file */
         $mimeType = self::getMimeType($file);
 
         $validateAgainst = array();
+
+        if (!array_key_exists($type, $validMimeTypes)) {
+            throw new \InvalidArgumentException('An invalid MIME type is provided.');
+        }
 
         /* Manage composite mime-types */
         foreach ($validMimeTypes[$type] as $key) {
@@ -499,7 +491,6 @@ class File
      *
      * @param array $file Value from $_FILES.
      *
-     * @throws \InvalidArgumentException If path does not lead to a file.
      * @see    http://php.net/manual/en/fileinfo.installation.php If using PHP versions prior to 5.3+.
      *
      * @return string MIME Type.
@@ -507,10 +498,6 @@ class File
     private static function getMimeType(array $file)
     {
         $mimeType = null;
-
-        if (!is_file($file['tmp_name'])) {
-            throw new \InvalidArgumentException('Given path does not lead to a file.');
-        }
 
         /* for >= PHP 5.3.0 and activated PHP extension fileinfo OOP variation */
         if (class_exists('\finfo')) {
@@ -533,37 +520,6 @@ class File
         $mimeType = trim($mimeType, ';');
 
         return $mimeType;
-    }
-
-    /**
-     * Uploads a file.
-     *
-     * @param array  $file      Value from $_FILES.
-     * @param string $directory Full path to storage.
-     * @param string $saveName  Filename in storage.
-     *
-     * @throws \InvalidArgumentException If a non-existing directory was supplied.
-     * @throws \UnexpectedValueException If errors occurred while uploading file.
-     * @uses self::filterFilename To filter the filename used in storage.
-     *
-     * @return boolean Result of the operation.
-     */
-    private static function processUpload(array $file, $directory, $saveName)
-    {
-        $saveName = $saveName ? $saveName : self::filterFilename($file['name']);
-
-        /* Check in case Directory::create() did not work */
-        if (!is_dir($directory)) {
-            throw new \InvalidArgumentException('A non-existing directory was supplied: ' . $directory);
-        }
-
-        $destination = rtrim($directory, '\/') . DIRECTORY_SEPARATOR . $saveName;
-
-        if (!$result = move_uploaded_file($file['tmp_name'], $destination)) {
-            throw new \UnexpectedValueException('Errors occurred while uploading file. Result was: ' . $result);
-        }
-
-        return $result;
     }
 
     /**

@@ -2,21 +2,34 @@
 use Core\Helpers\File;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use phpmock\phpunit\PHPMock;
 
 /**
  * @covers Core\Helpers\File
  */
 class FileTest extends PHPUnit_Framework_TestCase
 {
+    use PHPMock;
+
     protected $fullPath;
     protected $relativePath;
     protected $restrictedPath;
-    protected $basename;
+    protected $fileRoot;
+    protected $moveUploadedFile;
+    protected $uploadedFile;
 
     public static function setUpBeforeClass()
     {
-        vfsStream::setup('temp/');
-        Core\Config()->modifyPath('tmp', vfsStream::url('temp/'));
+        /* Setup virtual file system. */
+        vfsStream::setup('root/');
+
+        /* Copy a plain text file for testing purposes. */
+        copy(
+            Core\Config()->paths('root') . 'VERSION',
+            vfsStream::url('root/') . 'test.txt'
+        );
+        /* Modify root path to point to the virtual file system. */
+        Core\Config()->modifyPath('root', vfsStream::url('root/'));
     }
 
     protected function setUp()
@@ -24,17 +37,22 @@ class FileTest extends PHPUnit_Framework_TestCase
         $this->fullPath = Core\Config()->paths('root') . 'temp/cache';
         $this->relativePath = 'temp/cache';
         $this->restrictedPath = '../malicious_script.php';
-        $this->basename = 'test';
+        $this->fileRoot = 'test';
+        $this->baseName = 'test.txt';
+        $this->uploadedFile = 'uploaded.txt';
 
         $_FILES = array(
             'test' => array(
-                'name' => 'test.jpg',
-                'type' => 'image/jpeg',
-                'size' => 542,
-                'tmp_name' => $this->fullPath . '/source-test.jpg',
+                'name' => $this->baseName,
+                'type' => 'text/plain',
+                'size' => 2048,
+                'tmp_name' => Core\Config()->paths('root') . $this->baseName,
                 'error' => 0
             )
         );
+
+        /* Mock built-in function move_uploaded_file for namespace Core\Helpers */
+        $this->moveUploadedFile = $this->getFunctionMock('Core\Helpers', 'move_uploaded_file');
     }
 
     /**
@@ -77,7 +95,7 @@ class FileTest extends PHPUnit_Framework_TestCase
      */
     public function testUploadedFileExists()
     {
-        $this->assertTrue(File::uploadedFileExists($this->basename));
+        $this->assertTrue(File::uploadedFileExists($this->fileRoot));
     }
 
     /**
@@ -86,7 +104,7 @@ class FileTest extends PHPUnit_Framework_TestCase
     public function testUploadedFileDoesNotExist()
     {
         unset($_FILES['test']['name']);
-        $this->assertFalse(File::uploadedFileExists($this->basename));
+        $this->assertFalse(File::uploadedFileExists($this->fileRoot));
     }
 
     /**
@@ -95,15 +113,6 @@ class FileTest extends PHPUnit_Framework_TestCase
     public function testFilteringFilenameWithExtension()
     {
         $this->assertEquals($_FILES['test']['name'], File::filterFilename($_FILES['test']['name']));
-    }
-
-    /**
-     * @covers Core\Helpers\File::filterFilename
-     */
-    public function testFilteringFilenameWithoutExtension()
-    {
-        $this->markTestSkipped('The method does not work without file extension.');
-        $this->assertEquals($_FILES['test']['name'], File::filterFilename($this->basename));
     }
 
     /**
@@ -127,7 +136,198 @@ class FileTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             $_FILES['test']['name'],
-            File::formatFilename($this->basename, $_FILES['test']['name'])
+            File::formatFilename($this->fileRoot, $_FILES['test']['name'])
         );
+    }
+
+    /**
+     * @covers Core\Helpers\File::validate
+     * @expectedException InvalidArgumentException
+     */
+    public function testValidatingFileDoesNotExist()
+    {
+        $_FILES['test']['tmp_name'] = '';
+        File::validate($_FILES['test'], array(), $_FILES['test']['size']);
+    }
+
+    /**
+     * @covers Core\Helpers\File::validate
+     */
+    public function testValidatingBiggerThanAllowedFileSize()
+    {
+        $fileSize = 1;
+        $this->assertFalse(File::validate($_FILES['test'], array(), $fileSize));
+    }
+
+    /**
+     * @covers Core\Helpers\File::validate
+     * @expectedException InvalidArgumentException
+     */
+    public function testValidatingNonExistentMimeType()
+    {
+        $mimeType = array('script');
+        File::validate($_FILES['test'], $mimeType, $_FILES['test']['size']);
+    }
+
+    /**
+     * @covers Core\Helpers\File::validate
+     */
+    public function testValidatingInvalidMimeType()
+    {
+        $mimeType = array('photo');
+        $this->assertFalse(File::validate($_FILES['test'], $mimeType, $_FILES['test']['size']));
+    }
+
+    /**
+     * @covers Core\Helpers\File::validate
+     */
+    public function testValidatingCompositeMimeType()
+    {
+        $mimeType = array('documents');
+        $this->assertTrue(File::validate($_FILES['test'], $mimeType, $_FILES['test']['size']));
+    }
+
+    /**
+     * @covers Core\Helpers\File::validate
+     */
+    public function testValidatingSimpleMimeType()
+    {
+        $mimeType = array('rtf');
+        $this->assertTrue(File::validate($_FILES['test'], $mimeType, $_FILES['test']['size']));
+    }
+
+    /**
+     * @covers Core\Helpers\File::upload
+     */
+    public function testUploadingWithoutSaveName()
+    {
+        /* Mock built-in function move_uploaded_file to return TRUE */
+        $this->moveUploadedFile->expects($this->once())->willReturn(true);
+
+        $this->assertTrue(
+            File::upload(
+                $_FILES['test'],
+                Core\Config()->paths('root')
+            )
+        );
+    }
+
+    /**
+     * @covers Core\Helpers\File::upload
+     */
+    public function testUploadingWithNonExistentDirectory()
+    {
+        /* Mock built-in function move_uploaded_file to return TRUE */
+        $this->moveUploadedFile->expects($this->once())->willReturn(true);
+
+        $this->assertTrue(
+            File::upload(
+                $_FILES['test'],
+                Core\Config()->paths('root') . 'uploads',
+                $this->uploadedFile
+            )
+        );
+    }
+
+    /**
+     * @covers Core\Helpers\File::upload
+     */
+    public function testUploadingUnsuccessfully()
+    {
+        /* Mock built-in function move_uploaded_file to return FALSE */
+        $this->moveUploadedFile->expects($this->once())->willReturn(false);
+
+        $this->assertFalse(
+            File::upload(
+                $_FILES['test'],
+                Core\Config()->paths('root'),
+                $this->uploadedFile
+            )
+        );
+    }
+
+    /**
+     * @covers Core\Helpers\File::putContents
+     */
+    public function testPuttingContentsInNonExistentDirectory()
+    {
+        $this->assertInternalType(
+            'int',
+            File::putContents($this->relativePath . $this->uploadedFile, $this->fileRoot)
+        );
+    }
+
+    /**
+     * @covers Core\Helpers\File::putContents
+     */
+    public function testPuttingContents()
+    {
+        $this->assertInternalType(
+            'int',
+            File::putContents($this->uploadedFile, $this->fileRoot)
+        );
+    }
+
+    /**
+     * @covers Core\Helpers\File::getContents
+     * @expectedException InvalidArgumentException
+     */
+    public function testGettingContentsOfNonExistentFile()
+    {
+        $nonExistentFile = 'nofile.txt';
+        File::getContents($nonExistentFile);
+    }
+
+    /**
+     * @covers Core\Helpers\File::getContents
+     */
+    public function testGettingContents()
+    {
+        $this->assertStringEqualsFile(
+            Core\Config()->paths('root') . $this->baseName,
+            File::getContents($this->baseName)
+        );
+    }
+
+    /**
+     * @covers Core\Helpers\File::getContentsCurl
+     * @todo Test with credentials.
+     */
+    public function testGettingContentsCurl()
+    {
+        $url = 'https://raw.githubusercontent.com/WeAreAthlon/silla.io/master/VERSION';
+        $this->assertStringEqualsFile(
+            Core\Config()->paths('root') . $this->baseName,
+            File::getContentsCurl($url)
+        );
+    }
+
+    /**
+     * @covers Core\Helpers\File::copy
+     */
+    public function testCopyingFile()
+    {
+        $this->assertInternalType(
+            'int',
+            File::copy($this->baseName, $this->uploadedFile)
+        );
+    }
+
+    /**
+     * @covers Core\Helpers\File::delete
+     * @expectedException InvalidArgumentException
+     */
+    public function testDeletingNonExistentFile()
+    {
+        $nonExistentFile = 'nofile.txt';
+        File::delete($nonExistentFile);
+    }
+
+    /**
+     * @covers Core\Helpers\File::delete
+     */
+    public function testDeletingFile()
+    {
+        $this->assertTrue(File::delete($this->baseName));
     }
 }

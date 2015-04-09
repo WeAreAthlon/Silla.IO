@@ -153,8 +153,7 @@ abstract class Attachment implements Interfaces\Decorator
                 $successful = Helpers\File::upload(
                     $_FILES[$name],
                     $resource->attachmentsStoragePath($name),
-                    $_attachment_name,
-                    true
+                    $_attachment_name
                 );
                 if ($successful) {
                     /* Make thumbnails */
