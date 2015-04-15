@@ -17,17 +17,11 @@ use Core;
 use Core\Modules\Router;
 
 /**
- * Define Silla.IO framework variables.
- */
-define(
-    'SILLA_ENVIRONMENT',
-    isset($_SERVER['HTTP_ENV_SILLA_ENVIRONMENT']) ? $_SERVER['HTTP_ENV_SILLA_ENVIRONMENT'] : 'development'
-);
-
-/**
  * Require Silla.IO boot loader.
  */
-require __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
+require __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'silla.php';
+
+Silla::boot(isset($_SERVER['HTTP_ENV_SILLA_ENVIRONMENT']) ? $_SERVER['HTTP_ENV_SILLA_ENVIRONMENT'] : 'development');
 
 /**
  * Get Request String.

@@ -27,7 +27,7 @@ namespace Core {
      */
     function Config()
     {
-        $configuration = 'Configurations\\' . SILLA_ENVIRONMENT . '\\Configuration';
+        $configuration = 'Configurations\\' . Silla::$environment . '\\Configuration';
 
         return $configuration::getInstance();
     }

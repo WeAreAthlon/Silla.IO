@@ -14,9 +14,7 @@ namespace Core;
 
 use Core\CLI;
 
-$currentDir = getSillaRootProjectPath();
-
-require_once $currentDir . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
+boot();
 
 if ($argc > 1) {
     $parts   = explode(':', $argv[1]);
@@ -46,17 +44,25 @@ if ($argc > 1) {
     call_user_func_array(array($class, $command), array_slice($argv, 2));
 }
 
-function getSillaRootProjectPath()
+function boot()
 {
     $cwd = getcwd();
 
     while ($cwd !== DIRECTORY_SEPARATOR) {
-        if (file_exists($cwd . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php')) {
-            return $cwd;
+        $file = implode(DIRECTORY_SEPARATOR, [$cwd, 'core', 'silla.php']);
+        if (file_exists($file)) {
+            require_once($file);
+
+            try {
+                Silla::boot();
+                return true;
+            } catch(\Exception $e) {
+                echo "Not a Silla project\n";
+                exit;
+            }
+
         } else {
             $cwd = dirname($cwd);
         }
     }
-
-    return $cwd;
 }
