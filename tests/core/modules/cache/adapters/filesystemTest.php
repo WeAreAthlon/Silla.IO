@@ -15,8 +15,10 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        vfsStream::setup('temp/');
-        Core\Config()->modifyPath('tmp', vfsStream::url('temp/'));
+        /* Setup virtual file system. */
+        vfsStream::setup('root/');
+        /* Modify root path to point to the virtual file system. */
+        Core\Config()->modifyPath('root', vfsStream::url('root/'));
     }
 
     protected function setUp()
