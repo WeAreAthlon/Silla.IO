@@ -305,12 +305,22 @@ class FileTest extends PHPUnit_Framework_TestCase
     /**
      * @covers Core\Helpers\File::copy
      */
+    public function testCopyingFileInNonExistentDirectory()
+    {
+        $this->assertTrue(
+            File::copy(
+                $this->baseName,
+                $this->relativePath . DIRECTORY_SEPARATOR . $this->uploadedFile
+            )
+        );
+    }
+
+    /**
+     * @covers Core\Helpers\File::copy
+     */
     public function testCopyingFile()
     {
-        $this->assertInternalType(
-            'int',
-            File::copy($this->baseName, $this->uploadedFile)
-        );
+        $this->assertTrue(File::copy($this->baseName, $this->uploadedFile));
     }
 
     /**

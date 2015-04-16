@@ -24,10 +24,9 @@ class Directory
      * @param string $path Full or relative path to directory.
      *
      * @throws \DomainException If directory already exists.
-     * @throws \DomainException If directory could not be created.
      * @uses   File::getFullPath To format path to file.
      *
-     * @return boolean Result of the operation.
+     * @return boolean If the directory was successfully created.
      */
     public static function create($path)
     {
@@ -37,12 +36,8 @@ class Directory
             throw new \DomainException('Directory exists.');
         }
 
-        /* 0777 is the default mode, true for recursive creation */
+        /* 0777 default mode with recursive creation */
         $created = mkdir($fullPath, 0777, true);
-
-        if (!is_dir($fullPath)) {
-            throw new \DomainException('Directory could not be created.');
-        }
 
         return $created;
     }
@@ -52,83 +47,94 @@ class Directory
      *
      * @param string $path Full or relative path to directory.
      *
-     * @throws \InvalidArgumentException If no directory path is found.
-     * @uses   Core\Config() To get the root path of the framework.
-     * @uses   File::getRestrictedPath To format path to file.
+     * @throws \InvalidArgumentException If path is empty or is not a directory.
+     * @uses   File::getFullPath To format path to file.
+     * @uses   self::delete To recursively delete subdirectories.
      * @uses   File::delete To delete files in directories.
      *
      * @return boolean Result of the operation.
      */
     public static function delete($path)
     {
-        $success = true;
-        $rootPath = Core\Config()->paths('root');
-        $path = File::getRestrictedPath($path);
+        $fullPath = File::getFullPath($path);
 
-        if (empty($path) || !is_dir($rootPath . $path)) {
-            throw new \InvalidArgumentException('No directory with the given path found.');
+        if (empty($path) || !is_dir($fullPath)) {
+            throw new \InvalidArgumentException('Path is empty or is not a directory.');
         }
 
-        /* Get all items in the specified diectory */
-        $items = glob($rootPath . $path . DIRECTORY_SEPARATOR . '*');
-        $hiddenItems = glob($rootPath . $path . DIRECTORY_SEPARATOR . '.*');
-        $fsItems = $items || $hiddenItems ? array_merge((array)$items, (array)$hiddenItems) : false;
+        /* Open a directory handle. */
+        $handle = opendir($fullPath);
 
-        if ($fsItems) {
-            /* Separate directories from files */
-            $itemsToDelete = array('directories' => array(), 'files' => array());
-            foreach ($fsItems as $fsItems) {
-                /* Ignore service files - '.', '..' */
-                if ($fsItems[strlen($fsItems) - 1] != '.') {
-                    $itemsToDelete[(is_dir($fsItems) ? 'directories' : 'files')][] = $fsItems;
-                }
+        /* Read entries from the directory handle. */
+        while (($entry = readdir($handle)) !== false) {
+            /* Skip directory handles for current and previous directories. */
+            if ($entry == '.'  || $entry == '..') {
+                continue;
             }
-            foreach ($itemsToDelete['files'] as $file) {
-                File::delete($file);
-            }
-            foreach ($itemsToDelete['directories'] as $directory) {
-                $success = $success ? self::delete($directory) : $success;
+
+            /* Check whether the current entry is a directory and is not a symbolic link */
+            if (is_dir($fullPath . DIRECTORY_SEPARATOR . $entry) && !is_link($fullPath)) {
+                $deleted = self::delete($fullPath . DIRECTORY_SEPARATOR . $entry);
+            } else {
+                $deleted = File::delete($fullPath . DIRECTORY_SEPARATOR . $entry);
             }
         }
 
-        return $success && is_dir($rootPath . $path) ? rmdir($rootPath . $path) : $success;
+        /* Close directory handle */
+        closedir($handle);
+
+        $deleted = rmdir($fullPath);
+
+        return $deleted;
     }
 
     /**
      * Copies a directory to another destination, recursively.
      *
-     * @param string $from Full path to directory.
-     * @param string $to   Full path to destination directory.
+     * @param string $from Full or relative path to directory.
+     * @param string $to   Full or relative path to destination directory.
      *
-     * @uses   Core\Config() To get the root path of the framework.
-     * @uses   File::getRestrictedPath To format path to file.
+     * @uses   File::getFullPath To format path to file.
+     * @uses   self::create To create a directory.
+     * @uses   self::copy To recursively copy subdirectories.
      * @uses   File::copy To copy files to the destination.
      *
-     * @return integer Number of bytes written to the file, or FALSE on failure.
+     * @return boolean If the directory and its contents were copied successfully.
      */
     public static function copy($from, $to)
     {
-        $success = true;
-        /* Get all items in the specified diectory */
-        if ($fsItems = glob(Core\Config()->paths('root') . $from . DIRECTORY_SEPARATOR . '*')) {
-            /* Separate directories from files */
-            $itemsToCopy = array('directories' => array(), 'files' => array());
+        $from = File::getFullPath($from);
 
-            foreach ($fsItems as $fsItems) {
-                $itemsToCopy[(is_dir($fsItems) ? 'directories' : 'files')][] = $fsItems;
+        /* Create destination directory. */
+        $copied = self::create($to);
+
+        /* Open a directory handle. */
+        $handle = opendir($from);
+
+        /* Read entries from the directory handle. */
+        while (($entry = readdir($handle)) !== false) {
+            /* Skip directory handles for current and previous directories. */
+            if ($entry == '.'  || $entry == '..') {
+                continue;
             }
 
-            foreach ($itemsToCopy['files'] as $file) {
-                $destination = str_replace($from, $to, $file);
-                $success = $success ? File::copy($destination, $file) : $success;
-            }
-
-            foreach ($itemsToCopy['directories'] as $directory) {
-                $destination = str_replace($from, $to, $directory);
-                $success = $success ? self::copy($directory, $destination) : $success;
+            /* Check whether the current entry is a directory and is not a symbolic link */
+            if (is_dir($from . DIRECTORY_SEPARATOR . $entry) && !is_link($from)) {
+                $copied = self::copy(
+                    $from . DIRECTORY_SEPARATOR . $entry,
+                    $to . DIRECTORY_SEPARATOR . $entry
+                );
+            } else {
+                $copied = File::copy(
+                    $from . DIRECTORY_SEPARATOR . $entry,
+                    $to . DIRECTORY_SEPARATOR . $entry
+                );
             }
         }
 
-        return $success;
+        /* Close directory handle */
+        closedir($handle);
+
+        return $copied;
     }
 }

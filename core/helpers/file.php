@@ -320,9 +320,9 @@ class File
      * @param string $to   Full or relative path to destination.
      *
      * @uses self::getRestrictedPath To format path to file.
-     * @uses self::getContents To get the file for copying.
-     * @uses self::putContents To do the copying.
+     * @uses Directory::create To create a directory for the file, if necessary.
      *
+     * @todo Consider using built-in copy function.
      * @return integer Number of bytes written to the file, or FALSE on failure.
      */
     public static function copy($from, $to)
@@ -330,7 +330,11 @@ class File
         $from = self::getRestrictedPath($from);
         $to   = self::getRestrictedPath($to);
 
-        return self::putContents($to, self::getContents($from));
+        if (!is_dir(dirname($to))) {
+            Directory::create(dirname($to));
+        }
+
+        return copy($from, $to);
     }
 
     /**
