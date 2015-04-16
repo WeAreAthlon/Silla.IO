@@ -15,19 +15,13 @@
 namespace Core {
 
     /**
-     * Hook the default auto-load class function.
-     */
-    spl_autoload_extensions('.php');
-    spl_autoload_register('spl_autoload');
-
-    /**
      * For easier access to Config.
      *
      * @return Base\Configuration
      */
     function Config()
     {
-        $configuration = 'Configurations\\' . Silla::$environment . '\\Configuration';
+        $configuration = 'Configurations\\' . \Silla::$environment . '\\Configuration';
 
         return $configuration::getInstance();
     }
@@ -188,8 +182,4 @@ namespace {
         );
     }
 
-    /**
-     * Registers vendors auto-loaders.
-     */
-    require_once Core\Config()->paths('vendor') . 'autoload.php';
 }

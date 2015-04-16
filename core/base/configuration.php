@@ -294,7 +294,7 @@ abstract class Configuration
         $this->PATHS['views']['compiled'] = $this->PATHS['cache'] . 'compiled' . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['cache']    = $this->PATHS['cache'] . 'views'    . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['config']   = $this->PATHS['root']  .
-            'configurations' . DIRECTORY_SEPARATOR . Core\Silla::$environment .
+            'configurations' . DIRECTORY_SEPARATOR . \Silla::$environment .
             DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
 
         /* Process modes */

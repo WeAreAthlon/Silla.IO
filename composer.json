@@ -139,11 +139,12 @@
     "bin": [
         "silla"
     ],
-    {
-        "autoload": {
-            "psr-0": {
-                "Core\\": ["lib/", "core/"],
-            }
+    "autoload": {
+        "files": ["core/silla.php", "core/core.php"],
+        "psr-4": {
+            "Core\\": ["lib/", "core/"],
+            "Configurations\\": "configurations/",
+            "": ""
         }
     }
 }

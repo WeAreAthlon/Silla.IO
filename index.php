@@ -11,17 +11,14 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
-namespace Core;
-
-use Core;
 use Core\Modules\Router;
 
 /**
  * Require Silla.IO boot loader.
  */
-require __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'silla.php';
+require_once __DIR__ . implode(DIRECTORY_SEPARATOR, ['', 'vendor', 'autoload.php']);
 
-Silla::boot(isset($_SERVER['HTTP_ENV_SILLA_ENVIRONMENT']) ? $_SERVER['HTTP_ENV_SILLA_ENVIRONMENT'] : 'development');
+\Silla::boot(isset($_SERVER['HTTP_ENV_SILLA_ENVIRONMENT']) ? $_SERVER['HTTP_ENV_SILLA_ENVIRONMENT'] : 'development');
 
 /**
  * Get Request String.
@@ -34,7 +31,7 @@ try {
      * Detect Silla.IO Mode.
      */
     $mode = Router\Router::getMode($requestString);
-    Config()->setMode($mode);
+    Core\Config()->setMode($mode);
 
     /**
      * Setup Router variables.
