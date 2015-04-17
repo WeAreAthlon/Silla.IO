@@ -33,6 +33,8 @@ final class Routes
      */
     private $mode = array();
 
+    private $routesSource = array();
+
     /**
      * Init Routes.
      *
@@ -42,27 +44,28 @@ final class Routes
      *
      * @access private
      */
-    public function __construct(array $mode)
+    public function __construct()
     {
+        \Silla::$routesSource['/'] = \Spyc::YAMLLoad('app/routes.yaml');
+
         if (Core\Config()->CACHE['routes']) {
-            $routes = Core\Cache()->fetch($mode['location'] . '_routes');
+            $routes = Core\Cache()->fetch('app_routes');
 
             if (!$routes) {
-                $routes = self::loadRoutes($mode);
-                Core\Cache()->store($mode['location'] . '_routes', $routes);
+                $routes = self::loadRoutes();
+                Core\Cache()->store('app_routes', $routes);
             }
         } else {
-            $routes = self::loadRoutes($mode);
+            $routes = self::loadRoutes();
         }
 
         foreach ($routes as $route) {
             $this->add(array(
                 'pattern' => $route['route'],
                 'maps_to' => $route['maps'],
+                'package' => $route['package']
             ));
         }
-
-        $this->mode = $mode;
     }
 
     /**
@@ -84,12 +87,20 @@ final class Routes
     /**
      * Get all added routes in reversed order.
      *
+     * @param array $package Filter routes by package
+     *
      * @access public
      *
      * @return array
      */
-    public function getAll()
+    public function getAll($package = array())
     {
+        if(!empty($package)) {
+            return array_filter($this->routes, function($route) use($package) {
+                return $route['package'] == $package['name'];
+            });
+        }
+
         return $this->routes;
     }
 
@@ -136,11 +147,11 @@ final class Routes
                 }
             }
 
-            $_controller = $this->mode['namespace'] . '\Controllers\\' . $test_route['controller'];
+            $_controller = $route['package'] . '\Controllers\\' . $test_route['controller'];
 
             if (!class_exists($_controller)) {
                 $route = next($routes);
-                $_controller = $this->mode['namespace'] . '\Controllers\\' . $route['maps_to']['controller'];
+                $_controller = $route['package'] . '\Controllers\\' . $route['maps_to']['controller'];
 
                 if (!method_exists($_controller, $test_route['controller'])) {
                     $route = next($routes);
@@ -155,14 +166,15 @@ final class Routes
      * Select the best routing rules according to url mapping.
      *
      * @param array $url_mapping Representation of URL address.
+     * @param array $package Search in package routes
      *
      * @access public
      *
      * @return array
      */
-    public function extractUrl(array $url_mapping)
+    public function extractUrl(array $url_mapping, $package = array())
     {
-        $routes = $this->getAll();
+        $routes = $this->getAll($package);
         $default_route = end($routes);
         $url_mapping_count = count($url_mapping);
 
@@ -220,8 +232,17 @@ final class Routes
      *
      * @return array
      */
-    private static function loadRoutes(array $mode)
+    private static function loadRoutes()
     {
-        return \Spyc::YAMLLoad($mode['location'] . 'routes.yaml');
+        $routes = [];
+
+        foreach(\Silla::$routesSource as $preffix=>$r) {
+            $routes = array_merge($routes, array_map(function($item) use($preffix) {
+                $item['package'] = $preffix;
+                return $item;
+            }, $r));
+        }
+
+        return $routes;
     }
 }

@@ -82,9 +82,9 @@ final class Router
 
         self::verifyRequest($request);
 
-        $namespace = $request->mode('namespace');
+        $package = $request->package();
 
-        $controller = "\\{$namespace}\\Controllers\\" . $request->controller();
+        $controller = "\\{$package}\\Controllers\\" . $request->controller();
 
         if (class_exists($controller)) {
             $controller = new $controller;
@@ -122,9 +122,10 @@ final class Router
         $_cache_key = md5(serialize($options));
 
         $options = array_merge(array('controller' => $this->request->controller()), $options);
+        $package = isset($options['_package']) ? \Silla::$packages($options['_package']) : \Silla::$packages[$this->request->package()];
 
         if (!isset($_cache[$_cache_key])) {
-            $route = $this->routes->extractUrl($options);
+            $route = $this->routes->extractUrl($options, $package);
             $route['pattern'] = $this->routes->toRoute($route['pattern']);
 
             foreach ($route['pattern'] as $key => $url_element) {
@@ -152,17 +153,15 @@ final class Router
                 $_prefix = '?_path=';
             }
 
-            $mode = isset($options['_mode']) ? Core\Config()->modes($options['_mode']) : $this->request->mode();
-            $mode['url'] = $mode['url'] ? $mode['url'] . Core\Config()->ROUTER['separator'] : '';
-
             $_cache[$_cache_key] =
-                $_prefix . $mode['url'] . rtrim(
+                $_prefix . rtrim(
                     implode(
                         Core\Config()->ROUTER['separator'],
                         $route['pattern']
                     ),
                     Core\Config()->ROUTER['separator']
                 ) . ((!empty($options)) ? '?' . http_build_query($options, false, '&amp;') : '');
+
         }
 
         return $_cache[$_cache_key];
@@ -218,7 +217,7 @@ final class Router
             $raw ? $data : serialize($data),
             $duration ? time() + $duration : false,
             Core\Config()->urls('relative'),
-            $this->request->meta('SERVER_NAME'),
+            $_SERVER['SERVER_NAME'],
             Core\Config()->urls('protocol') === 'https',
             true
         );
@@ -248,27 +247,6 @@ final class Router
     }
 
     /**
-     * Extract current mode.
-     *
-     * @param string $httpRequestString HTTP qeuery request string.
-     *
-     * @return array
-     */
-    public static function getMode($httpRequestString)
-    {
-        $modes = Core\Config()->modes();
-
-        foreach ($modes as $mode) {
-            if ($mode['url'] && 0 === strpos($httpRequestString, $mode['url'])) {
-                return $mode;
-            }
-        }
-
-        /* Default mode */
-        return end($modes);
-    }
-
-    /**
      * Parses a request query string.
      *
      * @param string $httpRequestString Request string.
@@ -281,17 +259,10 @@ final class Router
      */
     public static function parseRequestQueryString($httpRequestString, Routes $routes)
     {
-        if (Core\Config()->mode('url')) {
-            $httpRequestString = trim(
-                Core\Utils::replaceFirstOccurrence(Core\Config()->mode('url'), '', $httpRequestString),
-                Core\Config()->ROUTER['separator']
-            );
-        } else {
-            $httpRequestString = trim(
-                $httpRequestString,
-                Core\Config()->ROUTER['separator']
-            );
-        }
+        $httpRequestString = trim(
+            $httpRequestString,
+            Core\Config()->ROUTER['separator']
+        );
 
         $requestElements = Core\Utils::parseHttpRequestString($httpRequestString, Core\Config()->ROUTER['separator']);
 
@@ -306,7 +277,7 @@ final class Router
             }
         }
 
-        return $elements;
+        return [$route['package'], $elements];
     }
 
     /**

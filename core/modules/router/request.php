@@ -44,11 +44,11 @@ final class Request
     private $token;
 
     /**
-     * Request mode.
+     * Request package.
      *
-     * @var array
+     * @var string
      */
-    private $mode;
+    private $package;
 
     /**
      * Init actions.
@@ -59,11 +59,11 @@ final class Request
      * @param array $elements Request Elements. All Routed variables.
      * @param array $context  Request Context Server data.
      */
-    public function __construct(array $mode, array $elements, array &$context)
+    public function __construct($package, array $elements, array &$context)
     {
         $this->elements = $elements;
         $this->context  = $context;
-        $this->mode     = $mode;
+        $this->package  = $package;
         $this->token    = Core\Session()->get('_token');
 
         if (!$this->token) {
@@ -99,19 +99,15 @@ final class Request
     }
 
     /**
-     * Retrives request mode or part of it.
+     * Retrieves the request action name.
      *
-     * @param string $segment Mode segment name.
+     * @access public
      *
-     * @return array
+     * @return string
      */
-    public function mode($segment = null)
+    public function package()
     {
-        if ($segment && isset($this->mode[$segment])) {
-            return $this->mode[$segment];
-        }
-
-        return $this->mode;
+        return $this->package;
     }
 
     /**

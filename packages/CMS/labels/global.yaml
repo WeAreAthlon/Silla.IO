@@ -1,0 +1,6 @@
+modules:
+  helpnew:
+    title   : Helpnew
+    desc    : User manual for working with the CMS
+    icon    : flag
+    index   : Index

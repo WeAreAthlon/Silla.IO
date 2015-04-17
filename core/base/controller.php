@@ -76,6 +76,7 @@ abstract class Controller
      */
     public function __construct()
     {
+        Core\Config()->setPackage(\Silla::$packages[\Silla::$request->package()]);
         $viewsPaths = Core\Config()->paths('views');
 
         $this->meta = array(
@@ -471,7 +472,7 @@ abstract class Controller
     {
         if (Core\Config()->CACHE['labels']) {
             $key    = '_silla_'
-                . Core\Config()->paths('mode')
+                /*. Core\Config()->paths('mode')*/
                 . '_labels_'
                 . Core\Registry()->get('locale')
                 . $this->labels;
@@ -531,7 +532,7 @@ abstract class Controller
      */
     private static function assignVariablesToRender(Modules\Render\Render &$renderer)
     {
-        $renderer->set('_mode', Core\Config()->paths('mode'));
+        /*$renderer->set('_mode', Core\Config()->paths('mode'));*/
         $renderer->set('_registry', Core\Registry());
         $renderer->set('_config', Core\Config());
         $renderer->set('_session', Core\Session());

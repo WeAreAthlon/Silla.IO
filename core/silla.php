@@ -6,6 +6,14 @@ class Silla
 
     public static $environment;
 
+    public static $packages = [];
+
+    public static $request;
+
+    public static $routes;
+
+    public static $routesSource = [];
+
     public static function boot($environment = 'development') 
     {
         self::$environment = $environment;

@@ -13,6 +13,8 @@
 
 use Core\Modules\Router;
 
+require_once __DIR__ . implode(DIRECTORY_SEPARATOR, ['', 'core', 'silla.php']);
+
 /**
  * Require Silla.IO boot loader.
  */
@@ -28,16 +30,14 @@ unset($_GET['_path']);
 
 try {
     /**
-     * Detect Silla.IO Mode.
-     */
-    $mode = Router\Router::getMode($requestString);
-    Core\Config()->setMode($mode);
-
-    /**
      * Setup Router variables.
      */
-    $routes  = new Router\Routes($mode);
-    $request = new Router\Request($mode, Router\Router::parseRequestQueryString($requestString, $routes), $GLOBALS);
+    $routes  = new Router\Routes();
+
+    list($package, $elements) = Router\Router::parseRequestQueryString($requestString, $routes);
+
+    $request = new Router\Request($package, $elements, $GLOBALS);
+    \Silla::$request = $request;
 
     /**
      * Dispatch Request.

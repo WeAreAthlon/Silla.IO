@@ -215,32 +215,6 @@ abstract class Configuration
     );
 
     /**
-     * @var array $MODES Silla.IO Runtime Modes. Array representation of supported Silla.IO modes.
-     *      Default mode(most common) is the last element the array.
-     *
-     * @example name     Semantic name of the mode.
-     * @example location File path to the mode files WITH trailing slash.
-     * @example url      URL prefix of the mode WITH trailing slash.
-     */
-    private $MODES = array(
-        array(
-            'name'     => 'cms',
-            'location' => 'cms/',
-            'url'      => 'cms/',
-        ),
-        array(
-            'name'     => 'default',
-            'location' => 'app/',
-            'url'      => '/',
-        ),
-    );
-
-    /**
-     * @var array $MODE Current mode.
-     */
-    private $MODE = array();
-
-    /**
      * @var Configuration $instance Reference to the current instance of the Configuration object.
      */
     protected static $instance = null;
@@ -298,37 +272,35 @@ abstract class Configuration
             DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
 
         /* Process modes */
-        $this->MODES = $this->setupModes($this->MODES);
+        /*$this->MODES = $this->setupModes($this->MODES);*/
 
         /* Default mode */
-        $this->setMode($this->MODES[0]);
+        /*$this->setPackage($this->MODES[0]);*/
     }
 
     /**
-     * Setup mode configuration variables.
+     * Setup package configuration variables.
      *
-     * @param array $mode Silla.IO mode data.
+     * @param array $package Silla.IO package data.
      *
      * @return void
      */
-    final public function setMode(array $mode)
+    final public function setPackage($package)
     {
-        $this->MODE = $mode;
-
-        $this->PATHS['mode']               = $mode['location'];
-        $this->PATHS['views']['templates'] = $this->PATHS['mode'] . 'views' . DIRECTORY_SEPARATOR;
+        $this->PATHS['package']            = $package['location'];
+        $this->PATHS['views']['templates'] = $this->PATHS['package'] . 'views' . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['layouts']   = $this->PATHS['views']['templates'] . '_layouts' . DIRECTORY_SEPARATOR;
 
-        $this->PATHS['labels']  = $this->PATHS['mode']   . 'labels' . DIRECTORY_SEPARATOR;
+        $this->PATHS['labels']  = $this->PATHS['package']   . 'labels' . DIRECTORY_SEPARATOR;
         $this->PATHS['uploads'] =
-            $this->PATHS['public'] . $mode['relative'] . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
+            $this->PATHS['public'] . $package['name'] . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
 
-        $this->PATHS['assets']['source']       = $mode['location'] . 'assets' . DIRECTORY_SEPARATOR;
+        $this->PATHS['assets']['source']       = $package['location'] . 'assets' . DIRECTORY_SEPARATOR;
         $this->PATHS['assets']['distribution'] =
-            $this->PATHS['public'] . $mode['relative'] . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
+            $this->PATHS['public'] . $package['name'] . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
 
-        $this->URLS['mode']    = $this->URLS['relative'] . $mode['url'];
-        $this->URLS['public']  = $this->URLS['relative'] . 'public/' . $mode['relative'] . '/';
+        $this->URLS['package'] = $this->URLS['relative'] . $package['url'];
+        $this->URLS['public']  = $this->URLS['relative'] . 'public/' . $package['name'] . '/';
         $this->URLS['assets']  = $this->URLS['public'] . 'assets/';
         $this->URLS['uploads'] = $this->URLS['public'] . 'uploads/';
     }
@@ -378,42 +350,6 @@ abstract class Configuration
     }
 
     /**
-     * Retrieves Silla.IO modes.
-     *
-     * @param string $name Name of the mode.
-     *
-     * @return array
-     */
-    final public function modes($name = '')
-    {
-        if ($name) {
-            foreach ($this->MODES as $mode) {
-                if ($mode['name'] === $name) {
-                    return $mode;
-                }
-            }
-        }
-
-        return $this->MODES;
-    }
-
-    /**
-     * Retrieves current Silla.IO mode.
-     *
-     * @param string $segment Segment name of the mode.
-     *
-     * @return mixed
-     */
-    final public function mode($segment = null)
-    {
-        if ($segment && isset($this->MODE[$segment])) {
-            return $this->MODE[$segment];
-        }
-
-        return $this->MODE;
-    }
-
-    /**
      * Returns an instance of the Configuration object.
      *
      * @return Configuration
@@ -439,33 +375,33 @@ abstract class Configuration
     }
 
     /**
-     * Format and setup Silla.IO modes.
+     * Format and setup Silla.IO packages.
      *
-     * @param array $modes Array of Silla.IO modes to setup.
+     * @param array $packages Array of Silla.IO packages to setup.
      *
      * @return array
      */
-    final protected function setupModes(array $modes)
+    final protected function setupPackages(array $packages)
     {
         if ($this->ROUTER['separator'] !== '/') {
-            foreach ($modes as &$mode) {
-                $mode['url'] = str_replace('/', $this->ROUTER['separator'], $mode['url']);
+            foreach ($packages as &$package) {
+                $oackage['url'] = str_replace('/', $this->ROUTER['separator'], $oackage['url']);
             }
         }
 
-        foreach ($modes as &$mode) {
-            $mode['relative'] = trim($mode['location'], '/');
-            $mode['location'] = $this->PATHS['root'] . $mode['location'];
-            $mode['url'] = trim(
-                str_replace($this->URLS['relative'], '', $mode['url']),
+        foreach ($oackages as &$package) {
+            $package['relative'] = trim($package['location'], '/');
+            $package['location'] = $this->PATHS['root'] . $package['location'];
+            $package['url'] = trim(
+                str_replace($this->URLS['relative'], '', $package['url']),
                 $this->ROUTER['separator']
             );
-            $mode['namespace'] = trim(
-                str_replace('/', '\\', str_replace($this->PATHS['root'], '', $mode['location'])),
+            $package['namespace'] = trim(
+                str_replace('/', '\\', str_replace($this->PATHS['root'], '', $package['location'])),
                 '\\'
             );
         }
 
-        return $modes;
+        return $packages;
     }
 }
