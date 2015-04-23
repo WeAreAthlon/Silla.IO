@@ -11,6 +11,8 @@ class FileTest extends PHPUnit_Framework_TestCase
 {
     use PHPMock;
 
+    protected static $vfs;
+    protected static $rootPath;
     protected $fullPath;
     protected $relativePath;
     protected $restrictedPath;
@@ -21,16 +23,27 @@ class FileTest extends PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         /* Setup virtual file system. */
-        vfsStream::setup('root/');
+        self::$vfs = vfsStream::setup('root/');
 
         /* Copy a plain text file for testing purposes. */
         copy(
             Core\Config()->paths('root') . 'VERSION',
             vfsStream::url('root/') . 'test.txt'
         );
+
+        self::$rootPath = Core\Config()->paths('root');
         /* Modify root path to point to the virtual file system. */
         Core\Config()->modifyPath('root', vfsStream::url('root/'));
     }
+
+    public static function tearDownAfterClass()
+    {
+        /* Tear down virtual file system. */
+        self::$vfs = null;
+        /* Reset root path to point to the real file system. */
+        Core\Config()->modifyPath('root', self::$rootPath);
+    }
+
 
     protected function setUp()
     {
