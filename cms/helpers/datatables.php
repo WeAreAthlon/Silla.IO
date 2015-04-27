@@ -125,11 +125,11 @@ class DataTables
                             if (in_array($model_fields[$field]['type'], array('date', 'datetime'), true)) {
                                 $decorator = 'Core\Modules\DB\Decorators\Interfaces\TimezoneAwareness';
                                 if (is_subclass_of($query->getObject(), $decorator)) {
-                                    $value['start'] = Core\Helpers\DateTime::removeTimezoneOffset(
+                                    $value['start'] = Core\Helpers\DateTime::formatGmt(
                                         $value['start'] . date(' H:i:s'),
                                         'Y-m-d'
                                     );
-                                    $value['end'] = Core\Helpers\DateTime::removeTimezoneOffset(
+                                    $value['end'] = Core\Helpers\DateTime::formatGmt(
                                         $value['end'] . date(' H:i:s'),
                                         'Y-m-d'
                                     );
