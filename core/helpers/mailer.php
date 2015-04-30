@@ -133,7 +133,7 @@ class Mailer
         $mail->Port = Core\Config()->MAILER['credentials']['SMTP']['port'];
         $mail->Username = Core\Config()->MAILER['credentials']['SMTP']['user'];
         $mail->Password = Core\Config()->MAILER['credentials']['SMTP']['password'];
-        //$mail->SMTPSecure = 'tls';
+        /* $mail->SMTPSecure = 'tls'; */
 
         $mail->SetFrom($params['from_mail'], $params['from_name']);
 

@@ -60,6 +60,7 @@ final class Generate
         try {
             Helpers\Directory::create($mode . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . strtolower($name));
         } catch (\Exception $e) {
+            /* @todo Explain why we are not handling exception. */
         }
 
         foreach ($action_names as $action) {

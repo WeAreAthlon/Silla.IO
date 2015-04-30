@@ -178,6 +178,7 @@ abstract class Attachment implements Interfaces\Decorator
                     try {
                         Helpers\File::delete($attachment_old_file);
                     } catch (\Exception $e) {
+                        /* @todo Explain why we are not handling exception. */
                     }
 
                     if ($_attachment['type'] === array('photo') &&

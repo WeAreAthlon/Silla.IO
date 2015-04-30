@@ -14,9 +14,7 @@
  */
 namespace Core {
 
-    /**
-     * Hook the default auto-load class function.
-     */
+    /* Hook the default auto-load class function. */
     spl_autoload_extensions('.php');
     spl_autoload_register('spl_autoload');
 
@@ -93,9 +91,7 @@ namespace Core {
     }
 }
 
-/**
- * Global namespace.
- */
+/* Global namespace. */
 namespace {
 
     /**
@@ -188,8 +184,6 @@ namespace {
         );
     }
 
-    /**
-     * Registers vendors auto-loaders.
-     */
+    /* Registers vendors auto-loaders. */
     require_once Core\Config()->paths('vendor') . 'autoload.php';
 }
