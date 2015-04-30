@@ -13,15 +13,6 @@ class DateTimeTest extends PHPUnit_Framework_TestCase
     protected $datetime;
     protected $datetimeUtc;
 
-    public static function setUpBeforeClass()
-    {
-    }
-
-    public static function tearDownAfterClass()
-    {
-    }
-
-
     protected function setUp()
     {
         $this->timezone = 'Europe/Sofia';

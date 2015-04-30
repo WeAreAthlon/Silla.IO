@@ -17,112 +17,99 @@ use \Imagine\Image\Box;
 use \Imagine\Image\ImageInterface;
 
 /**
- * Class Image Helper definition.
+ * Contains helper methods concerned with image manipulation.
  */
 class Image
 {
     /**
-     * Generate one or more cropped thumbnails of the input image.
+     * Generate one or more center cropped thumbnails given thumbnail sizes.
      *
-     * @param string  $path_to_image Path to the input image file.
-     * @param array   $thumbs_sizes  Array with needed thumb sizes it looks like: ['150x150', '240x320', '640x480'].
-     * @param integer $quality       Image compression quality(only for JPG).
+     * @param string  $imagePath   Path to the input image file.
+     * @param array   $thumbsSizes Array with thumb sizes. Example: ['150x150', '240x320', '640x480'].
+     * @param integer $quality     Image compression quality (only for JPG and PNG).
      *
-     * @access public
-     * @static
-     * @throws \Exception Generic exception.
+     * @uses self::createThumbnail To create a thumbnail from the given image.
      *
-     * @return void
+     * @return array Of paths to the newly created thumbnails.
      */
-    public static function createThumbnailExact($path_to_image, array $thumbs_sizes, $quality = 95)
+    public static function createCroppedThumbnail($imagePath, array $thumbsSizes, $quality = 95)
     {
-        $meta = pathinfo($path_to_image);
-
-        $imagine = new Imagine();
-        $imagine = $imagine->open($path_to_image);
-
-        foreach ($thumbs_sizes as $size) {
-            preg_match_all('/(\d+)/', $size, $thumb_size);
-
-            $size = new Box($thumb_size[0][0], $thumb_size[0][1]);
-            $size_name = "{$thumb_size[0][0]}x{$thumb_size[0][1]}";
-
-            $imagine = $imagine->thumbnail($size, ImageInterface::THUMBNAIL_INSET);
-            $imagine->save(
-                $meta['dirname'] . DIRECTORY_SEPARATOR . "{$size_name}-{$meta['filename']}.{$meta['extension']}",
-                array('quality' => $quality)
-            );
-        }
+        return self::createThumbnail($imagePath, $thumbsSizes, $quality, ImageInterface::THUMBNAIL_OUTBOUND);
     }
 
     /**
-     * Generate one or more scaled thumbnails of the input image.
+     * Generate one or more scaled thumbnails that fit in the given sizes.
      *
-     * @param string  $path_to_image Path to the input image file.
-     * @param array   $thumbs_sizes  Array with needed thumb sizes it looks like: ['150x150', '240x320', '640x480'].
-     * @param integer $quality       Image compression quality(only for JPG).
+     * @param string  $imagePath   Path to the input image file.
+     * @param array   $thumbsSizes Array with thumb sizes. Example: ['150x150', '240x320', '640x480'].
+     * @param integer $quality     Image compression quality (only for JPG and PNG).
      *
-     * @access public
-     * @static
-     * @throws \Exception Generic exception.
+     * @uses self::createThumbnail To create a thumbnail from the given image.
      *
-     * @return void
+     * @return array Of paths to the newly created thumbnails.
      */
-    public static function createThumbnailScaled($path_to_image, array $thumbs_sizes, $quality = 95)
+    public static function createScaledThumbnail($imagePath, array $thumbsSizes, $quality = 95)
     {
-        $meta = pathinfo($path_to_image);
-
-        $imagine = new Imagine();
-        $imagine = $imagine->open($path_to_image);
-
-        foreach ($thumbs_sizes as $size) {
-            preg_match_all('/(\d+)/', $size, $thumb_size);
-
-            $size = new Box($thumb_size[0][0], $thumb_size[0][1]);
-            $size_name = "{$thumb_size[0][0]}x{$thumb_size[0][1]}";
-
-            $imagine = $imagine->thumbnail($size, ImageInterface::THUMBNAIL_OUTBOUND);
-            $imagine->save(
-                $meta['dirname'] . DIRECTORY_SEPARATOR . "{$size_name}-{$meta['filename']}.{$meta['extension']}",
-                array('quality' => $quality)
-            );
-        }
+        return self::createThumbnail($imagePath, $thumbsSizes, $quality, ImageInterface::THUMBNAIL_INSET);
     }
 
     /**
-     * Calculates scale.
+     * Gets image size and aspect ratio.
      *
-     * @param integer $n     Parameter to be scaled.
-     * @param integer $ratio Scale ratio.
+     * @param string $imagePath Image file path.
      *
-     * @access public
-     * @static
-     *
-     * @return integer
+     * @return array With width, height, and aspect ratio.
      */
-    public static function scaleSize($n, $ratio)
+    public static function getSize($imagePath)
     {
-        return floor($n * $ratio);
-    }
-
-    /**
-     * Calculates image dimensions.
-     *
-     * @param string $path_to_image Image file path.
-     *
-     * @access public
-     * @static
-     *
-     * @return array Example [width, height, aspect ratio].
-     */
-    public static function getDimensions($path_to_image)
-    {
-        $dimensions = getimagesize($path_to_image);
+        $dimensions = getimagesize($imagePath);
 
         return array(
             'width' => $dimensions[0],
             'height' => $dimensions[1],
-            'aspect_ratio' => $dimensions[0] / $dimensions[1]
+            'ratio' => $dimensions[0] / $dimensions[1]
         );
+    }
+
+    /**
+     * Generate one or more thumbnails of an input file.
+     *
+     * @param string  $imagePath   Path to the input image file.
+     * @param array   $thumbsSizes Array with thumb sizes. Example: ['150x150', '240x320', '640x480'].
+     * @param integer $quality     Image compression quality (only for JPG and PNG).
+     * @param string  $mode        Used by thumbnail creation. Can be either inset or outbound.
+     *
+     * @return array Of paths to the newly created thumbnails.
+     */
+    private static function createThumbnail($imagePath, array $thumbsSizes, $quality, $mode)
+    {
+        $type = ($mode === 'inset') ? 'scaled' : 'cropped';
+
+        $meta = pathinfo($imagePath);
+
+        $imagine = new Imagine();
+        $image = $imagine->open($imagePath);
+
+        foreach ($thumbsSizes as $size) {
+            preg_match_all('/(\d+)/', $size, $thumbSize);
+
+            $size = new Box($thumbSize[0][0], $thumbSize[0][1]);
+            $sizeName = "{$thumbSize[0][0]}x{$thumbSize[0][1]}";
+            $filePath =
+                $meta['dirname'] .
+                DIRECTORY_SEPARATOR .
+                "{$meta['filename']}_{$sizeName}_{$type}.{$meta['extension']}";
+
+            $image
+                ->thumbnail($size, $mode)
+                ->save(
+                    $filePath,
+                    array('quality' => $quality)
+                );
+            /* Append the file path of the thumbnail for return. */
+            $thumbnails[] = $filePath;
+        }
+
+        return $thumbnails;
     }
 }

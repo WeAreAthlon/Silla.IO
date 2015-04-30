@@ -44,7 +44,6 @@ class FileTest extends PHPUnit_Framework_TestCase
         Core\Config()->modifyPath('root', self::$rootPath);
     }
 
-
     protected function setUp()
     {
         $this->fullPath = Core\Config()->paths('root') . 'temp/cache';

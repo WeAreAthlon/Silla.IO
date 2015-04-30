@@ -249,14 +249,14 @@ abstract class Attachment implements Interfaces\Decorator
             try {
                 switch ($thumbnail['type']) {
                     case 'resize':
-                        Helpers\Image::createThumbnailScaled(
+                        Helpers\Image::createScaledThumbnail(
                             $resource->attachmentsStoragePath($name) . $attachment_filename,
                             array($thumbnail['size'])
                         );
                         break;
 
                     case 'crop':
-                        Helpers\Image::createThumbnailExact(
+                        Helpers\Image::createCroppedThumbnail(
                             $resource->attachmentsStoragePath($name) . $attachment_filename,
                             array($thumbnail['size'])
                         );
