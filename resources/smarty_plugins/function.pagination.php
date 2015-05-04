@@ -25,7 +25,7 @@ function smarty_function_pagination(array $params, Smarty_Internal_Template $tem
     $params['range'] = isset($params['range']) ? abs($params['range']) : 2;
     $_path_to_templates = $viewsPaths['templates'] . '_shared' . DIRECTORY_SEPARATOR;
 
-    $_template          = isset($params['template']) ? $_path_to_templates . $params['template'] . '.html.tpl' : NULL;
+    $_template          = isset($params['template']) ? $_path_to_templates . $params['template'] . '.html.tpl' : null;
     $params['template'] = file_exists($_template) ? $_template : $_path_to_templates . 'pagination' . DIRECTORY_SEPARATOR . 'default.html.tpl';
 
     $paginator   = $params['paginator'];
@@ -41,7 +41,7 @@ function smarty_function_pagination(array $params, Smarty_Internal_Template $tem
         'last'       => $paginator->last(),
         'prev'       => $paginator->prev(),
         'next'       => $paginator->next(),
-        'boundaries' => isset($params['boundaries']) ? !!$params['boundaries'] : FALSE,
+        'boundaries' => isset($params['boundaries']) ? !!$params['boundaries'] : false,
         'range'      => $params['range'],
         'pages'      => range($range['start'], $range['end']),
     ));

@@ -9,20 +9,22 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
+use ICanBoogie\Inflector;
+
 /**
- * Smarty classify modifier plugin.
+ * Smarty underscore modifier plugin.
  *
  * Type:     modifier<br>
- * Name:     classify<br>
- * Purpose:  classify words in the string
+ * Name:     underscore<br>
+ * Purpose:  underscore words in the string
  *
  * @param string $string Input string.
  *
  * @return string
  */
-function smarty_modifier_classify($string)
+function smarty_modifier_underscore($string)
 {
-    $inflector = new \Vendor\Athlon\Inflector();
+    $inflector = Inflector::get();
 
-    return $inflector->classify($string);
+    return $inflector->underscore($string);
 }

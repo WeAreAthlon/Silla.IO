@@ -9,20 +9,22 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
+use ICanBoogie\Inflector;
+
 /**
- * Smarty underscore modifier plugin.
+ * Smarty tableize modifier plugin.
  *
  * Type:     modifier<br>
- * Name:     underscore<br>
- * Purpose:  underscore words in the string
+ * Name:     tableize<br>
+ * Purpose:  tableize words in the string
  *
- * @param string $string Input string.
+ * @param string $string Input string to tableize.
  *
  * @return string
  */
-function smarty_modifier_underscore($string)
+function smarty_modifier_tableize($string)
 {
-    $inflector = new \Vendor\Athlon\Inflector();
+    $inflector = Inflector::get();
 
-    return $inflector->underscore($string);
+    return $inflector->pluralize($this->underscore($string));
 }

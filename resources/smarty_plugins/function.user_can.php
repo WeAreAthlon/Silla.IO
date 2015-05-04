@@ -21,5 +21,5 @@
  */
 function smarty_function_user_can(array $options, Smarty_Internal_Template $template)
 {
-    return \CMS\Helpers\CMSUsers::userCan( $options );
+    return \CMS\Helpers\CMSUsers::userCan($options);
 }

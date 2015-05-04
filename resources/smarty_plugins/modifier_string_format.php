@@ -10,19 +10,14 @@
  */
 
 /**
- * Smarty pluralize modifier plugin.
+ * Formats String with format.
  *
- * Type:     modifier<br>
- * Name:     pluralize<br>
- * Purpose:  pluralize words in the string
- *
- * @param string $string Input string to pluralize.
+ * @param string $string Input string.
+ * @param string $format Format string.
  *
  * @return string
  */
-function smarty_modifier_pluralize($string)
+function smarty_modifier_string_format($string, $format)
 {
-    $inflector = new \Vendor\Athlon\Inflector();
-
-    return $inflector->pluralize($string);
+    return sprintf($format, $string);
 }

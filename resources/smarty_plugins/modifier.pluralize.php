@@ -9,21 +9,22 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
+use ICanBoogie\Inflector;
+
 /**
- * Smarty camelize modifier plugin.
+ * Smarty pluralize modifier plugin.
  *
- * Camelize words in the string
  * Type:     modifier<br>
- * Name:     camelize<br>
+ * Name:     pluralize<br>
+ * Purpose:  pluralize words in the string
  *
- * @param string $string Input string.
+ * @param string $string Input string to pluralize.
  *
  * @return string
  */
-function smarty_modifier_camelize($string)
+function smarty_modifier_pluralize($string)
 {
-    $inflector = new \Vendor\Athlon\Inflector();
+    $inflector = Inflector::get();
 
-    return $inflector->camelize($string);
+    return $inflector->pluralize($string);
 }
-

@@ -9,20 +9,22 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
+use ICanBoogie\Inflector;
+
 /**
- * Smarty singularize modifier plugin.
+ * Smarty classify modifier plugin.
  *
  * Type:     modifier<br>
- * Name:     singularize<br>
- * Purpose:  singularize words in the string
+ * Name:     classify<br>
+ * Purpose:  classify words in the string
  *
- * @param string $string Input string to singularize.
+ * @param string $string Input string.
  *
  * @return string
  */
-function smarty_modifier_singularize($string)
+function smarty_modifier_classify($string)
 {
-    $inflector = new \Vendor\Athlon\Inflector();
+    $inflector = Inflector::get();
 
-    return $inflector->singularize($string);
+    return $inflector->camelize($inflector->singularize($string));
 }

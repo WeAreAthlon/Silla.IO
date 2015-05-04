@@ -38,7 +38,7 @@ class Smarty implements Core\Modules\Render\Interfaces\Adapter
             ->setCompileDir($config['compiled'])
             ->setCacheDir($config['cache'])
             ->setConfigDir($config['config'])
-            ->addPluginsDir(Core\Config()->paths('vendor') . 'athlon' . DIRECTORY_SEPARATOR . 'smarty_plugins');
+            ->addPluginsDir(Core\Config()->paths('resources') . 'smarty_plugins');
 
         $this->tpl->configLoad('globals.conf');
     }

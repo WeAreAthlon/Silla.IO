@@ -62,9 +62,8 @@ function smarty_function_html_object_options(array $params, Smarty_Internal_Temp
                 $_opts = array();
                 $_opts_value_name = isset($params['obj_val']) ? $params['obj_val'] : 'id';
                 $_opts_title_name = isset($params['obj_name']) ? $params['obj_name'] : 'title';
-                foreach($_val as $object)
-                {
-                    $_opts[$object->{$_opts_value_name}] = ($object->$_opts_title_name ? $object->$_opts_title_name : $object->{$_opts_value_name});
+                foreach ($_val as $object) {
+                $_opts[$object->{$_opts_value_name}] = ($object->$_opts_title_name ? $object->$_opts_title_name : $object->{$_opts_value_name});
                 }
 
                 $options = $_opts;
@@ -102,7 +101,8 @@ function smarty_function_html_object_options(array $params, Smarty_Internal_Temp
                 }
                 break;
 
-            case 'strict': break;
+            case 'strict':
+                break;
 
             case 'disabled':
             case 'readonly':
@@ -118,15 +118,13 @@ function smarty_function_html_object_options(array $params, Smarty_Internal_Temp
                     break;
                 }
                 // omit break; to fall through!
-
             default:
-                if( !in_array($_key, array('obj_val', 'obj_name')) )
-                {
-                   if (!is_array($_val)) {
+                if (!in_array($_key, array('obj_val', 'obj_name'))) {
+                    if (!is_array($_val)) {
                         $extra .= ' ' . $_key . '="' . smarty_function_escape_special_chars($_val) . '"';
-                   } else {
+                    } else {
                         trigger_error("html_options: extra attribute '$_key' cannot be an array", E_USER_NOTICE);
-                   }
+                    }
                 }
 
                 break;

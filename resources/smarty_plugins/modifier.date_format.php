@@ -20,8 +20,8 @@
  *          - format: strftime format for output
  *          - default_date: default date if $string is empty
  *
- * @param string $string input
- * @param string $format type of the format
+ * @param string $string       input
+ * @param string $format       type of the format
  * @param string $default_date default date value
  *
  * @link http://smarty.php.net/manual/en/language.modifier.date.format.php date_format (Smarty online manual)
@@ -29,7 +29,7 @@
  *
  * @return string|void
  */
-function smarty_modifier_date_format($string, $format = SMARTY_RESOURCE_DATE_FORMAT, $default_date = '',$formatter = 'auto')
+function smarty_modifier_date_format($string, $format = SMARTY_RESOURCE_DATE_FORMAT, $default_date = '', $formatter = 'auto')
 {
     /**
      * Include the {@link shared.make_timestamp.php} plugin
@@ -42,7 +42,7 @@ function smarty_modifier_date_format($string, $format = SMARTY_RESOURCE_DATE_FOR
     } else {
         return;
     }
-    if($formatter=='strftime'||($formatter=='auto'&&strpos($format,'%')!==false)) {
+    if ($formatter=='strftime'||($formatter=='auto'&&strpos($format, '%')!==false)) {
         if (DS == '\\') {
             $_win_from = array('%D', '%h', '%n', '%r', '%R', '%t', '%T');
             $_win_to = array('%m/%d/%y', '%b', "\n", '%I:%M:%S %p', '%H:%M', "\t", '%H:%M:%S');

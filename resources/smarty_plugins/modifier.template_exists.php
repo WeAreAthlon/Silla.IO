@@ -19,7 +19,7 @@
  */
 function smarty_modifier_template_exists($template)
 {
-	$viewsPaths = Core\Config()->paths('views');
+    $viewsPaths = Core\Config()->paths('views');
 
     return is_file($viewsPaths['templates'] . $template);
 }

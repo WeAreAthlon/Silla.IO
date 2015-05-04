@@ -31,7 +31,7 @@ use Assetic\AssetWriter;
  *  - JavaScript
  *  - Coffee Script via Assetic\Filter\CoffeeScriptFilter
  *
- * @param array $options Assets source options.
+ * @param array                    $options  Assets source options.
  * @param Smarty_Internal_Template $template Smarty Template object.
  *
  * @uses   Core\Config
@@ -109,7 +109,7 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                                 $cached_asset = 'css' . DIRECTORY_SEPARATOR . $filename . '.css';
 
                                 if (file_exists($dist_path . $cached_asset)) {
-                                    $target = str_replace(DIRECTORY_SEPARATOR, '/', $cached_asset); 
+                                    $target = str_replace(DIRECTORY_SEPARATOR, '/', $cached_asset);
                                     $result[] = sprintf('<link href="%s" rel="%s" type="%s" media="%s" />', $dist_url . $target, $rel, $mimetype, $media);
                                 } else {
                                     $assets_to_process[$type][] = $file;

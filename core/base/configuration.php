@@ -171,28 +171,30 @@ abstract class Configuration
     /**
      * @var array $PATHS File Paths definition.
      *
-     * @example root    Path to Silla.IO files location on the file system.
-     * @example mode    Path to Silla.IO current mode location.
-     * @example labels  Path to Silla.IO localisation labels location.
-     * @example cache   Path to Silla.IO file caches on the server.
-     * @example tmp     Path to Silla.IO temorary file storage location.
-     * @example public  Path to Silla.IO public accessible location.
-     * @example uploads Path to Silla.IO uploads storage location.
-     * @example vendor  Path to Silla.IO vendor files location.
-     * @example assets  Path to Silla.IO assets storage location['source', 'distribution'].
-     * @example views   Path to Silla.IO views['templates', 'compiled', 'config', 'cache'].
+     * @example root      Path to Silla.IO files location on the file system.
+     * @example mode      Path to Silla.IO current mode location.
+     * @example labels    Path to Silla.IO localisation labels location.
+     * @example cache     Path to Silla.IO file caches on the server.
+     * @example tmp       Path to Silla.IO temorary file storage location.
+     * @example public    Path to Silla.IO public accessible location.
+     * @example uploads   Path to Silla.IO uploads storage location.
+     * @example vendor    Path to Silla.IO vendor files location.
+     * @example resources Path to Silla.IO resources files location.
+     * @example assets    Path to Silla.IO assets storage location['source', 'distribution'].
+     * @example views     Path to Silla.IO views['templates', 'compiled', 'config', 'cache'].
      */
     protected $PATHS = array(
-        'root'    => null,
-        'mode'    => null,
-        'labels'  => null,
-        'cache'   => null,
-        'tmp'     => null,
-        'public'  => null,
-        'uploads' => null,
-        'vendor'  => null,
-        'views'   => array(),
-        'assets'  => array(),
+        'root'      => null,
+        'mode'      => null,
+        'labels'    => null,
+        'cache'     => null,
+        'tmp'       => null,
+        'public'    => null,
+        'uploads'   => null,
+        'vendor'    => null,
+        'resources' => null,
+        'views'     => array(),
+        'assets'    => array(),
     );
 
     /**
@@ -287,6 +289,7 @@ abstract class Configuration
         }
 
         $this->PATHS['vendor'] = $this->PATHS['root'] . 'vendor' . DIRECTORY_SEPARATOR;
+        $this->PATHS['resources'] = $this->PATHS['root'] . 'resources' . DIRECTORY_SEPARATOR;
         $this->PATHS['tmp']    = $this->PATHS['root'] . 'temp'   . DIRECTORY_SEPARATOR;
         $this->PATHS['cache']  = $this->PATHS['tmp']  . 'cache'  . DIRECTORY_SEPARATOR;
         $this->PATHS['public'] = $this->PATHS['root'] . 'public' . DIRECTORY_SEPARATOR;

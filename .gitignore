@@ -23,7 +23,6 @@ composer.lock
 
 # Ignore vendor libraries
 /vendor/*
-!/vendor/athlon/
 
 # Ignore uploads directories
 /public/*/uploads

@@ -9,20 +9,22 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
+use ICanBoogie\Inflector;
+
 /**
- * Smarty ordinalize modifier plugin.
+ * Smarty singularize modifier plugin.
  *
  * Type:     modifier<br>
- * Name:     ordinalize<br>
- * Purpose:  ordinalize words in the string
+ * Name:     singularize<br>
+ * Purpose:  singularize words in the string
  *
- * @param integer $number Number to ordinalize.
+ * @param string $string Input string to singularize.
  *
  * @return string
  */
-function smarty_modifier_ordinalize($number)
+function smarty_modifier_singularize($string)
 {
-    $inflector = new \Vendor\Athlon\Inflector();
+    $inflector = Inflector::get();
 
-    return $inflector->ordinalize($number);
+    return $inflector->singularize($string);
 }

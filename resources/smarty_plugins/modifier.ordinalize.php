@@ -9,20 +9,22 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
+use ICanBoogie\Inflector;
+
 /**
- * Smarty tableize modifier plugin.
+ * Smarty ordinalize modifier plugin.
  *
  * Type:     modifier<br>
- * Name:     tableize<br>
- * Purpose:  tableize words in the string
+ * Name:     ordinalize<br>
+ * Purpose:  ordinalize words in the string
  *
- * @param string $string Input string to tableize.
+ * @param integer $number Number to ordinalize.
  *
  * @return string
  */
-function smarty_modifier_tableize($string)
+function smarty_modifier_ordinalize($number)
 {
-    $inflector = new \Vendor\Athlon\Inflector();
+    $inflector = Inflector::get();
 
-    return $inflector->tableize($string);
+    return $inflector->ordinalize($number);
 }

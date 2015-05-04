@@ -9,15 +9,22 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
+use ICanBoogie\Inflector;
+
 /**
- * Formats String with format.
+ * Smarty camelize modifier plugin.
+ *
+ * Camelize words in the string
+ * Type:     modifier<br>
+ * Name:     camelize<br>
  *
  * @param string $string Input string.
- * @param string $format Format string.
  *
  * @return string
  */
-function smarty_modifier_string_format($string, $format)
+function smarty_modifier_camelize($string)
 {
-	return sprintf($format, $string);
+    $inflector = Inflector::get();
+
+    return $inflector->camelize($string);
 }
