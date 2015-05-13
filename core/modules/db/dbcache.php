@@ -265,7 +265,6 @@ final class DbCache
      * @param string $tableName Name of the table.
      *
      * @uses   Core\Cache()
-     * @uses   getAllTableNames()
      * @uses   extractSchemaMeta()
      *
      * @return array

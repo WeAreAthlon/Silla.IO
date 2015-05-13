@@ -99,8 +99,8 @@ abstract class Configuration
         ),
         'credentials' => array(
             'smtp' => array(
-                'host' => '',
-                'port' => '',
+                'host' => 'localhost',
+                'port' => '25',
                 'user' => '',
                 'password' => '',
             ),

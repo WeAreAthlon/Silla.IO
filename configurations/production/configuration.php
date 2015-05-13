@@ -92,8 +92,8 @@ class Configuration extends Core\Base\Configuration
         ),
         'credentials' => array(
             'smtp' => array(
-                'host' => '',
-                'port' => '',
+                'host' => 'localhost',
+                'port' => '25',
                 'user' => '',
                 'password' => '',
             ),
