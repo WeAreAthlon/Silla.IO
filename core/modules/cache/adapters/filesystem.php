@@ -69,6 +69,7 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
             try {
                 File::delete($file);
             } catch (\Exception $e) {
+                // Provide comment why we are not processing the catched exception.
             }
 
             return null;

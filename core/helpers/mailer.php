@@ -89,8 +89,8 @@ class Mailer
     /**
      * Process email.
      *
-     * @param \PHPMailer $mail PHPMailer object.
-     * @param array $params Sending parameters.
+     * @param \PHPMailer $mail   PHPMailer object.
+     * @param array      $params Sending parameters.
      *
      * @uses   Core\Config()
      *
