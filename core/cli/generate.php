@@ -42,28 +42,36 @@ final class Generate
      *
      * @return void
      */
-    public static function controller($mode, $name)
+    public static function controller($args, $options)
     {
-        $action_names = array_slice(func_get_args(), 2);
+        $name = $args[0];
+        $action_names = array_slice($args, 1);
+
+        if(isset($options['p'])) {
+            $package = \Silla::getPackage($options['p']);
+        } else {
+            $package = \Silla::getPackage();
+        }
+
         $result = self::parseTemplate('controller', array(
-            'mode' => $mode,
+            'mode' => $package['name'],
             'controller' => $name,
             'actions' => $action_names
         ));
 
         Helpers\File::putContents(
-            $mode . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . strtolower($name) . '.php',
+            $package['extendLocation'] . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . strtolower($name) . '.php',
             $result
         );
 
         /* Generate views */
         try {
-            Helpers\Directory::create($mode . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . strtolower($name));
+            Helpers\Directory::create($package['extendLocation'] . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . strtolower($name));
         } catch (\Exception $e) {
         }
 
         foreach ($action_names as $action) {
-            $path = $mode . DIRECTORY_SEPARATOR . 'views'
+            $path = $package['extendLocation'] . DIRECTORY_SEPARATOR . 'views'
                 . DIRECTORY_SEPARATOR . strtolower($name) . DIRECTORY_SEPARATOR . $action . '.html';
             $view = self::parseTemplate('view', array(
                 'controller' => $name,

@@ -150,6 +150,7 @@
             "Core\\": ["lib/", "core/"],
             "Configurations\\": "configurations/",
             "": ["packages/", ""]
-        }
+        },
+        "classmap": ["core/silla.php"]
     }
 }

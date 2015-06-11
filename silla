@@ -11,12 +11,14 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Core\CLI;
+use Core\Cli\Cli;
 
 boot();
 
 if ($argc > 1) {
-    $parts   = explode(':', $argv[1]);
+    Cli::run(array_slice($argv, 1));
+
+    /*$parts   = explode(':', $argv[1]);
     $command = implode(':', array_slice($parts, 1));
     $class   = 'Core\CLI\\' . $parts[0];
 
@@ -40,7 +42,7 @@ if ($argc > 1) {
         CLI\DB::$migrations = $migrations;
     }
 
-    call_user_func_array(array($class, $command), array_slice($argv, 2));
+    call_user_func_array(array($class, $command), array_slice($argv, 2));*/
 }
 
 function boot()

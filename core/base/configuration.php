@@ -240,7 +240,7 @@ abstract class Configuration
                 '',
                 $current_dir . '/'
             );
-            
+
             $this->URLS['relative'] = str_replace(DIRECTORY_SEPARATOR, '/', $this->URLS['relative']);
         }
 

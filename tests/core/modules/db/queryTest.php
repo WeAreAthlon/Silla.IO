@@ -1,122 +1,178 @@
 <?php
+use Tests\Core\Modules\DB\User;
 use Core\Modules\DB;
+use Core\Modules\DB\Query;
+use Zob\Adapters\MySql\MySql;
+use Zob\Objects\Table;
 
-class QueryTest extends PHPUnit_Framework_TestCase
+class QueryTest extends PHPUnit_Extensions_Database_TestCase
 {
+    protected static $connection;
+    protected static $users;
+    protected static $tasks;
     private $query;
 
-    protected function setUp()
+    protected function getTableRows($queryTable)
     {
-        $this->query = new DB\Query();
-    }
+        $result = [];
+        for($i = 0; $i < $queryTable->getRowCount(); $i++) {
+            $result[] = $queryTable->getRow($i);
+        }
 
-    public function testFind()
-    {
-        $this->query->find();
-        $this->assertEquals('get', $this->query->type);
-    }
-
-    public function testCreate()
-    {
-        $this->query->create(DB\DBO::RECORD);
-        $this->assertEquals('create', $this->query->type);
-        $this->assertEquals('record', $this->query->object);
-
-        $this->query->create('datasource');
-        $this->assertEquals('create', $this->query->type);
-        $this->assertEquals('datasource', $this->query->object);
-    }
-
-    public function testDelete()
-    {
-        $this->query->delete(DB\DBO::PROPERTY);
-        $this->assertEquals('delete', $this->query->type);
-        $this->assertEquals('property', $this->query->object);
-
-        $this->query->delete('index');
-        $this->assertEquals('delete', $this->query->type);
-        $this->assertEquals('index', $this->query->object);
-    }
-
-    public function testChange()
-    {
-        $this->query->change(DB\DBO::RECORD);
-        $this->assertEquals('change', $this->query->type);
-        $this->assertEquals('record', $this->query->object);
-    }
-
-    public function testDatasource()
-    {
-        $this->query->datasource('tasks');
-        $this->assertEquals('tasks', $this->query->datasource);
-    }
-
-    public function testFilter()
-    {
-        $filter = new DB\Filter('id', DB\FilterOp::EQ, 3);
-        $this->query->filter($filter);
-        $this->assertEquals($filter, $this->query->filter);
-    }
-
-    public function testSort()
-    {
-        $this->query->sort('id', 'desc');
-        $this->query->sort('name', 'asc');
-        $this->query->sort('description');
-
-        $this->assertEquals(array('id', 'desc'), $this->query->sort[0]);
-        $this->assertEquals(array('name', 'asc'), $this->query->sort[1]);
-        $this->assertEquals(array('description', 'desc'), $this->query->sort[2]);
-    }
-
-    public function testSkip()
-    {
-        $this->query->skip(5);
-        $this->assertEquals(5, $this->query->skip);
-
-        $this->query->skip(13);
-        $this->assertEquals(13, $this->query->skip);
-    }
-
-    public function testRand()
-    {
-
-    }
-
-    public function testGet()
-    {
-        $this->query->get();
-        $this->assertEquals(0, $this->query->get);
-
-        $this->query->get(3);
-        $this->assertEquals(3, $this->query->get);
-    }
-
-    public function testOne()
-    {
-        $this->query->one();
-        $this->assertEquals(1, $this->query->get);
-    }
-
-    public function testAll()
-    {
-        $this->query->all();
-        $this->assertEquals(0, $this->query->get);
+        return $result;
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
-    public function testIncompatibleObjectForCreate()
+    public function getConnection()
     {
-        $this->query->create('Not an Object');
+        $pdo = new PDO('mysql:host=localhost;dbname=silla_test', 'root');
+        return $this->createDefaultDBConnection($pdo);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testIncompatibleObjectForDelete()
+    public function getDataSet()
     {
-        $this->query->delete('category');
+        return $this->createXmlDataSet('tests/core/modules/db/dataset.xml');
+    }
+
+    public static function setUpBeforeClass()
+    {
+        self::$connection = new MySql([
+            'host' => 'localhost',
+            'name' => 'silla_test',
+            'user' => 'root',
+            'password' => ''
+        ]);
+
+        self::$users = new Table(self::$connection, 'users', [
+            [
+                'name' => 'id',
+                'type' => 'int',
+                'length' => 10,
+                'pk'    => true,
+                'ai'    => true
+            ],
+            [
+                'name' => 'name',
+                'type' => 'varchar',
+                'length' => 255
+            ],
+            [
+                'name' => 'email',
+                'type' => 'varchar',
+                'length' => 255,
+                'required' => true
+            ],
+            [
+                'name' => 'created_at',
+                'type' => 'datetime'
+            ]
+        ]);
+        self::$users->create();
+
+        self::$tasks = new Table(self::$connection, 'tasks', [
+            [
+                'name' => 'id',
+                'type' => 'int',
+                'length' => 10,
+                'pk'    => true,
+                'ai'    => true
+            ],
+            [
+                'name' => 'title',
+                'type' => 'varchar',
+                'length' => 255
+            ],
+            [
+                'name' => 'user_id',
+                'type' => 'int',
+                'length' => 10,
+                'required' => true
+            ],
+            [
+                'name' => 'description',
+                'type' => 'text'
+            ],
+            [
+                'name' => 'created_at',
+                'type' => 'datetime'
+            ]
+        ]);
+        self::$tasks->create();
+    }
+
+    public static function tearDownAfterClass()
+    {
+        self::$users->delete();
+        self::$tasks->delete();
+    }
+
+    public function testSelect()
+    {
+        $q = (new Query(self::$connection))->select()->from('users');
+        $items = $q->run();
+        $queryTable = $this->getConnection()->createQueryTable(
+            'users', 'SELECT * FROM users'
+        );
+
+        $this->assertEquals($items, $this->getTableRows($queryTable));
+    }
+
+    public function testSelectOnlyTheId()
+    {
+        $q = (new Query(self::$connection))->select('id')->from('users');
+        $items = $q->run();
+        $queryTable = $this->getConnection()->createQueryTable(
+            'users', 'SELECT id FROM users'
+        );
+
+        $this->assertEquals($items, $this->getTableRows($queryTable));
+    }
+
+    public function testSelectFromSubquery()
+    {
+        $q = (new Query(self::$connection))->select()->from('(SELECT * from users where id < ?) as d', [5]);
+        $items = $q->run();
+        $queryTable = $this->getConnection()->createQueryTable(
+            'users', 'SELECT * FROM (SELECT * from users where id < 5) as d'
+        );
+
+        $this->assertEquals($items, $this->getTableRows($queryTable));
+    }
+
+    public function testSelectWithLimit()
+    {
+        $q = (new Query(self::$connection))->select()->from('users')->limit(4);
+        $items = $q->run();
+        $queryTable = $this->getConnection()->createQueryTable(
+            'users', 'SELECT * FROM users LIMIT 4'
+        );
+
+        $this->assertEquals($items, $this->getTableRows($queryTable));
+    }
+
+    public function testSelectWithLimitAndOffset()
+    {
+        $q = (new Query(self::$connection))->select()->from('users')->limit(2, 3);
+        $items = $q->run();
+        $queryTable = $this->getConnection()->createQueryTable(
+            'users', 'SELECT * FROM users LIMIT 2 OFFSET 3'
+        );
+
+        $this->assertEquals($items, $this->getTableRows($queryTable));
+    }
+
+    public function testSelectWithJoin()
+    {
+        $usr = new User();
+        $q = (new Query(self::$connection))->select('users.*')->from('users')->joins('tasks');
+        $items = $q->run();
+        $queryTable = $this->getConnection()->createQueryTable(
+            'users', 'SELECT users.* FROM users LEFT JOIN tasks ON(users.id = tasks.user_id)'
+        );
+
+        $this->assertEquals($items, $this->getTableRows($queryTable));
     }
 }
+
