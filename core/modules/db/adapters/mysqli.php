@@ -362,10 +362,11 @@ class MySQLi implements Interfaces\Adapter
             $reflection = new \ReflectionClass('mysqli_stmt');
             $method = $reflection->getMethod('bind_param');
 
-            $param_types = array_reduce($bind_params, function($carry) {
+            $param_types = array_reduce($bind_params, function ($carry) {
                 $carry .= 's';
                 return $carry;
             });
+
             array_unshift($bind_params, $param_types);
             $method->invokeArgs($stmt, Core\Utils::arrayToRefValues($bind_params));
         } else {

@@ -71,7 +71,6 @@ final class Router
      *
      * @access public
      * @throws \InvalidArgumentException Request token does not match.
-     * @throws \LogicException Router is not initialized properly. Specify Routing routes.
      *
      * @return void
      */
