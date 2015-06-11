@@ -15,7 +15,7 @@ use Core;
 use Core\Modules\Session\Interfaces;
 
 /**
- * DB session handler class defintion.
+ * DB session handler class definition.
  */
 final class DB implements Interfaces\Adapter
 {
@@ -184,7 +184,7 @@ final class DB implements Interfaces\Adapter
         $key = $this->generateKey();
 
         $this->db->query(
-            "INSERT INTO {$this->storageTable}(sessionKey, last_active) VALUES(?, ?)",
+            "INSERT INTO {$this->storageTable}(session_key, last_active) VALUES(?, ?)",
             array($key, time())
         );
 

@@ -54,10 +54,16 @@ try {
     Core\Router()->dispatch($request, $routes);
 
 } catch(\Exception $e) {
+    if(!Core\Router()->response) {
+        Core\Router()->response = new Modules\Router\Response;
+    }
+
     if (!Core\Router()->response->hasContent()) {
         Core\Router()->response->setHttpResponseCode(500);
     }
+
     $message = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+
     if ('on' === strtolower(ini_get('display_errors'))) {
         Core\Router()->response->setContent("<pre>{$message}</pre>");
     } else {

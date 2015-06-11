@@ -64,11 +64,7 @@ final class Request
         $this->elements = $elements;
         $this->context  = $context;
         $this->mode     = $mode;
-        $this->token    = Core\Session()->get('_token');
-
-        if (!$this->token) {
-            $this->regenerateToken();
-        }
+        $this->token    = '';
 
         /* Make all routed variables accessible as a GET variables */
         $this->context['_GET'] = array_merge($this->context['_GET'], $elements);
@@ -259,10 +255,7 @@ final class Request
      */
     public function regenerateToken()
     {
-        $token = self::generateToken();
-        Core\Session()->set('_token', $token);
-
-        $this->token = $token;
+        $this->token = self::generateToken();
     }
 
     /**
@@ -353,5 +346,31 @@ final class Request
         }
 
         return strtoupper($type) === $this->method();
+    }
+
+    /**
+     * Specify request token.
+     *
+     * @param string $token Request token.
+     *
+     * @return void
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
+    /**
+     * Verifies validity of the request.
+     *
+     * @return boolean
+     */
+    public function isValid()
+    {
+        if ($this->is('post') || $this->is('put') || $this->is('delete') || $this->is('patch')) {
+            return $this->variables('_token') && ($this->variables('_token') === $this->token);
+        }
+
+        return true;
     }
 }

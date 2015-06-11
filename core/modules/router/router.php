@@ -52,7 +52,7 @@ final class Router
     private $routes;
 
     /**
-     * Constructor. Filters all input.
+     * Filters all input.
      *
      * @access private
      */
@@ -80,7 +80,17 @@ final class Router
         $this->request = $request;
         $this->response = new Response;
 
-        self::verifyRequest($request);
+        if(Core\Session()->get('_token')) {
+            $this->request->setToken(Core\Session()->get('_token'));
+        } else {
+            $this->request->regenerateToken();
+            Core\Session()->set('_token', $this->request->token());
+        }
+
+        if(!$request->isValid()) {
+            $this->response->setHttpResponseCode(403);
+            throw new \InvalidArgumentException('Request token does not match');
+        }
 
         $namespace = $request->mode('namespace');
 
@@ -334,26 +344,5 @@ final class Router
         }
 
         unset($process);
-    }
-
-    /**
-     * Verifies validity of the request.
-     *
-     * @param Request $request Current router request.
-     *
-     * @static
-     * @throws \UnexpectedValueException When there is no token or it does not match.
-     *
-     * @return void
-     */
-    protected static function verifyRequest(Request $request)
-    {
-        if ($request->is('post') || $request->is('put') || $request->is('delete') || $request->is('patch')) {
-            if (!$request->variables('_token') || $request->variables('_token') !== Core\Session()->get('_token')) {
-                Core\Router()->response->setHttpResponseCode(403);
-
-                throw new \UnexpectedValueException('Request token does not match.');
-            }
-        }
     }
 }
