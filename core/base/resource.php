@@ -159,7 +159,7 @@ abstract class Resource extends Controller
     {
         $resource = new $this->model;
 
-        $this->beforeCreate($request);
+        $this->beforeCreate($resource, $request);
 
         if ($request->is('post')) {
             $resource->save($request->post());
@@ -312,13 +312,14 @@ abstract class Resource extends Controller
     /**
      * Hook - executes before create action.
      *
-     * @param Request $request Current router request.
+     * @param Model   $resource Currently processed resource.
+     * @param Request $request  Current router request.
      *
      * @access protected
      *
      * @return void
      */
-    protected function beforeCreate(Request $request)
+    protected function beforeCreate(Model $resource, Request $request)
     {
     }
 
