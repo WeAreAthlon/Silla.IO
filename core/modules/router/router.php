@@ -70,6 +70,7 @@ final class Router
      * @param Routes  $routes  Router Routes object.
      *
      * @access public
+     * @throws \InvalidArgumentException Request token does not match.
      * @throws \LogicException Router is not initialized properly. Specify Routing routes.
      *
      * @return void
@@ -80,16 +81,16 @@ final class Router
         $this->request = $request;
         $this->response = new Response;
 
-        if(Core\Session()->get('_token')) {
+        if (Core\Session()->get('_token')) {
             $this->request->setToken(Core\Session()->get('_token'));
         } else {
             $this->request->regenerateToken();
             Core\Session()->set('_token', $this->request->token());
         }
 
-        if(!$request->isValid()) {
+        if (!$request->isValid()) {
             $this->response->setHttpResponseCode(403);
-            throw new \InvalidArgumentException('Request token does not match');
+            throw new \InvalidArgumentException('Request token does not match.');
         }
 
         $namespace = $request->mode('namespace');
