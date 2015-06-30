@@ -1,6 +1,6 @@
 <?php
 /**
- * Router Request.
+ * Http Request.
  *
  * @package    Silla.IO
  * @subpackage Core\Modules\Router
@@ -9,7 +9,7 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
-namespace Core\Modules\Router;
+namespace Core\Modules\Http;
 
 use Core;
 

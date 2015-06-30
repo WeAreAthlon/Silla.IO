@@ -25,7 +25,36 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
      *
      * @var Core\Modules\DB\DbCache
      */
-    public $cache;
+    protected $dbCache;
+
+    /**
+     * Data source name.
+     *
+     * @var array
+     */
+    protected $dsn;
+
+    /**
+     * Constructor.
+     *
+     * @param array $dsn Data source name.
+     */
+    public function __construct(array $dsn)
+    {
+        $this->dsn = $dsn;
+
+        parent::__construct('mysql:host=' . $dsn['host'] . ';dbname=' . $dsn['name'], $dsn['user'], $dsn['password']);
+    }
+
+    /**
+     * Sets a database cache storage.
+     *
+     * @param DB\DbCache $dbCache Database cache instance.
+     */
+    public function setCacheStorage(Core\Modules\DB\DbCache $dbCache)
+    {
+        $this->dbCache = $dbCache;
+    }
 
     /**
      * Runs a query.
@@ -36,7 +65,7 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
      */
     public function run(DB\Query $query)
     {
-        $query->appendTablesPrefix(Core\Config()->DB['tables_prefix']);
+        $query->appendTablesPrefix($this->dsn['tables_prefix']);
 
         $sql = $this->buildSql($query);
         $query_hash = md5(serialize(array('query' => $sql, 'bind_params' => $query->bind_params)));
@@ -45,8 +74,8 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
             return $item['table'];
         }, $query->join))));
 
-        if (array_key_exists($query_hash, Core\DbCache()->getCache($query_cache_name))) {
-            return Core\DbCache()->getCache($query_cache_name, $query_hash);
+        if (array_key_exists($query_hash, $this->dbCache->getCache($query_cache_name))) {
+            return $this->dbCache->getCache($query_cache_name, $query_hash);
         }
 
         $this->storeQueries($sql, $query->bind_params);
@@ -54,14 +83,14 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
         if ($query->type === 'select') {
             $res = $this->query($sql, $query->bind_params);
 
-            Core\DbCache()->setCache($query_cache_name, $query_hash, $res);
+            $this->dbCache->setCache($query_cache_name, $query_hash, $res);
 
             return $res;
         }
 
-        foreach (Core\DbCache()->cache as $table => $value) {
+        foreach ($this->dbCache->cache as $table => $value) {
             if (in_array($query->table, explode(',', $table), true)) {
-                Core\DbCache()->clearCache($table);
+                $this->dbCache->clearCache($table);
             }
         }
 
@@ -181,9 +210,9 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
     public function storeQueries($query, array $params = array())
     {
         if (empty($params)) {
-            DB\DB::$queries[] = $query;
+            $this->dbCache->logQuery($query);
         } else {
-            DB\DB::$queries[] = array('query' => $query, 'params' => $params);
+            $this->dbCache->logQuery($query, $params);
         }
     }
 
@@ -218,9 +247,9 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
      */
     public function clearTable($table)
     {
-        foreach (Core\DbCache()->cache as $tbl => $value) {
+        foreach ($this->dbCache->cache as $tbl => $value) {
             if (in_array($table, explode(',', $tbl), true)) {
-                Core\DbCache()->clearCache($tbl);
+                $this->dbCache->clearCache($tbl);
             }
         }
 
@@ -255,7 +284,7 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
 
                     $sql[] = $join['type'];
                     $sql[] = 'JOIN';
-                    $sql[] = Core\Config()->DB['tables_prefix'] . $join['table'];
+                    $sql[] = $this->dsn['tables_prefix'] . $join['table'];
 
                     if ($join['condition']) {
                         $sql[] = 'ON (' . $join['condition'] . ')';

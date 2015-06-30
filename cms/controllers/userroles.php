@@ -31,6 +31,8 @@ class UserRoles extends CMS
      */
     protected $model = 'CMS\Models\CMSUserRole';
 
+    protected static $instance;
+
     /**
      * Permissions scope for the current user session.
      *

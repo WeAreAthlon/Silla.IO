@@ -19,32 +19,25 @@ use Core;
 final class Session
 {
     /**
-     * Reference to the current instance of the Session object.
-     *
-     * @var Session
-     * @access private
-     * @static
-     */
-    private static $instance = null;
-
-    /**
      * Reference to the current adapter of the Session object.
      *
      * @var Core\Modules\Session\Interfaces\Adapter
-     * @access private
      */
     private $adapter = null;
 
     /**
      * Session constructor.
      *
-     * @param string $adapter Session Adapter.
+     * @param string $adapter  Session Adapter.
+     * @param string $scope    Relative path to be used for the session cookie scope.
+     * @param string $protocol Protocol name to used for the session cookie.
+     * @param array  $settings Configuration settings.
+     * @param array  $context  Execution context.
      *
      * @throws \DomainException          Not supported Session adapter.
      * @throws \InvalidArgumentException Not compatible Session adapter.
-     * @access private
      */
-    private function __construct($adapter)
+    public function __construct($adapter, $scope, $protocol, array $settings, array $context)
     {
         if (!class_exists($adapter)) {
             throw new \DomainException('Not supported Session adapter type: ' . $adapter);
@@ -54,7 +47,7 @@ final class Session
             throw new \InvalidArgumentException('Not compatible Session adapter type: ' . $adapter);
         }
 
-        $this->adapter = new $adapter;
+        $this->adapter = new $adapter($scope, $protocol, $settings, $context);
     }
 
     /**
@@ -193,42 +186,5 @@ final class Session
     public function __unset($name)
     {
         $this->remove($name);
-    }
-
-    /**
-     * Cloning of Session is disallowed.
-     *
-     * @access public
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        trigger_error(__CLASS__ . ' cannot be cloned! It is singleton.', E_USER_ERROR);
-    }
-
-    /**
-     * Returns an instance of the Session object.
-     *
-     * @param string $adapter Adapter name.
-     *
-     * @access public
-     * @static
-     * @final
-     * @uses   Core\Registry()
-     *
-     * @return Session
-     */
-    final public static function getInstance($adapter)
-    {
-        if (null === self::$instance) {
-            $adapter = 'Core\Modules\Session\Adapters\\' . $adapter;
-
-            self::$instance = new Session($adapter);
-
-            Core\Registry()->set('session', self::$instance);
-        }
-
-        return self::$instance;
     }
 }

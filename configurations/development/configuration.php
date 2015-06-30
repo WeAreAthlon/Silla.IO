@@ -21,9 +21,9 @@ class Configuration extends Configurations\Staging\Configuration
     /**
      * @var boolean[] $ASSETS Assets Management options flags.
      *
-     * @example cache    Whether to cache all assets groups on the file system.
-     * @example combine  Whether to combine all assets groups in one file.
-     * @example optimize Whether to minify assets.
+     * @example cache    Flag whether to cache all assets groups on the file system.
+     * @example combine  Flag whether to combine all assets groups in one file.
+     * @example optimize Flag whether to optimize assets.
      */
     public $ASSETS = array(
         'cache'    => false,
@@ -35,14 +35,14 @@ class Configuration extends Configurations\Staging\Configuration
      * @var array $CACHE Cache related configuration options.
      *
      * @example adapter   Caching adapter name.
-     * @example routes    Whether to cache Routing routes.
-     * @example labels    Whether to cache Localisation labels.
-     * @example db_schema Whether to cache Database Entity tables schemas.
+     * @example routes    Flag whether to cache Routing routes.
+     * @example labels    Flag whether to cache Localisation labels.
+     * @example db_schema FLag whether to cache Database Entity tables schemas.
      * @example database  Database cache adapter database schema.
      * @example redis     Redis cache adapter connection parameters.
      */
     public $CACHE = array(
-        'adapter'       => 'FileSystem',
+        'adapter'       => 'Core\Modules\Cache\Adapters\FileSystem',
         'routes'        => false,
         'labels'        => false,
         'db_schema'     => false,
@@ -77,11 +77,11 @@ class Configuration extends Configurations\Staging\Configuration
      */
     public $DB = array(
         'adapter'        => 'pdo_mysql',
-        'host'           => '<DB_HOST>',
+        'host'           => 'localhost',
         'port'           => 3306,
-        'user'           => '<DB_USER>',
-        'password'       => '<DB_PASSWORD>',
-        'name'           => '<DB_NAME>',
+        'user'           => 'athlon',
+        'password'       => 'athlon_sofia',
+        'name'           => 'athlon_framework',
         'tables_prefix'  => '',
         'encryption_key' => '25c6c7ff35bd13b0ff9979b151f2136c',
         'crypt_vector'   => 'dasn312321nssa1k',

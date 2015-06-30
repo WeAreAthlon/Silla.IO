@@ -12,9 +12,11 @@
 namespace Core\Modules\DB;
 
 use Core;
+use Core\Modules\Cache\Cache;
+use Core\Modules\DB\Interfaces\Adapter;
 
 /**
- * DbCache Class Definition. Singleton class for handling the database cache.
+ * DbCache Class Definition.
  */
 final class DbCache
 {
@@ -59,13 +61,67 @@ final class DbCache
     private $statements = array();
 
     /**
+     * Data source name.
+     *
+     * @var array
+     * @access private
+     */
+    private $dsn = array();
+
+    /**
+     * Flag to indicate whether the persistent cache is turned on.
+     *
+     * @var boolean
+     */
+    private $hasPersistence = false;
+
+    /**
+     * Caching storage.
+     *
+     * @var Core\Modules\Cache\Cache
+     */
+    private $cacheStorage;
+
+    /**
+     * Database storage adapter instance.
+     *
+     * @var Core\Modules\DB\Interfaces\Adapter
+     */
+    private $dbAdapter;
+
+    /**
+     * Executed queries.
+     *
+     * @var array
+     */
+    private $queryLog;
+
+    /**
      * Initialize DB Cache.
+     *
+     * @param Core\Modules\DB\Interfaces\Adapter $adapter      Database instance.
+     * @param array                              $dsn          Database meta data.
+     * @param Core\Modules\Cache\Cache           $cacheStorage Caching Storage instance.
+     * @param boolean                            $persistence  Flag whether to user persistence storage for the cache.
      *
      * @uses   setSchema()
      */
-    public function __construct()
+    public function __construct(Adapter $adapter, array $dsn, Cache $cacheStorage, $persistence)
     {
-        $names = Core\DB()->getTables(Core\Config()->DB['name']);
+        $this->dsn = $dsn;
+        $this->hasPersistence = $persistence;
+        $this->cacheStorage = $cacheStorage;
+        $this->dbAdapter = $adapter;
+    }
+
+    /**
+     * Setup caching schemas.
+     *
+     * @return void
+     */
+    public function setup()
+    {
+        $names = $this->dbAdapter->getTables($this->dsn['name']);
 
         if (empty($names)) {
             return;
@@ -73,23 +129,12 @@ final class DbCache
 
         foreach ($names as $tableName) {
             $schemaMeta = $this->getSchemaMeta($tableName);
+
             /* Cache the schema for the current execution of the script */
             $this->setSchema($tableName, $schemaMeta);
         }
 
         $this->hasSchema = true;
-    }
-
-    /**
-     * Cloning of DbCache is disallowed.
-     *
-     * @access public
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        trigger_error(__CLASS__ . ' cannot be cloned! It is a singleton.', E_USER_ERROR);
     }
 
     /**
@@ -173,21 +218,6 @@ final class DbCache
     }
 
     /**
-     * Set the state of a table.
-     *
-     * @param string  $name       Name of the table.
-     * @param boolean $is_changed Whether the schema has been changed.
-     *
-     * @access private
-     *
-     * @return void
-     */
-    private function setTable($name, $is_changed)
-    {
-        $this->tables[$name] = $is_changed;
-    }
-
-    /**
      * Get the state of a table.
      *
      * @param string $name Name of the table.
@@ -199,21 +229,6 @@ final class DbCache
     public function getTable($name)
     {
         return $this->tables[$name];
-    }
-
-    /**
-     * Cache a database statement.
-     *
-     * @param string $query     It's used for a key.
-     * @param mixed  $statement Statement to cache.
-     *
-     * @access private
-     *
-     * @return void
-     */
-    private function setStatement($query, $statement)
-    {
-        $this->statements[$query] = $statement;
     }
 
     /**
@@ -256,7 +271,7 @@ final class DbCache
      */
     public function getSchema($table)
     {
-        return $this->schema[Core\Config()->DB['tables_prefix'] . $table];
+        return $this->schema[$this->dsn['tables_prefix'] . $table];
     }
 
     /**
@@ -264,18 +279,17 @@ final class DbCache
      *
      * @param string $tableName Name of the table.
      *
-     * @uses   Core\Cache()
      * @uses   extractSchemaMeta()
      *
      * @return array
      */
     private function getSchemaMeta($tableName)
     {
-        if (Core\Config()->CACHE['db_schema']) {
-            $schemaMeta = Core\Cache()->fetch($tableName);
+        if ($this->hasPersistence) {
+            $schemaMeta = $this->cacheStorage->fetch($tableName);
             if (is_null($schemaMeta)) {
                 $schemaMeta = $this->extractSchemaMeta($tableName);
-                Core\Cache()->store($tableName, $schemaMeta);
+                $this->cacheStorage->store($tableName, $schemaMeta);
             }
         } else {
             $schemaMeta = $this->extractSchemaMeta($tableName);
@@ -291,7 +305,6 @@ final class DbCache
      *
      * @throws \LogicException Error extracting schema meta information.
      * @access private
-     * @uses   Core\DB()
      * @uses   associateType()
      *
      * @return array
@@ -300,7 +313,7 @@ final class DbCache
     {
         $fields_meta = array();
 
-        $results = Core\DB()->getTableSchema($tableName, Core\Config()->DB['name']);
+        $results = $this->dbAdapter->getTableSchema($tableName, $this->dsn['name']);
 
         foreach ($results as $result) {
             $fields_meta[$result['COLUMN_NAME']]['type'] = $this->associateType($result['DATA_TYPE']);
@@ -362,5 +375,18 @@ final class DbCache
             default:
                 return 'string';
         }
+    }
+
+    /**
+     * Adds a query to the log.
+     *
+     * @param string $query  Executed query.
+     * @param array  $params Query params.
+     *
+     * @ret
+     */
+    public function logQuery($query, array $params = array())
+    {
+        $this->queryLog[] = array('query' => $query, 'params' => $params);
     }
 }

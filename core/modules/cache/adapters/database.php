@@ -12,7 +12,7 @@
 namespace Core\Modules\Cache\Adapters;
 
 use Core;
-use Core\Modules\DB\Query;
+use Core\Modules\DB;
 
 /**
  * Class Database Adapter for caching data.
@@ -23,7 +23,6 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
      * Database table name.
      *
      * @var string
-     * @access private
      */
     private $tableName;
 
@@ -31,19 +30,28 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
      * Database fields.
      *
      * @var array
-     * @access private
      */
     private $fields;
 
     /**
-     * Database constructor.
-     *
-     * @access public
+     * @var Core\Modules\DB\Interfaces\Adapter
      */
-    public function __construct()
+    private $db;
+
+    /**
+     * Database adapter constructor.
+     *
+     * @param array $settings Configuration settings.
+     */
+    public function __construct(array $settings)
     {
-        $this->tableName = Core\Config()->CACHE['database']['table_name'];
-        $this->fields = Core\Config()->CACHE['database']['fields'];
+        $this->tableName = $settings['database']['table_name'];
+        $this->fields = $settings['database']['fields'];
+    }
+
+    public function setDatabaseStorage(Core\Modules\DB\Interfaces\Adapter $db)
+    {
+        $this->db = $db;
     }
 
     /**
@@ -53,7 +61,6 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
      * @param mixed   $value  Cache value.
      * @param integer $expire Expire time, in seconds(optional).
      *
-     * @access public
      * @uses   Core\Modules\DB\Query
      *
      * @return boolean
@@ -65,7 +72,8 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
         }
         $value = json_encode($value);
 
-        $query = new Query();
+        $query = new DB\Query($this->db);
+
         $exists = $query
             ->select('all')
             ->from($this->tableName)
@@ -76,13 +84,13 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
             $insert = $query
                 ->insert($this->fields, array(md5($key), $value, $expire))
                 ->into($this->tableName);
-            return Core\DB()->run($insert);
+            return $this->db->run($insert);
         } else {
             $update = $query
                 ->update($this->tableName)
                 ->set($this->fields, array(md5($key), $value, $expire))
                 ->where("{$this->fields[0]} = ?", array(md5($key)));
-            return Core\DB()->run($update);
+            return $this->db->run($update);
         }
     }
 
@@ -91,14 +99,14 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
      *
      * @param string $key Variable key.
      *
-     * @access public
      * @uses   Core\Modules\DB\Query
      *
      * @return mixed
      */
     public function fetch($key)
     {
-        $query = new Query();
+        $query = new DB\Query($this->db);
+
         $query = $query
             ->select('all')
             ->from($this->tableName)
@@ -114,6 +122,7 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
 
         if ($expire && $expire < time()) {
             $query->remove()->run();
+
             return null;
         }
 
@@ -129,7 +138,8 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
      */
     public function exists($key)
     {
-        $query = new Query();
+        $query = new DB\Query($this->db);
+
         $exists = $query
             ->select('all')
             ->from($this->tableName)
@@ -148,7 +158,7 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
      */
     public function remove($key)
     {
-        $query = new Query();
+        $query = new DB\Query($this->db);
         $query = $query
             ->select('all')
             ->from($this->tableName)
@@ -156,8 +166,10 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
 
         if ($query->exists()) {
             $query->remove()->run();
+
             return true;
         } else {
+
             return false;
         }
     }
