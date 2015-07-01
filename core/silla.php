@@ -19,14 +19,14 @@ use Aura;
 final class Silla
 {
     /**
-     * Execution environment.
+     * Execution environment name.
      *
      * @var string
      */
     protected $environment;
 
     /**
-     * Execution configuration.
+     * Execution configuration instance.
      *
      * @var Base\Configuration
      */
@@ -47,29 +47,53 @@ final class Silla
     protected $cwd;
 
     /**
+     * Router instance.
+     *
      * @var Aura\Router\Router
      */
     protected $router;
 
     /**
+     * Registry instance.
+     *
      * @var Modules\Registry\Registry
      */
     protected $registry;
 
     /**
+     * Session instance.
+     *
      * @var Modules\Session\Session
      */
     protected $session;
 
     /**
+     * Cache instance.
+     *
      * @var Modules\Cache\Cache
      */
     protected $cache;
 
     /**
+     * Database management layer instance.
+     *
      * @var Modules\DB\DB
      */
     protected $db;
+
+    /**
+     * Request instance.
+     *
+     * @var Modules\Http\Request
+     */
+    protected $request;
+
+    /**
+     * Response instance.
+     *
+     * @var Modules\Http\Response
+     */
+    protected $response;
 
     /**
      * Constructor. Creates a Silla.IO instance.
@@ -79,12 +103,15 @@ final class Silla
      */
     public function __construct($environment, array $context)
     {
-        /**
+        /*
          * Registers vendors auto-loaders.
          */
         require_once dirname(__DIR__) . DIRECTORY_SEPARATOR .  'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-        include __DIR__ . DIRECTORY_SEPARATOR . 'core.php';
+        /*
+         * Register debug functions.
+         */
+        require_once __DIR__ . DIRECTORY_SEPARATOR . 'debug.php';
 
         $this->verifyServerSoftware();
 
@@ -122,11 +149,13 @@ final class Silla
             $this->configuration->CACHE
         );
 
-        $this->db = new Modules\DB\DB($this->configuration->DB, $this->cache, $this->configuration->CACHE['db_schema']);
+//        $this->db = new Modules\DB\DB($this->configuration->DB, $this->cache, $this->configuration->CACHE['db_schema']);
+//
+//        if ($this->cache->getAdapter() instanceof Modules\Cache\Adapters\Database) {
+//            $this->cache->getAdapter()->setDatabaseStorage($this->db->getAdapter());
+//        }
 
-        if ($adapter = $this->cache->getAdapter() instanceof Modules\Cache\Adapters\Database) {
-            $this->cache->getAdapter()->setDatabaseStorage($this->db->getAdapter());
-        }
+        $this->response = new Modules\Http\Response;
     }
 
     /**
@@ -140,14 +169,42 @@ final class Silla
     {
         $path = $this->normalizeQueryString($path);
         $mode = $this->getMode($path);
+        $this->configuration->setMode($mode);
 
-        $routesConfiguration = '\\' . $mode['namespace'] . '\Configuration\Routes';
+        $namespace = $mode['namespace'];
+
+        $routesConfiguration = "\\{$namespace}\\Configuration\\Routes";
         $routesConfiguration = new $routesConfiguration();
 
         $this->router->setRoutes($routesConfiguration->routes());
-        $route = $this->router->match($path, $this->context['_SERVER']);
-        dd($route);
-        return new Modules\Http\Response($route);
+        $route = $this->router->match(rtrim($path, '/'), $this->context['_SERVER']);
+
+        if ($route) {
+            $request = new Modules\Http\Request($mode, $route->params, $this->context);
+            $this->validateRequest($request);
+            $this->request = $request;
+
+            $controller = "\\{$namespace}\\Controllers\\" . $request->controller();
+
+            if (class_exists($controller)) {
+                $controller = new $controller($this);
+                $action = $request->action();
+
+                /* Check if there is such action implemented and filter for magic methods like __construct, etc. */
+                if (is_callable(array($controller, $action)) && false === strpos($action, '__')) {
+                    $controller->__executeAction($action, $request);
+                } else {
+                    $controller->__executeAction('actionNotFound', $request);
+                }
+                $this->response->setContent($controller->renderer->getOutput());
+                $this->response->addHeader('Content-Type: ' . $controller->renderer->getOutputContentType());
+            } else {
+                Base\Controller::resourceNotFound($request);
+            }
+
+        }
+
+        return $this->response;
     }
 
     /**
@@ -191,13 +248,33 @@ final class Silla
     }
 
     /**
+     * Gets a request instance.
+     *
+     * @return Modules\Http\Request
+     */
+    public function request()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Gets a response instance.
+     *
+     * @return Modules\Http\Response
+     */
+    public function response()
+    {
+        return $this->response;
+    }
+
+    /**
      * Gets a cache instance.
      *
      * @return Modules\Cache\Cache
      */
     public function cache()
     {
-        return $this->cache();
+        return $this->cache;
     }
 
     /**
@@ -237,6 +314,30 @@ final class Silla
     {
         if (version_compare(PHP_VERSION, '5.3.7', '<')) {
             throw new \Exception('Sorry, Silla.IO framework will only run on PHP version 5.3.7 or greater!');
+        }
+    }
+
+    /**
+     * Validates request
+     *
+     * @param Modules\Http\Request $request Request object instance.
+     *
+     * @throws \InvalidArgumentException Request token does not match.
+     *
+     * @return void
+     */
+    private function validateRequest(Modules\Http\Request $request)
+    {
+        if ($this->session->get('_token')) {
+            $request->setToken($this->session->get('_token'));
+        } else {
+            $request->regenerateToken();
+            $this->session->set('_token', $request->token());
+        }
+
+        if (!$request->isValid()) {
+            $this->response->setHttpResponseCode(403);
+            throw new \InvalidArgumentException('Request token does not match.');
         }
     }
 

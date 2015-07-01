@@ -36,14 +36,10 @@ class Configuration extends Core\Base\Configuration
     /**
      * @var string[] $ROUTER Router related configuration options.
      *
-     * @example rewrite          Whether to support url rewrite or not.
-     * @example separator        URL elements separator.
-     * @example variables_prefix Routes variables notation prefix. Must be different from the 'separator'.
+     * @example rewrite Whether to support url rewrite or not.
      */
     public $ROUTER = array(
-        'rewrite'          => true,
-        'separator'        => '/',
-        'variables_prefix' => ':'
+        'rewrite' => true,
     );
 
     /**

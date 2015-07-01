@@ -12,11 +12,12 @@
 namespace Core\Helpers;
 
 use Core;
+use Core\Base;
 
 /**
  * Labels Helper Class definition.
  */
-class YAML
+class YAML extends Base\Helper
 {
     /**
      * Gets a defined label.
@@ -32,13 +33,15 @@ class YAML
      *
      * @return array|null
      */
-    public static function get($key, $type = 'globals', $locale = '')
+    public function get($key, $type = 'globals', $locale = '')
     {
         if (!$locale) {
-            $locale = Core\Registry()->get('locale');
+            $locale = $this->environment->registry()->get('locale');
         }
 
-        $labels = \Spyc::YAMLLoad(Core\Config()->paths('labels') . $locale . DIRECTORY_SEPARATOR . $type . '.yaml');
+        $labels = \Spyc::YAMLLoad(
+            $this->environment->configuration()->paths('labels') . $locale . DIRECTORY_SEPARATOR . $type . '.yaml'
+        );
 
         return isset($labels[$key]) ? $labels[$key] : null;
     }
@@ -56,13 +59,15 @@ class YAML
      *
      * @return array
      */
-    public static function getAll($type, $locale = '')
+    public function getAll($type, $locale = '')
     {
         if (!$locale) {
-            $locale = Core\Registry()->get('locale');
+            $locale = $this->environment->registry()->get('locale');
         }
 
-        return \Spyc::YAMLLoad(Core\Config()->paths('labels') . $locale . DIRECTORY_SEPARATOR . $type . '.yaml');
+        return \Spyc::YAMLLoad(
+            $this->environment->configuration()->paths('labels') . $locale . DIRECTORY_SEPARATOR . $type . '.yaml'
+        );
     }
 
     /**
@@ -76,14 +81,15 @@ class YAML
      *
      * @return array
      */
-    public static function getExtendWithGlobals($labels, $locale = '')
+    public function getExtendWithGlobals($labels, $locale = '')
     {
         if (!$locale) {
-            $locale = Core\Registry()->get('locale');
+            $locale = $this->environment->registry()->get('locale');
         }
 
-        $globals = \Spyc::YAMLLoad(Core\Config()->paths('labels') . $locale . DIRECTORY_SEPARATOR . 'globals.yaml');
-        $labelsLocalFile = Core\Config()->paths('labels') . $locale . DIRECTORY_SEPARATOR . $labels . '.yaml';
+        $labelsPath = $this->environment->configuration()->paths('labels');
+        $globals = \Spyc::YAMLLoad($labelsPath . $locale . DIRECTORY_SEPARATOR . 'globals.yaml');
+        $labelsLocalFile = $labelsPath. $locale . DIRECTORY_SEPARATOR . $labels . '.yaml';
 
         $labels = $globals;
 

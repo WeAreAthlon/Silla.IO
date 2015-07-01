@@ -40,6 +40,9 @@ abstract class Routes
     /**
      * Setup routes.
      *
+     * @example $this->routes->add();
+     * @see     https://github.com/auraphp/Aura.Router
+     *
      * @return void
      */
     public function setup()

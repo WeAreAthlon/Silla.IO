@@ -35,12 +35,20 @@ final class Response
     private $headers = array();
 
     /**
+     * Response protocol.
+     *
+     * @var string
+     */
+    private $protocol;
+
+    /**
      * Init actions.
      *
-     * @param string $content Response contents.
-     * @param array  $headers Response headers.
+     * @param string $content  Response contents.
+     * @param array  $headers  Response headers.
+     * @param string $protocol Response protocol.
      */
-    public function __construct($content = '', array $headers = array())
+    public function __construct($content = '', array $headers = array(), $protocol = '')
     {
         if ($content) {
             $this->setContent($content);
@@ -49,6 +57,8 @@ final class Response
         if ($headers) {
             $this->addHeaders($headers);
         }
+
+        $this->protocol = $protocol ? $protocol : 'HTTP/1.0';
     }
 
     /**
@@ -67,6 +77,24 @@ final class Response
         }
 
         $this->content = $content;
+    }
+
+    /**
+     * Sets response protocol.
+     *
+     * @param string $protocol Response protocol.
+     *
+     * @throws \InvalidArgumentException Response protocol must be a string.
+     *
+     * @return void
+     */
+    public function setProtocol($protocol)
+    {
+        if (!is_string($protocol)) {
+            throw new \InvalidArgumentException('Response protocol must be a string');
+        }
+
+        $this->content = $protocol;
     }
 
     /**
@@ -318,7 +346,8 @@ final class Response
                 break;
         }
 
-        $this->addHeader(Core\Router()->request->type() . ' ' . $code . ' ' . $text);
+        $this->addHeader($this->protocol . ' ' . $code . ' ' . $text);
+
         $GLOBALS['http_response_code'] = $code;
 
         return $code;

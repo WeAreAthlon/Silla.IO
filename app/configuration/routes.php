@@ -23,11 +23,14 @@ final class Routes extends Base\Routes
     /**
      * Setup routes.
      *
-     * @return array
+     * @example $this->routes->add();
+     * @see     https://github.com/auraphp/Aura.Router
+     *
+     * @return void
      */
     public function setup()
     {
-        $this->routes->add('home', '/');
-        $this->routes->add('default', '/{controller}/{action}');
+        $this->routes->addGet('home', '/');
+        $this->routes->addGet(null, '/{controller}/{action}');
     }
 }

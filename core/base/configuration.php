@@ -37,20 +37,16 @@ abstract class Configuration
      * @example adapter Caching adapter name.
      */
     public $RENDER = array(
-        'adapter' => 'Smarty',
+        'adapter' => 'Core\Modules\Render\Adapters\Smarty',
     );
 
     /**
      * @var string[] $ROUTER Router related configuration options.
      *
-     * @example rewrite          Whether to support url rewrite or not.
-     * @example separator        URL elements separator.
-     * @example variables_prefix Routes variables notation prefix. Must be different from the 'separator'.
+     * @example rewrite Whether to support url rewrite or not.
      */
     public $ROUTER = array(
-        'rewrite'          => true,
-        'separator'        => '/',
-        'variables_prefix' => ':'
+        'rewrite' => true,
     );
 
     /**
@@ -294,6 +290,7 @@ abstract class Configuration
 
         $this->PATHS['views']['compiled'] = $this->PATHS['cache'] . 'compiled' . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['cache']    = $this->PATHS['cache'] . 'views'    . DIRECTORY_SEPARATOR;
+        $this->PATHS['views']['resources']= $this->PATHS['resources'];
         $this->PATHS['views']['config']   = $this->PATHS['root']  .
             'configurations' . DIRECTORY_SEPARATOR . $environment .
             DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;

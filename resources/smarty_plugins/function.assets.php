@@ -34,7 +34,6 @@ use Assetic\AssetWriter;
  * @param array                    $options  Assets source options.
  * @param Smarty_Internal_Template $template Smarty Template object.
  *
- * @uses   Core\Config
  * @uses   Core\Utils
  * @see    Assetic
  *
@@ -43,15 +42,16 @@ use Assetic\AssetWriter;
 function smarty_function_assets(array $options, Smarty_Internal_Template $template)
 {
     $result = array();
+    $templateVariables = $template->getTemplateVars();
 
     if (isset($options['source'])) {
-        $assetsPath           = Core\Config()->paths('assets');
-        $optimization_enabled = Core\Config()->ASSETS['optimize'];
-        $combination_enabled  = Core\Config()->ASSETS['combine'];
-        $caching_enabled      = Core\Config()->ASSETS['cache'];
+        $assetsPath           = $templateVariables['_config']->paths('assets');
+        $optimization_enabled = $templateVariables['_config']->ASSETS['optimize'];
+        $combination_enabled  = $templateVariables['_config']->ASSETS['combine'];
+        $caching_enabled      = $templateVariables['_config']->ASSETS['cache'];
         $dist_path            = $assetsPath['distribution'];
         $source_path          = $assetsPath['source'];
-        $dist_url             = Core\Config()->urls('assets');
+        $dist_url             = $templateVariables['_config']->urls('assets');
 
         $media    = isset($options['media']) ? $options['media'] : 'all';
         $rel      = isset($options['rel'])   ? $options['rel']   : 'stylesheet';

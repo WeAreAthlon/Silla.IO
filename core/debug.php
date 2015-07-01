@@ -49,18 +49,6 @@ function dd($what)
 }
 
 /**
- * Prints all Database queries executed.
- *
- * @uses   d()
- *
- * @return void
- */
-function ds()
-{
-    d(Core\Modules\DB\DB::$queries);
-}
-
-/**
  * Prints human-readable information about a variable.
  *
  * @param mixed $what Input data.

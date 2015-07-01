@@ -86,10 +86,11 @@ final class Render
      * Creates a render instance.
      *
      * @param string $adapter Adapter class name.
+     * @param string $viewsPath Path to views
      */
-    public function __construct($adapter)
+    public function __construct($adapter, $viewsPath)
     {
-        $this->configuration  = Core\Config()->paths('views');
+        $this->configuration = $viewsPath;
         $this->setAdapter($adapter);
         $this->filesExtension = $this->render->getTemplatesFileExtension();
         $this->contentType = $this->render->getRenderedContentType();

@@ -70,19 +70,27 @@ abstract class Controller
     protected $cachingOutput = array();
 
     /**
+     * @var Core\Silla
+     */
+    protected $environment;
+
+    /**
      * Base Controller Constructor definition.
+     *
+     * @param Core\Silla $environment Silla.IO application instance.
      *
      * @access public
      */
-    public function __construct()
+    public function __construct(Core\Silla $environment)
     {
-        $viewsPaths = Core\Config()->paths('views');
+        $this->environment = $environment;
+        $viewsPaths = $environment->configuration()->paths('views');
 
         $this->meta = array(
-            'controller' => Core\Router()->request->controller(),
-            'action'     => Core\Router()->request->action(),
+            'controller' => $environment->request()->controller(),
+            'action'     => $environment->request()->action(),
             'paths'      => array(
-                'views'   => $viewsPaths['templates'] . Core\Router()->request->controller() . DIRECTORY_SEPARATOR,
+                'views'   => $viewsPaths['templates'] . $environment->request()->controller() . DIRECTORY_SEPARATOR,
                 'layouts' => $viewsPaths['layouts'],
             ),
             'filters' => array(
@@ -91,15 +99,18 @@ abstract class Controller
             ),
         );
 
-        $this->labels          = $this->labels          ? $this->labels          : $this->meta['controller'];
-        $this->rendererAdapter = $this->rendererAdapter ? $this->rendererAdapter : Core\Config()->RENDER['adapter'];
+        $this->labels          =
+            $this->labels ? $this->labels : $this->meta['controller'];
+        $this->rendererAdapter =
+            $this->rendererAdapter ? $this->rendererAdapter : $environment->configuration()->RENDER['adapter'];
 
         if ($this->rendererAdapter) {
             $this->renderer = new Core\Modules\Render\Render(
-                'Core\Modules\Render\Adapters\\' . $this->rendererAdapter
+                $this->rendererAdapter,
+                $environment->configuration()->paths('views')
             );
 
-            self::setOutputDefaultHeaders();
+            $this->setOutputDefaultHeaders();
 
             $defaultLayout = 'default';
             $defaultView   = $this->meta['controller'] . DIRECTORY_SEPARATOR . $this->meta['action'];
@@ -118,11 +129,11 @@ abstract class Controller
      * Executes an controller action.
      *
      * @param string                 $action  Action name.
-     * @param Modules\Router\Request $request Request object.
+     * @param Modules\Http\Request $request Request object.
      *
      * @return void
      */
-    final public function __executeAction($action, Modules\Router\Request $request)
+    final public function __executeAction($action, Modules\Http\Request $request)
     {
         $cache = array(
             'lifetime' => $this->getOutputCachingLifetime($action),
@@ -132,7 +143,7 @@ abstract class Controller
             $cache['id'] = $this->generateOutputCacheId($request);
 
             /* Fetch from cache */
-            $output = Core\Cache()->fetch($cache['id']);
+            $output = $this->environment->cache()->fetch($cache['id']);
 
             if (!$output['content']) {
                 $this->executeBeforeFilters($action);
@@ -140,13 +151,13 @@ abstract class Controller
                 $this->executeAfterFilters($action);
 
                 $output['content'] = $this->renderer->getOutput();
-                $output['headers'] = Core\Router()->response->getHeaders();
+                $output['headers'] = $this->environment->response()->getHeaders();
 
                 /* Store in cache */
-                Core\Cache()->store($cache['id'], $output, $cache['lifetime']);
+                $this->environment->cache()->store($cache['id'], $output, $cache['lifetime']);
             } else {
                 $this->renderer->setOutput($output['content']);
-                Core\Router()->response->addHeaders($output['headers']);
+                $this->environment->response()->addHeaders($output['headers']);
                 $this->renderer->render();
             }
         } else {
@@ -161,13 +172,13 @@ abstract class Controller
      *
      * Displayed when a requested controller action does not exist.
      *
-     * @param Modules\Router\Request $request Request object.
+     * @param Modules\Http\Request $request Request object.
      *
      * @access public
      *
      * @return void
      */
-    public function actionNotFound(Modules\Router\Request $request)
+    public function actionNotFound(Modules\Http\Request $request)
     {
         if ($this->renderer) {
             $this->renderer->setLayout('404');
@@ -176,7 +187,7 @@ abstract class Controller
             $this->renderer->set('_action', '404');
             $this->renderer->set('_labels', Core\Helpers\YAML::getAll('globals'));
 
-            Core\Router()->response->setHttpResponseCode(404);
+            $this->environment->response()->setHttpResponseCode(404);
         }
     }
 
@@ -185,7 +196,7 @@ abstract class Controller
      *
      * Displayed when a requested controller does not exist.
      *
-     * @param Modules\Router\Request $request Request object.
+     * @param Modules\Http\Request $request Request object.
      *
      * @static
      * @access public
@@ -193,7 +204,7 @@ abstract class Controller
      *
      * @return void
      */
-    final public static function resourceNotFound(Modules\Router\Request $request)
+    final public static function resourceNotFound(Modules\Http\Request $request)
     {
         if (Core\Config()->RENDER['adapter']) {
             $renderer = new Core\Modules\Render\Render(
@@ -218,12 +229,12 @@ abstract class Controller
     /**
      * Generate cache identifier value.
      *
-     * @param Modules\Router\Request $request Request object.
+     * @param Modules\Http\Request $request Request object.
      *
      * @see    md5(), implode()
      * @return string
      */
-    protected static function generateOutputCacheId(Modules\Router\Request $request)
+    protected static function generateOutputCacheId(Modules\Http\Request $request)
     {
         return md5('_silla_' . implode('', $request->get()));
     }
@@ -231,13 +242,11 @@ abstract class Controller
     /**
      * Set default response HTTP headers.
      *
-     * @static
-     *
      * @return void
      */
-    protected static function setOutputDefaultHeaders()
+    protected function setOutputDefaultHeaders()
     {
-        Core\Router()->response->addHeaders(array(
+        $this->environment->response()->addHeaders(array(
             'X-Powered-By: Silla.IO',
             'X-Frame-Options: SAMEORIGIN',
         ));
@@ -469,20 +478,22 @@ abstract class Controller
      */
     private function loadLabels()
     {
-        if (Core\Config()->CACHE['labels']) {
+        $helper = new Core\Helpers\YAML($this->environment);
+
+        if ($this->environment->configuration()->CACHE['labels']) {
             $key    = '_silla_'
-                . Core\Config()->paths('mode')
+                . $this->environment->configuration()->paths('mode')
                 . '_labels_'
-                . Core\Registry()->get('locale')
+                . $this->environment->registry()->get('locale')
                 . $this->labels;
-            $labels = Core\Cache()->fetch($key);
+            $labels = $this->environment->cache()->fetch($key);
 
             if (!$labels) {
-                $labels = Core\Helpers\YAML::getExtendWithGlobals($this->labels);
-                Core\Cache()->store($key, $labels);
+                $labels = $helper->getExtendWithGlobals($this->labels);
+                $this->environment->cache()->store($key, $labels);
             }
         } else {
-            $labels = Core\Helpers\YAML::getExtendWithGlobals($this->labels);
+            $labels = $helper->getExtendWithGlobals($this->labels);
         }
 
         return $labels;
@@ -529,18 +540,18 @@ abstract class Controller
      *
      * @return Modules\Render\Render
      */
-    private static function assignVariablesToRender(Modules\Render\Render &$renderer)
+    private function assignVariablesToRender(Modules\Render\Render &$renderer)
     {
-        $renderer->set('_mode', Core\Config()->paths('mode'));
-        $renderer->set('_registry', Core\Registry());
-        $renderer->set('_config', Core\Config());
-        $renderer->set('_session', Core\Session());
+        $renderer->set('_mode', $this->environment->configuration()->paths('mode'));
+        $renderer->set('_registry', $this->environment->registry());
+        $renderer->set('_config', $this->environment->configuration());
+        $renderer->set('_session', $this->environment->session());
         $renderer->set('_assets', $renderer->assets());
-        $renderer->set('_urls', Core\Config()->urls());
-        $renderer->set('_paths', Core\Config()->paths());
-        $renderer->set('_request', Core\Router()->request);
-        $renderer->set('_get', Core\Router()->request->get());
-        $renderer->set('_post', Core\Router()->request->post());
+        $renderer->set('_urls', $this->environment->configuration()->urls());
+        $renderer->set('_paths', $this->environment->configuration()->paths());
+        $renderer->set('_request', $this->environment->request());
+        $renderer->set('_get', $this->environment->request()->get());
+        $renderer->set('_post', $this->environment->request()->post());
 
         return $renderer;
     }
