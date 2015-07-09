@@ -1,5 +1,8 @@
-<div class="content help">
-     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mattis, justo a varius luctus, mauris lorem tincidunt massa, a vestibulum elit mauris at tortor. Etiam vitae mi lorem. Sed malesuada porta scelerisque. Maecenas tempor lectus sed mi pellentesque at mattis sapien blandit. Fusce ac facilisis urna. Phasellus at nunc nec lacus consequat imperdiet et vitae sapien. In hac habitasse platea dictumst. Morbi at elit id dolor sollicitudin hendrerit sit amet ut metus. Donec adipiscing, orci sed commodo fermentum, quam leo semper tellus, sit amet cursus dui nisl non nisl. Mauris elit lorem, convallis pulvinar varius nec, dictum fermentum diam. Aliquam lorem massa, consectetur ac dictum in, suscipit vitae libero. Mauris dui massa, vestibulum nec dictum ut, ornare quis metus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vivamus ut est a ante vehicula tincidunt.
-     <br /><br />
-     Curabitur tempor aliquam mattis. Mauris rhoncus facilisis quam nec pellentesque. Aliquam id metus metus. Ut quis metus ante. Cras ut augue nulla. Vivamus ornare libero ac massa venenatis pharetra. Aliquam a nisl velit. Pellentesque eros nulla, malesuada eget placerat vitae, molestie non sem. Praesent at nunc et metus imperdiet eleifend. Sed ut erat massa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porttitor justo et tellus ultricies at laoreet velit semper. Pellentesque laoreet ligula mi. Vestibulum congue risus vitae lectus mollis gravida.
-</div>
+{capture caption}
+<h1 class="text-thinner">{$_labels.modules.$_controller.title|default:''}
+    <a href="{link_to controller=$_controller action=edit}" class="btn btn-link no-padding-left"><i class="glyphicon
+    glyphicon-plus"></i> {$_labels.modules.$_controller.edit}</a>
+</h1>
+<p class="text-thin">{$_labels.modules.$_controller.desc|default:''}</p>
+{/capture}
+<div class="content help">{$content}</div>

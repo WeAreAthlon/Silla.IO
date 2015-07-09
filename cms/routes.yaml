@@ -16,6 +16,14 @@
     controller: cms
     action    : *
 
+# Help route
+- route: /help/edit
+  maps:
+    controller: help
+    action    : edit
+    id        : 1
+
+
 - route: /:controller/:action
   maps:
     controller: *
