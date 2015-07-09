@@ -268,6 +268,20 @@ final class Silla
     }
 
     /**
+     * Gets a DB instance.
+     *
+     * @return Modules\DB\DB
+     */
+    public function getDb()
+    {
+        if (!$this->db) {
+            $this->db = new Modules\DB\DB($this->configuration->DB, $this->cache, $this->configuration->CACHE['db_schema']);
+        }
+
+        return $this->db;
+    }
+
+    /**
      * Gets a cache instance.
      *
      * @return Modules\Cache\Cache

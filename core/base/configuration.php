@@ -296,35 +296,37 @@ abstract class Configuration
             DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
 
         /* Process modes */
-        /*$this->MODES = $this->setupModes($this->MODES);*/
+        $this->MODES = $this->setupModes($this->MODES);
 
         /* Default mode */
-        /*$this->setPackage($this->MODES[0]);*/
+        $this->setMode($this->MODES[0]);
     }
 
     /**
-     * Setup package configuration variables.
+     * Setup mode configuration variables.
      *
-     * @param array $package Silla.IO package data.
+     * @param array $mode Silla.IO mode data.
      *
      * @return void
      */
-    final public function setPackage($package)
+    final public function setMode(array $mode)
     {
-        $this->PATHS['package']            = $package['location'];
-        $this->PATHS['views']['templates'] = $this->PATHS['package'] . 'views' . DIRECTORY_SEPARATOR;
+        $this->MODE = $mode;
+
+        $this->PATHS['mode']               = $mode['location'];
+        $this->PATHS['views']['templates'] = $this->PATHS['mode'] . 'views' . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['layouts']   = $this->PATHS['views']['templates'] . '_layouts' . DIRECTORY_SEPARATOR;
 
-        $this->PATHS['labels']  = $this->PATHS['package']   . 'labels' . DIRECTORY_SEPARATOR;
+        $this->PATHS['labels']  = $this->PATHS['mode']   . 'labels' . DIRECTORY_SEPARATOR;
         $this->PATHS['uploads'] =
-            $this->PATHS['public'] . $package['name'] . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
+            $this->PATHS['public'] . $mode['relative'] . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
 
-        $this->PATHS['assets']['source']       = $package['location'] . 'assets' . DIRECTORY_SEPARATOR;
+        $this->PATHS['assets']['source']       = $mode['location'] . 'assets' . DIRECTORY_SEPARATOR;
         $this->PATHS['assets']['distribution'] =
-            $this->PATHS['public'] . $package['name'] . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
+            $this->PATHS['public'] . $mode['relative'] . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
 
-        $this->URLS['package'] = $this->URLS['relative'] . $package['url'];
-        $this->URLS['public']  = $this->URLS['relative'] . 'public/' . $package['name'] . '/';
+        $this->URLS['mode']    = $this->URLS['relative'] . $mode['url'];
+        $this->URLS['public']  = $this->URLS['relative'] . 'public/' . $mode['relative'] . '/';
         $this->URLS['assets']  = $this->URLS['public'] . 'assets/';
         $this->URLS['uploads'] = $this->URLS['public'] . 'uploads/';
     }
@@ -412,11 +414,11 @@ abstract class Configuration
     /**
      * Format and setup Silla.IO modes.
      *
-     * @param array $packages Array of Silla.IO packages to setup.
+     * @param array $modes Array of Silla.IO modes to setup.
      *
      * @return array
      */
-    final protected function setupPackages(array $packages)
+    final protected function setupModes(array $modes)
     {
         foreach ($modes as &$mode) {
             $mode['relative'] = trim($mode['location'], '/');
@@ -427,6 +429,6 @@ abstract class Configuration
             );
         }
 
-        return $packages;
+        return $modes;
     }
 }

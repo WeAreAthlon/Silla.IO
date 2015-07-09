@@ -12,6 +12,7 @@
 namespace Core\Modules\DB;
 
 use Core;
+use Zob\Adapters;
 
 /**
  * DB Class ORM definition.
@@ -50,14 +51,14 @@ final class DB
     public function __construct(array $dsn, Core\Modules\Cache\Cache $cacheStorage, $persistence)
     {
         switch ($dsn['adapter']) {
-            case 'pdo_mysql':
-                $this->adapter = new Adapters\PdoMySql($dsn);
-                $this->cache = new DbCache($this->adapter, $dsn, $cacheStorage, $persistence);
+            case 'mysql':
+                $this->connection = new Adapters\MySql\MySql($dsn);
+                /*$this->cache = new DbCache($this->connection, $dsn, $cacheStorage, $persistence);
                 $this->adapter->setCacheStorage($this->cache);
                 $this->cache->setup();
 
                 $this->adapter->setCharset();
-                $this->adapter->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+                $this->adapter->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);*/
                 break;
             case 'mysqli':
                 $this->adapter = new Adapters\MySQLi($dsn['host'], $dsn['name'], $dsn['user'], $dsn['password']);
@@ -97,13 +98,13 @@ final class DB
     }
 
     /**
-     * Retrieves an adapter instance.
+     * Retrieves an connection instance.
      *
-     * @return Adapters\SQLite|Interfaces\Adapter
+     * @return Zob\Adapters\ConncetionInterface
      */
-    final public function getAdapter()
+    final public function getConnection()
     {
-        return $this->adapter;
+        return $this->connection;
     }
 
     /**

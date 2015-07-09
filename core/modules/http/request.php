@@ -44,11 +44,11 @@ final class Request
     private $token;
 
     /**
-     * Request package.
+     * Request mode.
      *
-     * @var string
+     * @var array
      */
-    private $package;
+    private $mode;
 
     /**
      * Init actions.
@@ -59,7 +59,7 @@ final class Request
      * @param array $elements Request Elements. All Routed variables.
      * @param array $context  Request Context Server data.
      */
-    public function __construct($package, array $elements, array &$context)
+    public function __construct(array $mode, array $elements, array &$context)
     {
         $this->elements = $elements;
         $this->context  = $context;
@@ -95,15 +95,19 @@ final class Request
     }
 
     /**
-     * Retrieves the request action name.
+     * Retrives request mode or part of it.
      *
-     * @access public
+     * @param string $segment Mode segment name.
      *
-     * @return string
+     * @return array
      */
-    public function package()
+    public function mode($segment = null)
     {
-        return $this->package;
+        if ($segment && isset($this->mode[$segment])) {
+            return $this->mode[$segment];
+        }
+
+        return $this->mode;
     }
 
     /**

@@ -40,6 +40,7 @@ try {
     }
 }
 
+
 /**
  * Output Response headers.
  */

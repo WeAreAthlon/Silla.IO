@@ -76,7 +76,7 @@ class Configuration extends Configurations\Staging\Configuration
      * @example crypt_vector   Initialization Vector value.
      */
     public $DB = array(
-        'adapter'        => 'pdo_mysql',
+        'adapter'        => 'mysql',
         'host'           => 'localhost',
         'port'           => 3306,
         'user'           => 'root',

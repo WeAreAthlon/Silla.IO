@@ -29,5 +29,13 @@ class Home extends Base\Controller
      */
     public function index(Request $request)
     {
+        $mdl = new \App\Models\User($this->environment);
+
+        $res = $mdl->save([
+            'name' => 'test name',
+            'email' => 'testemail'
+        ]);
+
+        dd($mdl);
     }
 }
