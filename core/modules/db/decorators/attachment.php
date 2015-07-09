@@ -153,8 +153,7 @@ abstract class Attachment implements Interfaces\Decorator
                 $successful = Helpers\File::upload(
                     $_FILES[$name],
                     $resource->attachmentsStoragePath($name),
-                    $_attachment_name,
-                    true
+                    $_attachment_name
                 );
                 if ($successful) {
                     /* Make thumbnails */
@@ -179,6 +178,7 @@ abstract class Attachment implements Interfaces\Decorator
                     try {
                         Helpers\File::delete($attachment_old_file);
                     } catch (\Exception $e) {
+                        /* @todo Explain why we are not handling exception. */
                     }
 
                     if ($_attachment['type'] === array('photo') &&
@@ -250,14 +250,14 @@ abstract class Attachment implements Interfaces\Decorator
             try {
                 switch ($thumbnail['type']) {
                     case 'resize':
-                        Helpers\Image::createThumbnailScaled(
+                        Helpers\Image::createScaledThumbnail(
                             $resource->attachmentsStoragePath($name) . $attachment_filename,
                             array($thumbnail['size'])
                         );
                         break;
 
                     case 'crop':
-                        Helpers\Image::createThumbnailExact(
+                        Helpers\Image::createCroppedThumbnail(
                             $resource->attachmentsStoragePath($name) . $attachment_filename,
                             array($thumbnail['size'])
                         );

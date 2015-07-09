@@ -1,33 +1,63 @@
 <?php
+
 namespace Core\Modules\DB;
 
 class Entity
 {
-    protected $relations = [];
+    protected $table;
 
-    public function getRelation($name)
+    protected $fields = [];
+
+    protected $errors = [];
+
+    public function __construct()
     {
-        return $this->relations[$name];
+        $this->table = DB::getTable(get_class($this));
     }
 
-    protected function hasMany($name)
+    public function __get($field)
     {
-        $this->relations[$name] = new Relation($name, 'hasMany');
+        if ($this->table->getField($field)) {
+            return $this->fields[$field];
+        }
     }
 
-    protected function hasAndBelongsToMany($name)
+    public function __set($field, $value)
     {
-        $this->relations[$name] = new Relation($name, 'hasAndBelongsToMany');
+        if ($this->table->getField($field)) {
+            $this->fields[$field] = $value;
+        }
     }
 
-    protected function belongsTo($name)
+    public function all()
     {
-        $this->relations[$name] = new Relation($name, 'belongsTo');
+        $query = new Query(DB::$connection);
+        $query->select($table);
     }
 
-    protected function hasOne($name)
+    public function one()
     {
-        $this->relations[$name] = new Relation($name, 'hasOne');
+    
+    }
+
+    public function save(array $params = [])
+    {
+        foreach ($params as $field=>$value) {
+            if (isset($this->fields[$field])) {
+                $this->fields[$field] = $value;
+            }
+        }
+    }
+
+    public function isValid()
+    {
+        foreach ($this->table->getFields() as $field) {
+            $error = $field->validate($this->fields[$field->getName()]);
+
+            if ($error) {
+                $this->errors[$field->getName()] = $error;
+            }
+        }
     }
 }
 

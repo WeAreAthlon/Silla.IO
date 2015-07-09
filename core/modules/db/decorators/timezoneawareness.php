@@ -98,7 +98,7 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
     {
         foreach (self::$timezoneAwareFields as $datetime_field) {
             if ($resource->{$datetime_field}) {
-                $resource->{$datetime_field} = Helpers\DateTime::applyTimezoneOffset($resource->{$datetime_field});
+                $resource->{$datetime_field} = Helpers\DateTime::format($resource->{$datetime_field});
             }
         }
     }
@@ -117,7 +117,7 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
     {
         foreach (self::$timezoneAwareFields as $datetime_field) {
             if ($resource->{$datetime_field}) {
-                $resource->{$datetime_field} = Helpers\DateTime::removeTimezoneOffset($resource->{$datetime_field});
+                $resource->{$datetime_field} = Helpers\DateTime::formatGmt($resource->{$datetime_field});
             }
         }
     }

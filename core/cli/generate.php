@@ -68,6 +68,7 @@ final class Generate
         try {
             Helpers\Directory::create($package['extendLocation'] . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . strtolower($name));
         } catch (\Exception $e) {
+            /* @todo Explain why we are not handling exception. */
         }
 
         foreach ($action_names as $action) {
@@ -157,7 +158,7 @@ final class Generate
         $tpl->setCompileDir($config['compiled'])
             ->setCacheDir($config['cache'])
             ->setConfigDir($config['config'])
-            ->addPluginsDir(Core\Config()->paths('vendor') . 'athlon' . DIRECTORY_SEPARATOR . 'smarty_plugins');
+            ->addPluginsDir(Core\Config()->paths('resources') . 'smarty_plugins');
 
         foreach ($params as $key => $value) {
             $tpl->assign($key, $value);

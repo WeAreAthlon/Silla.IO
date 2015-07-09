@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings and configuration variables of the framework.
+ * Settings and configuration variables.
  *
  * @package    Silla.IO
  * @subpackage Core\Base
@@ -21,9 +21,9 @@ abstract class Configuration
     /**
      * @var boolean[] $ASSETS Assets Management options flags.
      *
-     * @example cache    Whether to cache all assets groups on the file system.
-     * @example combine  Whether to combine all assets groups in one file.
-     * @example optimize Whether to minify assets.
+     * @example cache    Flag whether to cache all assets groups on the file system.
+     * @example combine  Flag whether to combine all assets groups in one file.
+     * @example optimize Flag whether to optimize assets.
      */
     public $ASSETS = array(
         'cache'    => false,
@@ -37,34 +37,30 @@ abstract class Configuration
      * @example adapter Caching adapter name.
      */
     public $RENDER = array(
-        'adapter' => 'Smarty',
+        'adapter' => 'Core\Modules\Render\Adapters\Smarty',
     );
 
     /**
      * @var string[] $ROUTER Router related configuration options.
      *
-     * @example rewrite          Whether to support url rewrite or not.
-     * @example separator        URL elements separator.
-     * @example variables_prefix Routes variables notation prefix. Must be different from the 'separator'.
+     * @example rewrite Whether to support url rewrite or not.
      */
     public $ROUTER = array(
-        'rewrite'          => true,
-        'separator'        => '/',
-        'variables_prefix' => ':'
+        'rewrite' => true,
     );
 
     /**
      * @var array $CACHE Cache related configuration options.
      *
      * @example adapter   Caching adapter name.
-     * @example routes    Whether to cache Routing routes.
-     * @example labels    Whether to cache Localisation labels.
-     * @example db_schema Whether to cache Database Entity tables schemas.
+     * @example routes    Flag whether to cache Routing routes.
+     * @example labels    Flag whether to cache Localisation labels.
+     * @example db_schema Flag whether to cache Database Entity tables schemas.
      * @example database  Database cache adapter database schema.
      * @example redis     Redis cache adapter connection parameters.
      */
     public $CACHE = array(
-        'adapter'       => 'FileSystem',
+        'adapter'       => 'Core\Modules\Cache\Adapters\FileSystem',
         'routes'        => false,
         'labels'        => false,
         'db_schema'     => false,
@@ -99,8 +95,8 @@ abstract class Configuration
         ),
         'credentials' => array(
             'smtp' => array(
-                'host' => '',
-                'port' => '',
+                'host' => 'localhost',
+                'port' => '25',
                 'user' => '',
                 'password' => '',
             ),
@@ -159,7 +155,7 @@ abstract class Configuration
      * @example parameter    Name of the transparent session id parameter.
      */
     public $SESSION = array(
-        'adapter'      => 'Standard',
+        'adapter'      => 'Core\Modules\Session\Adapters\Standard',
         'name'         => 'ATHSESSID',
         'ttl'          => 0,
         'lifetime'     => 60,
@@ -171,28 +167,30 @@ abstract class Configuration
     /**
      * @var array $PATHS File Paths definition.
      *
-     * @example root    Path to Silla.IO files location on the file system.
-     * @example mode    Path to Silla.IO current mode location.
-     * @example labels  Path to Silla.IO localisation labels location.
-     * @example cache   Path to Silla.IO file caches on the server.
-     * @example tmp     Path to Silla.IO temorary file storage location.
-     * @example public  Path to Silla.IO public accessible location.
-     * @example uploads Path to Silla.IO uploads storage location.
-     * @example vendor  Path to Silla.IO vendor files location.
-     * @example assets  Path to Silla.IO assets storage location['source', 'distribution'].
-     * @example views   Path to Silla.IO views['templates', 'compiled', 'config', 'cache'].
+     * @example root      Path to Silla.IO files location on the file system.
+     * @example mode      Path to Silla.IO current mode location.
+     * @example labels    Path to Silla.IO localisation labels location.
+     * @example cache     Path to Silla.IO file caches on the server.
+     * @example tmp       Path to Silla.IO temorary file storage location.
+     * @example public    Path to Silla.IO public accessible location.
+     * @example uploads   Path to Silla.IO uploads storage location.
+     * @example vendor    Path to Silla.IO vendor files location.
+     * @example resources Path to Silla.IO resources files location.
+     * @example assets    Path to Silla.IO assets storage location['source', 'distribution'].
+     * @example views     Path to Silla.IO views['templates', 'compiled', 'config', 'cache'].
      */
     protected $PATHS = array(
-        'root'    => null,
-        'mode'    => null,
-        'labels'  => null,
-        'cache'   => null,
-        'tmp'     => null,
-        'public'  => null,
-        'uploads' => null,
-        'vendor'  => null,
-        'views'   => array(),
-        'assets'  => array(),
+        'root'      => null,
+        'mode'      => null,
+        'labels'    => null,
+        'cache'     => null,
+        'tmp'       => null,
+        'public'    => null,
+        'uploads'   => null,
+        'vendor'    => null,
+        'resources' => null,
+        'views'     => array(),
+        'assets'    => array(),
     );
 
     /**
@@ -215,28 +213,52 @@ abstract class Configuration
     );
 
     /**
-     * @var Configuration $instance Reference to the current instance of the Configuration object.
+     * @var array $MODES Silla.IO Runtime Modes. Array representation of supported Silla.IO modes.
+     *      Default mode(most common) is the last element the array.
+     *
+     * @example name     Semantic name of the mode.
+     * @example location File path to the mode files WITH trailing slash.
+     * @example url      URL prefix of the mode WITH trailing slash.
      */
-    protected static $instance = null;
+    private $MODES = array(
+        array(
+            'name'     => 'cms',
+            'location' => 'cms/',
+            'url'      => '/cms/',
+        ),
+        array(
+            'name'     => 'default',
+            'location' => 'app/',
+            'url'      => '/',
+        ),
+    );
 
     /**
-     * Setup all variables values.
+     * @var array $MODE Current mode.
      */
-    protected function __construct()
+    private $MODE = array();
+
+    /**
+     * Constructor. Setup all variables values.
+     *
+     * @param string $environment Execution environment name.
+     * @param array  $context     Execution context.
+     */
+    public function __construct($environment, array $context)
     {
         $current_dir = dirname(dirname(realpath(__DIR__)));
 
         $this->PATHS['root'] = $current_dir . DIRECTORY_SEPARATOR;
 
-        if (!isset($_SERVER['CONTEXT_DOCUMENT_ROOT'])) {
+        if (!isset($context['CONTEXT_DOCUMENT_ROOT'])) {
             $this->URLS['relative'] = str_replace(
                 '\\',
                 '/',
-                str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', $current_dir . '/')
+                str_replace(realpath($context['DOCUMENT_ROOT']), '', $current_dir . '/')
             );
         } else {
-            $this->URLS['relative'] = $_SERVER['CONTEXT_PREFIX'] . str_replace(
-                realpath($_SERVER['CONTEXT_DOCUMENT_ROOT']),
+            $this->URLS['relative'] = $context['CONTEXT_PREFIX'] . str_replace(
+                realpath($context['CONTEXT_DOCUMENT_ROOT']),
                 '',
                 $current_dir . '/'
             );
@@ -248,27 +270,29 @@ abstract class Configuration
         $is_SSL = Core\Utils::httpRequestIsSsl();
         $port = null;
 
-        if (isset($_SERVER['SERVER_PORT'])) {
-            $port = in_array($_SERVER['SERVER_PORT'], array('80', '443', true)) ? null : $_SERVER['SERVER_PORT'];
+        if (isset($context['SERVER_PORT'])) {
+            $port = in_array($context['SERVER_PORT'], array('80', '443', true)) ? null : $context['SERVER_PORT'];
         }
 
         $this->URLS['protocol'] = 'http' . ($is_SSL ? 's' : '');
         $this->URLS['full']     = null;
 
-        if (isset($_SERVER['SERVER_NAME'])) {
+        if (isset($context['SERVER_NAME'])) {
             $this->URLS['full'] = $this->URLS['protocol'] . '://' .
-                $_SERVER['SERVER_NAME'] . $port . $this->URLS['relative'];
+                $context['SERVER_NAME'] . $port . $this->URLS['relative'];
         }
 
         $this->PATHS['vendor'] = $this->PATHS['root'] . 'vendor' . DIRECTORY_SEPARATOR;
+        $this->PATHS['resources'] = $this->PATHS['root'] . 'resources' . DIRECTORY_SEPARATOR;
         $this->PATHS['tmp']    = $this->PATHS['root'] . 'temp'   . DIRECTORY_SEPARATOR;
         $this->PATHS['cache']  = $this->PATHS['tmp']  . 'cache'  . DIRECTORY_SEPARATOR;
         $this->PATHS['public'] = $this->PATHS['root'] . 'public' . DIRECTORY_SEPARATOR;
 
         $this->PATHS['views']['compiled'] = $this->PATHS['cache'] . 'compiled' . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['cache']    = $this->PATHS['cache'] . 'views'    . DIRECTORY_SEPARATOR;
+        $this->PATHS['views']['resources']= $this->PATHS['resources'];
         $this->PATHS['views']['config']   = $this->PATHS['root']  .
-            'configurations' . DIRECTORY_SEPARATOR . \Silla::$environment .
+            'configurations' . DIRECTORY_SEPARATOR . $environment .
             DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
 
         /* Process modes */
@@ -350,32 +374,43 @@ abstract class Configuration
     }
 
     /**
-     * Returns an instance of the Configuration object.
+     * Retrieves Silla.IO modes.
      *
-     * @return Configuration
+     * @param string $name Name of the mode.
+     *
+     * @return array
      */
-    final public static function getInstance()
+    final public function modes($name = '')
     {
-        if (null === self::$instance) {
-            $configuration = get_called_class();
-            self::$instance = new $configuration;
+        if ($name) {
+            foreach ($this->MODES as $mode) {
+                if ($mode['name'] === $name) {
+                    return $mode;
+                }
+            }
         }
 
-        return self::$instance;
+        return $this->MODES;
     }
 
     /**
-     * Cloning of Configuration is disallowed.
+     * Retrieves current Silla.IO mode.
      *
-     * @return void
+     * @param string $segment Segment name of the mode.
+     *
+     * @return mixed
      */
-    final public function __clone()
+    final public function mode($segment = null)
     {
-        trigger_error(get_called_class() . ' cannot be cloned! It is a singleton.', E_USER_ERROR);
+        if ($segment && isset($this->MODE[$segment])) {
+            return $this->MODE[$segment];
+        }
+
+        return $this->MODE;
     }
 
     /**
-     * Format and setup Silla.IO packages.
+     * Format and setup Silla.IO modes.
      *
      * @param array $packages Array of Silla.IO packages to setup.
      *
@@ -383,21 +418,11 @@ abstract class Configuration
      */
     final protected function setupPackages(array $packages)
     {
-        if ($this->ROUTER['separator'] !== '/') {
-            foreach ($packages as &$package) {
-                $oackage['url'] = str_replace('/', $this->ROUTER['separator'], $oackage['url']);
-            }
-        }
-
-        foreach ($oackages as &$package) {
-            $package['relative'] = trim($package['location'], '/');
-            $package['location'] = $this->PATHS['root'] . $package['location'];
-            $package['url'] = trim(
-                str_replace($this->URLS['relative'], '', $package['url']),
-                $this->ROUTER['separator']
-            );
-            $package['namespace'] = trim(
-                str_replace('/', '\\', str_replace($this->PATHS['root'], '', $package['location'])),
+        foreach ($modes as &$mode) {
+            $mode['relative'] = trim($mode['location'], '/');
+            $mode['location'] = $this->PATHS['root'] . $mode['location'];
+            $mode['namespace'] = trim(
+                str_replace('/', '\\', str_replace($this->PATHS['root'], '', $mode['location'])),
                 '\\'
             );
         }

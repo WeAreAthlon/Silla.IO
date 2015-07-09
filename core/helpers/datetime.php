@@ -1,6 +1,6 @@
 <?php
 /**
- * Dates and Times Helper.
+ * Dates and Time Helper.
  *
  * @package    Silla.IO
  * @subpackage Core\Helpers;
@@ -14,36 +14,34 @@ namespace Core\Helpers;
 use Core;
 
 /**
- * Class DateTime Helper definition.
+ * Contains helper methods concerned with date and time manipulation.
  */
 class DateTime
 {
     /**
      * Fetches all available timezone codes.
      *
-     * @access public
-     * @static
-     *
-     * @return array
+     * @return array Of timezones with locations and location offsets from GMT.
      */
     public static function getTimezonesList()
     {
-        $result = array();
-        $timezone_codes = \DateTimeZone::listIdentifiers();
+        /* Get an array of all definied timezone identifiers. */
+        $timezoneCodes = \DateTimeZone::listIdentifiers();
 
-        foreach ($timezone_codes as $timezone_code) {
-            $now = new \DateTime('now', new \DateTimeZone($timezone_code));
-            $location = explode('/', $timezone_code);
+        foreach ($timezoneCodes as $timezoneCode) {
+            /* Create a datetime object using the currently processed timezone. */
+            $now = new \DateTime('now', new \DateTimeZone($timezoneCode));
+            $location = explode('/', $timezoneCode);
             $zone = $location[0];
-
+            /* Unset the zone. */
             unset($location[0]);
-
+            /* Merge the location back together. */
             $location = implode('/', $location);
-
-            $result[$zone][] = array('title' => $location, 'offset' => $now->format('P'));
+            /* Populate the resulting array containing timezones with locations and offsets from GMT. */
+            $timezones[$zone][] = array('title' => $location, 'offset' => $now->format('P'));
         }
 
-        return $result;
+        return $timezones;
     }
 
     /**
@@ -51,62 +49,48 @@ class DateTime
      *
      * @param string $timezone Valid timezone code.
      *
-     * @access public
-     * @static
-     *
-     * @return void
+     * @return bool FALSE if the $timezone isn't valid, or TRUE otherwise.
      */
     public static function setEnvironmentTimezone($timezone)
     {
-        date_default_timezone_set($timezone ? $timezone : self::getCurrentTimezone());
+        if (!$timezone) {
+            $timezone = date_default_timezone_get();
+        }
+
+        return date_default_timezone_set($timezone);
     }
 
     /**
-     * Gets current environment timezone.
-     *
-     * @access public
-     * @static
-     *
-     * @return string
-     */
-    public static function getCurrentTimezone()
-    {
-        return date_default_timezone_get();
-    }
-
-    /**
-     * Apply timezone offset.
+     * Format a datetime string to currently set timezone according to given format.
      *
      * @param string $datetime String representation of a datetime object.
      * @param string $format   Format of the returned date.
      *
-     * @access public
-     * @static
-     *
-     * @return string
+     * @return string Formatted according to the given format using the given Unix timestamp.
      */
-    public static function applyTimezoneOffset($datetime, $format = 'Y-m-d H:i:s')
+    public static function format($datetime, $format = 'Y-m-d H:i:s')
     {
-        $datetime_with_timezone = new \DateTime($datetime, new \DateTimeZone('UTC'));
+        /* Declare the given datetime string is UTC/GMT. */
+        $datetimeUtc = new \DateTime($datetime, new \DateTimeZone('UTC'));
 
-        return date($format, $datetime_with_timezone->format('U'));
+        /* Format datetime string to the currently set timezone. */
+        return date($format, $datetimeUtc->format('U'));
     }
 
     /**
-     * Converts the datetime to UTC.
+     * Format a datetime string to UTC/GMT according to given format.
      *
      * @param string $datetime String representation of a datetime object.
      * @param string $format   Format of the returned date.
      *
-     * @access public
-     * @static
-     *
      * @return string
      */
-    public static function removeTimezoneOffset($datetime, $format = 'Y-m-d H:i:s')
+    public static function formatGmt($datetime, $format = 'Y-m-d H:i:s')
     {
-        $datetime_with_timezone = new \DateTime($datetime);
+        /* The given datetime string is using the currently set timezone. */
+        $datetime = new \DateTime($datetime);
 
-        return gmdate($format, $datetime_with_timezone->format('U'));
+        /* Format datetime string to UTC/GMT. */
+        return gmdate($format, $datetime->format('U'));
     }
 }

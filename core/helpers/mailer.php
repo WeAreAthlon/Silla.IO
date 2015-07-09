@@ -14,7 +14,7 @@ namespace Core\Helpers;
 use Core;
 
 /**
- * Mailing Activity Helper definition.
+ * Contains helper methods concerned with sending email.
  */
 class Mailer
 {
@@ -24,157 +24,111 @@ class Mailer
      * @param array   $params Array containing the sender, receiver, and mail content details.
      * @param boolean $auth   Enable authentication (only applicable for SMTP mailer type).
      *
-     * @static
-     *
-     * @return boolean
+     * @return boolean Result TRUE if the email was successfully sent, FALSE otherwise.
      */
     public static function send(array $params, $auth = true)
     {
         switch (Core\Config()->MAILER['type']) {
             case 'SMTP':
-                $is_sent = self::processSmtp($params, $auth);
+                $sent = self::processSmtp($params, $auth);
                 break;
 
             case 'Sendmail':
             default:
-                $is_sent = self::processSendmail($params);
+                $sent = self::processSendmail($params);
                 break;
         }
 
-        return $is_sent;
+        return $sent;
     }
 
     /**
      * Sends email via standard PHP mailer.
      *
-     * @param array $params Sending options.
+     * @param array $params Sending parameters.
      *
-     * @access private
-     * @static
-     * @uses   \PHPMailer
-     *
-     * @return boolean
+     * @return boolean Result TRUE if the email was successfully sent, FALSE otherwise.
      */
     private static function processSendmail(array $params)
     {
-        $mail = new \PHPMailer();
+        /* PHPMailer with enabled exceptions. */
+        $mail = new \PHPMailer(true);
         $mail->IsSendmail();
-        $mail->CharSet = 'UTF-8';
 
-        try {
-            if (isset($params['reply_mail'], $params['reply_name'])) {
-                $mail->AddReplyTo($params['reply_mail'], $params['reply_name']);
-            }
-
-            if (is_array($params['to_mail'])) {
-                foreach ($params['to_mail'] as $recipient_address) {
-                    $mail->AddAddress($recipient_address, $params['to_name']);
-                }
-            } else {
-                $mail->AddAddress($params['to_mail'], $params['to_name']);
-            }
-
-            if (isset($params['images']) && is_array($params['images'])) {
-                foreach ($params['images'] as $image) {
-                    $mail->AddEmbeddedImage($image['url'], $image['name']);
-                }
-            }
-
-            /* Custom Headers */
-            if (isset($params['additional_headers']) && is_array($params['additional_headers'])) {
-                foreach ($params['additional_headers'] as $additional_header) {
-                    $mail->addCustomHeader($additional_header);
-                }
-            }
-
-            $mail->SetFrom($params['from_mail'], $params['from_name']);
-            $mail->Subject = $params['subject'];
-            $mail->MsgHTML($params['content']);
-
-            $mail->Send();
-        } catch (\phpmailerException $e) {
-            trigger_error($e->errorMessage());
-        } catch (\Exception $e) {
-            trigger_error($e->getMessage());
-        }
-
-        return true;
+        return self::processEmail($mail, $params);
     }
 
 
     /**
      * Sends email via SMTP Mail Server.
      *
-     * @param array   $params Sending options.
+     * @param array   $params Sending parameters.
      * @param boolean $auth   Flag for usage of SMTP authentication or not.
      *
-     * @access private
-     * @static
-     * @uses   Config
-     * @uses   \PHPMailer
+     * @uses Core\Config()
      *
-     * @return boolean
+     * @return boolean Result TRUE if the email was successfully sent, FALSE otherwise.
      */
     private static function processSmtp(array $params, $auth = true)
     {
-        $mail = new \PHPMailer();
+        /* PHPMailer with enabled exceptions. */
+        $mail = new \PHPMailer(true);
         $mail->IsSMTP();
 
-        /*
-         * Enables SMTP debug information (for testing)
-         * 1 = errors and messages
-         * 2 = messages only
-         */
+        $mail->Host = Core\Config()->MAILER['credentials']['smtp']['host'];
+        $mail->Port = Core\Config()->MAILER['credentials']['smtp']['port'];
 
-        $mail->SMTPDebug = 1;
         $mail->SMTPAuth = $auth;
+        $mail->Username = Core\Config()->MAILER['credentials']['smtp']['user'];
+        $mail->Password = Core\Config()->MAILER['credentials']['smtp']['password'];
+        /* $mail->SMTPSecure = 'tls'; */
+
+        return self::processEmail($mail, $params);
+    }
+
+    /**
+     * Process email.
+     *
+     * @param \PHPMailer $mail   PHPMailer object.
+     * @param array      $params Sending parameters.
+     *
+     * @uses   Core\Config()
+     *
+     * @return boolean Result TRUE if the email was successfully sent, FALSE otherwise.
+     */
+    private static function processEmail(\PHPMailer $mail, array $params)
+    {
         $mail->CharSet = 'UTF-8';
-        $mail->Host = Core\Config()->MAILER['credentials']['SMTP']['host'];
-        $mail->Port = Core\Config()->MAILER['credentials']['SMTP']['port'];
-        $mail->Username = Core\Config()->MAILER['credentials']['SMTP']['user'];
-        $mail->Password = Core\Config()->MAILER['credentials']['SMTP']['password'];
-        //$mail->SMTPSecure = 'tls';
 
-        $mail->SetFrom($params['from_mail'], $params['from_name']);
-
-        if (isset($params['reply_mail'], $params['reply_name'])) {
-            $mail->AddReplyTo($params['reply_mail'], $params['reply_name']);
-        }
-
+        $mail->SetFrom(key($params['from']), current($params['from']));
         $mail->Subject = $params['subject'];
         $mail->AltBody = strip_tags($params['content']);
-
         $mail->MsgHTML($params['content']);
 
-        if (is_array($params['to_mail'])) {
-            foreach ($params['to_mail'] as $recipient_address) {
-                $mail->AddAddress($recipient_address, $params['to_name']);
-            }
-        } else {
-            $mail->AddAddress($params['to_mail'], $params['to_name']);
-        }
-
-        if (isset($params['images']) && is_array($params['images'])) {
-            foreach ($params['images'] as $image) {
-                $mail->AddEmbeddedImage($image['url'], $image['name']);
+        if (isset($params['to']) && is_array($params['to'])) {
+            foreach ($params['to'] as $toAddr => $toName) {
+                $mail->AddAddress($toAddr, $toName);
             }
         }
 
-        /* Custom Headers */
-        if (isset($params['additional_headers']) && is_array($params['additional_headers'])) {
-            foreach ($params['additional_headers'] as $additional_header) {
-                $mail->addCustomHeader($additional_header);
+        if (isset($params['reply_to']) && is_array($params['reply_to'])) {
+            foreach ($params['reply_to'] as $replyAddr => $replyName) {
+                $mail->AddReplyTo($replyAddr, $replyName);
             }
         }
 
-        try {
-            $mail->Send();
-        } catch (\phpmailerException $e) {
-            trigger_error($e->errorMessage());
-        } catch (\Exception $e) {
-            trigger_error($e->getMessage());
+        if (isset($params['inline_attachments']) && is_array($params['inline_attachments'])) {
+            foreach ($params['inline_attachments'] as $attachmentPath => $contentId) {
+                $mail->AddEmbeddedImage($attachmentPath, $contentId);
+            }
         }
 
-        return true;
+        if (isset($params['custom_headers']) && is_array($params['custom_headers'])) {
+            foreach ($params['custom_headers'] as $headerName => $headerValue) {
+                $mail->addCustomHeader($headerName, $headerValue);
+            }
+        }
+
+        return $mail->Send();
     }
 }

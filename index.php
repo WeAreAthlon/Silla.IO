@@ -10,60 +10,41 @@
  * @copyright  Copyright (c) 2015, Silla.io
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
+namespace Silla;
 
-use Core\Modules\Router;
+use Core;
 
-require_once __DIR__ . implode(DIRECTORY_SEPARATOR, ['', 'core', 'silla.php']);
+/**
+ * Define Silla.IO framework variables.
+ */
+$environment = isset($_SERVER['HTTP_ENV_SILLA_ENVIRONMENT']) ? $_SERVER['HTTP_ENV_SILLA_ENVIRONMENT'] : 'development';
 
 /**
  * Require Silla.IO boot loader.
  */
-require_once __DIR__ . implode(DIRECTORY_SEPARATOR, ['', 'vendor', 'autoload.php']);
+require __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'silla.php';
 
-\Silla::boot(isset($_SERVER['HTTP_ENV_SILLA_ENVIRONMENT']) ? $_SERVER['HTTP_ENV_SILLA_ENVIRONMENT'] : 'development');
-
-/**
- * Get Request String.
- */
-$requestString = isset($_GET['_path']) ? $_GET['_path'] : '';
-unset($_GET['_path']);
+$application = new Core\Silla($environment, $GLOBALS);
 
 try {
-    /**
-     * Setup Router variables.
-     */
-    $routes  = new Router\Routes();
+    $response = $application->dispatch($_SERVER['REQUEST_URI']);
+} catch (\Exception $e) {
+    $response = new Core\Modules\Http\Response;
+    $response->setProtocol($application->request()->type());
+    $response->setHttpResponseCode(500);
 
-    list($package, $elements) = Router\Router::parseRequestQueryString($requestString, $routes);
-
-    $request = new Router\Request($package, $elements, $GLOBALS);
-    \Silla::$request = $request;
-
-    /**
-     * Dispatch Request.
-     */
-    Core\Router()->dispatch($request, $routes);
-
-} catch(\Exception $e) {
-    if (!Core\Router()->response->hasContent()) {
-        Core\Router()->response->setHttpResponseCode(500);
-    }
-    $message = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
     if ('on' === strtolower(ini_get('display_errors'))) {
-        Core\Router()->response->setContent("<pre>{$message}</pre>");
+        $response->setContent('<pre>' . $e->getMessage() . PHP_EOL . $e->getTraceAsString() . '</pre>');
     } else {
         error_log($e->__toString());
     }
 }
 
-unset($request, $routes);
-
 /**
  * Output Response headers.
  */
-if (!headers_sent() && Core\Router()->response->hasHeaders()) {
-    $headers = Core\Router()->response->getHeaders();
-    foreach ($headers as $header) {
+if (!headers_sent() && $response->hasHeaders()) {
+    foreach ($response->getHeaders() as $header) {
         if (isset($headers['code']) && $headers['code']) {
             header($header['string'], $header['replace'], $header['code']);
         } else {
@@ -75,6 +56,6 @@ if (!headers_sent() && Core\Router()->response->hasHeaders()) {
 /**
  * Output Response content.
  */
-if (Core\Router()->response->hasContent()) {
-    echo Core\Router()->response->getContent();
+if ($response->hasContent()) {
+    echo $response->getContent();
 }

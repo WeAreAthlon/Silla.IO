@@ -13,7 +13,7 @@ namespace App\Controllers;
 
 use Core;
 use Core\Base;
-use Core\Modules\Router\Request;
+use Core\Modules\Http\Request;
 
 /**
  * Home controller definition.
@@ -29,8 +29,5 @@ class Home extends Base\Controller
      */
     public function index(Request $request)
     {
-        $this->renderer->assets->add('css/styles.css');
-        $this->renderer->assets->add('css/print.css');
-        $this->renderer->assets->add('js/init.js');
     }
 }

@@ -19,146 +19,91 @@ use Core;
 final class DB
 {
     /**
-     * Instance of the singleton.
-     *
-     * @var DB
-     * @static
-     * @access public
-     */
-    public static $instance = null;
-
-    /**
      * Stores all executed queries.
      *
      * @var array
-     * @static
      * @access public
      */
-    public static $queries = array();
+    public $queries = array();
 
     /**
-     * Stores all instances.
-     *
-     * @var array
-     * @static
-     * @access private
+     * @var Core\Modules\DB\DbCache
      */
-    private static $instances = array();
+    public $cache;
 
     /**
-     * Cloning of DB is disallowed.
-     *
-     * @access public
-     *
-     * @return void
+     * @var Core\Modules\DB\Interfaces\Adapter
      */
-    public function __clone()
-    {
-        trigger_error(__CLASS__ . ' cannot be cloned! It is a singleton.', E_USER_ERROR);
-    }
-
-    /**
-     * Constructor, does nothing.
-     *
-     * @access private
-     */
-    private function __construct()
-    {
-    }
-
-    /**
-     * If we have instance return it, else create it.
-     *
-     * @param array $dsn Array containing all the credentials.
-     *
-     * @throws \LogicException Cannot establish a database connection.
-     * @access public
-     * @static
-     * @final
-     *
-     * @return DB
-     */
-    final public static function getInstance(array $dsn)
-    {
-        if (null === self::$instance) {
-            try {
-                self::$instance = self::createInstance($dsn);
-            } catch (\Exception $e) {
-                throw new \LogicException('Cannot establish a database connection');
-            }
-        }
-
-        return self::$instance;
-    }
+    protected $adapter;
 
     /**
      * Creates a DB instance object.
      *
-     * @param array $dsn Array containing all of the credentials.
+     * @param array                    $dsn          Array containing all of the credentials.
+     * @param Core\Modules\Cache\Cache $cacheStorage Cache storage instance.
+     * @param boolean                  $persistence  Flag whether to user persistence storage for the query caching.
      *
-     * @static
      * @throws \DomainException Unsupported Database adapter.
      *
      * @return mixed
      */
-    private static function createInstance(array $dsn)
+    public function __construct(array $dsn, Core\Modules\Cache\Cache $cacheStorage, $persistence)
     {
-        $hash = md5(serialize($dsn));
-        $instance = null;
+        switch ($dsn['adapter']) {
+            case 'pdo_mysql':
+                $this->adapter = new Adapters\PdoMySql($dsn);
+                $this->cache = new DbCache($this->adapter, $dsn, $cacheStorage, $persistence);
+                $this->adapter->setCacheStorage($this->cache);
+                $this->cache->setup();
 
-        if (!isset(self::$instances[$hash])) {
-            switch ($dsn['adapter']) {
-                case 'pdo_mysql':
-                    $instance = new Adapters\PdoMySql(
-                        'mysql:host=' . $dsn['host'] . ';dbname=' . $dsn['name'],
-                        $dsn['user'],
-                        $dsn['password']
-                    );
-                    $instance->setCharset();
-                    $instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-                    break;
-                case 'mysqli':
-                    $instance = new Adapters\MySQLi($dsn['host'], $dsn['name'], $dsn['user'], $dsn['password']);
-                    $instance->setCharset();
-                    break;
-                case 'mysql':
-                    $instance = new Adapters\MySQL($dsn['host'], $dsn['name'], $dsn['user'], $dsn['password']);
-                    $instance->setCharset();
-                    break;
-                case 'sqlite':
-                    $instance = new Adapters\SQLite($dsn['host']);
-                    $instance->setCharset();
-                    break;
-                default:
-                    throw new \DomainException('Unsupported Database adapter: ' . $dsn['adapter']);
-                    break;
-            }
-
-            self::$instances[$hash] = $instance;
-            $instance->cache = new DbCache();
+                $this->adapter->setCharset();
+                $this->adapter->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+                break;
+            case 'mysqli':
+                $this->adapter = new Adapters\MySQLi($dsn['host'], $dsn['name'], $dsn['user'], $dsn['password']);
+                $this->cache = new DbCache($this->adapter, $dsn, $cacheStorage, $persistence);
+                $this->adapter->setCacheStorage($this->cache);
+                $this->adapter->setCharset();
+                break;
+            case 'mysql':
+                $this->adapter = new Adapters\MySQL($dsn['host'], $dsn['name'], $dsn['user'], $dsn['password']);
+                $this->cache = new DbCache($this->adapter, $dsn, $cacheStorage, $persistence);
+                $this->adapter->setCacheStorage($this->cache);
+                $this->adapter->setCharset();
+                break;
+            case 'sqlite':
+                $this->adapter = new Adapters\SQLite($dsn['host']);
+                $this->cache = new DbCache($this->adapter, $dsn, $cacheStorage, $persistence);
+                $this->adapter->setCacheStorage($this->cache);
+                $this->adapter->setCharset();
+                break;
+            default:
+                throw new \DomainException('Unsupported Database adapter: ' . $dsn['adapter']);
+                break;
         }
-
-        return self::$instances[$hash];
     }
 
     /**
-     * Retrieves cache.
+     * Retrieves a cache instance.
      *
-     * @param array $dsn Array containing all the credentials.
-     *
-     * @static
      * @final
      * @access public
      *
-     * @return mixed
+     * @return Core\Modules\DB\DbCache
      */
-    final public static function getCache(array $dsn)
+    final public function getCache()
     {
-        if (!self::$instance) {
-            self::$instance = self::createInstance($dsn);
-        }
+        return $this->cache;
+    }
 
-        return self::$instance->cache;
+    /**
+     * Retrieves an adapter instance.
+     *
+     * @return Adapters\SQLite|Interfaces\Adapter
+     */
+    final public function getAdapter()
+    {
+        return $this->adapter;
     }
 
     /**
@@ -175,13 +120,13 @@ final class DB
      */
     final public static function with(array $dsn, $scope)
     {
-        $default_instance = self::$instance;
-        self::$instance = self::createInstance($dsn);
-
-        if (is_callable($scope)) {
-            $scope(self::$instance);
-        }
-
-        self::$instance = $default_instance;
+//        $default_instance = self::$instance;
+//        self::$instance = self::createInstance($dsn);
+//
+//        if (is_callable($scope)) {
+//            $scope(self::$instance);
+//        }
+//
+//        self::$instance = $default_instance;
     }
 }

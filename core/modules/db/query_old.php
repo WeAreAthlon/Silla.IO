@@ -11,12 +11,10 @@
 
 namespace Core\Modules\DB;
 
-use Core;
-
 /**
  * Class Query definition.
  */
-class Query implements \ArrayAccess, \Countable, \Iterator
+class Query extends \Zob\Query
 {
     /**
      * Reflection object container.
@@ -32,7 +30,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      * @var integer
      * @access public
      */
-    public $per_page = null;
+    public $perPage = null;
 
     /**
      * Current records pagination page.
@@ -56,7 +54,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      * @var string
      * @access private
      */
-    private $objects_class = null;
+    private $objectsClass = null;
 
     /**
      * Query options array.
@@ -64,7 +62,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      * @var array
      * @access private
      */
-    private $query_options = array(
+    private $queryOptions = array(
         'bind_params' => array(),
         'where' => array(),
         'table' => null,
@@ -83,13 +81,20 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     private $tablesPrefixAppended = false;
 
     /**
+     * @var Core\Modules\DB\Interfaces\Adapter
+     */
+    private $db;
+
+    /**
      * Init actions.
      *
-     * @param string $class_name Name of the class.
+     * @param Core\Modules\DB\Interfaces\Adapter $db        Database adapter instance.
+     * @param string                             $className Name of the class.
      */
-    public function __construct($class_name = null)
+    public function __construct(Core\Modules\DB\Interfaces\Adapter $db, $className = null)
     {
-        $this->objects_class = $class_name;
+        $this->objectsClass = $className;
+        $this->db = $db;
 
         self::$reflection = self::$reflection ? self::$reflection : new \ReflectionClass('Core\Modules\DB\Query');
     }
@@ -136,8 +141,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function __get($name)
     {
-        if (array_key_exists($name, $this->query_options)) {
-            return $this->query_options[$name];
+        if (array_key_exists($name, $this->queryOptions)) {
+            return $this->queryOptions[$name];
         }
 
         if (!self::$reflection->hasProperty($name)) {
@@ -164,8 +169,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function __set($name, $value)
     {
-        if (array_key_exists($name, $this->query_options)) {
-            $this->query_options[$name] = $value;
+        if (array_key_exists($name, $this->queryOptions)) {
+            $this->queryOptions[$name] = $value;
         } elseif (!in_array($name, get_object_vars($this), true)) {
             foreach ($this as $itm) {
                 $itm->$name = $value;
@@ -191,11 +196,11 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     private function run()
     {
         if (!$this->items) {
-            $items = Core\DB()->run($this);
+            $items = $this->db->run($this);
 
-            if ($this->objects_class) {
+            if ($this->objectsClass) {
                 foreach ($items as $item) {
-                    $obj = new $this->objects_class($item);
+                    $obj = new $this->objectsClass($item);
                     $this->items[] = $obj;
                 }
             } else {
@@ -348,7 +353,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function getObject()
     {
-        return new $this->objects_class;
+        return new $this->objectsClass;
     }
 
     /**
@@ -362,8 +367,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     {
         $obj = clone $this;
 
-        $obj->query_options['type'] = 'select';
-        $obj->query_options['db_fields'] = $fields;
+        $obj->queryOptions['type'] = 'select';
+        $obj->queryOptions['db_fields'] = $fields;
 
         return $obj;
     }
@@ -379,7 +384,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     {
         $obj = clone $this;
 
-        $obj->query_options['table'] = $table;
+        $obj->queryOptions['table'] = $table;
 
         return $obj;
     }
@@ -398,7 +403,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function join($table, $condition, $type = 'INNER')
     {
         $obj = clone $this;
-        $obj->query_options['join'][] = array(
+        $obj->queryOptions['join'][] = array(
             'table'     => $table,
             'condition' => $condition,
             'type'      => strtoupper($type),
@@ -418,8 +423,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function where($filter, array $params = array())
     {
         $obj = clone $this;
-        array_push($obj->query_options['where'], $filter);
-        $obj->query_options['bind_params'] = array_merge($obj->query_options['bind_params'], $params);
+        array_push($obj->queryOptions['where'], $filter);
+        $obj->queryOptions['bind_params'] = array_merge($obj->queryOptions['bind_params'], $params);
 
         return $obj;
     }
@@ -435,7 +440,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function order($field, $direction)
     {
         $obj = clone $this;
-        $obj->query_options['order'][] = array(
+        $obj->queryOptions['order'][] = array(
             'field'     => $field,
             'direction' => $direction,
         );
@@ -454,8 +459,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function limit($limit, $offset = null)
     {
         $obj = clone $this;
-        $obj->query_options['limit'] = $limit;
-        $obj->query_options['offset'] = $offset;
+        $obj->queryOptions['limit'] = $limit;
+        $obj->queryOptions['offset'] = $offset;
 
         return $obj;
     }
@@ -471,8 +476,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function set(array $fields, array $values)
     {
         $obj = clone $this;
-        $obj->query_options['db_fields'] = $fields;
-        $obj->query_options['bind_params'] = array_merge($obj->query_options['bind_params'], $values);
+        $obj->queryOptions['db_fields'] = $fields;
+        $obj->queryOptions['bind_params'] = array_merge($obj->queryOptions['bind_params'], $values);
 
         return $obj;
     }
@@ -489,7 +494,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function into($tableName)
     {
         $obj = clone $this;
-        $obj->query_options['table'] = $tableName;
+        $obj->queryOptions['table'] = $tableName;
 
         return $obj;
     }
@@ -505,9 +510,9 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function insert($fields, array $values)
     {
         $obj = clone $this;
-        $obj->query_options['type']        = 'insert';
-        $obj->query_options['db_fields']   = $fields;
-        $obj->query_options['bind_params'] = array_merge($obj->query_options['bind_params'], $values);
+        $obj->queryOptions['type']        = 'insert';
+        $obj->queryOptions['db_fields']   = $fields;
+        $obj->queryOptions['bind_params'] = array_merge($obj->queryOptions['bind_params'], $values);
 
         return $obj;
     }
@@ -522,8 +527,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function update($tableName)
     {
         $obj = clone $this;
-        $obj->query_options['type'] = 'update';
-        $obj->query_options['table'] = $tableName;
+        $obj->queryOptions['type'] = 'update';
+        $obj->queryOptions['table'] = $tableName;
 
         return $obj;
     }
@@ -536,7 +541,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function remove()
     {
         $obj = clone $this;
-        $obj->query_options['type'] = 'remove';
+        $obj->queryOptions['type'] = 'remove';
 
         return $obj;
     }
@@ -551,8 +556,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function createTable($tableName)
     {
         $obj = clone $this;
-        $obj->query_options['type'] = 'create_table';
-        $obj->query_options['table'] = $tableName;
+        $obj->queryOptions['type'] = 'create_table';
+        $obj->queryOptions['table'] = $tableName;
 
         return $obj;
     }
@@ -567,8 +572,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function dropTable($tableName)
     {
         $obj = clone $this;
-        $obj->query_options['type'] = 'drop_table';
-        $obj->query_options['table'] = $tableName;
+        $obj->queryOptions['type'] = 'drop_table';
+        $obj->queryOptions['table'] = $tableName;
 
         return $obj;
     }
@@ -583,8 +588,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function addColumns($tableName)
     {
         $obj = clone $this;
-        $obj->query_options['type'] = 'add_columns';
-        $obj->query_options['table'] = $tableName;
+        $obj->queryOptions['type'] = 'add_columns';
+        $obj->queryOptions['table'] = $tableName;
 
         return $obj;
     }
@@ -599,8 +604,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function dropColumns($tableName)
     {
         $obj = clone $this;
-        $obj->query_options['type'] = 'drop_columns';
-        $obj->query_options['table'] = $tableName;
+        $obj->queryOptions['type'] = 'drop_columns';
+        $obj->queryOptions['table'] = $tableName;
 
         return $obj;
     }
@@ -615,7 +620,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function columns($columns)
     {
         $obj = clone $this;
-        $obj->query_options['db_fields'] = $columns;
+        $obj->queryOptions['db_fields'] = $columns;
 
         return $obj;
     }
@@ -630,7 +635,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function tableEngine($engine)
     {
         $obj = clone $this;
-        $obj->query_options['table_engine'] = $engine;
+        $obj->queryOptions['table_engine'] = $engine;
 
         return $obj;
     }
@@ -654,9 +659,9 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function getCount()
     {
         $obj = clone $this;
-        $obj->query_options['limit'] = $obj->query_options['offset'] = null;
+        $obj->queryOptions['limit'] = $obj->queryOptions['offset'] = null;
 
-        return count(Core\DB()->run($obj));
+        return count($this->db->run($obj));
     }
 
     /**
@@ -672,9 +677,9 @@ class Query implements \ArrayAccess, \Countable, \Iterator
         $obj = clone $this;
 
         $obj->page = $page;
-        $obj->per_page = $per;
-        $obj->query_options['limit'] = $per;
-        $obj->query_options['offset'] = ($page > 0 ? ($page - 1) : 0) * $per;
+        $obj->perPage = $per;
+        $obj->queryOptions['limit'] = $per;
+        $obj->queryOptions['offset'] = ($page > 0 ? ($page - 1) : 0) * $per;
 
         return $obj;
     }
@@ -686,7 +691,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function paginate()
     {
-        return new Features\Paginator\Paginator($this->getCount(), $this->per_page, $this->page);
+        return new Features\Paginator\Paginator($this->getCount(), $this->perPage, $this->page);
     }
 
     /**
@@ -749,7 +754,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     public function appendTablesPrefix($prefix)
     {
         if (!$this->tablesPrefixAppended) {
-            $this->query_options['table'] = $prefix . $this->query_options['table'];
+            $this->queryOptions['table'] = $prefix . $this->queryOptions['table'];
             $this->tablesPrefixAppended = true;
         }
     }

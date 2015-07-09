@@ -23,19 +23,19 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
      * Redis client.
      *
      * @var string
-     * @access private
      */
     private $redisClient;
 
     /**
      * Redis constructor.
      *
-     * @access public
+     * @param array $settings Configuration settings.
+     *
      * @uses Predis\Client;
      */
-    public function __construct()
+    public function __construct(array $settings)
     {
-        $connParams = Core\Config()->CACHE['redis'];
+        $connParams = $settings['redis'];
         $this->redisClient = new Predis\Client($connParams);
         $this->redisClient->connect();
     }
@@ -47,7 +47,6 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
      * @param mixed   $value  Cache value.
      * @param integer $expire Expire time, in seconds(optional).
      *
-     * @access public
      * @uses \Predis\Response
      *
      * @return boolean
@@ -62,7 +61,7 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
             $status = $this->redisClient->set($key, $value);
         }
 
-        return true;
+        return $status;
     }
 
     /**
@@ -70,7 +69,6 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
      *
      * @param string $key Cache key.
      *
-     * @access public
      * @uses Predis\Client;
      *
      * @return mixed

@@ -17,6 +17,17 @@ namespace Core\Modules\Session\Interfaces;
 interface Adapter
 {
     /**
+     * Session Adapter constructor.
+     *
+     * @param string $scope    Relative path to be used for the session cookie scope.
+     * @param string $protocol Protocol name to used for the session cookie.
+     * @param array  $settings Configuration settings.
+     * @param array  $context  Execution context.
+     *
+     */
+    public function __construct($scope, $protocol, array $settings, array $context);
+
+    /**
      * Session destroy method.
      *
      * @return boolean

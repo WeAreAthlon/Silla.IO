@@ -23,7 +23,6 @@ final class Standard implements Interfaces\Adapter
      * IP Address of the client.
      *
      * @var string
-     * @access private
      * @static
      */
     private static $ip = null;
@@ -32,7 +31,6 @@ final class Standard implements Interfaces\Adapter
      * User Agent (OS, Browser, etc) of the client.
      *
      * @var string
-     * @access private
      * @static
      */
     private static $userAgent = null;
@@ -41,7 +39,6 @@ final class Standard implements Interfaces\Adapter
      * Session started flag.
      *
      * @var boolean
-     * @access private
      */
     private static $started = false;
 
@@ -49,7 +46,6 @@ final class Standard implements Interfaces\Adapter
      * All stored session variables.
      *
      * @var array
-     * @access private
      */
     private $vars = array();
 
@@ -57,7 +53,6 @@ final class Standard implements Interfaces\Adapter
      * Unique session ID.
      *
      * @var string
-     * @access private
      */
     private $sessionKey;
 
@@ -65,16 +60,38 @@ final class Standard implements Interfaces\Adapter
      * The path on the server in which the cookie will be available on.
      *
      * @var string
-     * @access private
      */
     private $cookie_path;
 
     /**
-     * Initialize values.
+     * Protocol name to used for the session cookie.
+     *
+     * @var string
      */
-    public function __construct()
+    private $protocol;
+
+    /**
+     * Relative path to be used for the session cookie scope.
+     *
+     * @var string
+     */
+    private $settings;
+
+    /**
+     * Constructor. Initialize values.
+     *
+     * @param string $scope    Relative path to be used for the session cookie scope.
+     * @param string $protocol Protocol name to used for the session cookie.
+     * @param array  $settings Configuration settings.
+     * @param array  $context  Execution context.
+     */
+    public function __construct($scope, $protocol, array $settings, array $context)
     {
-        $this->cookie_path = Core\Config()->urls('relative');
+        $this->cookie_path = $scope;
+        $this->protocol = $protocol;
+        $this->settings = $settings;
+        $this->context = $context;
+
         $this->start();
     }
 
@@ -89,27 +106,29 @@ final class Standard implements Interfaces\Adapter
             header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
             header('Pragma: no-cache');
 
-            ini_set('session.name', Core\Config()->SESSION['name']);
-            ini_set('session.cookie_lifetime', Core\Config()->SESSION['ttl']);
+            ini_set('session.name', $this->settings['name']);
+            ini_set('session.cookie_lifetime', $this->settings['ttl']);
             ini_set('session.gc_probability', 1);
-            ini_set('session.gc_maxlifetime', Core\Config()->SESSION['lifetime'] * 60);
+            ini_set('session.gc_maxlifetime', $this->settings['lifetime'] * 60);
 
             header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
 
-            self::$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-            self::$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+            self::$ip =
+                isset($this->context['_SERVER']['REMOTE_ADDR']) ? $this->context['_SERVER']['REMOTE_ADDR'] : '';
+            self::$userAgent =
+                isset($this->context['_SERVER']['HTTP_USER_AGENT']) ? $this->context['_SERVER']['HTTP_USER_AGENT'] : '';
 
-            if (Core\Config()->SESSION['transparency']) {
-                $_COOKIE[Core\Config()->SESSION['name']] =
-                    isset($_REQUEST[Core\Config()->SESSION['parameter']]) ?
-                    $_REQUEST[Core\Config()->SESSION['parameter']] : null;
+            if ($this->settings['transparency']) {
+                $this->context['_COOKIE'][$this->settings['name']] =
+                    isset($this->context['_REQUEST'][$this->settings['parameter']]) ?
+                    $this->context['_REQUEST'][$this->settings['parameter']] : null;
             }
 
             if ($this->isValidHost()
-                && array_key_exists(Core\Config()->SESSION['name'], $_COOKIE)
-                && $_COOKIE[Core\Config()->SESSION['name']]
+                && array_key_exists($this->settings['name'], $this->context['_COOKIE'])
+                && $this->context['_COOKIE'][$this->settings['name']]
             ) {
-                session_id($_COOKIE[Core\Config()->SESSION['name']]);
+                session_id($this->context['_COOKIE'][$this->settings['name']]);
             } else {
                 session_id($this->generateKey());
             }
@@ -117,8 +136,8 @@ final class Standard implements Interfaces\Adapter
             session_set_cookie_params(
                 null,
                 $this->cookie_path,
-                $_SERVER['SERVER_NAME'],
-                Core\Config()->urls('protocol') === 'https',
+                $this->context['_SERVER']['SERVER_NAME'],
+                $this->protocol === 'https',
                 true
             );
 
@@ -130,7 +149,7 @@ final class Standard implements Interfaces\Adapter
             $this->loadVars();
 
             if (isset($this->vars['last_updated']) &&
-                $this->vars['last_updated'] < time() - Core\Config()->SESSION['lifetime'] * 60
+                $this->vars['last_updated'] < time() - $this->settings['lifetime'] * 60
             ) {
                 $this->destroy();
                 $this->start();
@@ -152,7 +171,8 @@ final class Standard implements Interfaces\Adapter
      */
     private function isValidHost()
     {
-        return ($_SERVER['REMOTE_ADDR'] == self::$ip) && ($_SERVER['HTTP_USER_AGENT'] == self::$userAgent);
+        return ($this->context['_SERVER']['REMOTE_ADDR'] == self::$ip)
+            && ($this->context['_SERVER']['HTTP_USER_AGENT'] == self::$userAgent);
     }
 
     /**
@@ -164,7 +184,8 @@ final class Standard implements Interfaces\Adapter
      */
     public function getHash()
     {
-        return md5(session_id() . $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR']);
+        return
+            md5(session_id() . $this->context['_SERVER']['HTTP_USER_AGENT'] . $this->context['_SERVER']['REMOTE_ADDR']);
     }
 
     /**
@@ -176,7 +197,7 @@ final class Standard implements Interfaces\Adapter
      */
     public function isSession()
     {
-        return isset($_SESSION['last_active']) && $_SESSION['last_active'] > time() - Core\Config()->SESSION['ttl'];
+        return isset($_SESSION['last_active']) && $_SESSION['last_active'] > time() - $this->settings['ttl'];
     }
 
     /**
@@ -192,7 +213,7 @@ final class Standard implements Interfaces\Adapter
         mt_srand((double)microtime() * 1000000);
         $puddle = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-        for ($i = 0; $i < Core\Config()->SESSION['key_length'] - 1; $i++) {
+        for ($i = 0; $i < $this->settings['key_length'] - 1; $i++) {
             $key .= substr($puddle, (mt_rand() % (strlen($puddle))), 1);
         }
 
@@ -233,7 +254,7 @@ final class Standard implements Interfaces\Adapter
         $this->vars = array();
         $this->sessionKey = null;
 
-        unset($_COOKIE[Core\Config()->SESSION['name']]);
+        unset($this->context['_COOKIE'][$this->settings['name']]);
         self::$started = false;
         
         return true;

@@ -20,13 +20,29 @@ use Core\Helpers\File;
 class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
 {
     /**
+     * Storage path.
+     *
+     * @var string
+     */
+    private $storagePath;
+
+    /**
+     * Filesystem adapter constructor.
+     *
+     * @param array $settings Configuration settings.
+     */
+    public function __construct(array $settings)
+    {
+        $this->storagePath = '';
+    }
+
+    /**
      * Stores value by key.
      *
      * @param string  $key    Cache key.
      * @param mixed   $value  Cache value.
      * @param integer $expire Expiration time, in seconds(optional).
      *
-     * @access public
      * @uses   Core\Helpers\File
      *
      * @return boolean
@@ -36,17 +52,16 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
         if ($expire) {
             $expire = time() + $expire;
         }
+
         $content = array($expire, $value);
 
-        return File::putContents(self::storagePath() . self::generateName($key), json_encode($content));
+        return File::putContents($this->storagePath() . self::generateName($key), json_encode($content));
     }
 
     /**
      * Fetches stored value by key.
      *
      * @param string $key Cache key.
-     *
-     * @access public
      *
      * @return mixed
      */
@@ -69,6 +84,7 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
             try {
                 File::delete($file);
             } catch (\Exception $e) {
+                // Do nothing.
             }
 
             return null;
@@ -86,8 +102,9 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
      */
     public function exists($key)
     {
-        $file = self::storagePath() . self::generateName($key);
+        $file = $this->storagePath() . self::generateName($key);
         $file = File::getFullPath($file);
+
         return is_file($file);
     }
 
@@ -100,11 +117,11 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
      */
     public function remove($key)
     {
-        $file = self::storagePath() . self::generateName($key);
+        $file = $this->storagePath() . self::generateName($key);
+
         try {
             return File::delete($file);
         } catch (\Exception $e) {
-            var_log($e->getMessage());
             return false;
         }
     }
@@ -114,7 +131,6 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
      *
      * @param string $key Cache key.
      *
-     * @access private
      * @static
      *
      * @return string
@@ -127,13 +143,10 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
     /**
      * Generates storage path.
      *
-     * @access private
-     * @static
-     *
      * @return string
      */
-    private static function storagePath()
+    private function storagePath()
     {
-        return Core\Config()->paths('tmp') . 'cache' . DIRECTORY_SEPARATOR;
+        return $this->storagePath . 'cache' . DIRECTORY_SEPARATOR;
     }
 }

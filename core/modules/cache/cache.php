@@ -12,6 +12,7 @@
 namespace Core\Modules\Cache;
 
 use Core;
+use Core\Modules\DB;
 
 /**
  * Wrapper for caching data.
@@ -19,32 +20,22 @@ use Core;
 final class Cache
 {
     /**
-     * Reference to the current instance of the Cache object.
-     *
-     * @var Cache
-     * @access private
-     * @static
-     */
-    private static $instance = null;
-
-    /**
      * Reference to the current adapter of the Cache object.
      *
-     * @var mixed
-     * @access private
+     * @var Core\Modules\Cache\Interfaces\Adapter
      */
     private $adapter = null;
 
     /**
      * Cache constructor.
      *
-     * @param string $adapter Cache Adapter.
+     * @param string $adapter  Cache Adapter.
+     * @param array  $settings Configuration settings.
      *
-     * @access private
      * @throws \DomainException          Not supported Cache adapter.
      * @throws \InvalidArgumentException Not compatible Cache adapter type.
      */
-    private function __construct($adapter)
+    public function __construct($adapter, array $settings)
     {
         if (!class_exists($adapter)) {
             throw new \DomainException('Not supported Cache adapter type: ' . $adapter);
@@ -54,44 +45,7 @@ final class Cache
             throw new \InvalidArgumentException('Not compatible Cache adapter type: ' . $adapter);
         }
 
-        $this->adapter = new $adapter;
-    }
-
-    /**
-     * Cloning of Cache is disallowed.
-     *
-     * @access public
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        trigger_error(__CLASS__ . ' cannot be cloned! It is a singleton.', E_USER_ERROR);
-    }
-
-    /**
-     * Returns an instance of the Cache object.
-     *
-     * @param string $adapter Adapter name.
-     *
-     * @access public
-     * @static
-     * @final
-     * @uses   Core\Registry()
-     *
-     * @return Cache
-     */
-    final public static function getInstance($adapter)
-    {
-        if (null === self::$instance) {
-            $adapter = 'Core\Modules\Cache\Adapters\\' . $adapter;
-
-            self::$instance = new Cache($adapter);
-
-            Core\Registry()->set('cache', self::$instance);
-        }
-
-        return self::$instance;
+        $this->adapter = new $adapter($settings);
     }
 
     /**
@@ -146,5 +100,15 @@ final class Cache
     public function remove($key)
     {
         return $this->adapter->remove($key);
+    }
+
+    /**
+     * Retrieve the current adapter instance.
+     *
+     * @return Interfaces\Adapter
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
     }
 }

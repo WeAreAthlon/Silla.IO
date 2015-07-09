@@ -15,7 +15,7 @@ use Core;
 use Core\Modules\Session\Interfaces;
 
 /**
- * DB session handler class defintion.
+ * DB session handler class definition.
  */
 final class DB implements Interfaces\Adapter
 {

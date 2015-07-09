@@ -11,11 +11,20 @@
 
 namespace Core\Modules\Cache\Interfaces;
 
+use Core;
+
 /**
  * Cache Adapter Interface.
  */
 interface Adapter
 {
+    /**
+     * Constructor.
+     *
+     * @param array $settings Configuration settings.
+     */
+    public function __construct(array $settings);
+
     /**
      * Stores value by key.
      *

@@ -17,15 +17,6 @@ namespace Core\Modules\Registry;
 final class Registry
 {
     /**
-     * Reference to the current instance of the Registry object.
-     *
-     * @var object
-     * @access private
-     * @static
-     */
-    private static $instance = null;
-
-    /**
      * Keeps all object references.
      *
      * @var array
@@ -33,45 +24,6 @@ final class Registry
      * @access private
      */
     private $store = array();
-
-    /**
-     * Constructor, does nothing.
-     *
-     * @access private
-     */
-    private function __construct()
-    {
-    }
-
-    /**
-     * Cloning of Registry is disallowed.
-     *
-     * @access public
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        trigger_error(__CLASS__ . ' cannot be cloned! It is a singleton.', E_USER_ERROR);
-    }
-
-    /**
-     * Returns an instance of the registry object.
-     *
-     * @access public
-     * @static
-     * @final
-     *
-     * @return Registry
-     */
-    final public static function getInstance()
-    {
-        if (null === self::$instance) {
-            self::$instance = new Registry();
-        }
-
-        return self::$instance;
-    }
 
     /**
      * Magic method. Alias of set().
