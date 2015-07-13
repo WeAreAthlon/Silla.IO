@@ -133,4 +133,30 @@ class Configuration extends Core\Base\Configuration
         'public_key'  => '6LfSevQSAAAAAHUbl-gTGwQHi4C9UW219V0Nn6J5',
         'private_key' => '6LfSevQSAAAAAB6H3f9OznBVUGBp0iMMZWX2OSFH',
     );
+
+    /**
+     * Setup environment specific configuration settings.
+     *
+     * @return void
+     */
+    public static function setup()
+    {
+        /* Error reporting */
+        error_reporting(E_ALL ^ E_NOTICE);
+        ini_set('display_errors', 'Off');
+        ini_set('log_errors', 'On');
+        ini_set('error_log', 'temp/errors.log');
+
+        /* Encoding */
+        mb_internal_encoding('utf-8');
+
+        /* Timezone */
+        date_default_timezone_set('UTC');
+
+        /* Locale */
+        setlocale(LC_ALL, 'en_US.utf8');
+
+        /* Memory Limit */
+        /* ini_set('memory_limit','128M'); */
+    }
 }

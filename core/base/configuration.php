@@ -239,26 +239,34 @@ abstract class Configuration
     private $MODE = array();
 
     /**
+     * @var array $context Configuration context.
+     */
+    private $context = array();
+
+    /**
      * Constructor. Setup all variables values.
      *
-     * @param string $environment Execution environment name.
-     * @param array  $context     Execution context.
+     * @param array $context Execution context.
      */
-    public function __construct($environment, array $context)
+    public function __construct(array $context)
     {
+        static::setup();
+
         $current_dir = dirname(dirname(realpath(__DIR__)));
+
+        $this->context = $context;
 
         $this->PATHS['root'] = $current_dir . DIRECTORY_SEPARATOR;
 
-        if (!isset($context['CONTEXT_DOCUMENT_ROOT'])) {
+        if (!isset($context['_SERVER']['CONTEXT_DOCUMENT_ROOT'])) {
             $this->URLS['relative'] = str_replace(
                 '\\',
                 '/',
-                str_replace(realpath($context['DOCUMENT_ROOT']), '', $current_dir . '/')
+                str_replace(realpath($context['_SERVER']['DOCUMENT_ROOT']), '', $current_dir . '/')
             );
         } else {
-            $this->URLS['relative'] = $context['CONTEXT_PREFIX'] . str_replace(
-                realpath($context['CONTEXT_DOCUMENT_ROOT']),
+            $this->URLS['relative'] = $context['_SERVER']['CONTEXT_PREFIX'] . str_replace(
+                realpath($context['_SERVER']['CONTEXT_DOCUMENT_ROOT']),
                 '',
                 $current_dir . '/'
             );
@@ -270,16 +278,17 @@ abstract class Configuration
         $is_SSL = Core\Utils::httpRequestIsSsl();
         $port = null;
 
-        if (isset($context['SERVER_PORT'])) {
-            $port = in_array($context['SERVER_PORT'], array('80', '443', true)) ? null : $context['SERVER_PORT'];
+        if (isset($context['_SERVER']['SERVER_PORT'])) {
+            $port = in_array($context['_SERVER']['SERVER_PORT'], array('80', '443', true)) ?
+                null : $context['_SERVER']['SERVER_PORT'];
         }
 
         $this->URLS['protocol'] = 'http' . ($is_SSL ? 's' : '');
         $this->URLS['full']     = null;
 
-        if (isset($context['SERVER_NAME'])) {
+        if (isset($context['_SERVER']['SERVER_NAME'])) {
             $this->URLS['full'] = $this->URLS['protocol'] . '://' .
-                $context['SERVER_NAME'] . $port . $this->URLS['relative'];
+                $context['_SERVER']['SERVER_NAME'] . $port . $this->URLS['relative'];
         }
 
         $this->PATHS['vendor'] = $this->PATHS['root'] . 'vendor' . DIRECTORY_SEPARATOR;
@@ -292,7 +301,7 @@ abstract class Configuration
         $this->PATHS['views']['cache']    = $this->PATHS['cache'] . 'views'    . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['resources']= $this->PATHS['resources'];
         $this->PATHS['views']['config']   = $this->PATHS['root']  .
-            'configurations' . DIRECTORY_SEPARATOR . $environment .
+            'configurations' . DIRECTORY_SEPARATOR . 'development' .
             DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
 
         /* Process modes */
@@ -338,7 +347,7 @@ abstract class Configuration
      *
      * @throws \OutOfBoundsException When requesting a none existing path.
      *
-     * @return mixed
+     * @return string|array All pats or a specific one.
      */
     final public function paths($name = null)
     {
@@ -360,7 +369,7 @@ abstract class Configuration
      *
      * @throws \OutOfBoundsException When requesting a none existing URL.
      *
-     * @return mixed
+     * @return string|array All urls or a specific one.
      */
     final public function urls($name = null)
     {
@@ -380,7 +389,7 @@ abstract class Configuration
      *
      * @param string $name Name of the mode.
      *
-     * @return array
+     * @return array Array of modes.
      */
     final public function modes($name = '')
     {
@@ -400,7 +409,7 @@ abstract class Configuration
      *
      * @param string $segment Segment name of the mode.
      *
-     * @return mixed
+     * @return string|array Mode array or a mode segment.
      */
     final public function mode($segment = null)
     {
@@ -416,7 +425,7 @@ abstract class Configuration
      *
      * @param array $modes Array of Silla.IO modes to setup.
      *
-     * @return array
+     * @return array Mode array.
      */
     final protected function setupModes(array $modes)
     {
@@ -430,5 +439,38 @@ abstract class Configuration
         }
 
         return $modes;
+    }
+
+    /**
+     * Retrieve configuration context.
+     *
+     * @return array Configuration context representation as array.
+     */
+    final public function context()
+    {
+        return $this->context;
+    }
+
+    /**
+     * Setup environment specific configuration settings.
+     *
+     * @return void
+     */
+    public static function setup()
+    {
+        /* Error reporting */
+        error_reporting(E_ALL ^ E_NOTICE);
+        ini_set('display_errors', 'Off');
+        ini_set('log_errors', 'On');
+        ini_set('error_log', 'temp/errors.log');
+
+        /* Encoding */
+        mb_internal_encoding('utf-8');
+
+        /* Timezone */
+        date_default_timezone_set('UTC');
+
+        /* Locale */
+        setlocale(LC_ALL, 'en_US.utf8');
     }
 }

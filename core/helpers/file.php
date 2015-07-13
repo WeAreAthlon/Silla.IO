@@ -228,9 +228,9 @@ class File
      *
      * @return integer Number of bytes written to the file, or FALSE on failure.
      */
-    public static function putContents($path, $content)
+    public function putContents($path, $content)
     {
-        $path = self::getFullPath($path);
+        $path = $this->getFullPath($path);
 
         if (!is_dir(dirname($path))) {
             Directory::create(dirname($path));
@@ -249,9 +249,9 @@ class File
      *
      * @return string The read data.
      */
-    public static function getContents($path)
+    public function getContents($path)
     {
-        $path = self::getFullPath($path);
+        $path = $this->getFullPath($path);
 
         if (!is_file($path)) {
             throw new \InvalidArgumentException('Given path does not lead to a file.');
@@ -302,9 +302,9 @@ class File
      *
      * @return boolean Result of the operation.
      */
-    public static function delete($path)
+    public function delete($path)
     {
-        $path = self::getFullPath($path);
+        $path = $this->getFullPath($path);
 
         if (!is_file($path)) {
             throw new \InvalidArgumentException('Given path does not lead to a file.');
@@ -595,14 +595,12 @@ class File
      *
      * @param string $path Path to file.
      *
-     * @uses self::getFullPath To format path to file.
-     *
      * @return string Restricted path.
      */
-    public static function getRestrictedPath($path)
+    public function getRestrictedPath($path)
     {
         $path = str_replace('..', '', rtrim($path, '\/. '));
-        $path = self::getFullPath($path);
+        $path = $this->getFullPath($path);
 
         return $path;
     }
@@ -612,15 +610,10 @@ class File
      *
      * @param string $path File path.
      *
-     * @uses Core\Base\Configuration::paths To get root path of framework.
-     *
      * @return string Full path.
      */
-    public static function getFullPath($path)
+    public function getFullPath($path)
     {
-        $path = trim(str_replace(Core\Config()->paths('root'), '', $path), '\/');
-        $path = Core\Config()->paths('root') . $path;
-
-        return $path;
+        return $this->root . trim(str_replace($this->root, '', $path), '\/');
     }
 }

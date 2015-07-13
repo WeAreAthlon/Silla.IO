@@ -86,4 +86,27 @@ class Configuration extends Configurations\Staging\Configuration
         'encryption_key' => '25c6c7ff35bd13b0ff9979b151f2136c',
         'crypt_vector'   => 'dasn312321nssa1k',
     );
+
+    /**
+     * Setup environment specific configuration settings.
+     *
+     * @return void
+     */
+    public static function setup()
+    {
+        /* Error reporting */
+        error_reporting(E_ALL|E_STRICT);
+        ini_set('display_errors', 'On');
+        ini_set('log_errors', 'On');
+        ini_set('error_log', 'temp/errors.log');
+
+        /* Encoding */
+        mb_internal_encoding('utf-8');
+
+        /* Timezone */
+        date_default_timezone_set('UTC');
+
+        /* Locale */
+        setlocale(LC_ALL, 'en_US.utf8');
+    }
 }

@@ -70,6 +70,8 @@ abstract class Controller
     protected $cachingOutput = array();
 
     /**
+     * Application instance.
+     *
      * @var Core\Silla
      */
     protected $environment;
@@ -83,6 +85,7 @@ abstract class Controller
      */
     public function __construct(Core\Silla $environment)
     {
+
         $this->environment = $environment;
         $viewsPaths = $environment->configuration()->paths('views');
 
@@ -104,6 +107,7 @@ abstract class Controller
         $this->rendererAdapter =
             $this->rendererAdapter ? $this->rendererAdapter : $environment->configuration()->RENDER['adapter'];
 
+
         if ($this->rendererAdapter) {
             $this->renderer = new Core\Modules\Render\Render(
                 $this->rendererAdapter,
@@ -123,6 +127,8 @@ abstract class Controller
                 $this->renderer->setView($defaultView);
             }
         }
+
+
     }
 
     /**

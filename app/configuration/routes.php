@@ -30,7 +30,6 @@ final class Routes extends Base\Routes
      */
     public function setup()
     {
-        $this->routes->addGet('home', '/');
         $this->routes->addGet(null, '/{controller}/{action}');
     }
 }

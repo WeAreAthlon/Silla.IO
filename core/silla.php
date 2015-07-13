@@ -19,13 +19,6 @@ use Aura;
 final class Silla
 {
     /**
-     * Execution environment name.
-     *
-     * @var string
-     */
-    protected $environment;
-
-    /**
      * Execution configuration instance.
      *
      * @var Base\Configuration
@@ -98,10 +91,9 @@ final class Silla
     /**
      * Constructor. Creates a Silla.IO instance.
      *
-     * @param string $environment Environment name.
-     * @param array $context Execution context.
+     * @param Base\Configuration $configuration Configuration instance name.
      */
-    public function __construct($environment, array $context)
+    public function __construct(Base\Configuration $configuration)
     {
         /*
          * Registers vendors auto-loaders.
@@ -119,41 +111,14 @@ final class Silla
 
         chdir($this->cwd);
 
-        /* Hook the default auto-load class function. */
-        spl_autoload_extensions('.php');
-        spl_autoload_register('spl_autoload');
-
-        $this->context     = $context;
-        $this->environment = $environment;
-
-        $this->loadConfiguration();
+        $this->context = $configuration->context();
+        $this->configuration = $configuration;
 
         $router_factory = new Aura\Router\RouterFactory;
         $this->router = $router_factory->newInstance();
 
         $this->registry = new Modules\Registry\Registry;
         $this->registry->set('locale', $this->configuration()->I18N['default']);
-
-        $this->session = new Modules\Session\Session(
-            $this->configuration->SESSION['adapter'],
-            $this->configuration->urls('relative'),
-            $this->configuration->urls('protocol'),
-            $this->configuration->SESSION,
-            $context
-        );
-
-        $this->registry->set('session', $this->session);
-
-        $this->cache = new Modules\Cache\Cache(
-            $this->configuration->CACHE['adapter'],
-            $this->configuration->CACHE
-        );
-
-//        $this->db = new Modules\DB\DB($this->configuration->DB, $this->cache, $this->configuration->CACHE['db_schema']);
-//
-//        if ($this->cache->getAdapter() instanceof Modules\Cache\Adapters\Database) {
-//            $this->cache->getAdapter()->setDatabaseStorage($this->db->getAdapter());
-//        }
 
         $this->response = new Modules\Http\Response;
     }
@@ -169,19 +134,27 @@ final class Silla
     {
         $path = $this->normalizeQueryString($path);
         $mode = $this->getMode($path);
+
         $this->configuration->setMode($mode);
 
         $namespace = $mode['namespace'];
+//
+//        if ($this->configuration->CACHE['routes']) {
+//            $routes = $this->cache->fetch('routes');
+//        } else {
+            $routesConfiguration = "\\{$namespace}\\Configuration\\Routes";
+            $routesConfiguration = new $routesConfiguration();
+            $routes = $routesConfiguration->routes();
+            //$this->cache->store('routes', $routes);
+        //}
 
-        $routesConfiguration = "\\{$namespace}\\Configuration\\Routes";
-        $routesConfiguration = new $routesConfiguration();
-
-        $this->router->setRoutes($routesConfiguration->routes());
+        $this->router->setRoutes($routes);
         $route = $this->router->match(rtrim($path, '/'), $this->context['_SERVER']);
 
         if ($route) {
             $request = new Modules\Http\Request($mode, $route->params, $this->context);
             $this->validateRequest($request);
+
             $this->request = $request;
 
             $controller = "\\{$namespace}\\Controllers\\" . $request->controller();
@@ -244,6 +217,17 @@ final class Silla
      */
     public function session()
     {
+        if (!$this->session) {
+            $this->session = new Modules\Session\Session(
+                $this->configuration->SESSION['adapter'],
+                $this->configuration->urls('relative'),
+                $this->configuration->urls('protocol'),
+                $this->configuration->SESSION,
+                $this->context
+            );
+
+        }
+
         return $this->session;
     }
 
@@ -274,33 +258,27 @@ final class Silla
      */
     public function cache()
     {
+        if (!$this->cache) {
+            $this->cache = new Modules\Cache\Cache(
+                $this->configuration->CACHE['adapter'],
+                $this->configuration->CACHE
+            );
+
+            if ($this->cache->getAdapter() instanceof Modules\Cache\Adapters\Database) {
+                $this->cache->getAdapter()->setDatabaseStorage($this->db()->getAdapter());
+            }
+        }
+
         return $this->cache;
     }
 
-    /**
-     * Loads configuration file.
-     *
-     * @throws \Exception Cannot load environment configuration file.
-     *
-     * @return void
-     */
-    private function loadConfiguration()
+    public function db()
     {
-        $configurationEnvironmentFile = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'configurations' .
-            DIRECTORY_SEPARATOR . $this->environment . DIRECTORY_SEPARATOR . 'environment.php';
-
-        if (file_exists($configurationEnvironmentFile)) {
-            require $configurationEnvironmentFile;
-        } else {
-            throw new \Exception('Cannot load environment configuration file: ' . $configurationEnvironmentFile);
+        if (!$this->db) {
+            $this->db = new Modules\DB\DB($this->configuration->DB, $this->cache, $this->configuration->CACHE['db_schema']);
         }
 
-        if (class_exists('\Configurations\\' . $this->environment . '\\Configuration')) {
-            $configurationClass = 'Configurations\\' . $this->environment . '\\Configuration';
-            $this->configuration = new $configurationClass($this->environment, $this->context['_SERVER']);
-        } else {
-            throw new \Exception('Cannot load environment configuration class: ' . $configurationEnvironmentFile);
-        }
+        return $this->db;
     }
 
     /**
@@ -328,16 +306,18 @@ final class Silla
      */
     private function validateRequest(Modules\Http\Request $request)
     {
-        if ($this->session->get('_token')) {
-            $request->setToken($this->session->get('_token'));
-        } else {
-            $request->regenerateToken();
-            $this->session->set('_token', $request->token());
-        }
+        if (in_array($request->method(), array('post', 'put', 'delete'))) {
+            if ($this->session()->get('_token')) {
+                $request->setToken($this->session->get('_token'));
+            } else {
+                $request->regenerateToken();
+                $this->session()->set('_token', $request->token());
+            }
 
-        if (!$request->isValid()) {
-            $this->response->setHttpResponseCode(403);
-            throw new \InvalidArgumentException('Request token does not match.');
+            if (!$request->isValid()) {
+                $this->response->setHttpResponseCode(403);
+                throw new \InvalidArgumentException('Request token does not match.');
+            }
         }
     }
 
@@ -378,5 +358,25 @@ final class Silla
         }
 
         return $path;
+    }
+
+    /**
+     * Retrieves configuration files.
+     *
+     * @param string $environment Execution environment name.
+     *
+     * @throws \Exception Cannot load environment configuration file.
+     *
+     * @return string Configuration class name.
+     */
+    public static function getConfigurationClass($environment)
+    {
+        $configurationClass = '\Configurations\\' . $environment . '\\Configuration';
+
+        if (!class_exists($configurationClass)) {
+            throw new \Exception('Cannot load environment configuration class: ' . $configurationClass);
+        }
+
+        return $configurationClass;
     }
 }
