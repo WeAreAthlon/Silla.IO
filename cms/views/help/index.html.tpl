@@ -5,4 +5,4 @@
 </h1>
 <p class="text-thin">{$_labels.modules.$_controller.desc|default:''}</p>
 {/capture}
-<div class="content help">{$content}</div>
+<div class="content help">{$content.formatted}</div>

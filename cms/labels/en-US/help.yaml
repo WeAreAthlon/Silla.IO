@@ -23,8 +23,8 @@ attributes:
         readonly: true
       content:
         title   : Content of the setting
-        type    : textarea
-        desc    : <a class="btn btn-link help-link" data-help-link="https://daringfireball.net/projects/markdown/syntax">Markdown supported</a>
+        type    : pattern
+        desc    : Text formatting supportes <a class="btn btn-link help-link no-padding-left" data-help-link="https://daringfireball.net/projects/markdown/syntax">Parsedown</a>
         rows    : 15
         disabled: false
         icon    : user

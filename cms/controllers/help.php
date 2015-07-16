@@ -66,10 +66,9 @@ class Help extends CMS
      */
     public function index(Request $request)
     {
-        $resource   = $this->model;
-        $resource   = $resource::find()->where('name = "help"')->first();
-        $parsedown  = new Parsedown();
-        $this->content = $parsedown->text($resource->content);
+        $resource       = $this->model;
+        $resource       = $resource::find()->where('name = "help"')->first();
+        $this->content  = $resource->content;
     }
 
     /**

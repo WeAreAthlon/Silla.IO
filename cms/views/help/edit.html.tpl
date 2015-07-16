@@ -26,7 +26,7 @@
                 </span>
             </legend>
             <p class="muted text-thin help-block text-right">{$_labels.attributes.write.fields.content.desc|default:''}</p>
-            {include file='_shared/entities/types/textarea/form.html.tpl' attr=$attr}
+            {include file='_shared/entities/types/pattern/form.html.tpl' attr=$attr}
         </div>
         <div role="tabpanel" class="tab-pane fade action-preview" id="help-preview">
             <legend class="no-border no-margin-bottom font-size-normal">

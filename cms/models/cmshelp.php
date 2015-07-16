@@ -18,7 +18,7 @@ use Core\Modules\DB\Decorators\Interfaces;
 /**
  * Class CMSHelp definition.
  */
-class CMSHelp extends Base\Model implements Interfaces\TimezoneAwareness
+class CMSHelp extends Base\Model implements Interfaces\TimezoneAwareness, Interfaces\Formatting
 {
     /**
      * Table storage name.
@@ -26,4 +26,16 @@ class CMSHelp extends Base\Model implements Interfaces\TimezoneAwareness
      * @var string
      */
     public static $tableName = 'cms_settings';
+
+    /**
+     * Formalize fields container.
+     *
+     * @static
+     *
+     * @return array
+     */
+    public static function formalizeFields()
+    {
+        return array('content');
+    }
 }

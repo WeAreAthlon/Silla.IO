@@ -61,17 +61,16 @@ abstract class Serialization implements Interfaces\Decorator
     }
 
     /**
-     * Un-serialized the fields.
+     * Un-serializes the fields.
      *
      * @param Base\Model $resource Currently processed resource.
-     * @param array      $params   Additional parameters.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function unserialize(Base\Model $resource, array $params = array())
+    public static function unserialize(Base\Model $resource)
     {
         foreach (self::$serializedFields as $field => $type) {
             switch ($type) {
@@ -91,7 +90,7 @@ abstract class Serialization implements Interfaces\Decorator
     }
 
     /**
-     * Applies timezone effect.
+     * Serializes the fields.
      *
      * @param Base\Model $resource Currently processed resource.
      *
