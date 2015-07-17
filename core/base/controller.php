@@ -23,7 +23,6 @@ abstract class Controller
      * Render instance.
      *
      * @var Core\Modules\Render\Render
-     * @access public
      */
     public $renderer;
 
@@ -31,7 +30,6 @@ abstract class Controller
      * Renderer adapter name.
      *
      * @var string
-     * @access public
      */
     public $rendererAdapter;
 
@@ -39,7 +37,6 @@ abstract class Controller
      * Labels name.
      *
      * @var string|bool
-     * @access public
      */
     public $labels;
 
@@ -47,7 +44,6 @@ abstract class Controller
      * Main Data Model name.
      *
      * @var string
-     * @access protected
      */
     protected $model;
 
@@ -55,7 +51,6 @@ abstract class Controller
      * Controller meta data.
      *
      * @var array
-     * @access protected
      */
     protected $meta = array();
 
@@ -65,14 +60,13 @@ abstract class Controller
      * Example format: [action:string -> lifetime:integer(seconds)]
      *
      * @var array
-     * @access protected
      */
     protected $cachingOutput = array();
 
     /**
      * Application instance.
      *
-     * @var Core\Silla
+     * @var Core\Silla Silla.IO application instance.
      */
     protected $environment;
 
@@ -80,8 +74,6 @@ abstract class Controller
      * Base Controller Constructor definition.
      *
      * @param Core\Silla $environment Silla.IO application instance.
-     *
-     * @access public
      */
     public function __construct(Core\Silla $environment)
     {
@@ -102,8 +94,7 @@ abstract class Controller
             ),
         );
 
-        $this->labels          =
-            $this->labels ? $this->labels : $this->meta['controller'];
+        $this->labels = $this->labels ? $this->labels : $this->meta['controller'];
         $this->rendererAdapter =
             $this->rendererAdapter ? $this->rendererAdapter : $environment->configuration()->RENDER['adapter'];
 
@@ -114,7 +105,7 @@ abstract class Controller
                 $environment->configuration()->paths('views')
             );
 
-            $this->setOutputDefaultHeaders();
+            self::setOutputDefaultHeaders($environment->response());
 
             $defaultLayout = 'default';
             $defaultView   = $this->meta['controller'] . DIRECTORY_SEPARATOR . $this->meta['action'];
@@ -174,61 +165,65 @@ abstract class Controller
     }
 
     /**
+     * Global 404 page.
+     *
+     * Displayed when a requested controller does not exist.
+     *
+     * @param Core\Silla           $environment Silla.IO application instance.
+     * @param Modules\Http\Request $request Request object.
+     *
+     * @return Modules\Http\Response $response Response object.
+     */
+    public static function resourceNotFound(Core\Silla $environment, Modules\Http\Request $request)
+    {
+        $response = new Core\Modules\Http\Response;
+        $response->setHttpResponseCode(404);
+
+        if ($environment->configuration()->RENDER['adapter']) {
+            $renderer = new Core\Modules\Render\Render(
+                $environment->configuration()->RENDER['adapter'],
+                $environment->configuration()->paths('views')
+            );
+
+            self::setOutputDefaultHeaders($response);
+            $renderer = self::assignVariablesToRender($environment, $renderer);
+            $renderer->set('_controller', 'base');
+            $renderer->set('_action', '404');
+
+            $helper = new Core\Helpers\YAML($environment);
+
+            $renderer->set('_labels', $helper->getAll('globals'));
+            $renderer->setLayout('404');
+            $renderer->setView(null);
+            $output = $renderer->render();
+
+            $response->setContent($output);
+        }
+
+        return $response;
+    }
+
+    /**
      * Handles 404 pages.
      *
      * Displayed when a requested controller action does not exist.
      *
      * @param Modules\Http\Request $request Request object.
      *
-     * @access public
-     *
      * @return void
      */
     public function actionNotFound(Modules\Http\Request $request)
     {
         if ($this->renderer) {
+            $helper = new Core\Helpers\YAML($this->environment);
+
             $this->renderer->setLayout('404');
             $this->renderer->setView(null);
-            $this->renderer->set('_controller', 'base');
-            $this->renderer->set('_action', '404');
-            $this->renderer->set('_labels', Core\Helpers\YAML::getAll('globals'));
+            $this->renderer->set('_controller', $this->getControllerName());
+            $this->renderer->set('_action', 'actionNotFound');
+            $this->renderer->set('_labels', $helper->getAll('globals'));
 
             $this->environment->response()->setHttpResponseCode(404);
-        }
-    }
-
-    /**
-     * Global 404 page.
-     *
-     * Displayed when a requested controller does not exist.
-     *
-     * @param Modules\Http\Request $request Request object.
-     *
-     * @static
-     * @access public
-     * @final
-     *
-     * @return void
-     */
-    final public static function resourceNotFound(Modules\Http\Request $request)
-    {
-        if (Core\Config()->RENDER['adapter']) {
-            $renderer = new Core\Modules\Render\Render(
-                'Core\Modules\Render\Adapters\\' . Core\Config()->RENDER['adapter']
-            );
-
-            self::setOutputDefaultHeaders();
-            $renderer = self::assignVariablesToRender($renderer);
-            $renderer->set('_controller', 'base');
-            $renderer->set('_action', '404');
-            $renderer->set('_labels', Core\Helpers\YAML::getAll('globals'));
-            $renderer->setLayout('404');
-
-            $renderer->setView(null);
-            $output = $renderer->render();
-
-            Core\Router()->response->setHttpResponseCode(404);
-            Core\Router()->response->setContent($output);
         }
     }
 
@@ -248,11 +243,13 @@ abstract class Controller
     /**
      * Set default response HTTP headers.
      *
+     * @param Modules\Http\Response $response Response instance.
+     *
      * @return void
      */
-    protected function setOutputDefaultHeaders()
+    protected static function setOutputDefaultHeaders(Modules\Http\Response $response)
     {
-        $this->environment->response()->addHeaders(array(
+        $response->addHeaders(array(
             'X-Powered-By: Silla.IO',
             'X-Frame-Options: SAMEORIGIN',
         ));
@@ -264,7 +261,6 @@ abstract class Controller
      * @param array $methods Array with method names to be executed.
      * @param array $scope   Execution scope conditions.
      *
-     * @access protected
      * @final
      *
      * @return void
@@ -291,7 +287,6 @@ abstract class Controller
      * @param array $methods Array with method names to be executed.
      * @param array $scope   Execution scope conditions.
      *
-     * @access protected
      * @final
      *
      * @return void
@@ -315,7 +310,6 @@ abstract class Controller
     /**
      * Gets current controller name.
      *
-     * @access protected
      * @final
      *
      * @return string
@@ -328,7 +322,6 @@ abstract class Controller
     /**
      * Gets current action name.
      *
-     * @access protected
      * @final
      *
      * @return string
@@ -341,7 +334,6 @@ abstract class Controller
     /**
      * Gets controller main model name.
      *
-     * @access private
      * @final
      *
      * @return string
@@ -356,8 +348,6 @@ abstract class Controller
      *
      * Manages static template caching. See see http://www.smarty.net/docs/en/caching.tpl
      *
-     * @access protected
-     *
      * @return void
      */
     protected function processOutput()
@@ -371,7 +361,6 @@ abstract class Controller
      *
      * @param string $name Name of the partial template for render.
      *
-     * @access protected
      * @final
      *
      * @return mixed
@@ -404,7 +393,6 @@ abstract class Controller
      *
      * @param string $action Current action.
      *
-     * @access private
      * @throws \BadMethodCallException When specifying non-existing method.
      *
      * @return void
@@ -443,7 +431,6 @@ abstract class Controller
      *
      * @param string $action Current action.
      *
-     * @access private
      * @throws \BadMethodCallException When specifying non-existing method.
      *
      * @return void
@@ -478,8 +465,6 @@ abstract class Controller
     /**
      * Load labels for the controller.
      *
-     * @access private
-     *
      * @return array
      */
     private function loadLabels()
@@ -508,14 +493,13 @@ abstract class Controller
     /**
      * Assign easy to use template vars.
      *
-     * @access private
      * @see    get_object_vars()
      *
      * @return void
      */
     private function assignContentVariables()
     {
-        $this->renderer = self::assignVariablesToRender($this->renderer);
+        $this->renderer = self::assignVariablesToRender($this->environment, $this->renderer);
         $this->renderer->set('_controller', $this->meta['controller']);
         $this->renderer->set('_action', $this->meta['action']);
 
@@ -531,6 +515,7 @@ abstract class Controller
             $locals['rendererAdapter'],
             $locals['meta'],
             $locals['labels'],
+            $locals['environment'],
             $locals['cachingOutput']
         );
 
@@ -542,22 +527,23 @@ abstract class Controller
     /**
      * Assigns common template engine vars.
      *
-     * @param Modules\Render\Render $renderer Render module object.
+     * @param Core\Silla            $environment Silla.IO application instance.
+     * @param Modules\Render\Render $renderer    Render module object.
      *
-     * @return Modules\Render\Render
+     * @return Modules\Render\Render The render object instance.
      */
-    private function assignVariablesToRender(Modules\Render\Render &$renderer)
+    private static function assignVariablesToRender(Core\Silla $environment, Modules\Render\Render &$renderer)
     {
-        $renderer->set('_mode', $this->environment->configuration()->paths('mode'));
-        $renderer->set('_registry', $this->environment->registry());
-        $renderer->set('_config', $this->environment->configuration());
-        $renderer->set('_session', $this->environment->session());
+        $renderer->set('_mode', $environment->configuration()->paths('mode'));
+        $renderer->set('_registry', $environment->registry());
+        $renderer->set('_config', $environment->configuration());
+        $renderer->set('_session', $environment->session());
         $renderer->set('_assets', $renderer->assets());
-        $renderer->set('_urls', $this->environment->configuration()->urls());
-        $renderer->set('_paths', $this->environment->configuration()->paths());
-        $renderer->set('_request', $this->environment->request());
-        $renderer->set('_get', $this->environment->request()->get());
-        $renderer->set('_post', $this->environment->request()->post());
+        $renderer->set('_urls', $environment->configuration()->urls());
+        $renderer->set('_paths', $environment->configuration()->paths());
+        $renderer->set('_request', $environment->request());
+        $renderer->set('_get', $environment->request()->get());
+        $renderer->set('_post', $environment->request()->post());
 
         return $renderer;
     }

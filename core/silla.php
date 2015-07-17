@@ -100,11 +100,6 @@ final class Silla
          */
         require_once dirname(__DIR__) . DIRECTORY_SEPARATOR .  'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-        /*
-         * Register debug functions.
-         */
-        require_once __DIR__ . DIRECTORY_SEPARATOR . 'debug.php';
-
         $this->verifyServerSoftware();
 
         $this->cwd = dirname(__DIR__);
@@ -149,7 +144,7 @@ final class Silla
         //}
 
         $this->router->setRoutes($routes);
-        $route = $this->router->match(rtrim($path, '/'), $this->context['_SERVER']);
+        $route = $this->router->match($path, $this->context['_SERVER']);
 
         if ($route) {
             $request = new Modules\Http\Request($mode, $route->params, $this->context);
@@ -172,9 +167,18 @@ final class Silla
                 $this->response->setContent($controller->renderer->getOutput());
                 $this->response->addHeader('Content-Type: ' . $controller->renderer->getOutputContentType());
             } else {
-                Base\Controller::resourceNotFound($request);
+                $this->response = Base\Controller::resourceNotFound($this, $this->request);
             }
+        } else {
+            $failure = $this->router->getFailedRoute();
 
+            if ($failure->failedMethod()) {
+               $this->response->setHttpResponseCode(405);
+            } elseif ($failure->failedAccept()) {
+                $this->response->setHttpResponseCode(406);
+            } else {
+                $this->response->setHttpResponseCode(500);
+            }
         }
 
         return $this->response;
