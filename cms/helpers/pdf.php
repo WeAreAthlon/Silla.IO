@@ -57,7 +57,7 @@ class PDF extends \TCPDF
     {
         parent::__construct();
 
-        $_path = Core\Config()->paths('vendor') . 'athlon' . DIRECTORY_SEPARATOR . 'fonts' . DIRECTORY_SEPARATOR;
+        $_path = Core\Config()->paths('resources') . 'fonts' . DIRECTORY_SEPARATOR;
 
         $this->AddFont('freeserif', '', $_path . 'freeserif.php');
         $this->AddFont('freeserif', 'B', $_path . 'freeserifb.php');

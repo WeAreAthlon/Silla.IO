@@ -96,7 +96,7 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
      */
     private static function applyTimezoneEffect(Base\Model $resource)
     {
-        foreach (self::$timezoneAwareFields as $datetime_field) {
+        foreach ($resource::timezoneAwareFields() as $datetime_field) {
             if ($resource->{$datetime_field}) {
                 $resource->{$datetime_field} = Helpers\DateTime::format($resource->{$datetime_field});
             }
@@ -115,7 +115,7 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
      */
     private static function removeTimezoneEffect(Base\Model $resource)
     {
-        foreach (self::$timezoneAwareFields as $datetime_field) {
+        foreach ($resource::timezoneAwareFields() as $datetime_field) {
             if ($resource->{$datetime_field}) {
                 $resource->{$datetime_field} = Helpers\DateTime::formatGmt($resource->{$datetime_field});
             }

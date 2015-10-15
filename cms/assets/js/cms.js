@@ -98,7 +98,9 @@ var CMS = {
             });
 
             /* Cancel buttons */
-            $('.cancel').on('click', function() { history.go(-1); });
+            $('.cancel').on('click', function() {
+                history.go(-1);
+            });
 
             $('.btn-file-remove').on('click', function() {
                var btn_wrapper = $(this).parent().parent();
@@ -108,8 +110,9 @@ var CMS = {
             });
 
             /* LightBox */
-            $('*[data-toggle="lightbox"]').one('click', function(event) {
-                event.preventDefault(); $(this).ekkoLightbox();
+            $(document.body).on('click',  '*[data-toggle="lightbox"]', function(e) {
+                e.preventDefault();
+                $(this).ekkoLightbox();
             });
 
             /* Disable form submit button */

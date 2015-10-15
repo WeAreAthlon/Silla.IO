@@ -794,7 +794,7 @@ abstract class Model
                         $this->errors[$field] = 'invalid_type';
                     }
 
-                    if (strlen($value) > $schema[$field]['length']) {
+                    if (mb_strlen($value) > $schema[$field]['length']) {
                         $this->errors[$field] = 'max_length_exceeded';
                     }
 

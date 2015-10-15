@@ -10,6 +10,11 @@
                 {append var='related_object_ids' value=$related_object->id}
             {/foreach}
             {html_object_options options=$related_obj->find() selected=$related_object_ids}
+            {if $related_object_ids}
+                {html_object_options options=$related_obj->find() selected=$related_object_ids}
+            {else}
+                {html_object_options options=$related_obj->find() selected=$smarty.post.{$attr.name}|default:[]}
+            {/if}
         {/if}
     {/if}
 </select>
