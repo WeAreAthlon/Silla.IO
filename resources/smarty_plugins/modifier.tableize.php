@@ -26,5 +26,5 @@ function smarty_modifier_tableize($string)
 {
     $inflector = Inflector::get();
 
-    return $inflector->pluralize($this->underscore($string));
+    return $inflector->pluralize($inflector->underscore($string));
 }
