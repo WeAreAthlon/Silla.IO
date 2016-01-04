@@ -781,7 +781,7 @@ abstract class Model
              * We are using this "( is_null($value) || '' === $value )", instead of just empty($field)
              * because if $field is 0, empty(0) is true, and we can't pass 0's to a NOT_null field
              */
-            if (($schema[$field]['is_null'] === 'NO') && (is_null($value) || '' === $value) &&
+            if (($schema[$field]['is_null'] === 'NO') && (is_null($value) || ('' === trim($value))) &&
                 empty($schema[$field]['default'])
             ) {
                 $this->errors[$field] = 'not_empty';
