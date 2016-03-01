@@ -14,7 +14,11 @@
 
 {* Show the assigned values *}
 {foreach from=$values item=value}
-    <span class="label label-default">{$value}</span>
+    {if $attributes.escape|default:true}
+        <span class="label label-default">{$value|escape}</span>
+    {else}
+        <span class="label label-default">{$value}</span>
+    {/if}
 {foreachelse}
     <em class="text-muted">{$_labels.general.never}</em>
 {/foreach}

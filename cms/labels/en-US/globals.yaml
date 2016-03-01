@@ -79,15 +79,15 @@ sections:
 
 errors:
   general          : The following errors have prevented the record from being saved
-  not_exists       : The selected user does not exist!
-  not_empty        : Cannot be empty value
-  invalid_format   : Invalid format
+  not_exists       : The selected resource does not exist!
+  not_empty        : Cannot be empty value.
+  invalid_format   : Invalid format.
   duplication      : Duplicated value, this value has already been used by the application.
-  invalid_url      : Invalid URL format
-  mismatch         : Mismatched values
-  invalid_type     : Incompatible value type
-  enum_no_match    : The value is not allowed
-  max_length_exceeded : The value exceeds the system limit
+  invalid_url      : Invalid URL format.
+  mismatch         : Mismatched values.
+  invalid_type     : Incompatible value type.
+  enum_no_match    : The value is not allowed.
+  max_length_exceeded : The value exceeds the system limit.
 
 status:
   "0" : 'No'
@@ -119,7 +119,7 @@ filtering:
   reset  : Reset the current filter
 
 datatable:
-  totals: Showing %d to %d of %d entries
+  totals: Showing %d to %d of %d entries.
 
 daterange:
   restriction: Date of creation
@@ -148,7 +148,7 @@ export:
 
 page_not_found:
   title: Resource cannot be found!
-  desc: The resource you are requesting does not exist
+  desc : The resource you are requesting does not exist.
 
 js:
   no_results: No results found
@@ -163,7 +163,7 @@ js:
     maxlength : 'Used %charsTyped% of %charsTotal% chars.'
   errors:
    general : General Server Error
-   access  : Permission denied
+   access  : Permission denied.
 
 credits:
   author: powered by

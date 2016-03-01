@@ -202,12 +202,10 @@ class CMS extends Core\Base\Resource
 
                 $mailForPasswordReset = array(
                     'from' => array(
-                        Core\Config()->MAILER['identity']['email'],
-                        Core\Config()->MAILER['identity']['name']
+                        Core\Config()->MAILER['identity']['email'] => Core\Config()->MAILER['identity']['name']
                     ),
                     'to' => array(
-                        $user->email,
-                        $user->name
+                        $user->email => $user->name
                     ),
                     'subject' => $mailLabels['reset']['subject'],
                     'content' => $this->getPartialOutput('cms/mails/password_reset'),

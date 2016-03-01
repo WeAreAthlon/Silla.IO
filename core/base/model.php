@@ -777,6 +777,9 @@ abstract class Model
                 continue;
             }
 
+            /* Trim spacing. */
+            $value = trim($value);
+
             /*
              * We are using this "( is_null($value) || '' === $value )", instead of just empty($field)
              * because if $field is 0, empty(0) is true, and we can't pass 0's to a NOT_null field
@@ -794,7 +797,7 @@ abstract class Model
                         $this->errors[$field] = 'invalid_type';
                     }
 
-                    if (strlen($value) > $schema[$field]['length']) {
+                    if (mb_strlen($value) > $schema[$field]['length']) {
                         $this->errors[$field] = 'max_length_exceeded';
                     }
 

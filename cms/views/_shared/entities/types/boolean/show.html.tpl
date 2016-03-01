@@ -1,0 +1,1 @@
+{$_labels.status[$resource->$field]}

@@ -22,7 +22,7 @@
     {/foreach}
     </dl>
     {/if}
-    {if $_action neq 'edit' or $flash.layout neq 'danger'}
+    {if $flash.layout neq 'danger'}
     <script>setTimeout(function() { document.getElementById('flash-message-close').click(); }, 3500);</script>
     {/if}
 </div>
