@@ -777,6 +777,9 @@ abstract class Model
                 continue;
             }
 
+            /* Trim spacing. */
+            $value = trim($value);
+
             /*
              * We are using this "( is_null($value) || '' === $value )", instead of just empty($field)
              * because if $field is 0, empty(0) is true, and we can't pass 0's to a NOT_null field
