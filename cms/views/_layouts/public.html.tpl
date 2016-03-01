@@ -10,7 +10,7 @@
     {assets source=$_assets.styles media="all"}
     <link href="{$_urls.assets}img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 </head>
-    <body>
+    <body data-controller="{$_controller}" data-action="{$_action}">
         <div class="container">
             <div class="content">
                 <img src="{$_urls.assets}img/logo.png" alt="{$_labels.title|escape}" class="img-circle logo">

@@ -52,12 +52,13 @@ modules:
     create  : Add new role
     edit    : Edit role
     hidden  : true
-  help:
+  cmshelp:
     title   : Help
-    desc    : User manual for working with the CMS
+    desc    : User manual for working with the CMS.
     icon    : flag
     index   : Index
-    edit    : Edit
+    create  : Create Help Page
+    edit    : Edit Help Page
     hidden  : true
 
 sections:
@@ -175,4 +176,4 @@ navigation_groups:
     modules:
       - users
       - userroles
-      - help
+      - cmshelp

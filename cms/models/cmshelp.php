@@ -1,6 +1,6 @@
 <?php
 /**
- * CMS Help Model.
+ * CMS Help Pages Model.
  *
  * @package    Silla.IO
  * @subpackage CMS\Models
@@ -16,7 +16,7 @@ use Core\Base;
 use Core\Modules\DB\Decorators\Interfaces;
 
 /**
- * Class CMSHelp definition.
+ * Class CMS Help Pages definition.
  */
 class CMSHelp extends Base\Model implements Interfaces\TimezoneAwareness, Interfaces\Formatting
 {
@@ -25,7 +25,7 @@ class CMSHelp extends Base\Model implements Interfaces\TimezoneAwareness, Interf
      *
      * @var string
      */
-    public static $tableName = 'cms_settings';
+    public static $tableName = 'cms_help';
 
     /**
      * Formalize fields container.

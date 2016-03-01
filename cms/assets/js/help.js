@@ -8,17 +8,17 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
-$(function(){
-    $('.help-link').on('click', function(){
-        window.open($(this).attr('data-help-link'), '_blank', 'width=400,scrollbars=yes');
-    });
-})
+$(function() {
+    $('.help-link').on('click', function(e) {
+        e.preventDefault();
 
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    if ($(e.target).parents('li').hasClass('help-preview')) {
-        var form = $(e.target).parents('form');
-        $.post(form.data('preview-action'), form.serialize(), function(response) {
-            $('.preview-content').html('').append(response).fadeIn();
+        window.open($(this).attr('href'), '_blank', 'width=600,scrollbars=yes');
+    });
+
+    $('a[data-section="preview"]').on('click', function() {
+        var content = $('textarea[name="content"]');
+        $.post(content.data('urlPreview'), {content: content.val()}, function(response) {
+            $('fieldset[data-section="preview"] .form-fields-wrapper').html('').append(response).fadeIn();
         });
-    }
+    });
 });

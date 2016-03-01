@@ -7,7 +7,7 @@
 {if not $attributes|default:false}
     {$attributes = []}
     {foreach from=$_labels.attributes item=section}
-        {$attributes = array_merge($attributes, $section.fields)}
+        {$attributes = array_merge($attributes, $section.fields|default:[])}
     {/foreach}
 {/if}
 <div class="data-table-wrapper row">

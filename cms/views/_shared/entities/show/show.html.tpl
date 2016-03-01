@@ -5,6 +5,7 @@
 {/if}
 
 {foreach from=$_labels.attributes key=section_key item=section}
+    {if $section.fields|default:false}
     {$section.serialize = $section.meta.serialize|default:false}
     <h3 class="no-margin-top text-thin"><i class="glyphicon glyphicon-{$section.meta.icon}"></i> {$section.meta.title}</h3>
     <table class="table table-striped">
@@ -50,6 +51,7 @@
         </tbody>
     </table>
     <hr />
+    {/if}
 {/foreach}
 
 {if "{$_controller}/_show/footer.html.tpl"|template_exists}
