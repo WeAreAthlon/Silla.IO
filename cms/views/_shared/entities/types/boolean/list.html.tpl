@@ -1,0 +1,1 @@
+<span class="glyphicon glyphicon-eye-{if $resource->$field}open{else}close{/if}" title="{$_labels.status[$resource->$field]|escape}"></span>

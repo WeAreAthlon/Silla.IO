@@ -6,15 +6,23 @@
 {if $relations.$field|default:false}
     {* If the field is part of a relation, assign the related resource title/name. *}
     {$property = $relations.$field.name}
-    {$value = $resource->$property()->title|default:$resource->$property()->name|default:''}
+    {if isset($attr.association_title)}
+        {$value = $resource->$property()->first()->{$attr.association_title}|default:''}
+    {else}
+        {$value = $resource->$property()->first()->title|default:$resource->$property()->first()->name|default:''}
+    {/if}
 {else}
-    {if $_labels.attributes.$field.value|default:[]}
+    {if $section.fields.$field.value|default:[]}
         {* The field is not part of a relation, so assign the available values. *}
-        {$value = $_labels.attributes.$field.value[$resource->$field]}
+        {$value = $section.fields.$field.value[$resource->$field]}
     {else}
         {$value = $resource->$field}
     {/if}
 {/if}
 
 {* Show the assigned value *}
-<em>{$value}</em>
+{if $section.fields.$field.escape|default:true}
+    <strong><em>{$value|escape|default:$_labels.general.none}</em></strong>
+{else}
+    <strong><em>{$value|default:$_labels.general.none}</em></strong>
+{/if}

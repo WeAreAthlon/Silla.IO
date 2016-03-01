@@ -14,7 +14,11 @@
             {if $relations.$field|default:false}
                 {* Show dropdown populated with all related resource values *}
                 {custom_class var=related_resource class=$relations.$field.class_name}
-                {html_object_options options=$related_resource->find() selected=$_get.filtering.$field|default:''}
+                {if isset($attributes.association_title)}
+                    {html_object_options options=$related_resource->find() selected=$_get.filtering.$field|default:'' obj_name=$attributes.association_title|default:'title'}
+                {else}
+                    {html_object_options options=$related_resource->find() selected=$_get.filtering.$field|default:''}
+                {/if}
             {/if}
         {/if}
     </select>
