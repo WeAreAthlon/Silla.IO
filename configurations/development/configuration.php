@@ -63,6 +63,30 @@ class Configuration extends Configurations\Staging\Configuration
     );
 
     /**
+     * @var (int|string)[] $MAILER Mailer configuration options.
+     *
+     * @example type        Type of the mailing infrastructure to use(Sendmail|SMTP).
+     * @example identity    Mailer identity signature.
+     * @example credentials Mailer service credentials.
+     */
+    public $MAILER = array(
+        'type' => 'Sendmail',
+        'debug' => true,
+        'identity' => array(
+            'name'  => 'Athlon Production',
+            'email' => 'hi@athlonproduction.com',
+        ),
+        'credentials' => array(
+            'smtp' => array(
+                'host' => 'localhost',
+                'port' => '25',
+                'user' => '',
+                'password' => '',
+            ),
+        ),
+    );
+
+    /**
      * @var (int|string)[] $DB DSN (Data source name).
      *
      * @example adapter        Adapter type (pdo_mysql|mysql|sqllite).

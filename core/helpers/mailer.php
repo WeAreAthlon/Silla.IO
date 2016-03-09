@@ -51,8 +51,7 @@ class Mailer
      */
     private static function processSendmail(array $params)
     {
-        /* PHPMailer with enabled exceptions. */
-        $mail = new \PHPMailer(true);
+        $mail = new \PHPMailer(Core\Config()->MAILER['debug']);
         $mail->IsSendmail();
 
         return self::processEmail($mail, $params);
@@ -71,8 +70,12 @@ class Mailer
      */
     private static function processSmtp(array $params, $auth = true)
     {
-        /* PHPMailer with enabled exceptions. */
-        $mail = new \PHPMailer(true);
+        /* Disable authentication if there is no valid SMTP user specified. */
+        if ($auth && !Core\Config()->MAILER['credentials']['smtp']['user']) {
+            $auth = false;
+        }
+
+        $mail = new \PHPMailer(Core\Config()->MAILER['debug']);
         $mail->IsSMTP();
 
         $mail->Host = Core\Config()->MAILER['credentials']['smtp']['host'];

@@ -86,6 +86,7 @@ class Configuration extends Core\Base\Configuration
      */
     public $MAILER = array(
         'type' => 'Sendmail',
+        'debug' => false,
         'identity' => array(
             'name'  => 'Athlon Production',
             'email' => 'hi@athlonproduction.com',
