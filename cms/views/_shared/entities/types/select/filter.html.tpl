@@ -5,15 +5,15 @@
             {* Show regular values from the entitity *}
             {html_options options=$attr.value selected=$_get.filtering.$field|default:''}
         {else}
-            {* Analyze filtering field relations *}
+            {* Analyze filtering field associations *}
             {custom_class var=current_model class=$model}
-            {foreach from=$current_model->belongsTo key=name item=relation}
-                {append var=relations value=array_merge($relation, ['name' => $name]) index=$relation.key}
+            {foreach from=$current_model->belongsTo key=name item=association}
+                {append var=associations value=array_merge($association, ['name' => $name]) index=$association.key}
             {/foreach}
 
-            {if $relations.$field|default:false}
+            {if $associations.$field|default:false}
                 {* Show dropdown populated with all related resource values *}
-                {custom_class var=related_resource class=$relations.$field.class_name}
+                {custom_class var=related_resource class=$associations.$field.class_name}
                 {if isset($attributes.association_title)}
                     {html_object_options options=$related_resource->find() selected=$_get.filtering.$field|default:'' obj_name=$attributes.association_title|default:'title'}
                 {else}

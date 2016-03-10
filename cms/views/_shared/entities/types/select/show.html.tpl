@@ -1,11 +1,11 @@
-{* Analyze resource belongsTo relations *}
-{foreach from=$resource->belongsTo key=name item=relation}
-    {append var=relations value=array_merge($relation, ['name' => $name]) index=$relation.key}
+{* Analyze resource belongsTo associations *}
+{foreach from=$resource->belongsTo key=name item=association}
+    {append var=associations value=array_merge($association, ['name' => $name]) index=$association.key}
 {/foreach}
 
-{if $relations.$field|default:false}
-    {* If the field is part of a relation, assign the related resource title/name. *}
-    {$property = $relations.$field.name}
+{if $associations.$field|default:false}
+    {* If the field is part of a association, assign the related resource title/name. *}
+    {$property = $associations.$field.name}
     {if isset($attr.association_title)}
         {$value = $resource->$property()->first()->{$attr.association_title}|default:''}
     {else}
@@ -13,7 +13,7 @@
     {/if}
 {else}
     {if $section.fields.$field.value|default:[]}
-        {* The field is not part of a relation, so assign the available values. *}
+        {* The field is not part of a association, so assign the available values. *}
         {$value = $section.fields.$field.value[$resource->$field]}
     {else}
         {$value = $resource->$field}

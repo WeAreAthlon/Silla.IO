@@ -44,17 +44,17 @@ class Users extends CMS
     {
         if ($request->is('post')) {
             if (!$request->post('current_password')) {
-                $resource->errors['current_password'] = 'not_empty';
+                $resource->setError('current_password', 'not_empty');
             } else {
                 $user = Core\Registry()->get('current_user');
 
                 if (!Crypt::hashCompare($user->password, $request->post('current_password'))) {
-                    $resource->errors['current_password'] = 'mismatch';
+                    $resource->setError('current_password', 'mismatch');
                 }
             }
 
             if ($request->post('password') !== $request->post('password_confirm')) {
-                $resource->errors['password_confirm'] = 'mismatch';
+                $resource->setError('password_confirm', 'mismatch');
             }
         }
     }

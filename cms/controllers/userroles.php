@@ -63,12 +63,12 @@ class UserRoles extends CMS
     {
         if ($request->is('post')) {
             if (!$request->post('current_password')) {
-                $resource->errors['current_password'] = 'not_empty';
+                $resource->setError('current_password', 'not_empty');
             } else {
                 $currentUser = Core\Registry()->get('current_user');
 
                 if (!Crypt::hashCompare($currentUser->password, $request->post('current_password'))) {
-                    $resource->errors['current_password'] = 'mismatch';
+                    $resource->setError('current_password', 'mismatch');
                 }
             }
         }

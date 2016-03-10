@@ -3,14 +3,14 @@
     {if isset($attr.value) and $attr.value|is_array}
         {html_options options=$attr.value selected=$attr.default|default:$attr.default_value|default:''}
     {else}
-        {foreach from=$resource->belongsTo key=name item=relation}
-            {append var=relations value=array_merge($relation, ['name' => $name]) index=$relation.key}
+        {foreach from=$resource->belongsTo key=name item=association}
+            {append var=associations value=array_merge($association, ['name' => $name]) index=$association.key}
         {/foreach}
 
-        {if $relations.{$attr.name}|default:false}
-            {$property = $relations.$field.name}
+        {if $associations.{$attr.name}|default:false}
+            {$property = $associations.$field.name}
             {if not $resource->$property|is_object}
-                {custom_class var=related_resource class=$relations.$field.class_name}
+                {custom_class var=related_resource class=$associations.$field.class_name}
             {else}
                 {assign var=related_resource value=$resource->$property()}
             {/if}

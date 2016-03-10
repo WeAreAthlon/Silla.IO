@@ -5,7 +5,7 @@
             {* Show regular values from the entitity *}
             {html_options options=$attr.value selected=$_get.filtering.$field|default:''}
         {else}
-            {* Analyze filtering field relations *}
+            {* Analyze filtering field associations *}
             {custom_class var=current_model class=$model}
             {if isset($current_model->hasAndBelongsToMany.$field) and is_array($current_model->hasAndBelongsToMany.$field)}
                 {* Show multiselect populated with all related resource values *}

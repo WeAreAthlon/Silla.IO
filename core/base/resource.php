@@ -335,9 +335,9 @@ abstract class Resource extends Controller
      */
     protected function afterCreate(Model $resource, Request $request)
     {
-        if (!empty($resource->errors)) {
+        if ($resource->hasErrors()) {
             $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $resource->errors);
+            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $resource->errors());
         } else {
             $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
             Helpers\FlashMessage::set($labelsMessages['create']['success'], 'success');
@@ -372,9 +372,9 @@ abstract class Resource extends Controller
      */
     protected function afterEdit(Model $resource, Request $request)
     {
-        if (!empty($resource->errors)) {
+        if ($resource->hasErrors()) {
             $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $resource->errors);
+            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $resource->errors());
         } else {
             $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
             Helpers\FlashMessage::set($labelsMessages['edit']['success'], 'success');

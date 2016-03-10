@@ -99,13 +99,13 @@ abstract class Attachment implements Interfaces\Decorator
     public static function validate(Base\Model $resource, array $params)
     {
         foreach (self::$attachments as $name => $_attachment) {
-            if (self::$isUploading[$name] && isset($resource->errors[$name])) {
-                unset($resource->errors[$name]);
+            if (self::$isUploading[$name] && $resource->getError($name)) {
+                $resource->removeError($name);
             }
 
             if (self::$isUploading[$name]) {
                 if (!Helpers\File::validate($_FILES[$name], $_attachment['type'], $_attachment['size'])) {
-                    $resource->errors[$name] = 'invalid_type';
+                    $resource->setError($name, 'invalid_type');
                 }
             }
         }

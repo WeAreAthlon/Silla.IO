@@ -29,7 +29,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     public static $tableName = 'cms_users';
 
     /**
-     * Has many relation definition.
+     * Has many association definition.
      *
      * @var array
      */
@@ -62,11 +62,12 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     public function afterValidate()
     {
         if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $this->errors['email'] = 'invalid_format';
+            $this->setError('email', 'invalid_format');
         }
 
-        if (!$this->isNewRecord() && isset($this->errors['password'])) {
-            unset($this->errors['password'], $this->password);
+        if (!$this->isNewRecord() && $this->getError('password')) {
+            unset($this->password);
+            $this->removeError('password');
         }
     }
 
