@@ -158,8 +158,8 @@ js:
     desc      : Delete permanently the selected resource from the application?
     password  : Enter your current user password...
     buttons:
-      confirm : Permanently Delete
-      cancel  : Cancel
+      confirm : '<span class="glyphicon glyphicon-trash"></span> Permanently Delete'
+      cancel  : '<span class="glyphicon glyphicon-menu-left"></span> Cancel'
   validations:
     maxlength : 'Used %charsTyped% of %charsTotal% chars.'
   errors:

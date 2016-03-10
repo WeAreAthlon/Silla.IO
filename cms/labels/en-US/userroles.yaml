@@ -54,6 +54,10 @@ attributes:
         export  : false
         hidden  : true
 
+buttons:
+  create: Create Role
+  save: Update Role
+
 messages:
   create:
     success: The User Role has been successfully added!

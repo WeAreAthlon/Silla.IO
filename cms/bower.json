@@ -4,7 +4,7 @@
     "dependencies": {
         "jquery"   : "1.11.1",
         "moment"   : "2.7.0",
-        "bootstrap": "3.3.1",
+        "bootstrap": "3.3.6",
         "eonasdan-bootstrap-datetimepicker" : "v2.1.30",
         "bootstrap-maxlength"               : "1.4.0",
         "pnikolov-bootstrap-daterangepicker": "*",

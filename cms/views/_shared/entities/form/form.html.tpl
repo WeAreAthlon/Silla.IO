@@ -42,11 +42,13 @@
 
     <div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div class="navbar-header width-full padding-horizontal">
-        {if "{$_controller}/_form/actions.html.tpl"|template_exists}
-            {include file="{$_controller}/_form/actions.html.tpl"}
-        {else}
-            {include file='_shared/entities/form/actions.html.tpl'}
-        {/if}
+            <div class="col-sm-10 col-sm-offset-2">
+            {if "{$_controller}/_form/actions.html.tpl"|template_exists}
+                {include file="{$_controller}/_form/actions.html.tpl"}
+            {else}
+                {include file='_shared/entities/form/actions.html.tpl'}
+            {/if}
+            </div>
         </div>
         <div class="collapse navbar-collapse" id="form-actions-collapse"></div>
     </div>

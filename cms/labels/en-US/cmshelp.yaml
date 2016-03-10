@@ -17,7 +17,7 @@ attributes:
         title   : Contents
         type    : stencil
         desc    : 'Text formatting supportes <a href="https://daringfireball.net/projects/markdown/syntax" class="help-link"><span class="glyphicon glyphicon-share"></span> <strong>Parsedown</strong></a>.'
-        rows    : 10
+        rows    : 15
         list    : false
         icon    : font
   preview:
@@ -27,6 +27,10 @@ attributes:
       desc      : Formatted content.
       serialize : false
       custom    : true
+
+buttons:
+  create: Create Page
+  save: Update Page
 
 messages:
   create:

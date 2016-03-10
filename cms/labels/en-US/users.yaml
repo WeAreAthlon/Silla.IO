@@ -89,6 +89,10 @@ profile:
   title : Profile
   desc  : Personal data management.
 
+buttons:
+  create: Create User
+  save: Update User
+
 messages:
   create:
     success: The user has been successfully added!

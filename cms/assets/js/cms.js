@@ -184,6 +184,10 @@ var CMS = {
                         title   : Silla.labels.delete_confirmation.title,
                         message : Silla.labels.delete_confirmation.desc + (isProtected ? passwordInput.html() : ''),
                         buttons : {
+                            cancel: {
+                                label    : Silla.labels.delete_confirmation.buttons.cancel,
+                                className: 'btn-default'
+                            },
                             confirm: {
                                 label: Silla.labels.delete_confirmation.buttons.confirm,
                                 className: 'btn-danger',
@@ -208,10 +212,6 @@ var CMS = {
                                         deleteFormAction.submit();
                                     }
                                 }
-                            },
-                            cancel: {
-                                label    : Silla.labels.delete_confirmation.buttons.cancel,
-                                className: 'btn-default'
                             }
                         }
                     });
