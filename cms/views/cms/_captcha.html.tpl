@@ -16,5 +16,5 @@
     <script type="text/javascript">
         var RecaptchaOptions = { theme: 'custom', custom_theme_widget: 'recaptcha_widget' };
     </script>
-    {$captcha}
+    {$captchaTemplate}
 </div>

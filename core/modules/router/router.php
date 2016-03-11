@@ -189,6 +189,22 @@ final class Router
     }
 
     /**
+     * Generates an application full url.
+     *
+     * @param array $options Array of options.
+     *
+     * @access public
+     * @uses   toUrl
+     * @uses   Core\Config();
+     *
+     * @return string
+     */
+    public function toFullUrl(array $options)
+    {
+        return Core\Config()->urls('full') . $this->toUrl($options);
+    }
+
+    /**
      * Returns an instance of the router object.
      *
      * @access public

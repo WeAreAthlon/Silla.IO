@@ -16,7 +16,6 @@ use Core\Modules\Crypt\Crypt;
 use Core\Modules\Router\Request;
 use CMS\Models;
 use CMS\Helpers;
-use \Captcha;
 
 /**
  * Class CMS Controller definition.
@@ -43,6 +42,13 @@ class CMS extends Core\Base\Resource
      * @var \CMS\Models\CMSUser
      */
     protected $user;
+
+    /**
+     * Captcha HTML code.
+     *
+     * @var \Captcha\Captcha
+     */
+    public $captcha;
 
     /**
      * Init method.
@@ -72,6 +78,10 @@ class CMS extends Core\Base\Resource
         $this->addAfterFilters(array('loadAccessibilityScope', 'loadCmsAssets'), array(
             'except' => array('login', 'reset', 'renew')
         ));
+
+        if (Core\Config()->CAPTCHA['enabled'] && in_array(Core\Router()->request->action(), array('login', 'reset'))) {
+            $this->loadCaptcha(Core\Config()->CAPTCHA);
+        }
     }
 
     /**
@@ -87,33 +97,31 @@ class CMS extends Core\Base\Resource
         $this->renderer->assets->remove('css/style.css');
         $this->renderer->assets->add('css/login.css');
 
-        if (Core\Session()->get('login_error')) {
-            $this->captcha = Core\Session()->get('captcha')->html();
-        }
-
         if ($request->is('post')) {
-            if (Core\Session()->get('login_error') && !Core\Session()->get('captcha')->check()->isValid()) {
-                $labelsCaptcha = Core\Helpers\YAML::get('captcha', $this->labels);
-                Helpers\FlashMessage::set($labelsCaptcha['error'], 'danger');
-                $this->captcha = Core\Session()->get('captcha')->html();
+            if ($this->captcha) {
+                if (!Helpers\Captcha::isValid($this->captcha)) {
+                    $labelsCaptcha = Core\Helpers\YAML::get('captcha', $this->labels);
 
-                return;
+                    Helpers\FlashMessage::set($labelsCaptcha['error'], 'danger');
+                    return;
+                }
             }
 
             $user = Models\CMSUser::find()->where('email = ?', array($request->post('email')))->first();
 
             if ($user && Crypt::hashCompare($user->password, $request->post('password'))) {
-                /* Update the user login time */
+                /* Update the user login time. */
                 $user->save(array('login_on' => gmdate('Y-m-d H:i:s')), true);
 
-                /* Regenerate Session key for prevent session fixation */
+                /* Regenerate Session key for prevent session id fixation. */
                 Core\Session()->regenerateKey();
 
                 Core\Session()->set('user_info', rawurlencode(serialize($user)));
                 Core\Session()->set('user_logged', 1);
-                Core\Session()->remove('login_error');
+                Core\Session()->remove('authentication_error');
+                Core\Session()->remove('captcha');
 
-                /* Regenerate CSRF token for prevent fixation */
+                /* Regenerate CSRF token for prevent token fixation. */
                 Core\Session()->remove('_token');
                 $request->regenerateToken();
 
@@ -125,15 +133,11 @@ class CMS extends Core\Base\Resource
             } else {
                 $labels_login = Core\Helpers\YAML::get('login', $this->labels);
                 Helpers\FlashMessage::set($labels_login['error'], 'danger');
+                Core\Session()->set('authentication_error', true);
 
-                $captcha = new Captcha\Captcha();
-                $captcha->setPublicKey(Core\Config()->CAPTCHA['public_key']);
-                $captcha->setPrivateKey(Core\Config()->CAPTCHA['private_key']);
-
-                Core\Session()->set('login_error', true);
-                Core\Session()->set('captcha', $captcha);
-
-                $this->captcha = $captcha->html();
+                if (Core\Config()->CAPTCHA['enabled']) {
+                    $this->loadCaptcha(Core\Config()->CAPTCHA);
+                }
             }
         } else {
             if (Core\Session()->get('user_logged') === 1) {
@@ -152,6 +156,7 @@ class CMS extends Core\Base\Resource
     public function logout(Request $request)
     {
         Core\Session()->destroy();
+
         $request->redirectTo('login');
     }
 
@@ -168,19 +173,12 @@ class CMS extends Core\Base\Resource
         $this->renderer->assets->remove('css/style.css');
         $this->renderer->assets->add('css/login.css');
 
-        if (Core\Session()->get('password_reset_error')) {
-            $this->captcha = Core\Session()->get('captcha')->html();
-        }
-
         if ($request->is('post')) {
-            $labelsReset   = Core\Helpers\YAML::get('reset', $this->labels);
-            $labelsCaptcha = Core\Helpers\YAML::get('captcha', $this->labels);
-
+            $labelsReset = Core\Helpers\YAML::get('reset', $this->labels);
+            $this->errors = array();
             $user = new Models\CMSUser;
 
-            $this->errors = array();
-
-            if (Core\Session()->get('password_reset_error') && !Core\Session()->get('captcha')->check()->isValid()) {
+            if ($this->captcha && !Helpers\Captcha::isValid($this->captcha)) {
                 $this->errors['captcha'] = true;
             } elseif (filter_var($request->post('email'), FILTER_VALIDATE_EMAIL) === false) {
                 $this->errors['email'] = true;
@@ -192,14 +190,13 @@ class CMS extends Core\Base\Resource
                 $user->save(array('updated_on' => gmdate('Y-m-d H:i:s')), true);
 
                 $this->name = $user->name;
-                $this->password_reset_link = Core\Config()->urls('full') . Core\Router()->toUrl(array(
+                $this->password_reset_link = Core\Router()->toFullUrl(array(
                     'controller' => 'cms',
                     'action'     => 'renew',
                     'id'         => sha1($user->password . Core\Config()->USER_AUTH['cookie_salt'] . $user->email),
                 ));
 
                 $mailLabels = Core\Helpers\YAML::get('mails', 'cms');
-
                 $mailForPasswordReset = array(
                     'from' => array(
                         Core\Config()->MAILER['identity']['email'] => Core\Config()->MAILER['identity']['name']
@@ -213,19 +210,21 @@ class CMS extends Core\Base\Resource
 
                 Core\Helpers\Mailer::send($mailForPasswordReset);
                 Helpers\FlashMessage::set($labelsReset['success'], 'success');
-                Core\Session()->remove('password_reset_error');
+                Core\Session()->remove('authentication_error');
+                Core\Session()->remove('captcha');
             } else {
-                $message = isset($this->errors['email']) ? $labelsReset['error'] : $labelsCaptcha['error'];
-                Helpers\FlashMessage::set($message, 'danger');
+                if ($this->captcha) {
+                    $labelsCaptcha = Core\Helpers\YAML::get('captcha', $this->labels);
+                    Helpers\FlashMessage::set($labelsCaptcha['error'], 'danger');
+                } else {
+                    Helpers\FlashMessage::set($labelsReset['error'], 'danger');
+                }
 
-                $captcha = new Captcha\Captcha();
-                $captcha->setPublicKey(Core\Config()->CAPTCHA['public_key']);
-                $captcha->setPrivateKey(Core\Config()->CAPTCHA['private_key']);
+                Core\Session()->set('authentication_error', true);
 
-                Core\Session()->set('password_reset_error', true);
-                Core\Session()->set('captcha', $captcha);
-
-                $this->captcha = $captcha->html();
+                if (Core\Config()->CAPTCHA['enabled']) {
+                    $this->loadCaptcha(Core\Config()->CAPTCHA);
+                }
             }
         }
     }
@@ -286,18 +285,6 @@ class CMS extends Core\Base\Resource
                 )),
             ));
         }
-    }
-
-    /**
-     * Skip generation and verification of access scope for the specified controller actions.
-     *
-     * @param array $actions Array of action names.
-     *
-     * @return void
-     */
-    protected function skipAclFor(array $actions)
-    {
-        $this->skipAclFor = array_merge($this->skipAclFor, $actions);
     }
 
     /**
@@ -416,5 +403,23 @@ class CMS extends Core\Base\Resource
             'js/libs/obj.js',
             'js/libs/datatables.js',
         ));
+    }
+
+    /**
+     * Loads the Captcha.
+     *
+     * @param array $configuration Captcha Configuration data.
+     *
+     * @throws \Captcha\Exception
+     *
+     * @return void
+     */
+    private function loadCaptcha($configuration)
+    {
+        $this->captcha = Helpers\Captcha::get($configuration);
+
+        if($this->captcha) {
+            $this->captchaTemplate = Helpers\Captcha::getTemplate($this->captcha);
+        }
     }
 }

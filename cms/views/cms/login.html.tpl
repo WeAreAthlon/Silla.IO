@@ -8,9 +8,9 @@
         <label for="password"><i class="glyphicon glyphicon-cog"></i> {$_labels.login.password}</label>
         <input name="password" type="password" id="password" class="form-control text-thin" placeholder="..." autocomplete="off" tabindex="2">
     </div>
-    {if $captcha|default:false}
-        {include file='cms/_captcha.html.tpl'}
-    {/if}
+{if $captchaTemplate|default:false}
+    {include file='cms/_captcha.html.tpl'}
+{/if}
     <div class="form-group clearfix">
         <div class="text-center">
             <label class="forgotten-password text-thin"><a href="{link_to controller=cms action=reset}" tabindex="5">{$_labels.login.forgotten_password}</a></label>
