@@ -39,7 +39,7 @@ class Users extends CMS
     {
         if ($request->is('post')) {
             if (!Crypt::hashCompare($this->user->password, $request->post('current_password'))) {
-               // $this->resource->setError('current_password', 'mismatch');
+                $this->resource->setError('current_password', 'mismatch');
             }
 
             if ($request->post('password') !== $request->post('password_confirm')) {
@@ -102,7 +102,7 @@ class Users extends CMS
     {
         parent::afterEdit($request);
 
-        if ($request->is('post') && !$this->resource->hasErrors() && $this->resource->id == $this->user->id) {
+        if ($request->is('post') && !$this->resource->hasErrors() && ($this->resource->id == $this->user->id)) {
             Core\Session()->set('user_info', rawurlencode(serialize($this->resource)));
         }
     }
