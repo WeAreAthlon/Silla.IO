@@ -94,7 +94,7 @@ INSERT INTO `cms_userroles` (`id`, `title`, `created_on`, `updated_on`, `permiss
 -- Data for table `cms_users`
 -- -----------------------------------------------------
 
-INSERT INTO `cms_users` (`id`, `role_id`, `password`, `email`, `name`, `timezone`, `created_on`, `updated_on`, `login_on`) VALUES (1, 1, '$2a$12$wX61GlidotqLdWiuRYP5sOVItSdauCGlZ/V7wO1E7//4LZ92y2gqu', 'demo@silla.io', 'Demo', 'Europe/Sofia', '2012-06-19 11:40:16', '2013-04-01 23:31:52', '2013-04-01 23:31:52');
+INSERT INTO `cms_users` (`id`, `role_id`, `password`, `email`, `name`, `timezone`, `created_on`, `updated_on`, `login_on`) VALUES (1, 1, '$2a$12$xxSrRen55zNOFEypa/kSHuOmQUeATuLtNFOBt5OTkExsh1tbMOaiC', 'demo@silla.io', 'Demo', 'Europe/Sofia', '2012-06-19 11:40:16', '2013-04-01 23:31:52', '2013-04-01 23:31:52');
 
 -- -----------------------------------------------------
 -- Data for table `cms_settings`

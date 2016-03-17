@@ -7,6 +7,14 @@ attributes:
       desc      : Mandatory user data.
       serialize : false
     fields:
+      current_password:
+        title   : Your Current Password
+        type    : password
+        desc    : To ensure this action you must enter your current <abbr data-toggle="tooltip" data-placement="right" title="Password of the logged in user.">password</abbr>.
+        list    : false
+        length  : 100
+        export  : false
+        hidden  : true
       name:
         title   : Name
         type    : text
@@ -30,7 +38,7 @@ attributes:
       password:
         title   : Password
         type    : password
-        desc    : '<span class="label label-danger">Important</span> Use hard to guess passphrases: <em class="muted">lower + capital letters + numbers</em>'
+        desc    : '<span class="label label-danger">Important</span> Use hard to guess passphrases. It must be at least 8 characters consited of <em class="muted"><u>lower letters</u> + <u>capital letters</u> + <u>numbers</u> + <u>special chars</u></em>.'
         list    : false
         length  : 100
         export  : false
@@ -40,14 +48,6 @@ attributes:
         type    : password
         desc    : Confirm the new passphrase by entering it again.
         list    : false
-        export  : false
-        hidden  : true
-      current_password:
-        title   : Current Password
-        type    : password
-        desc    : To ensure this action you must enter your current <abbr data-toggle="tooltip" data-placement="right" title="Password of the logged in user">password</abbr>.
-        list    : false
-        length  : 100
         export  : false
         hidden  : true
       login_on:

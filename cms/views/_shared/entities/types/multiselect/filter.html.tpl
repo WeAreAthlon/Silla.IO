@@ -6,7 +6,7 @@
             {html_options options=$attr.value selected=$_get.filtering.$field|default:''}
         {else}
             {* Analyze filtering field associations *}
-            {custom_class var=current_model class=$model}
+            {custom_class var=current_model class=get_class($resource)}
             {if isset($current_model->hasAndBelongsToMany.$field) and is_array($current_model->hasAndBelongsToMany.$field)}
                 {* Show multiselect populated with all related resource values *}
                 {custom_class var=related_resource class=$current_model->hasAndBelongsToMany.$field.class_name}

@@ -6,7 +6,7 @@
             {html_options options=$attr.value selected=$_get.filtering.$field|default:''}
         {else}
             {* Analyze filtering field associations *}
-            {custom_class var=current_model class=$model}
+            {custom_class var=current_model class=get_class($resource)}
             {foreach from=$current_model->belongsTo key=name item=association}
                 {append var=associations value=array_merge($association, ['name' => $name]) index=$association.key}
             {/foreach}

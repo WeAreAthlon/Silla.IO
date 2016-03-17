@@ -20,7 +20,7 @@
              <a href="{link_to controller=users action=account}"><i class="glyphicon glyphicon-user"></i> {$_labels.modules.users.account}</a>
         </li>
         {/if}
-        <li><a href="{link_to controller=cms action=logout}"><i class="glyphicon glyphicon-log-out"></i> {$_labels.sections.logout}</a></li>
+        <li><a href="{link_to controller=authentication action=logout}"><i class="glyphicon glyphicon-log-out"></i> {$_labels.sections.logout}</a></li>
       </ul>
     </li>
 </ul>

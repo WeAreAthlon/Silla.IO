@@ -205,6 +205,16 @@ abstract class Model
     }
 
     /**
+     * Whether the record exists in the persistent storage. (DB)
+     *
+     * @return bool
+     */
+    final public function exists()
+    {
+        return (bool)$this->{static::$primaryKeyField};
+    }
+
+    /**
      * Generic set method.
      *
      * @param string $field Field to set.

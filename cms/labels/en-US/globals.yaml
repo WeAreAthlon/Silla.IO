@@ -89,6 +89,7 @@ errors:
   invalid_type     : Incompatible value type.
   enum_no_match    : The value is not allowed.
   max_length_exceeded : The value exceeds the system limit.
+  weak             : The entered value is weak. Please chooes a stronger phrase.
 
 status:
   "0" : 'No'

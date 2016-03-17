@@ -286,4 +286,69 @@ final class Utils
         }
         return $refs;
     }
+
+    /**
+     * Generate random string suitable for password.
+     *
+     * @param integer $length Number of chars.
+     *
+     * @access public
+     * @static
+     *
+     * @return string
+     */
+    public static function generatePassword($length = 10)
+    {
+        $password = '';
+        $possible = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZbcdfghjkmnpqrstvwxyz!@#$%^&*()\-_=+{};:,<.>';
+
+        $i = 0;
+
+        while ($i < $length) {
+            $char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
+
+            if (!strstr($password, $char)) {
+                $password .= $char;
+                $i++;
+            }
+        }
+
+        return $password;
+    }
+
+    /**
+     * Validates a sting against password policy.
+     *
+     * @param string $candidate Input.
+     *
+     * @return boolean
+     */
+    public static function validatePassword($candidate) {
+        $r1 = '/[A-Z]/';
+        $r2 = '/[a-z]/';
+        $r3 = '!@#$%^&*()\-_=+{};:,<.>][';
+        $r4 = '/[0-9]/';
+
+        if (strlen($candidate) < 8) {
+            return false;
+        }
+
+        if (preg_match_all($r1, $candidate, $o) < 1) {
+            return false;
+        }
+
+        if (preg_match_all($r2, $candidate, $o) < 1) {
+            return false;
+        }
+
+        if (strpbrk($candidate, $r3) == false) {
+            return false;
+        }
+
+        if (preg_match_all($r4, $candidate, $o) < 1) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -24,37 +24,26 @@ use CMS\Helpers;
 class Users extends CMS
 {
     /**
-     * The main model to be used for CRUD.
+     * Resource Model class name.
      *
      * @var string
      */
-    protected $model = 'CMS\Models\CMSUser';
+    protected $resourceModel = 'CMS\Models\CMSUser';
 
     /**
      * Additional validation rules to ensure user is authorized to edit this resource.
      *
-     * @param Base\Model $resource Currently processed resource.
-     * @param Request    $request  Current router request.
-     *
-     * @access protected
-     *
-     * @return void
+     * @inheritdoc
      */
-    protected function beforeEdit(Base\Model $resource, Request $request)
+    protected function beforeEdit(Request $request)
     {
         if ($request->is('post')) {
-            if (!$request->post('current_password')) {
-                $resource->setError('current_password', 'not_empty');
-            } else {
-                $user = Core\Registry()->get('current_user');
-
-                if (!Crypt::hashCompare($user->password, $request->post('current_password'))) {
-                    $resource->setError('current_password', 'mismatch');
-                }
+            if (!Crypt::hashCompare($this->user->password, $request->post('current_password'))) {
+               // $this->resource->setError('current_password', 'mismatch');
             }
 
             if ($request->post('password') !== $request->post('password_confirm')) {
-                $resource->setError('password_confirm', 'mismatch');
+                $this->resource->setError('password_confirm', 'mismatch');
             }
         }
     }
@@ -68,38 +57,21 @@ class Users extends CMS
      */
     public function account(Request $request)
     {
-        $user = $this->user;
-        $this->beforeEdit($user, $request);
+        $this->resource = $this->user;
+        $this->removeAccessibleAttribute('role_id');
 
-        if ($request->is('post')) {
-            unset($_POST['role_id']);
-            $data = $request->post();
-
-            if ($user->save($data)) {
-                /* Reloads user info */
-                $resource = new $this->model;
-                $resource = $resource::find()->where('id = ?', array($user->id))->first();
-                Core\Session()->set('user_info', rawurlencode(serialize($resource)));
-            }
-
-            parent::afterEdit($user, $request);
-        }
-
-        $this->resource = $user;
-        $this->renderer->setView('_shared/entities/form/form');
+        $this->edit($request);
     }
 
     /**
      * Verifies that the current logged user cannot delete himself.
      *
-     * @param Base\Model $resource Currently processed resource.
-     * @param Request    $request  Current router request.
+     * Request current user password before deletion of any users.
      *
-     * @return void
+     * @inheritdoc
      */
-    protected function beforeDelete(Base\Model $resource, Request $request)
+    protected function beforeDelete(Request $request)
     {
-        /* Request current user password before deletion of any users */
         if (!$request->post('password') || !Crypt::hashCompare($this->user->password, $request->post('password'))) {
             if (!$request->is('xhr')) {
                 $labelsGeneral = Core\Helpers\YAML::get('general');
@@ -109,8 +81,7 @@ class Users extends CMS
             $request->redirectTo('index');
         }
 
-        /* Prevent self deletion */
-        if ($resource->id == $this->user->id) {
+        if ($this->resource->id == $this->user->id) {
             if (!$request->is('xhr')) {
                 $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
                 Helpers\FlashMessage::set($labelsMessages['delete']['self'], 'danger');
@@ -119,26 +90,20 @@ class Users extends CMS
             $request->redirectTo('index');
         }
 
-        parent::beforeDelete($resource, $request);
+        parent::beforeDelete($request);
     }
 
     /**
-     * Reloads current user info stored in the app session.
+     * Reloads current user info stored in the application session.
      *
-     * @param Base\Model $resource Currently processed resource.
-     * @param Request    $request  Current router request.
-     *
-     * @return void
+     * @inheritdoc
      */
-    protected function afterEdit(Base\Model $resource, Request $request)
+    protected function afterEdit(Request $request)
     {
-        /* Reloads user info */
-        if ($resource->id == $this->user->id) {
-            $resource = new $this->model;
-            $resource = $resource::find()->where('id = ?', array($this->user->id))->first();
-            Core\Session()->set('user_info', rawurlencode(serialize($resource)));
-        }
+        parent::afterEdit($request);
 
-        parent::afterEdit($resource, $request);
+        if ($request->is('post') && !$this->resource->hasErrors() && $this->resource->id == $this->user->id) {
+            Core\Session()->set('user_info', rawurlencode(serialize($this->resource)));
+        }
     }
 }

@@ -9,11 +9,11 @@
         <input name="password" type="password" id="password" class="form-control text-thin" placeholder="..." autocomplete="off" tabindex="2">
     </div>
 {if $captchaTemplate|default:false}
-    {include file='cms/_captcha.html.tpl'}
+    {include file='authentication/_captcha.html.tpl'}
 {/if}
     <div class="form-group clearfix">
         <div class="text-center">
-            <label class="forgotten-password text-thin"><a href="{link_to controller=cms action=reset}" tabindex="5">{$_labels.login.forgotten_password}</a></label>
+            <label class="forgotten-password text-thin"><a href="{link_to controller=authentication action=reset}" tabindex="5">{$_labels.login.forgotten_password}</a></label>
         </div>
     </div>
     <div class="text-center">

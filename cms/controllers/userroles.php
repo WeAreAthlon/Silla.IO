@@ -24,23 +24,21 @@ use CMS\Helpers;
 class UserRoles extends CMS
 {
     /**
-     * The main model to be used for CRUD.
+     * Resource Model class name.
      *
      * @var string
-     * @access protected
      */
-    protected $model = 'CMS\Models\CMSUserRole';
+    protected $resourceModel = 'CMS\Models\CMSUserRole';
 
     /**
      * Permissions scope for the current user session.
      *
      * @var array
-     * @access protected
      */
     protected $permissionsScope = array();
 
     /**
-     * Hooks before filters.
+     * UserRoles constructor.
      */
     public function __construct()
     {
@@ -52,23 +50,20 @@ class UserRoles extends CMS
     /**
      * Additional validation rules to ensure user is authorized to edit this resource.
      *
-     * @param Base\Model $resource Currently processed resource.
-     * @param Request    $request  Current router request.
-     *
-     * @access protected
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function beforeEdit(Base\Model $resource, Request $request)
+    protected function beforeEdit(Request $request)
     {
         if ($request->is('post')) {
             if (!$request->post('current_password')) {
-                $resource->setError('current_password', 'not_empty');
+                $this->resource->setError('current_password', 'not_empty');
             } else {
                 $currentUser = Core\Registry()->get('current_user');
 
                 if (!Crypt::hashCompare($currentUser->password, $request->post('current_password'))) {
-                    $resource->setError('current_password', 'mismatch');
+                    $this->resource->setError('current_password', 'mismatch');
                 }
             }
         }
@@ -77,14 +72,14 @@ class UserRoles extends CMS
     /**
      * Verifies the current user cannot delete his role.
      *
-     * @param Base\Model $resource Currently processed resource.
-     * @param Request    $request  Current router request.
+     * Request current user password before deletion of any User Roles.
+     *
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function beforeDelete(Base\Model $resource, Request $request)
+    protected function beforeDelete(Request $request)
     {
-        /* Request current user password before deletion of any User Roles */
         if (!$request->post('password') || !Crypt::hashCompare($this->user->password, $request->post('password'))) {
             if (!$request->is('xhr')) {
                 $labelsGeneral = Core\Helpers\YAML::get('general');
@@ -94,8 +89,7 @@ class UserRoles extends CMS
             $request->redirectTo('index');
         }
 
-        /* Prevent user role self deletion */
-        if ($this->user->role_id == $resource->id) {
+        if ($this->user->role_id == $this->resource->id) {
             if (!$request->is('xhr')) {
                 $labelsErrors = Core\Helpers\YAML::get('messages', $this->labels);
                 Helpers\FlashMessage::set($labelsErrors['delete']['self'], 'danger');
@@ -104,7 +98,7 @@ class UserRoles extends CMS
             $request->redirectTo('index');
         }
 
-        parent::beforeDelete($resource, $request);
+        parent::beforeDelete($request);
     }
 
     /**

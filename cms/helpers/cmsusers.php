@@ -39,11 +39,9 @@ class CMSUsers
             $builtin_actions = array_merge($builtin_actions, get_class_methods($resource));
         }
 
-        foreach ($builtin_actions as $key => $builtin_action) {
-            if (in_array($builtin_action, array('create', 'show', 'edit', 'delete', 'export'), true)) {
-                unset($builtin_actions[$key]);
-            }
-        }
+        $builtin_actions = array_filter($builtin_actions, function($action) {
+            return !in_array($action, array('create', 'show', 'edit', 'delete', 'export'), true);
+        });
 
         foreach ($scope as $resource) {
             $resource = basename(str_replace('.php', '', $resource));
@@ -52,7 +50,7 @@ class CMSUsers
                 $controller_name = '\CMS\Controllers\\' . $resource;
                 $controller_object = new $controller_name;
 
-                if ($controller_object) {
+                if ('CMS\Controllers\CMS' == get_parent_class($controller_object)) {
                     $accessibility_scope[$resource] = array_diff(get_class_methods($controller_name), $builtin_actions);
                     array_push($accessibility_scope[$resource], 'index');
 
@@ -66,35 +64,6 @@ class CMSUsers
         }
 
         return $accessibility_scope;
-    }
-
-    /**
-     * Generate random string suitable for password.
-     *
-     * @param integer $length Number of chars.
-     *
-     * @access public
-     * @static
-     *
-     * @return string
-     */
-    public static function generatePassword($length = 8)
-    {
-        $password = '';
-        $possible = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZbcdfghjkmnpqrstvwxyz';
-
-        $i = 0;
-
-        while ($i < $length) {
-            $char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
-
-            if (!strstr($password, $char)) {
-                $password .= $char;
-                $i++;
-            }
-        }
-
-        return $password;
     }
 
     /**

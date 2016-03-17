@@ -38,9 +38,16 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
             'table' => 'cms_userroles',
             'key' => 'role_id',
             'relative_key' => 'id',
-            'class_name' => 'CMS\Models\CMSUserRole'
+            'class_name' => 'CMS\Models\CMSUserRole',
         ),
     );
+
+    /**
+     * Current password.
+     *
+     * @var string
+     */
+    private $currentPassword;
 
     /**
      * Definition of the timezone aware fields.
@@ -55,9 +62,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     }
 
     /**
-     * After validate actions.
-     *
-     * @return void
+     * @inheritdoc
      */
     public function afterValidate()
     {
@@ -66,19 +71,30 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
         }
 
         if (!$this->isNewRecord() && $this->getError('password')) {
-            unset($this->password);
             $this->removeError('password');
+        }
+
+        if ($this->password && !Core\Utils::validatePassword($this->password)) {
+            $this->setError('password', 'weak');
         }
     }
 
     /**
-     * Before save actions.
-     *
-     * @return void
+     * @inheritdoc
      */
-    public function beforeSave()
+    public function beforePopulate()
     {
-        if ($this->password && !in_array(Core\Router()->request->action(), array('login', 'reset'), true)) {
+        $this->currentPassword = $this->password;
+    }
+
+    /**
+     * Hashes the user password.
+     *
+     * @inheritdoc
+     */
+    public function afterPopulate()
+    {
+        if ($this->password !== $this->currentPassword) {
             $this->password = Crypt::hash($this->password);
         }
     }

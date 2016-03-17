@@ -23,11 +23,11 @@ use Parsedown;
 class CMSHelp extends CMS
 {
     /**
-     * The main model to be used for CRUD.
+     * Resource Model class name.
      *
      * @var string
      */
-    protected $model = 'CMS\Models\CMSHelp';
+    protected $resourceModel = 'CMS\Models\CMSHelp';
 
     /**
      * @inheritdoc
