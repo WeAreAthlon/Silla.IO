@@ -57,7 +57,9 @@ table.data-table th:hover         { background-image: linear-gradient(to bottom,
 table.data-table td.table-actions { border-top: 0; }
 table.data-table td.table-summary, table.data-table tr:hover td.table-summary { text-align: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.067) inset; background-image: linear-gradient(to bottom, #F2F2F2, #FFFFFF); }
 table.data-table th.column-type-heading-datetime { width: 180px; }
-table.data-table th.column-type-heading-actions, table.data-table td.column-actions { width: 175px; min-width: 175px; }
+table.data-table th.column-type-heading-actions, table.data-table td.column-actions { width: 1%; white-space: nowrap; }
+table.data-table td.column-actions .btn-group { white-space: nowrap; font-size: 0; }
+table.data-table td.column-actions .btn-group .btn { float: none; display: inline-block; clear: none; }
 table.data-table tbody tr td { vertical-align: middle; }
 table.data-table thead.fixed { position: fixed; top: 50px; z-index: 1000; }
 table.data-table tbody tr    { cursor: pointer; }

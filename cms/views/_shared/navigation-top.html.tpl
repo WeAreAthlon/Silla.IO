@@ -20,6 +20,6 @@
         {/if}
     </div>
     <div class="collapse navbar-collapse navbar-main-collapse">
-        {if $user|default:false}{include file='_shared/users/profile.html.tpl'}{/if}
+        {if $user|default:false}{include file='_shared/cmsusers/account.html.tpl'}{/if}
     </div>
 </div>

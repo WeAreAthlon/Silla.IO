@@ -1,0 +1,19 @@
+# YAML file
+attributes:
+  credentials:
+    meta:
+      title     : Credentials
+      icon      : lock
+      desc      : Manage account access credentials.
+      serialize : false
+      disabled  : true
+    fields:
+      password:
+        title   : New Password
+
+buttons:
+  save: Update Account
+
+messages:
+  edit:
+    success: Your account profile has been successfully updated!

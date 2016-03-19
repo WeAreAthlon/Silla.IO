@@ -73,10 +73,10 @@ abstract class CMS extends Core\Base\Resource
      */
     protected function checkLogged(Request $request)
     {
-        if (1 === Core\Session()->get('user_logged')) {
-            $this->user = unserialize(rawurldecode(Core\Session()->get('user_info')));
+        if (1 === Core\Session()->get('cms_user_logged')) {
+            $this->user = unserialize(rawurldecode(Core\Session()->get('cms_user_info')));
 
-            Core\Registry()->set('current_user', $this->user);
+            Core\Registry()->set('current_cms_user', $this->user);
             Core\Helpers\DateTime::setEnvironmentTimezone($this->user->timezone);
         } else {
             $request->redirectTo(array(
@@ -102,10 +102,9 @@ abstract class CMS extends Core\Base\Resource
         $action     = $this->getActionName();
 
         if (!Helpers\CMSUsers::userCan(array('controller' => $controller, 'action' => $action))) {
-            $labelsGeneral = Core\Helpers\YAML::get('general');
-            Helpers\FlashMessage::set($labelsGeneral['no_access'], 'danger');
+            Helpers\FlashMessage::set($this->labels['general']['no_access'], 'danger');
 
-            $request->redirectTo(array('controller' => 'users', 'action' => 'account'));
+            $request->redirectTo(array('controller' => 'account'));
         }
 
         return true;

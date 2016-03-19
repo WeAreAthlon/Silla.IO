@@ -6,7 +6,7 @@
 <div class="row">
     <div class="position-fixed-static" data-offset-top="50">
         <ul class="nav nav-tabs nav-justified form-sections-navigation-wrapper">
-        {foreach from=$_labels.attributes key=section_key item=section name=form_sections_headings}
+        {foreach from=$sections key=section_key item=section name=form_sections_headings}
             <li{if $smarty.foreach.form_sections_headings.first} class="active"{/if}>
                 <a href="#form-section-{$section_key}" data-toggle="tab" title="{$section.meta.title|escape}" data-section="{$section_key}">
                    <span class="hidden-xs"><i class="glyphicon glyphicon-{$section.meta.icon|default:'cog'}"></i> {$section.meta.title}</span>
@@ -19,7 +19,7 @@
 </div>
 <form action="{$smarty.server.REQUEST_URI}" method="post" role="form" class="data-form form-horizontal"{if {'Core\Utils::arraySearchRecursive'|call_user_func_array:[['file', 'photo'], $_labels.attributes]}} enctype="multipart/form-data"{/if} accept-charset="UTF-8">
     <div class="tab-content">
-        {foreach from=$_labels.attributes key=section_key item=section name=form_sections_contents}
+    {foreach from=$sections key=section_key item=section name=form_sections_contents}
         <div class="tab-pane {if $smarty.foreach.form_sections_contents.first} in active{/if}" id="form-section-{$section_key}">
             <fieldset data-section="{$section_key}">
                 <legend class="no-border no-margin-bottom font-size-normal">
@@ -35,11 +35,10 @@
                 </div>
             </fieldset>
         </div>
-        {/foreach}
+    {/foreach}
     </div>
 
     <input type="hidden" name="_token" value="{$_request->token()}" />
-
     <div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div class="navbar-header width-full padding-horizontal">
             <div class="col-sm-10 col-sm-offset-2">

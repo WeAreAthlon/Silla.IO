@@ -3,7 +3,7 @@ attributes:
   write:
     meta:
       title     : Write
-      icon      : cog
+      icon      : flag
       desc      : Describe help page contents.
       serialize : false
     fields:

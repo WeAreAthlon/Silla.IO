@@ -26,7 +26,7 @@
                     {$smarty.capture.caption|default:{include file='_shared/caption.html.tpl'}}
                 </div>
 
-                <div class="status-alert-area text-thin">{flash_message}</div>
+                {include file='_shared/flash-message.html.tpl'}
 
                 {$_content_view_yield}
 

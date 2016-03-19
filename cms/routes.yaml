@@ -6,6 +6,11 @@
     controller: authentication
     action    : login
 
+- route: /authentication
+  maps:
+    controller: authentication
+    action    : login
+
 - route: /:controller
   maps:
     controller: *

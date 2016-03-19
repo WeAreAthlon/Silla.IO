@@ -88,13 +88,13 @@ ENGINE=MyISAM;
 -- -----------------------------------------------------
 
 INSERT INTO `cms_userroles` (`id`, `title`, `created_on`, `updated_on`, `permissions`) VALUES
-  (1, 'Administrator', '2015-02-20 03:00:00', '2015-02-20 14:20:01', '{"help":["show","create","edit","delete","export","index"],"userroles":["show","create","edit","delete","export","index"],"users":["account","show","create","edit","delete","export","index"]}');
+  (1, 'Administrator', '2015-02-20 03:00:00', '2015-02-20 14:20:01', '{"account":["credentials","edit"],"help":["show","create","edit","delete","export","index"],"cmsuserroles":["show","create","edit","delete","export","index"],"cmsusers":["show","create","edit","delete","export","index"]}');
 
 -- -----------------------------------------------------
 -- Data for table `cms_users`
 -- -----------------------------------------------------
 
-INSERT INTO `cms_users` (`id`, `role_id`, `password`, `email`, `name`, `timezone`, `created_on`, `updated_on`, `login_on`) VALUES (1, 1, '$2a$12$XOhONym.UtjUgFyYzM7L5uG2SXTre6Vx.3GIw10bRC.t/.4rMmjrq', 'demo@silla.io', 'Demo', 'Europe/Sofia', '2012-06-19 11:40:16', '2013-04-01 23:31:52', '2013-04-01 23:31:52');
+INSERT INTO `cms_users` (`id`, `role_id`, `password`, `email`, `name`, `timezone`, `created_on`, `updated_on`, `login_on`) VALUES (1, 1, '$2a$12$jusORAs9Ezt5wOH7iUy4oO4iRV0EKzRgrsXng4IQoF4Psd2Cbq1zW', 'demo@silla.io', 'Demo', 'Europe/Sofia', '2012-06-19 11:40:16', '2013-04-01 23:31:52', '2013-04-01 23:31:52');
 
 -- -----------------------------------------------------
 -- Data for table `cms_settings`

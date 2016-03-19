@@ -46,13 +46,14 @@ class Authentication extends Base\Controller
     public $errors = array();
 
     /**
-     * Login constructor.
+     * Authentication constructor.
      */
     public function __construct()
     {
         parent::__construct();
 
         $this->addBeforeFilters(array('loadAssets'));
+        $this->addAfterFilters(array('loadFlashMessage'));
 
         if (Core\Config()->CAPTCHA['enabled'] && in_array(Core\Router()->request->action(), array('login', 'reset'))) {
             $this->loadCaptcha(Core\Config()->CAPTCHA);
@@ -73,9 +74,7 @@ class Authentication extends Base\Controller
         if ($request->is('post')) {
             if ($this->captcha) {
                 if (!Helpers\Captcha::isValid($this->captcha)) {
-                    $labelsCaptcha = Core\Helpers\YAML::get('captcha', $this->labels);
-
-                    Helpers\FlashMessage::set($labelsCaptcha['error'], 'danger');
+                    Helpers\FlashMessage::set($this->labels['captcha']['error'], 'danger');
                     return;
                 }
             }
@@ -87,8 +86,8 @@ class Authentication extends Base\Controller
 
                 /* Regenerate Session key for prevent session id fixation. */
                 Core\Session()->regenerateKey();
-                Core\Session()->set('user_info', rawurlencode(serialize($user)));
-                Core\Session()->set('user_logged', 1);
+                Core\Session()->set('cms_user_info', rawurlencode(serialize($user)));
+                Core\Session()->set('cms_user_logged', 1);
                 Core\Session()->remove('authentication_error');
                 Core\Session()->remove('captcha');
 
@@ -99,11 +98,10 @@ class Authentication extends Base\Controller
                 if ($request->get('redirect')) {
                     $request->redirectTo($request->get('redirect'));
                 } else {
-                    $request->redirectTo(array('controller' => 'users', 'action' => 'account'));
+                    $request->redirectTo(array('controller' => 'account'));
                 }
             } else {
-                $labels_login = Core\Helpers\YAML::get('login', $this->labels);
-                Helpers\FlashMessage::set($labels_login['error'], 'danger');
+                Helpers\FlashMessage::set($this->labels['login']['error'], 'danger');
                 Core\Session()->set('authentication_error', true);
 
                 if (Core\Config()->CAPTCHA['enabled']) {
@@ -111,8 +109,8 @@ class Authentication extends Base\Controller
                 }
             }
         } else {
-            if (Core\Session()->get('user_logged') === 1) {
-                $request->redirectTo(array('controller' => 'users', 'action' => 'account'));
+            if (Core\Session()->get('cms_user_logged') === 1) {
+                $request->redirectTo(array('controller' => 'account'));
             }
         }
     }
@@ -141,7 +139,6 @@ class Authentication extends Base\Controller
     public function reset(Request $request)
     {
         if ($request->is('post')) {
-            $labelsReset = Core\Helpers\YAML::get('reset', $this->labels);
             $this->errors = array();
             $user = new Models\CMSUser;
 
@@ -163,7 +160,6 @@ class Authentication extends Base\Controller
                     'id'         => sha1($user->password . Core\Config()->USER_AUTH['cookie_salt'] . $user->email),
                 ));
 
-                $mailLabels = Core\Helpers\YAML::get('mails', $this->labels);
                 $mailForPasswordReset = array(
                     'from' => array(
                         Core\Config()->MAILER['identity']['email'] => Core\Config()->MAILER['identity']['name']
@@ -171,20 +167,19 @@ class Authentication extends Base\Controller
                     'to' => array(
                         $user->email => $user->name
                     ),
-                    'subject' => $mailLabels['reset']['subject'],
+                    'subject' => $this->labels['mails']['reset']['subject'],
                     'content' => $this->getPartialOutput('authentication/mails/password_reset'),
                 );
 
                 Core\Helpers\Mailer::send($mailForPasswordReset);
-                Helpers\FlashMessage::set($labelsReset['success'], 'success');
+                Helpers\FlashMessage::set($this->labels['reset']['success'], 'success');
                 Core\Session()->remove('authentication_error');
                 Core\Session()->remove('captcha');
             } else {
                 if ($this->captcha) {
-                    $labelsCaptcha = Core\Helpers\YAML::get('captcha', $this->labels);
-                    Helpers\FlashMessage::set($labelsCaptcha['error'], 'danger');
+                    Helpers\FlashMessage::set($this->labels['captcha']['error'], 'danger');
                 } else {
-                    Helpers\FlashMessage::set($labelsReset['error'], 'danger');
+                    Helpers\FlashMessage::set($this->labels['reset']['error'], 'danger');
                 }
 
                 Core\Session()->set('authentication_error', true);
@@ -225,7 +220,7 @@ class Authentication extends Base\Controller
     }
 
     /**
-     * Loads the Captcha.
+     * Loads the CAPTCHA.
      *
      * @param array $configuration Captcha Configuration data.
      *
@@ -256,5 +251,15 @@ class Authentication extends Base\Controller
             'css/bootstrap-theme.athlon.css',
             'css/login.css',
         ));
+    }
+
+    /**
+     * Loads Flash Messages.
+     *
+     * @return void
+     */
+    protected function loadFlashMessage()
+    {
+        $this->renderer->set('flash', Helpers\FlashMessage::get());
     }
 }

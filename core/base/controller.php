@@ -39,7 +39,7 @@ abstract class Controller
     /**
      * Labels name.
      *
-     * @var string|bool
+     * @var array|bool
      * @access public
      */
     public $labels;
@@ -91,7 +91,7 @@ abstract class Controller
             ),
         );
 
-        $this->labels          = $this->labels          ? $this->labels          : $this->meta['controller'];
+        $this->labels          = $this->labels          ? $this->labels          : array($this->meta['controller']);
         $this->rendererAdapter = $this->rendererAdapter ? $this->rendererAdapter : Core\Config()->RENDER['adapter'];
 
         if ($this->rendererAdapter) {
@@ -112,6 +112,8 @@ abstract class Controller
                 $this->renderer->setView($defaultView);
             }
         }
+
+        $this->addBeforeFilters(array('loadLabels'));
     }
 
     /**
@@ -174,7 +176,7 @@ abstract class Controller
             $this->renderer->setView(null);
             $this->renderer->set('_controller', 'base');
             $this->renderer->set('_action', '404');
-            $this->renderer->set('_labels', Core\Helpers\YAML::getAll('globals'));
+            $this->renderer->set('_labels', self::loadLabelsFile('globals'));
 
             Core\Router()->response->setHttpResponseCode(404);
         }
@@ -204,7 +206,7 @@ abstract class Controller
             $renderer = self::assignVariablesToRender($renderer);
             $renderer->set('_controller', 'base');
             $renderer->set('_action', '404');
-            $renderer->set('_labels', Core\Helpers\YAML::getAll('globals'));
+            $renderer->set('_labels', self::loadLabelsFile('globals'));
             $renderer->setLayout('404');
 
             $renderer->setView(null);
@@ -454,24 +456,38 @@ abstract class Controller
      *
      * @access private
      *
+     * @return void
+     */
+    protected function loadLabels()
+    {
+        $labels = self::loadLabelsFile('globals');
+
+        foreach ($this->labels as $labelsFile) {
+            $labels = Core\Utils::arrayExtend($labels, self::loadLabelsFile($labelsFile));
+        }
+
+        $this->labels = $labels;
+    }
+
+    /**
+     * Load Labels file.
+     *
+     * @param string $fileName Labels file name.
+     *
      * @return array
      */
-    private function loadLabels()
+    private static function loadLabelsFile($fileName)
     {
         if (Core\Config()->CACHE['labels']) {
-            $key    = '_silla_'
-                . Core\Config()->paths('mode')
-                . '_labels_'
-                . Core\Registry()->get('locale')
-                . $this->labels;
+            $key = '_silla_' . Core\Config()->paths('mode') . '_labels_' . Core\Registry()->get('locale') . $fileName;
             $labels = Core\Cache()->fetch($key);
 
             if (!$labels) {
-                $labels = Core\Helpers\YAML::getExtendWithGlobals($this->labels);
+                $labels = Core\Helpers\YAML::getAll($fileName);
                 Core\Cache()->store($key, $labels);
             }
         } else {
-            $labels = Core\Helpers\YAML::getExtendWithGlobals($this->labels);
+            $labels = Core\Helpers\YAML::getAll($fileName);
         }
 
         return $labels;
@@ -493,7 +509,7 @@ abstract class Controller
 
         /* Load local labels */
         if ($this->labels) {
-            $this->renderer->set('_labels', $this->loadLabels());
+            $this->renderer->set('_labels', $this->labels);
         }
 
         $locals = get_object_vars($this);

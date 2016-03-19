@@ -60,6 +60,13 @@ abstract class Resource extends Controller
     protected $resourceModel = '';
 
     /**
+     * Resource Sections.
+     *
+     * @var array
+     */
+    public $sections = array();
+
+    /**
      * Resource constructor.
      */
     public function __construct()
@@ -74,7 +81,9 @@ abstract class Resource extends Controller
                 array_keys($this->resource->hasAndBelongsToMany)
             );
 
+            $this->addBeforeFilters(array('loadAttributeSections'), array('except' => 'delete'));
             $this->addBeforeFilters(array('loadResource'), array('only' => array('show', 'edit', 'delete')));
+            $this->addAfterFilters(array('loadFlashMessage'));
         }
     }
 
@@ -211,8 +220,7 @@ abstract class Resource extends Controller
                 $this->afterDelete($request);
             } else {
                 if (!$request->is('xhr')) {
-                    $labelsErrors = Core\Helpers\YAML::get('errors');
-                    Helpers\FlashMessage::set($labelsErrors['not_exists'], 'danger');
+                    Helpers\FlashMessage::set($this->labels['errors']['not_exists'], 'danger');
                 }
 
                 $request->redirectTo('index');
@@ -281,28 +289,27 @@ abstract class Resource extends Controller
     /**
      * Add access to a resource attribute.
      *
-     * @param string $field Attribute field name.
+     * @param array $fields Attribute field names.
      *
      * @return void
      */
-    protected function addAccessibleAttribute($field)
+    protected function addAccessibleAttributes(array $fields)
     {
-        $this->accessibleAttributes[] = $field;
-        $this->accessibleAttributes = array_unique($this->accessibleAttributes);
+        $this->accessibleAttributes = array_unique(array_merge($this->accessibleAttributes, $fields));
     }
 
     /**
      * Remove access to a resource attribute.
      *
-     * @param string $field Attribute field name.
+     * @param array $fields Attribute field names.
      *
      * @return void
      */
-    protected function removeAccessibleAttribute($field)
+    protected function removeAccessibleAttributes(array $fields)
     {
-        if ($key = array_search($field, $this->accessibleAttributes)) {
-            unset($this->accessibleAttributes[$key]);
-        }
+        $this->accessibleAttributes = array_filter($this->accessibleAttributes, function($attribute) use($fields) {
+            return !in_array($attribute, $fields, true);
+        });
     }
 
     /**
@@ -327,11 +334,9 @@ abstract class Resource extends Controller
     protected function afterCreate(Request $request)
     {
         if ($this->resource->hasErrors()) {
-            $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $this->resource->errors());
+            Helpers\FlashMessage::set($this->labels['errors']['general'], 'danger', $this->resource->errors());
         } else {
-            $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-            Helpers\FlashMessage::set($labelsMessages['create']['success'], 'success');
+            Helpers\FlashMessage::set($this->labels['messages']['create']['success'], 'success');
 
             $request->redirectTo('index');
         }
@@ -358,11 +363,9 @@ abstract class Resource extends Controller
     protected function afterEdit(Request $request)
     {
         if ($this->resource->hasErrors()) {
-            $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $this->resource->errors());
+            Helpers\FlashMessage::set($this->labels['errors']['general'], 'danger', $this->resource->errors());
         } else {
-            $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-            Helpers\FlashMessage::set($labelsMessages['edit']['success'], 'success');
+            Helpers\FlashMessage::set($this->labels['messages']['edit']['success'], 'success');
         }
     }
 
@@ -387,8 +390,7 @@ abstract class Resource extends Controller
     protected function afterDelete(Request $request)
     {
         if (!$request->is('xhr')) {
-            $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-            Helpers\FlashMessage::set($labelsMessages['delete']['success'], 'warning');
+            Helpers\FlashMessage::set($this->labels['messages']['delete']['success'], 'warning');
         }
 
         $request->redirectTo('index');
@@ -415,7 +417,7 @@ abstract class Resource extends Controller
             $attributes = array();
 
             /* Determine which model data fields to export. */
-            $sections = Core\Helpers\YAML::get('attributes', $this->labels);
+            $sections = $this->labels['attributes'];
 
             foreach ($sections as $section) {
                 $attributes = array_merge($attributes, $section['fields']);
@@ -437,7 +439,7 @@ abstract class Resource extends Controller
                 $exportFile
             )) {
                 if ('pdf' === $request->get('type')) {
-                    $cmsLabels = Core\Helpers\YAML::getAll('globals');
+                    $cmsLabels = $this->labels;
 
                     $title  = $cmsLabels['export']['caption'] . ' ' .
                         $cmsLabels['modules'][$this->getControllerName()]['title'];
@@ -467,19 +469,44 @@ abstract class Resource extends Controller
      */
     protected function loadResource(Request $request)
     {
-        if (!$request->get('id')) {
-            $request->redirectTo('index');
+        if (!$this->resource->exists()) {
+            if (!$request->get('id')) {
+                $request->redirectTo('index');
+            }
+
+            $resourceModel = $this->resource;
+            $this->resource = $resourceModel::find()
+                ->where($resourceModel::primaryKeyField() . ' = ?', array($request->get('id')))->first();
+
+            if (!$this->resource) {
+                Helpers\FlashMessage::set($this->labels['errors']['not_exists'], 'danger');
+
+                $request->redirectTo('index');
+            }
         }
+    }
 
-        $resourceModel = $this->resource;
-        $this->resource = $resourceModel::find()
-            ->where($resourceModel::primaryKeyField() . ' = ?', array($request->get('id')))->first();
+    /**
+     * Loads Flash Messages.
+     *
+     * @return void
+     */
+    protected function loadFlashMessage()
+    {
+        $this->renderer->set('flash', Helpers\FlashMessage::get());
+    }
 
-        if (!$this->resource) {
-            $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::set($labelsErrors['not_exists'], 'danger');
-
-            $request->redirectTo('index');
-        }
+    /**
+     * Loads Attribute Sections.
+     *
+     * @param Request $request Current router request.
+     *
+     * @return void
+     */
+    protected function loadAttributeSections(Request $request)
+    {
+        $this->sections = array_filter($this->labels['attributes'], function($section) {
+            return !(isset($section['meta']['custom']) && $section['meta']['custom']);
+        });
     }
 }

@@ -3,7 +3,7 @@ attributes:
   general:
     meta:
       title     : General
-      icon      : cog
+      icon      : user
       desc      : Mandatory user data.
       serialize : false
     fields:
@@ -35,21 +35,6 @@ attributes:
         icon    : cog
         filter  : true
         export  : false
-      password:
-        title   : Password
-        type    : password
-        desc    : '<span class="label label-danger">Important</span> Use hard to guess passphrases. It must be at least 8 characters consited of <em class="muted"><u>lower letters</u> + <u>capital letters</u> + <u>numbers</u> + <u>special chars</u></em>.'
-        list    : false
-        length  : 100
-        export  : false
-        hidden  : true
-      password_confirm:
-        title   : Password Confirm
-        type    : password
-        desc    : Confirm the new passphrase by entering it again.
-        list    : false
-        export  : false
-        hidden  : true
       login_on:
         title   : Last login
         type    : datetime
@@ -71,16 +56,47 @@ attributes:
         readonly: true
         list    : false
         export  : false
+  credentials:
+    meta:
+      title     : Credentials
+      icon      : lock
+      desc      : Manage user access credentials.
+      serialize : false
+      show      : false
+    fields:
+      current_password:
+        title   : Your Current Password
+        type    : password
+        desc    : To ensure this action you must enter your current <abbr data-toggle="tooltip" data-placement="right" title="Password of the logged in user.">password</abbr>.
+        list    : false
+        length  : 100
+        export  : false
+        hidden  : true
+      password:
+        title   : Password
+        type    : password
+        desc    : '<span class="label label-danger">Important</span> Use hard to guess passphrases. It must be at least 8 characters consited of <em class="muted"><u>lower letters</u> + <u>capital letters</u> + <u>numbers</u> + <u>special chars</u></em>.'
+        list    : false
+        length  : 100
+        export  : false
+        hidden  : true
+      password_confirm:
+        title   : Confirm password
+        type    : password
+        desc    : Confirm the new passphrase by entering it again.
+        list    : false
+        export  : false
+        hidden  : true
   settings:
     meta:
       title     : Settings
-      icon      : time
+      icon      : cog
       desc      : Additinal user settings.
       serialize : false
     fields:
       timezone:
         title   : Timezone
-        type    : select
+        type    : timezone
         desc    : Choose your timezone - <abbr data-toggle="tooltip" data-placement="bottom" title="Daylight Saving Time">DST</abbr> is automatically calculated based on the time of the year.
         icon    : globe
         list    : false
@@ -98,7 +114,6 @@ messages:
     success: The user has been successfully added!
   edit:
     success: The user has been successfully amended!
-    account: Your user account profile has been successfully updated!
   delete:
     success: The selected user has been permanently deleted!
     self   : The selected role cannot be deleted! You cannot delete yourself!

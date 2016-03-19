@@ -12,6 +12,7 @@
 namespace CMS\Helpers;
 
 use Core;
+use CMS;
 
 /**
  * Users Helper Class Definition.
@@ -50,7 +51,7 @@ class CMSUsers
                 $controller_name = '\CMS\Controllers\\' . $resource;
                 $controller_object = new $controller_name;
 
-                if ('CMS\Controllers\CMS' == get_parent_class($controller_object)) {
+                if ($controller_object instanceof CMS\Controllers\CMS) {
                     $accessibility_scope[$resource] = array_diff(get_class_methods($controller_name), $builtin_actions);
                     array_push($accessibility_scope[$resource], 'index');
 
@@ -80,7 +81,7 @@ class CMSUsers
     public static function userCan(array $scope, $user = null)
     {
         if (!$user) {
-            $user = Core\Registry()->get('current_user');
+            $user = Core\Registry()->get('current_cms_user');
         }
 
         $_cache_key = md5(serialize($user) . serialize($scope));

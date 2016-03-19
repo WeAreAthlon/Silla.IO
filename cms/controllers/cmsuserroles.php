@@ -1,6 +1,6 @@
 <?php
 /**
- * UserRoles Controller.
+ * CMS User Roles Controller.
  *
  * @package    Silla.IO
  * @subpackage CMS\Controllers;
@@ -19,9 +19,9 @@ use CMS\Models;
 use CMS\Helpers;
 
 /**
- * Class UserRoles Controller definition.
+ * Class CMS User Roles Controller definition.
  */
-class UserRoles extends CMS
+class CMSUserRoles extends CMS
 {
     /**
      * Resource Model class name.
@@ -60,7 +60,7 @@ class UserRoles extends CMS
             if (!$request->post('current_password')) {
                 $this->resource->setError('current_password', 'not_empty');
             } else {
-                $currentUser = Core\Registry()->get('current_user');
+                $currentUser = Core\Registry()->get('current_cms_user');
 
                 if (!Crypt::hashCompare($currentUser->password, $request->post('current_password'))) {
                     $this->resource->setError('current_password', 'mismatch');
@@ -82,8 +82,7 @@ class UserRoles extends CMS
     {
         if (!$request->post('password') || !Crypt::hashCompare($this->user->password, $request->post('password'))) {
             if (!$request->is('xhr')) {
-                $labelsGeneral = Core\Helpers\YAML::get('general');
-                Helpers\FlashMessage::set($labelsGeneral['not_authorized'], 'danger');
+                Helpers\FlashMessage::set($this->labels['general']['not_authorized'], 'danger');
             }
 
             $request->redirectTo('index');
@@ -91,8 +90,7 @@ class UserRoles extends CMS
 
         if ($this->user->role_id == $this->resource->id) {
             if (!$request->is('xhr')) {
-                $labelsErrors = Core\Helpers\YAML::get('messages', $this->labels);
-                Helpers\FlashMessage::set($labelsErrors['delete']['self'], 'danger');
+                Helpers\FlashMessage::set($this->labels['errors']['delete']['self'], 'danger');
             }
 
             $request->redirectTo('index');

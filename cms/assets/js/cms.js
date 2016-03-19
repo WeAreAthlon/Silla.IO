@@ -175,7 +175,7 @@ var CMS = {
                     var element = $(this);
                     var isInDataTableContext = (element.closest('table[data-type="xhr"]').length > 0);
                     var isInPreviewContext   = (element.closest('.modal-dialog').length > 0);
-                    var isProtected          = (element.data('controller') === 'users' || element.data('controller') === 'userroles');
+                    var isProtected          = (element.data('controller') === 'cmsusers' || element.data('controller') === 'cmsuserroles');
                     var passwordInput        = $('<div>').append($('<div>', {'class': 'form-group has-warning margin-vertical'})
                         .append($('<label>', {'class': 'sr-only', 'for': 'password-confirmation'}).text(Silla.labels.delete_confirmation.password))
                         .append($('<input>', {'type' : 'password', 'class': 'form-control', 'id': 'password-confirmation', 'placeholder': Silla.labels.delete_confirmation.password})));

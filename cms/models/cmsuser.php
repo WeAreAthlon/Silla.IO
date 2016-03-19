@@ -62,6 +62,8 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     }
 
     /**
+     * Additional validations.
+     *
      * @inheritdoc
      */
     public function afterValidate()
@@ -70,16 +72,14 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
             $this->setError('email', 'invalid_format');
         }
 
-        if (!$this->isNewRecord() && $this->getError('password')) {
-            $this->removeError('password');
-        }
-
-        if ($this->password && !Core\Utils::validatePassword($this->password)) {
+        if (!$this->getError('password') && !Core\Utils::validatePassword($this->password)) {
             $this->setError('password', 'weak');
         }
     }
 
     /**
+     * Store current password for later reference.
+     *
      * @inheritdoc
      */
     public function beforePopulate()
@@ -88,7 +88,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     }
 
     /**
-     * Hashes the user password.
+     * Hashes the new password if the password is different form the stored one.
      *
      * @inheritdoc
      */

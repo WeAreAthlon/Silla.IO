@@ -87,13 +87,18 @@ abstract class Formatting implements Interfaces\Decorator
     public static function format(Base\Model $resource)
     {
         foreach (self::$formalizeFields as $field) {
-            $parsedown =  new \Parsedown();
+            $parser = new \Parsedown();
+
             if (is_array($resource->{$field})) {
-                $resource->{$field} =  serialize(array('formatted' => $parsedown->parse($resource->{$field}['raw']),
-                'raw' => $resource->{$field}['raw']));
+                $resource->{$field} = serialize(array(
+                    'formatted' => $parser->parse($resource->{$field}['raw']),
+                    'raw' => $resource->{$field}['raw'],
+                ));
             } else {
-                $resource->{$field} =  serialize(array('formatted' => $parsedown->parse($resource->{$field}),
-                    'raw' => $resource->{$field}));
+                $resource->{$field} = serialize(array(
+                    'formatted' => $parser->parse($resource->{$field}),
+                    'raw' => $resource->{$field},
+                ));
             }
         }
     }

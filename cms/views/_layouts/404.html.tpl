@@ -16,7 +16,7 @@
              <div class="col-lg-12">
                  <h1 class="text-thin">{$_labels.page_not_found.title}</h1>
                  <p class="text-thin">{$_labels.page_not_found.desc}</p>
-                 <p class="text-thin"><a href="{link_to controller=users action=account}" class="btn btn-link btn-lg no-padding-left"><i class="glyphicon glyphicon-user"></i> {$_labels.modules.users.account}</a></p>
+                 <p class="text-thin"><a href="{link_to controller=account}" class="btn btn-link btn-lg no-padding-left"><i class="glyphicon glyphicon-user"></i> {$_labels.modules.account.title}</a></p>
              </div>
           </div>
           {include file='_shared/footer.html.tpl'}

@@ -35,48 +35,58 @@ buttons:
   login  : Sign in
 
 modules:
-  users:
+  cmsusers:
     title   : Users
     desc    : Users. User profiles management.
     icon    : user
-    index   : Users list
-    create  : Add new user
-    edit    : Edit user profile
-    account : Profile
+    index   : Listing
+    show    : View
+    create  : Create new User
+    credentials: Credentials
+    edit    : Edit User
+    delete  : Delete User
+    export  : Export Users
     hidden  : true
-  userroles:
+  cmsuserroles:
     title   : User Roles
     desc    : Definition and management of access levels.
     icon    : cog
-    index   : User Roles
-    create  : Add new role
-    edit    : Edit role
+    show    : View
+    index   : Listing
+    create  : Create new Role
+    edit    : Edit Role
+    delete  : Delete Role
+    export  : Export User Roles
+    hidden  : true
+  account:
+    title   : Account
+    desc    : Manage profile account data.
+    icon    : user
+    show    : View
+    edit    : Update Profile
+    index   : Update Profile
+    export  : Export Profile
+    credentials: Credentials
     hidden  : true
   cmshelp:
     title   : Help
     desc    : User manual for working with the CMS.
     icon    : flag
+    show    : View
     index   : Index
-    create  : Create Help Page
-    edit    : Edit Help Page
+    create  : Create Page
+    edit    : Edit Page
+    delete  : Delete Page
+    export  : Export Pages
     hidden  : true
 
 sections:
-  index     : Index
-  create    : Create
-  edit      : Edit
-  delete    : Delete
-  show      : Show
-  preview   : Preview
-  login     : User log in
-  logout    : Sign out
-  read      : Read
-  filter    : Filtering
-  reset     : Forgotten password
+  login      : User log in
+  logout     : Sign out
+  filter     : Filtering
+  reset      : Forgotten password
   reset_access : Reset account access
-  manage    : Manage
-  export    : Export
-  upload    : Upload
+  export     : Export
 
 errors:
   general          : The following errors have prevented the record from being saved
@@ -100,8 +110,8 @@ pagination:
   of       : of
   first    : First
   last     : Last
-  next     : »
-  prev     : «
+  next     : '<span class="glyphicon glyphicon-menu-right"></span>'
+  prev     : '<span class="glyphicon glyphicon-menu-left"></span>'
   per_page : Per page
   limits   :
     10 : 10
@@ -175,6 +185,7 @@ navigation_groups:
     title: CMS Settings
     icon : cog
     modules:
-      - users
-      - userroles
+      - account
+      - cmsusers
+      - cmsuserroles
       - cmshelp

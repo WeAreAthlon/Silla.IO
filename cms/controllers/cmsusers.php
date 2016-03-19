@@ -1,6 +1,6 @@
 <?php
 /**
- * Users Controller.
+ * CMS Users Controller.
  *
  * @package    Silla.IO
  * @subpackage CMS\Controllers;
@@ -19,9 +19,9 @@ use CMS\Models;
 use CMS\Helpers;
 
 /**
- * Class Users Controller definition.
+ * Class CMS Users Controller definition.
  */
-class Users extends CMS
+class CMSUsers extends CMS
 {
     /**
      * Resource Model class name.
@@ -31,12 +31,31 @@ class Users extends CMS
     protected $resourceModel = 'CMS\Models\CMSUser';
 
     /**
+     * Additional validation rules to ensure password confirmation.
+     *
+     * @inheritdoc
+     */
+    protected function beforeCreate(Request $request)
+    {
+        parent::beforeCreate($request);
+
+        if ($request->is('post')) {
+            if ($request->post('password') !== $request->post('password_confirm')) {
+                $this->resource->setError('password_confirm', 'mismatch');
+            }
+        }
+    }
+
+
+    /**
      * Additional validation rules to ensure user is authorized to edit this resource.
      *
      * @inheritdoc
      */
     protected function beforeEdit(Request $request)
     {
+        parent::beforeEdit($request);
+
         if ($request->is('post')) {
             if (!Crypt::hashCompare($this->user->password, $request->post('current_password'))) {
                 $this->resource->setError('current_password', 'mismatch');
@@ -49,18 +68,20 @@ class Users extends CMS
     }
 
     /**
-     * Account action.
+     * Change access credentials action.
      *
      * @param Request $request Current router request.
      *
      * @return void
      */
-    public function account(Request $request)
+    public function credentials(Request $request)
     {
-        $this->resource = $this->user;
-        $this->removeAccessibleAttribute('role_id');
-
+        $this->loadResource($request);
         $this->edit($request);
+
+        if ($request->is('post') && !$this->resource->hasErrors()) {
+            $request->redirectTo('index');
+        }
     }
 
     /**
@@ -74,8 +95,7 @@ class Users extends CMS
     {
         if (!$request->post('password') || !Crypt::hashCompare($this->user->password, $request->post('password'))) {
             if (!$request->is('xhr')) {
-                $labelsGeneral = Core\Helpers\YAML::get('general');
-                Helpers\FlashMessage::set($labelsGeneral['not_authorized'], 'danger');
+                Helpers\FlashMessage::set($this->labels['general']['not_authorized'], 'danger');
             }
 
             $request->redirectTo('index');
@@ -83,8 +103,7 @@ class Users extends CMS
 
         if ($this->resource->id == $this->user->id) {
             if (!$request->is('xhr')) {
-                $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-                Helpers\FlashMessage::set($labelsMessages['delete']['self'], 'danger');
+                Helpers\FlashMessage::set($this->labels['messages']['delete']['self'], 'danger');
             }
 
             $request->redirectTo('index');
@@ -103,7 +122,29 @@ class Users extends CMS
         parent::afterEdit($request);
 
         if ($request->is('post') && !$this->resource->hasErrors() && ($this->resource->id == $this->user->id)) {
-            Core\Session()->set('user_info', rawurlencode(serialize($this->resource)));
+            Core\Session()->set('cms_user_info', rawurlencode(serialize($this->resource)));
+            $this->user = $this->resource;
+        }
+    }
+
+    /**
+     * Prevent credentials management on edit action.
+     *
+     * @inheritdoc
+     */
+    protected function loadAttributeSections(Request $request)
+    {
+        parent::loadAttributeSections($request);
+
+        if ($request->action() === 'credentials') {
+            $this->removeAccessibleAttributes(array_merge(
+                array_keys($this->sections['general']['fields']),
+                array_keys($this->sections['settings']['fields'])
+            ));
+            unset($this->sections['general'], $this->sections['settings']);
+        } elseif($request->action() === 'edit') {
+            $this->removeAccessibleAttributes(array_keys($this->sections['credentials']['fields']));
+            unset($this->sections['credentials']);
         }
     }
 }

@@ -4,7 +4,8 @@
     {include file="_shared/entities/show/header.html.tpl"}
 {/if}
 
-{foreach from=$_labels.attributes key=section_key item=section}
+{foreach from=$sections key=section_key item=section}
+{if $section.meta.show|default:true}
     {if $section.fields|default:false}
     {$section.serialize = $section.meta.serialize|default:false}
     <h3 class="no-margin-top text-thin"><i class="glyphicon glyphicon-{$section.meta.icon}"></i> {$section.meta.title}</h3>
@@ -52,6 +53,7 @@
     </table>
     <hr />
     {/if}
+{/if}
 {/foreach}
 
 {if "{$_controller}/_show/footer.html.tpl"|template_exists}

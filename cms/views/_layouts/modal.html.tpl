@@ -1,4 +1,2 @@
-<div class="status-alert-area">
-     {flash_message}
-</div>
+{include file='_shared/flash-message.html.tpl'}
 {$_content_view_yield}

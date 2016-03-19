@@ -64,33 +64,4 @@ class YAML
 
         return \Spyc::YAMLLoad(Core\Config()->paths('labels') . $locale . DIRECTORY_SEPARATOR . $type . '.yaml');
     }
-
-    /**
-     * Fetch labels from the filesystem.
-     *
-     * @param string $labels Name of the labels file.
-     * @param string $locale Locale code.
-     *
-     * @static
-     * @see    \Spyc
-     *
-     * @return array
-     */
-    public static function getExtendWithGlobals($labels, $locale = '')
-    {
-        if (!$locale) {
-            $locale = Core\Registry()->get('locale');
-        }
-
-        $globals = \Spyc::YAMLLoad(Core\Config()->paths('labels') . $locale . DIRECTORY_SEPARATOR . 'globals.yaml');
-        $labelsLocalFile = Core\Config()->paths('labels') . $locale . DIRECTORY_SEPARATOR . $labels . '.yaml';
-
-        $labels = $globals;
-
-        if (is_file($labelsLocalFile)) {
-            $labels = Core\Utils::arrayExtend($globals, \Spyc::YAMLLoad($labelsLocalFile));
-        }
-
-        return $labels;
-    }
 }
