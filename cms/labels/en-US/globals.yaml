@@ -74,6 +74,7 @@ modules:
     icon    : flag
     show    : View
     index   : Index
+    preview : Preview
     create  : Create Page
     edit    : Edit Page
     delete  : Delete Page

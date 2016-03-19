@@ -37,7 +37,6 @@
         </div>
     {/foreach}
     </div>
-
     <input type="hidden" name="_token" value="{$_request->token()}" />
     <div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div class="navbar-header width-full padding-horizontal">

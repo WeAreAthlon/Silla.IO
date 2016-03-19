@@ -1,6 +1,6 @@
 <?php
 /**
- * CMS Controller.
+ * Authentication Controller.
  *
  * @package    Silla.IO
  * @subpackage CMS\Controllers
@@ -19,7 +19,7 @@ use CMS\Models;
 use CMS\Helpers;
 
 /**
- * Class Login Controller definition.
+ * Class Authentication Controller definition.
  */
 class Authentication extends Base\Controller
 {

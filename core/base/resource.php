@@ -505,8 +505,6 @@ abstract class Resource extends Controller
      */
     protected function loadAttributeSections(Request $request)
     {
-        $this->sections = array_filter($this->labels['attributes'], function($section) {
-            return !(isset($section['meta']['custom']) && $section['meta']['custom']);
-        });
+        $this->sections = $this->labels['attributes'];
     }
 }

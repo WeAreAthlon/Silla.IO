@@ -1,5 +1,5 @@
 <div class="media account-profile-preview-wrapper">
-    <a class="pull-left" href="#">
+    <a class="pull-left" href="{link_to controller=account}">
         <img src="{'CMS\Helpers\CMSUsers::getGravatar'|call_user_func_array:[$user->email, 75]}" class="img-circle pull-left" alt="{$user->name|escape}"/>
     </a>
     <div class="media-body">

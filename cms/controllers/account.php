@@ -59,36 +59,18 @@ class Account extends CMSUsers
     }
 
     /**
-     * @inheritdoc
-     */
-    public function show(Request $request)
-    {
-        $request->redirectTo('index');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function delete(Request $request)
-    {
-        $request->redirectTo('index');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function export(Request $request)
-    {
-        $request->redirectTo('index');
-    }
-
-    /**
      * Assign current user as a resource object.
+     *
+     * @param Request $request Current Router Request.
      *
      * @return void
      */
-    protected function assignCurrentUserAsResource()
+    protected function assignCurrentUserAsResource(Request $request)
     {
+        if (in_array($request->action(), array('edit', 'delete', 'show', 'export'), true)) {
+            $request->redirectTo('index');
+        }
+
         $this->resource = $this->user;
         $this->removeAccessibleAttributes(array('role_id'));
     }
