@@ -57,14 +57,8 @@ class CMSUserRoles extends CMS
     protected function beforeEdit(Request $request)
     {
         if ($request->is('post')) {
-            if (!$request->post('current_password')) {
-                $this->resource->setError('current_password', 'not_empty');
-            } else {
-                $currentUser = Core\Registry()->get('current_cms_user');
-
-                if (!Crypt::hashCompare($currentUser->password, $request->post('current_password'))) {
-                    $this->resource->setError('current_password', 'mismatch');
-                }
+            if (!Crypt::hashCompare($this->user->password, $request->post('current_password'))) {
+                $this->resource->setError('current_password', 'mismatch');
             }
         }
     }

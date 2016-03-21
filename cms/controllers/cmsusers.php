@@ -39,6 +39,12 @@ class CMSUsers extends CMS
     {
         parent::beforeCreate($request);
 
+        /* Remove current password entrance. */
+        unset(
+            $this->sections['general']['fields']['current_password'],
+            $this->sections['credentials']['fields']['current_password']
+        );
+
         if ($request->is('post')) {
             if ($request->post('password') !== $request->post('password_confirm')) {
                 $this->resource->setError('password_confirm', 'mismatch');
@@ -77,6 +83,15 @@ class CMSUsers extends CMS
     public function credentials(Request $request)
     {
         $this->loadResource($request);
+
+        /* Prevent access to other resource attributes except credentials. */
+        $this->removeAccessibleAttributes(array_merge(
+            array_keys($this->sections['general']['fields']),
+            array_keys($this->sections['settings']['fields'])
+        ));
+
+        unset($this->sections['general'], $this->sections['settings']);
+
         $this->edit($request);
 
         if ($request->is('post') && !$this->resource->hasErrors()) {
@@ -136,13 +151,7 @@ class CMSUsers extends CMS
     {
         parent::loadAttributeSections($request);
 
-        if ($request->action() === 'credentials') {
-            $this->removeAccessibleAttributes(array_merge(
-                array_keys($this->sections['general']['fields']),
-                array_keys($this->sections['settings']['fields'])
-            ));
-            unset($this->sections['general'], $this->sections['settings']);
-        } elseif($request->action() === 'edit') {
+        if($request->action() === 'edit') {
             $this->removeAccessibleAttributes(array_keys($this->sections['credentials']['fields']));
             unset($this->sections['credentials']);
         }

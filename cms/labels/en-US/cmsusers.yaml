@@ -116,4 +116,4 @@ messages:
     success: The user has been successfully amended!
   delete:
     success: The selected user has been permanently deleted!
-    self   : The selected role cannot be deleted! You cannot delete yourself!
+    self   : The selected user cannot be deleted! You cannot delete yourself!
