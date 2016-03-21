@@ -9,7 +9,7 @@
                 <p class="font-size-bigger text-center padding-full text-thin">{$_labels.general.loading}</p>
             </div>
             <div class="modal-footer modal-actions-wrapper">
-                <button type="button" class="btn btn-default" data-dismiss="modal">{$_labels.buttons.close}</button>
+                <button type="button" class="btn btn-outline btn-default" data-dismiss="modal">{$_labels.buttons.close}</button>
             </div>
         </div>
     </div>

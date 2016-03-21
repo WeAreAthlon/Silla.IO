@@ -50,20 +50,20 @@
                     </div>
                     <div class="col-lg-4 col-sm-6 col-md-6 col-xs-12">
                         <div class="datatable-tools pull-right bootstrap-select-wrapper">
-                            <label class="muted text-thin">{$_labels.pagination.per_page}: </label>
+                            <label class="muted font-weight-normal">{$_labels.pagination.per_page}: </label>
                             <div class="pagination-per-page-selector form-input-wrapper-sm dropup">
                                 {html_options name='pagination[limit]' options=$_labels.pagination.limits selected=$_get.pagination.limit|default:current($_labels.pagination.limits)}
                             </div>
-                            <div class="daterange btn btn-default btn-sm dropup" data-date-format="{#datepicker_format#}" data-attribute="created_on" data-attribute-title="{$_labels.daterange.ranges.all|escape}" data-range-labels='{$_labels.daterange.ranges|json_encode}' data-locale-labels='{$_labels.daterange.locales|json_encode}'>
-                                <i class="glyphicon glyphicon-align-justify glyphicon glyphicon-large text-danger"></i>
-                                <span class="text-danger">{$_labels.daterange.ranges.all}</span>
+                            <div class="daterange btn btn-outline btn-default btn-sm dropup" data-date-format="{#datepicker_format#}" data-attribute="created_on" data-attribute-title="{$_labels.daterange.ranges.all|escape}" data-range-labels='{$_labels.daterange.ranges|json_encode}' data-locale-labels='{$_labels.daterange.locales|json_encode}'>
+                                <i class="glyphicon glyphicon-time"></i>
+                                <span>{$_labels.daterange.ranges.all}</span>
                                 <b class="caret"></b>
                                 <input type="hidden" name="filtering[created_on][start]" class="daterange-start" value="{$_get.filtering.created_on.start|default:''}">
                                 <input type="hidden" name="filtering[created_on][end]" class="daterange-end" value="{$_get.filtering.created_on.end|default:''}">
                             </div>
                             {if {user_can controller=$_controller action=export}}
                                 <div class="btn-group data-export dropup">
-                                    <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+                                    <a class="btn btn-outline btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="javascript:;">
                                         <span class="glyphicon glyphicon-download-alt"></span> {$_labels.export.title}
                                         <span class="caret"></span>
                                     </a>

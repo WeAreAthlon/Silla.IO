@@ -1,6 +1,6 @@
 /*!
- * Bootstrap v3.0.2 Theme
- * Copyright 2013 Athlon Production, Inc.
+ * Bootstrap v3.1.3 Theme
+ * Copyright 2015 Athlon Production, Inc.
  * Author Plamen Nikolov <plamen@athlonsofia.com>
  */
 
@@ -24,6 +24,7 @@
 .clear-left        { clear: left !important; }
 .block             { display: block !important; }
 .display-hidden    { display: none; }
+.display-table-cell{ display: table-cell; }
 .text-thin         { font-weight: 200 !important; }
 .text-thinner      { font-weight: 100 !important; }
 .clip              { overflow: hidden !important; }
@@ -34,24 +35,26 @@
 .font-size-normal  { font-size: 14px !important; }
 .font-size-bigger  { font-size: 16px !important; }
 .font-weight-normal{ font-weight: normal !important; }
+.vertical-align-top { vertical-align: top; }
+.vertical-align-middle { vertical-align: middle; }
+.vertical-align-bottom { vertical-align: bottom; }
+.vertical-center { display: inline-block; vertical-align: middle; }
 
 body, input, textarea, select, button { font-family: 'Helvetica Neue', 'Open Sans', Helvetica, Arial, sans-serif; }
-a, .btn-link      { color: #ED1F4E; }
+a, a.btn-link, .btn-link { color: #ED1F4E; }
 a:active, a:focus { text-decoration: none; }
 a:hover, a:focus, .btn-link:hover, .btn-link:focus { color: #040707; }
-.btn-default { background-image: linear-gradient(to bottom, #FFFFFF 0px, #E6E6E6 100%); background-repeat: repeat-x; border-color: #CCCCCC; text-shadow: 0 1px 0 #FFFFFF; }
-.btn-default:hover, .btn-default:focus { background-color: #E6E6E6; background-position: 0 -15px; }
-.btn-danger, .has-error .btn-default { background-image: linear-gradient(to bottom, #D9534F 0px, #C12E2A 100%); background-repeat: repeat-x; border-color: #B92C28; }
-.btn-danger:hover, .has-error .btn-default:hover, .btn-primary:focus, .has-error .btn-default:focus { background-color: #C12E2A; background-position: 0 -15px; }
-.btn-success { background-image: linear-gradient(to bottom, #5cb85c 0px, #419641 100%); background-repeat: repeat-x; border-color: #3e8f3e; }
-.btn-success:hover, .btn-success:focus { background-color: #419641; background-position: 0 -15px; }
+.btn-default:hover, .btn-default:focus, .btn-default:hover .text-danger { background: #999999; color: #FFFFFF; border-color: #999999; }
+.btn-danger, .has-error .btn-default { color: #B92C28; }
+.btn-danger:hover, .has-error .btn-default:hover, .btn-primary:focus, .has-error .btn-default:focus { background: #C12E2A; }
 .has-error .btn-default { color: #FFFFFF; text-shadow: none !important; }
-.btn-primary { background-image: linear-gradient(to bottom, #428BCA 0px, #2D6CA2 100%); background-repeat: repeat-x; border-color: #2B669A;}
-.btn-primary:hover, .btn-primary:focus { background-color: #2D6CA2; background-position: 0 -15px; }
-.navbar-default { background-image: linear-gradient(to bottom, #FFFFFF 0px, #F8F8F8 15%); background-repeat: repeat-x; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 1px 5px rgba(0, 0, 0, 0.075); }
+.navbar-default { background-image: linear-gradient(to bottom, #FFFFFF 0px, #F8F8F8 15%); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 1px 5px rgba(0, 0, 0, 0.075); }
+.btn-primary.btn-disabled { cursor: not-allowed !important; background: transparent !important; opacity: 0.6; }
+.btn-primary.btn-disabled:hover { color: #2B669A; }
 
 .bordered           { border: 1px solid #D4D4D4; }
 .border-rounded     { border-radius: 3px; }
+.border-accent      { border-color: #999999; }
 .padding-horizontal { padding: 0 8px !important; }
 .padding-vertical   { padding: 8px 0 !important; }
 .padding-full       { padding: 8px !important;   }
@@ -60,6 +63,10 @@ a:hover, a:focus, .btn-link:hover, .btn-link:focus { color: #040707; }
 .margin-horizontal  { margin: 0 8px !important; }
 .margin-vertical    { margin: 8px 0 !important; }
 .margin-full        { margin: 8px !important;   }
+.margin-top         { margin: 8px 0 0 0 !important; }
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control { background-color: #EFEFEF !important; }
+.form-control-file input.form-control { border-radius: 0 4px 4px 0 !important; }
 
 /* Accents */
 .accent, .panel-default .panel-heading { background: #FAFAFA linear-gradient(to bottom, #FFFFFF, #F2F2F2) repeat-x; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067); }
@@ -68,3 +75,20 @@ a:hover, a:focus, .btn-link:hover, .btn-link:focus { color: #040707; }
 .accent-light { background: #FFFFFF; background: linear-gradient(to bottom, #ffffff 0%,#F2F2F2 50%,#F0F0F0 60%,#ffffff 100%); }
 .navbar-header .breadcrumb { line-height: 20px; padding: 15px 0; white-space: nowrap; }
 .navbar-header .breadcrumb a:hover { text-decoration: none; }
+
+/* Outline buttons */
+.btn-outline { background-color: transparent; color: inherit; transition: all .5s; }
+.btn-default.btn-outline { color: #666666; }
+.btn-primary.btn-outline { color: #2e6da4; }
+.btn-success.btn-outline { color: #4cae4c; }
+.btn-info.btn-outline { color: #5bc0de; }
+.btn-warning.btn-outline { color: #f0ad4e; }
+.btn-danger.btn-outline { color: #ac2925; }
+.btn-default.btn-outline:hover,
+.btn-primary.btn-outline:hover,
+.btn-success.btn-outline:hover,
+.btn-info.btn-outline:hover,
+.btn-warning.btn-outline:hover,
+.btn-danger.btn-outline:hover {
+    color: #fff;
+}

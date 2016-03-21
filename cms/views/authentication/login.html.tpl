@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="text-center">
-        <button class="btn btn-primary text-thin" type="submit" tabindex="4"><i class="glyphicon glyphicon-log-in"></i> &nbsp;{$_labels.buttons.login}</button>
+        <button class="btn btn-outline btn-primary text-thin" type="submit" tabindex="4"><i class="glyphicon glyphicon-log-in"></i> &nbsp;{$_labels.buttons.login}</button>
     </div>
     <input type="hidden" name="_token" value="{$_request->token()}" />
 </form>

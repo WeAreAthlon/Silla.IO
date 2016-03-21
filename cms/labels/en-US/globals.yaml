@@ -128,8 +128,8 @@ files:
 
 filtering:
   title  : Filter data
-  submit : Filter the result set
-  reset  : Reset the current filter
+  submit : Apply
+  reset  : Reset
 
 datatable:
   totals: Showing %d to %d of %d entries.
