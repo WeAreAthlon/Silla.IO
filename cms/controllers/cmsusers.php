@@ -39,7 +39,7 @@ class CMSUsers extends CMS
     {
         parent::beforeCreate($request);
 
-        /* Remove current password entrance. */
+        /* Remove current password validation. */
         unset(
             $this->sections['general']['fields']['current_password'],
             $this->sections['credentials']['fields']['current_password']

@@ -231,7 +231,7 @@ abstract class Configuration
             'url'      => 'cms/',
         ),
         array(
-            'name'     => 'default',
+            'name'     => 'app',
             'location' => 'app/',
             'url'      => '/',
         ),

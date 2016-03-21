@@ -32,7 +32,7 @@ class YAML
      *
      * @return array|null
      */
-    public static function get($key, $type = 'globals', $locale = '')
+    public static function get($key, $type = 'cms', $locale = '')
     {
         if (!$locale) {
             $locale = Core\Registry()->get('locale');

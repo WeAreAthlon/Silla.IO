@@ -48,11 +48,19 @@ class CMSUserRoles extends CMS
     }
 
     /**
+     * Remove current password validation.
+     *
+     * @inheritdoc
+     */
+    protected function beforeCreate(Request $request)
+    {
+        unset($this->sections['general']['fields']['current_password']);
+    }
+
+    /**
      * Additional validation rules to ensure user is authorized to edit this resource.
      *
-     * @param Request $request Current router request.
-     *
-     * @return void
+     * @inheritdoc
      */
     protected function beforeEdit(Request $request)
     {
@@ -68,9 +76,7 @@ class CMSUserRoles extends CMS
      *
      * Request current user password before deletion of any User Roles.
      *
-     * @param Request $request Current router request.
-     *
-     * @return void
+     * @inheritdoc
      */
     protected function beforeDelete(Request $request)
     {

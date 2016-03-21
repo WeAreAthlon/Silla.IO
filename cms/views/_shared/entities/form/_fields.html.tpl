@@ -38,7 +38,7 @@
                     </div>
                 {/if}
             {/if}
-                <p class="muted text-thin help-block">{$attr.desc|default:''}</p>
+                <p class="text-muted text-thin help-block">{$attr.desc|default:''}</p>
             </div>
         </div>
         {/if}

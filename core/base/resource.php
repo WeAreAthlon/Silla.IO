@@ -403,7 +403,6 @@ abstract class Resource extends Controller
      *
      * @uses   CMS\Helpers\Export
      * @uses   CMS\Helpers\CMSUsers
-     * @uses   Core\Helpers\YAML
      *
      * @return void
      */

@@ -119,7 +119,7 @@ abstract class CMS extends Core\Base\Resource
      */
     protected function loadAccessibilityScope()
     {
-        $this->modules = array_keys(Core\Helpers\YAML::get('modules'));
+        $this->modules = array_keys($this->labels['modules']);
 
         foreach ($this->modules as $key => $module) {
             if (!Helpers\CMSUsers::userCan(array('controller' => $module, 'action' => 'index'))) {

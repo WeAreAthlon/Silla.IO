@@ -176,7 +176,7 @@ abstract class Controller
             $this->renderer->setView(null);
             $this->renderer->set('_controller', 'base');
             $this->renderer->set('_action', '404');
-            $this->renderer->set('_labels', self::loadLabelsFile('globals'));
+            $this->renderer->set('_labels', self::loadLabelsFile(Core\Config()->mode('name')));
 
             Core\Router()->response->setHttpResponseCode(404);
         }
@@ -206,7 +206,7 @@ abstract class Controller
             $renderer = self::assignVariablesToRender($renderer);
             $renderer->set('_controller', 'base');
             $renderer->set('_action', '404');
-            $renderer->set('_labels', self::loadLabelsFile('globals'));
+            $renderer->set('_labels', self::loadLabelsFile(Core\Config()->mode('name')));
             $renderer->setLayout('404');
 
             $renderer->setView(null);
@@ -460,7 +460,7 @@ abstract class Controller
      */
     protected function loadLabels()
     {
-        $labels = self::loadLabelsFile('globals');
+        $labels = self::loadLabelsFile(Core\Config()->mode('name'));
 
         foreach ($this->labels as $labelsFile) {
             $labels = Core\Utils::arrayExtend($labels, self::loadLabelsFile($labelsFile));
