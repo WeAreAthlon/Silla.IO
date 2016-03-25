@@ -15,6 +15,7 @@ use Core;
 use Core\Base;
 use Core\Modules\Crypt\Crypt;
 use Core\Modules\DB\Decorators\Interfaces;
+use CMS;
 
 /**
  * Class CMSUser definition.
@@ -99,5 +100,19 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
         } else {
             $this->password = $this->currentPassword;
         }
+    }
+
+    /**
+     * Get either a Gravatar URL or complete image tag for a specified email address.
+     *
+     * @param integer $size   Size in pixels, defaults to 80px [ 1 - 2048 ].
+     * @param string  $type   Default image-set to use [ 404 | mm | identicon | monsterid | wavatar ].
+     * @param string  $rating Maximum rating (inclusive) [ g | pg | r | x ].
+     *
+     * @return string
+     */
+    public function getAvatar($size = 70, $type = 'mm', $rating = 'g')
+    {
+        return CMS\Helpers\CMSUsers::getGravatar($this->email, $size, $type, $rating);
     }
 }

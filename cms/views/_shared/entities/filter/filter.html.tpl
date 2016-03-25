@@ -13,9 +13,9 @@
                     <li class="filter-data-type-{$attr.type}">
                         <label for="filter-attribute-{$field}">{$attr.title}:</label>
                         {if "{$_controller}/_filter/{$field}.html.tpl"|template_exists}
-                            {include file="{$_controller}/_filter/{$field}.html.tpl"}
+                            {include "{$_controller}/_filter/{$field}.html.tpl"}
                         {elseif "_shared/entities/types/{$attr.type}/filter.html.tpl"|template_exists}
-                            {include file="_shared/entities/types/{$attr.type}/filter.html.tpl"}
+                            {include "_shared/entities/types/{$attr.type}/filter.html.tpl"}
                         {else}
                             Missing field type filter template: <code>{$_mode}views/_shared/entities/types/{$attr.type}/filter.html.tpl</code>
                         {/if}

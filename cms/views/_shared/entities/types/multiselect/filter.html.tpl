@@ -10,7 +10,7 @@
             {if isset($current_model->hasAndBelongsToMany.$field) and is_array($current_model->hasAndBelongsToMany.$field)}
                 {* Show multiselect populated with all related resource values *}
                 {custom_class var=related_resource class=$current_model->hasAndBelongsToMany.$field.class_name}
-                {html_object_options options=$related_resource->find() selected=$_get.filtering.{$field}|default:''}
+                {html_object_options options=$related_resource->find() selected=$_get.filtering.$field|default:''}
             {/if}
         {/if}
     </select>

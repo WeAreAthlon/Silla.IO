@@ -7,7 +7,7 @@
             {$attr.default = $attr.section[$field]|default:''}
         {else}
             {$attr.name    = $field}
-            {$attr.default = $resource->{$field}}
+            {$attr.default = $resource->$field}
         {/if}
 
         {$attr.disabled = $attr.disabled|default:false}
@@ -20,7 +20,7 @@
         {$has_custom_template = false}
         {if "{$_controller}/_form/fields/{$section}/{$field}.html.tpl"|template_exists}
             {$has_custom_template = true}
-            {include file="{$_paths.views.templates}{$_controller}/_form/fields/{$section}/{$field}.html.tpl" assign=field_template}
+            {include "{$_paths.views.templates}{$_controller}/_form/fields/{$section}/{$field}.html.tpl" assign=field_template}
         {/if}
 
         {if not $has_custom_template || $field_template|default:false}
@@ -31,7 +31,7 @@
                 {$field_template}
             {else}
                 {if "_shared/entities/types/{$attr.type}/form.html.tpl"|template_exists}
-                    {include file="_shared/entities/types/{$attr.type}/form.html.tpl"}
+                    {include "_shared/entities/types/{$attr.type}/form.html.tpl"}
                 {else}
                     <div class="well well-small">
                         Missing field type template: <code>{$_mode}views/_shared/entities/types/{$attr.type}/form.html.tpl</code>

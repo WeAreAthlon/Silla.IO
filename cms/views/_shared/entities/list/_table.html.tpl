@@ -1,11 +1,3 @@
-{if not $attributes|default:false}
-    {$attributes = []}
-    {foreach from=$_labels.attributes item=section}
-        {if $section.fields|default:false}
-            {$attributes = array_merge($attributes, $section.fields)}
-        {/if}
-    {/foreach}
-{/if}
 {assign var=fields_to_display value=$fields_to_display|default:[]}
 <thead>
 <tr>
@@ -45,7 +37,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-lg-offset-4 col-md-5 col-md-offset-1 col-sm-5 col-sm-offset-1 col-xs-12">
                         <div class="pagination-wrapper text-center">
-                            {include file='_shared/entities/list/_pagination.html.tpl'}
+                            {include '_shared/entities/list/_pagination.html.tpl'}
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6 col-md-6 col-xs-12">
@@ -88,5 +80,5 @@
 </tr>
 </tfoot>
 <tbody>
-{include file='_shared/entities/list/_tbody.html.tpl'}
+{include '_shared/entities/list/_tbody.html.tpl'}
 </tbody>

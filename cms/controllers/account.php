@@ -49,12 +49,17 @@ class Account extends CMSUsers
     /**
      * Account action.
      *
+     * Prevent credentials management on action.
+     * 
      * @param Request $request Current router request.
      *
      * @return void
      */
     public function index(Request $request)
     {
+        $this->removeAccessibleAttributes(array_keys($this->sections['credentials']['fields']));
+        unset($this->sections['credentials'], $this->sections['general']['fields']['role_id']);
+
         $this->edit($request);
     }
 
@@ -73,20 +78,5 @@ class Account extends CMSUsers
 
         $this->resource = $this->user;
         $this->removeAccessibleAttributes(array('role_id'));
-    }
-
-    /**
-     * Prevent credentials management on edit action.
-     *
-     * @inheritdoc
-     */
-    protected function loadAttributeSections(Request $request)
-    {
-        parent::loadAttributeSections($request);
-
-        if ($request->action() === 'index') {
-            $this->removeAccessibleAttributes(array_keys($this->sections['credentials']['fields']));
-            unset($this->sections['credentials']);
-        }
     }
 }

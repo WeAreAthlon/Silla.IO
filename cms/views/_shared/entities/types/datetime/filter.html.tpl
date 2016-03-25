@@ -4,6 +4,6 @@
         <span>{$_labels.general.select_option}</span>
         <b class="caret"></b>
     </div>
-    <input type="hidden" name="filtering[{$field}][start]" class="daterange-start" value="{$_get.filtering.{$field}.start|default:''}">
-    <input type="hidden" name="filtering[{$field}][end]" class="daterange-end" value="{$_get.filtering.{$field}.end|default:''}">
+    <input type="hidden" name="filtering[{$field}][start]" class="daterange-start" value="{$_get.filtering.$field.start|default:''}">
+    <input type="hidden" name="filtering[{$field}][end]" class="daterange-end" value="{$_get.filtering.$field.end|default:''}">
 </div>

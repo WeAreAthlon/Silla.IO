@@ -103,6 +103,8 @@ table.data-table th[data-field="avatar"] { width: 36px !important; min-width: 36
 .pagination-per-page-selector select { width: 68px; margin-left: 5px; vertical-align: middle; }
 .pagination-per-page-selector .chosen-container { width: 68px !important; color: #000000; }
 .pagination li.active a { background-color: #F5F5F5; }
+.pagination li a { color: #ED1F4E; }
+.pagination li a:hover { color: #040707; }
 
 /* File upload */
 .btn-file { position: relative; overflow: hidden; }
@@ -182,4 +184,4 @@ table.data-table th[data-field="avatar"] { width: 36px !important; min-width: 36
 #spinner-loader { position:fixed; top:50%; left:50% }
 
 /* Common */
-.account-profile-preview-wrapper { padding: 30px 0 0 0; }
+.account-profile-preview-wrapper { padding: 20px 0 0 0; }

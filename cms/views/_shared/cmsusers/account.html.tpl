@@ -6,7 +6,7 @@
         <ul class="dropdown-menu">
             <li class="text-center">
               <a href="{link_to controller=account}" title="{$user->name|escape}">
-                  <img src="{'CMS\Helpers\CMSUsers::getGravatar'|call_user_func_array:[$user->email, 75]}" class="img-circle" alt="{$user->name|escape}"/><br />
+                  <img src="{$user->getAvatar(75)}" class="img-circle" alt="{$user->name|escape}"/><br />
                   <strong>{$user->name}</strong><br />
                   <span class="font-size-smaller">
                       <span class="text-muted">{$_labels.general.last_login}</span><br />

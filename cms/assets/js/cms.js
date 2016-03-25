@@ -186,11 +186,11 @@ var CMS = {
                         buttons : {
                             cancel: {
                                 label    : Silla.labels.delete_confirmation.buttons.cancel,
-                                className: 'btn-default'
+                                className: 'btn-default btn-outline'
                             },
                             confirm: {
                                 label: Silla.labels.delete_confirmation.buttons.confirm,
-                                className: 'btn-danger',
+                                className: 'btn-danger btn-outline',
                                 callback: function() {
                                     if (isInDataTableContext) {
                                         $.post(element.attr('href'), {method: 'delete', password: $('#password-confirmation').val()}, function() {

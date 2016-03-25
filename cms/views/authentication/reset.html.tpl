@@ -6,7 +6,7 @@
             <p class="text-thin">{$_labels.reset.instructions}</p>
         </div>
     {if $captchaTemplate|default:false}
-        {include 'authentication/_captcha.html.tpl'}
+        {include 'authentication/_captcha.html.tpl' inline}
     {/if}
         <div class="text-center">
             <button class="btn btn-outline btn-primary text-thin" type="submit"><i class="glyphicon glyphicon-send"></i> {$_labels.reset.send}</button>

@@ -41,7 +41,7 @@ modules:
     icon    : user
     index   : Listing
     show    : View
-    create  : Create new User
+    create  : Create User
     credentials: Credentials
     edit    : Edit User
     delete  : Delete User
@@ -53,7 +53,7 @@ modules:
     icon    : cog
     show    : View
     index   : Listing
-    create  : Create new Role
+    create  : Create Role
     edit    : Edit Role
     delete  : Delete Role
     export  : Export User Roles

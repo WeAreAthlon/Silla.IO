@@ -12,7 +12,7 @@
             {if $related_object_ids}
                 {html_object_options options=$related_obj->find() selected=$related_object_ids obj_name=$attr.association_title|default:'title'}
             {else}
-                {html_object_options options=$related_obj->find() selected=$smarty.post.{$attr.name}|default:[] obj_name=$attr.association_title|default:'title'}
+                {html_object_options options=$related_obj->find() selected=$smarty.post[$attr.name]|default:[] obj_name=$attr.association_title|default:'title'}
             {/if}
         {/if}
     {/if}

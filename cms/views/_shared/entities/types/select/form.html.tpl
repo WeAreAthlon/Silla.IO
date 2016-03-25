@@ -7,7 +7,7 @@
             {append var=associations value=array_merge($association, ['name' => $name]) index=$association.key}
         {/foreach}
 
-        {if $associations.{$attr.name}|default:false}
+        {if $associations[$attr.name]|default:false}
             {$property = $associations.$field.name}
             {if not $resource->$property|is_object}
                 {custom_class var=related_resource class=$associations.$field.class_name}

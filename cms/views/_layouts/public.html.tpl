@@ -14,7 +14,7 @@
         <div class="container">
             <div class="content">
                 <img src="{$_urls.assets}img/logo.png" alt="{$_labels.title|escape}" class="img-circle logo">
-                {include file='_shared/flash-message.html.tpl'}
+                {include '_shared/flash-message.html.tpl' inline}
                 {$_content_view_yield}
             </div>
         </div>

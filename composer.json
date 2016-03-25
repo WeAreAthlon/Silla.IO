@@ -49,26 +49,6 @@
     "repositories" : [
         {
             "type": "package",
-            "package" : {
-                "name": "smarty/smarty",
-                "version": "3.1.21",
-                "dist": {
-                    "url": "http://www.smarty.net/files/Smarty-3.1.21.zip",
-                    "type": "zip"
-                },
-                "require": {
-                    "php": ">=5.2"
-                },
-                "autoload": {
-                    "classmap": [
-                        "libs/Smarty.class.php",
-                        "libs/sysplugins/smarty_security.php"
-                    ]
-                }
-            }
-        },
-        {
-            "type": "package",
             "package": {
                 "name": "tcpdf/tcpdf",
                 "version": "6",
@@ -105,7 +85,7 @@
     "require": {
         "php"                   : ">=5.3.7",
         "ext-PDO"               : "*",
-        "smarty/smarty"         : "3.1.21",
+        "smarty/smarty"         : "v3.1.21",
         "phpmailer/phpmailer"   : "v5.2.7",
         "mustangostang/spyc"    : "0.5.1",
         "imagine/imagine"       : "v0.5.0",

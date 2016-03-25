@@ -1,7 +1,7 @@
 {if "{$_controller}/_show/header.html.tpl"|template_exists}
-    {include file="{$_controller}/_show/header.html.tpl"}
+    {include "{$_controller}/_show/header.html.tpl"}
 {else}
-    {include file="_shared/entities/show/header.html.tpl"}
+    {include '_shared/entities/show/header.html.tpl'}
 {/if}
 
 {foreach from=$sections key=section_key item=section}
@@ -57,13 +57,13 @@
 {/foreach}
 
 {if "{$_controller}/_show/footer.html.tpl"|template_exists}
-    {include file="{$_controller}/_show/footer.html.tpl"}
+    {include "{$_controller}/_show/footer.html.tpl"}
 {else}
-    {include file="_shared/entities/show/footer.html.tpl"}
+    {include '_shared/entities/show/footer.html.tpl' inline}
 {/if}
 
 {if "{$_controller}/_show/actions.html.tpl"|template_exists}
-    {include file="{$_controller}/_show/actions.html.tpl"}
+    {include "{$_controller}/_show/actions.html.tpl"}
 {else}
-    {include file="_shared/entities/show/actions.html.tpl"}
+    {include '_shared/entities/show/actions.html.tpl' inline}
 {/if}

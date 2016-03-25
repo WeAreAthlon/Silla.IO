@@ -67,6 +67,13 @@ abstract class Resource extends Controller
     public $sections = array();
 
     /**
+     * Resource Attributes.
+     *
+     * @var array
+     */
+    public $attributes = array();
+
+    /**
      * Resource constructor.
      */
     public function __construct()
@@ -505,5 +512,11 @@ abstract class Resource extends Controller
     protected function loadAttributeSections(Request $request)
     {
         $this->sections = $this->labels['attributes'];
+
+        foreach ($this->sections as $section) {
+            if (isset($section['fields']) && $section['fields'] && is_array($section['fields'])) {
+                $this->attributes = array_merge($this->attributes, $section['fields']);
+            }
+        }
     }
 }

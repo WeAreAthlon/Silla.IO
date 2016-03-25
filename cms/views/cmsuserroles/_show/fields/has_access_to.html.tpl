@@ -3,7 +3,7 @@
         <dt>{$_labels.modules.$section.title}:</dt>
         <dd>
             {foreach from=$permissions item=permission}
-                <span class="label label-success">{$_labels.modules.{$section}.{$permission}|default:$_labels.sections.{$permission}|default:''}</span>
+                <span class="label label-success">{$_labels.modules.$section.$permission|default:$_labels.sections.$permission|default:''}</span>
                 {foreachelse}
                 <span class="label label-danger">{$_labels.general.none}</span>
             {/foreach}

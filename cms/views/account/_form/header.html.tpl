@@ -1,13 +1,12 @@
 <div class="media account-profile-preview-wrapper">
-    <a class="pull-left" href="{link_to controller=account}">
-        <img src="{'CMS\Helpers\CMSUsers::getGravatar'|call_user_func_array:[$user->email, 75]}" class="img-circle pull-left" alt="{$user->name|escape}"/>
+    <a class="media-left" href="{link_to controller=account}">
+        <img src="{$user->getAvatar(75)}" class="media-object img-circle" alt="{$user->name|escape}"/>
     </a>
     <div class="media-body">
-        <h2 class="media-heading text-thin">{$_labels.modules.account.title} / <strong>{$user->name}</strong></h2>
+        <h1 class="media-heading text-thinner">&nbsp;{$_labels.modules.account.title} / <strong class="text-thin">{$user->name}</strong></h1>
         <p class="font-size-smaller no-margin-bottom">
-            <span class="text-muted">{$_labels.general.last_login}</span>
-            {$user->login_on|date_format:#datetime#}
+            <span class="text-muted">&nbsp;&nbsp;{$_labels.general.last_login}</span> {$user->login_on|date_format:#datetime#}
         </p>
-        <p class="text-thin">{$_labels.modules.account.desc}</p>
+        <p class="text-thin">&nbsp;&nbsp;{$_labels.modules.account.desc}</p>
     </div>
 </div>
