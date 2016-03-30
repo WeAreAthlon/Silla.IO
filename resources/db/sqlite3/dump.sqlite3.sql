@@ -1,6 +1,8 @@
 ----
--- Silla.IO SQLite 3 database dump file
--- phpLiteAdmin version: 1.9.5
+-- phpLiteAdmin database dump (https://bitbucket.org/phpliteadmin/public)
+-- phpLiteAdmin version: 1.9.6
+-- Exported: 2:18pm on March 30, 2016 (UTC)
+-- database file: ./silla.db3
 ----
 BEGIN TRANSACTION;
 
@@ -12,10 +14,7 @@ CREATE TABLE 'cms_users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'role
 ----
 -- Data dump for cms_users, a total of 1 rows
 ----
-INSERT INTO "cms_users" ("id", "role_id", "password", "email", "name", "timezone", "created_on", "updated_on", "login_on")
-VALUES
-  ('1', '1', '$2a$12$jusORAs9Ezt5wOH7iUy4oO4iRV0EKzRgrsXng4IQoF4Psd2Cbq1zW', 'demo@silla.io', 'Demo',
-   'Europe/Sofia', '2012-06-19 11:40:16', '2013-04-01 23:31:52', '2013-04-01 23:31:52');
+INSERT INTO "cms_users" ("id","role_id","password","email","name","timezone","created_on","updated_on","login_on") VALUES ('1','1','$2a$12$jusORAs9Ezt5wOH7iUy4oO4iRV0EKzRgrsXng4IQoF4Psd2Cbq1zW','demo@silla.io','Demo','Europe/Sofia','2012-06-19 11:40:16','2015-03-25 23:08:19','2015-03-25 23:08:19');
 
 ----
 -- Table structure for cms_userroles
@@ -25,10 +24,9 @@ CREATE TABLE 'cms_userroles' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, '
 ----
 -- Data dump for cms_userroles, a total of 1 rows
 ----
-INSERT INTO "cms_userroles" ("id", "title", "created_on", "updated_on", "permissions") VALUES
-  ('1', 'Administrator', '2015-02-20 03:00:00', '2015-02-20 14:20:01', '{"account":["credentials","edit"],"help":["show","create","edit","delete","export","index"],
-   "cmsuserroles":["show","create","edit","delete","export","index"],
-   "cmsusers":["show","create","edit","delete","export","index"]}');
+INSERT INTO "cms_userroles" ("id","title","created_on","updated_on","permissions") VALUES ('1','Administrator','2015-02-20 03:00:00','2015-02-20 14:20:01','{"account":["credentials","edit"],"help":["show","create","edit","delete","export","index"],
+   "userroles":["show","create","edit","delete","export","index"],
+   "users":["show","create","edit","delete","export","index"]}');
 
 ----
 -- Table structure for sessions
@@ -45,6 +43,10 @@ CREATE TABLE 'sessions' ('session_key' TEXT PRIMARY KEY NOT NULL, 'last_active' 
 CREATE TABLE 'session_vars' ('session_key' TEXT NOT NULL, 'private_key' TEXT NOT NULL, 'name' TEXT NOT NULL, 'value' TEXT, PRIMARY KEY ('session_key', 'private_key', 'name'));
 
 ----
+-- Data dump for session_vars, a total of 0 rows
+----
+
+----
 -- Table structure for cache
 ----
 CREATE TABLE 'cache' ('cache_key' INTEGER PRIMARY KEY NOT NULL, 'value' TEXT NOT NULL, 'expire' NUMERIC NOT NULL);
@@ -52,6 +54,16 @@ CREATE TABLE 'cache' ('cache_key' INTEGER PRIMARY KEY NOT NULL, 'value' TEXT NOT
 ----
 -- Data dump for cache, a total of 0 rows
 ----
+
+----
+-- Table structure for cms_help
+----
+CREATE TABLE 'cms_help' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT NOT NULL, 'content' TEXT NOT NULL, 'created_on' DATETIME NOT NULL, 'updated_on' DATETIME NOT NULL);
+
+----
+-- Data dump for cms_help, a total of 1 rows
+----
+INSERT INTO "cms_help" ("id","title","content","created_on","updated_on") VALUES ('1','Overview','a:2:{s:9:\"formatted\";s:1235:\"<h1>Overview</h1>\n<hr />\n<h3>Silla.IO is a MVC based PHP Application Development Framework</h3>\n<p>Reusable software environment that provides particular functionality as part of a larger software platform to facilitate development of software applications, products and solutions.</p>\n<p>The framework comes with a CMS Application to enable building user defined content management systems.</p>\n<ul>\n<li>Used to run projects for global brands</li>\n<li>3 years in active development by a professional team</li>\n<li>Covers best practices and system architecture</li>\n<li>Complete development history available</li>\n<li>Complete code Documentation and available examples of CMS user documentation</li>\n<li>Penetration tested\n<ul>\n<li>The framework has been penetration tested by industry leading experts.</li>\n<li>Tested against: DoS, CSRF, Persistent and reflected XSS, Exposed download links, ClickJacking, Text injection,   Order injection, Insecure HTTP methods as well as issues with password management, authentication and e-mail harvesting</li>\n<li>To live up to standards of multinational blue chip clients and their data security needs</li>\n</ul></li>\n</ul>\n<p><em>Learn more at <a href=\"http://silla.io/\">silla.io</a></em> </p>\";s:3:\"raw\";s:1122:\"# Overview\n***\n### Silla.IO is a MVC based PHP Application Development Framework\n\nReusable software environment that provides particular functionality as part of a larger software platform to facilitate development of software applications, products and solutions.\n\nThe framework comes with a CMS Application to enable building user defined content management systems.\n* Used to run projects for global brands\n* 3 years in active development by a professional team\n* Covers best practices and system architecture\n* Complete development history available\n* Complete code Documentation and available examples of CMS user documentation\n* Penetration tested\n  * The framework has been penetration tested by industry leading experts.\n  * Tested against: DoS, CSRF, Persistent and reflected XSS, Exposed download links, ClickJacking, Text injection,   Order injection, Insecure HTTP methods as well as issues with password management, authentication and e-mail harvesting\n  * To live up to standards of multinational blue chip clients and their data security needs\n\n*Learn more at [silla.io](http://silla.io/)* \";}','2016-03-01 00:00:00','2016-03-01 00:00:00');
 
 ----
 -- structure for index sqlite_autoindex_sessions_1 on table sessions
@@ -64,19 +76,17 @@ CREATE TABLE 'cache' ('cache_key' INTEGER PRIMARY KEY NOT NULL, 'value' TEXT NOT
 ;
 
 ----
--- structure for index userrole on table cms_users
+-- structure for index  userrole on table cms_users
 ----
 CREATE INDEX ' userrole' ON "cms_users" ("role_id");
 
 ----
--- structure for index email on table cms_users
+-- structure for index  email on table cms_users
 ----
 CREATE UNIQUE INDEX ' email' ON "cms_users" ("email");
 
 ----
--- structure for trigger Delete session variables on table sessions
+-- structure for index  title on table cms_help
 ----
-CREATE TRIGGER ' DELETE session variables' AFTER DELETE ON "sessions" FOR EACH ROW BEGIN DELETE FROM session_vars
-WHERE session_key = OLD.session_key;
-END;
+CREATE UNIQUE INDEX ' title' ON "cms_help" ("title");
 COMMIT;
