@@ -5,7 +5,7 @@ client : Client Title
 general:
   actions       : Actions
   details       : Details
-  profile       : Profile
+  profile       : Account
   has_access_to : Has access to
   active        : Active
   inactive      : Inactive
@@ -37,7 +37,7 @@ buttons:
 modules:
   cmsusers:
     title   : Users
-    desc    : Users. User profiles management.
+    desc    : Users. User accounts management.
     icon    : user
     index   : Listing
     show    : View
@@ -60,12 +60,12 @@ modules:
     hidden  : true
   account:
     title   : Account
-    desc    : Manage profile account data.
+    desc    : Manage account profile data.
     icon    : user
     show    : View
-    edit    : Update Profile
-    index   : Update Profile
-    export  : Export Profile
+    edit    : Update Account
+    index   : Update Account
+    export  : Export Account data
     credentials: Credentials
     hidden  : true
   cmshelp:

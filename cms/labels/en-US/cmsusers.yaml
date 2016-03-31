@@ -102,7 +102,7 @@ attributes:
         list    : false
 
 profile:
-  title : Profile
+  title : Account
   desc  : Personal data management.
 
 buttons:

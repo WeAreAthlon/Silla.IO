@@ -22,7 +22,7 @@ captcha :
 reset_access:
   title    : Reset user access to the CMS
   success  : Your password has been reset successfully.
-  new_password: The following pass-phrase has been assigned to your user profile
+  new_password: The following pass-phrase has been assigned to your user account
 
 mails:
  reset:
