@@ -15,7 +15,7 @@ attributes:
         length  : 255
       content:
         title   : Contents
-        type    : stencil
+        type    : format
         desc    : 'Text formatting supportes <a href="https://daringfireball.net/projects/markdown/syntax" class="help-link"><span class="glyphicon glyphicon-share"></span> <strong>Parsedown</strong></a>.'
         rows    : 15
         list    : false

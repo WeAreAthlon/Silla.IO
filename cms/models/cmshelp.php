@@ -28,14 +28,16 @@ class CMSHelp extends Base\Model implements Interfaces\TimezoneAwareness, Interf
     public static $tableName = 'cms_help';
 
     /**
-     * Formalize fields container.
+     * Fields that support formatting.
      *
      * @static
      *
      * @return array
      */
-    public static function formalizeFields()
+    public static function formattingFields()
     {
-        return array('content');
+        return array(
+            'content' => '\Parsedown',
+        );
     }
 }

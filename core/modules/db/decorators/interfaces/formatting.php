@@ -17,11 +17,11 @@ namespace Core\Modules\DB\Decorators\Interfaces;
 interface Formatting
 {
     /**
-     * Formalize fields container.
+     * Fields that support formatting.
      *
      * @static
      *
      * @return array
      */
-    public static function formalizeFields();
+    public static function formattingFields();
 }

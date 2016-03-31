@@ -23,14 +23,6 @@ use Core\Modules\DB\Decorators;
 abstract class Formatting implements Interfaces\Decorator
 {
     /**
-     * Fields to formalize.
-     *
-     * @var array
-     * @static
-     */
-    private static $formalizeFields = array();
-
-    /**
      * Decorator entry point.
      *
      * @param Base\Model $resource Currently processed resource.
@@ -42,23 +34,17 @@ abstract class Formatting implements Interfaces\Decorator
      */
     public static function decorate(Base\Model $resource)
     {
-        $_fields = $resource::formalizeFields();
-
-        foreach ($_fields as $key => $value) {
-            self::$formalizeFields[$key] = $value;
-        }
-
-        $resource->on('afterCreate', array(__CLASS__, 'unformat'));
+        $resource->on('afterCreate', array(__CLASS__, 'fetch'));
 
         $resource->on('beforeValidate', array(__CLASS__, 'format'));
-        $resource->on('afterValidate', array(__CLASS__, 'unformat'));
+        $resource->on('afterValidate', array(__CLASS__, 'fetch'));
 
         $resource->on('beforeSave', array(__CLASS__, 'format'));
-        $resource->on('afterSave', array(__CLASS__, 'unformat'));
+        $resource->on('afterSave', array(__CLASS__, 'fetch'));
     }
 
     /**
-     * Unformats the fields.
+     * Retrieve both formats of the content fields.
      *
      * @param Base\Model $resource Currently processed resource.
      *
@@ -67,18 +53,23 @@ abstract class Formatting implements Interfaces\Decorator
      *
      * @return void
      */
-    public static function unformat(Base\Model $resource)
+    public static function fetch(Base\Model $resource)
     {
-        foreach (self::$formalizeFields as $field) {
-            $resource->{$field} = unserialize($resource->{$field});
+        foreach ($resource::formattingFields() as $field => $formatter) {
+            if ($resource->{$field}) {
+                $resource->{$field} = json_decode($resource->{$field}, true);
+            } else {
+                $resource->{$field} = array('formatted' => '', 'raw' => '');
+            }
         }
     }
 
     /**
-     * Formats the fields.
+     * Formats the content fields.
      *
      * @param Base\Model $resource Currently processed resource.
      *
+     * @throws \RuntimeException Missing method parse for the specified parser.
      * @static
      * @access public
      *
@@ -86,19 +77,23 @@ abstract class Formatting implements Interfaces\Decorator
      */
     public static function format(Base\Model $resource)
     {
-        foreach (self::$formalizeFields as $field) {
-            $parser = new \Parsedown();
+        foreach ($resource::formattingFields() as $field => $formatter) {
+            $parser = new $formatter;
 
-            if (is_array($resource->{$field})) {
-                $resource->{$field} = serialize(array(
-                    'formatted' => $parser->parse($resource->{$field}['raw']),
-                    'raw' => $resource->{$field}['raw'],
-                ));
+            if (method_exists($parser, 'parse')) {
+                if (is_array($resource->{$field})) {
+                    $resource->{$field} = json_encode(array(
+                        'formatted' => $parser->parse($resource->{$field}['raw']),
+                        'raw' => $resource->{$field}['raw'],
+                    ));
+                } else {
+                    $resource->{$field} = json_encode(array(
+                        'formatted' => $parser->parse($resource->{$field}),
+                        'raw' => $resource->{$field},
+                    ));
+                }
             } else {
-                $resource->{$field} = serialize(array(
-                    'formatted' => $parser->parse($resource->{$field}),
-                    'raw' => $resource->{$field},
-                ));
+                throw new \RuntimeException('Missing method parse for the specified parser: ' . get_class($parser));
             }
         }
     }
