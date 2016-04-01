@@ -15,6 +15,15 @@ attributes:
         length  : 100
         export  : false
         hidden  : true
+      avatar:
+        title   : Avatar
+        type    : custom
+        icon    : camera
+        desc    : Account avatar.
+        readonly: true
+        sort    : false
+        export  : false
+        caption : false
       name:
         title   : Name
         type    : text
