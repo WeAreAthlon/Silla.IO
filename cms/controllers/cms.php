@@ -138,7 +138,7 @@ abstract class CMS extends Core\Base\Resource
         $this->renderer->assets->add(array(
             'vendor/components/jquery/jquery.min.js',
             'vendor/components/bootstrap/js/bootstrap.min.js',
-            'vendor/components/bootstrap/css/bootstrap.min.css',
+            'vendor/components/bootstrap/css/bootstrap.css',
             'vendor/pnikolov/bootstrap-chosen/js/chosen.jquery.min.js',
             'vendor/pnikolov/bootstrap-chosen/css/chosen.min.css',
             'vendor/drmonty/ekko-lightbox/js/ekko-lightbox.min.js',
