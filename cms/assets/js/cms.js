@@ -421,6 +421,8 @@ var CMS = {
                 startDate: moment(new Date(daterangeDefaultValues.start)),
                 endDate: moment(new Date(daterangeDefaultValues.end)),
                 ranges: daterangeRanges,
+                applyClass: 'btn btn-primary btn-outline',
+                cancelClass: 'btn btn-default btn-outline',
                 locale: selector.data('localeLabels')
             }, function (start, end) {
                 if (start.toDate().getFullYear() !== 1900 && end.toDate().getFullYear() !== 2100) {

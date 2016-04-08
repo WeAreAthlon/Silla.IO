@@ -687,6 +687,22 @@ table.data-table th[data-field="avatar"] {
     left: 50%
 }
 
+/* Date Range Picker */
+.ranges li {
+    color: #0a2b1d;
+    border: 0;
+}
+
+.ranges li.active {
+    background: #ED1F4E;
+    border: 0;
+}
+
+.ranges li:hover {
+    background: #ED1F4E;
+    border: 0;
+}
+
 /* Common */
 .account-profile-preview-wrapper {
     padding: 20px 0 0 0;
