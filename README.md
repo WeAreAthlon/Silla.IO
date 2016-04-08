@@ -15,7 +15,7 @@ http://silla.io by [Athlon](http://weareathlon.com)
 * **Demo of the CMS app:** http://demo.silla.io/cms/
     * *Credentials*
         * **email:** _demo@silla.io_
-        * **password:** _demo_
+        * **password:** _DemoDemo1!_
 
 ***
 
