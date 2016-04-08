@@ -1,7 +1,7 @@
 ----
 -- phpLiteAdmin database dump (https://bitbucket.org/phpliteadmin/public)
 -- phpLiteAdmin version: 1.9.6
--- Exported: 1:32pm on March 31, 2016 (UTC)
+-- Exported: 2:18pm on April 8, 2016 (UTC)
 -- database file: ./silla.db3
 ----
 BEGIN TRANSACTION;
@@ -24,9 +24,7 @@ CREATE TABLE 'cms_userroles' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, '
 ----
 -- Data dump for cms_userroles, a total of 1 rows
 ----
-INSERT INTO "cms_userroles" ("id","title","created_on","updated_on","permissions") VALUES ('1','Administrator','2015-02-20 03:00:00','2015-02-20 14:20:01','{"account":["credentials","edit"],"help":["show","create","edit","delete","export","index"],
-   "userroles":["show","create","edit","delete","export","index"],
-   "users":["show","create","edit","delete","export","index"]}');
+INSERT INTO "cms_userroles" ("id","title","created_on","updated_on","permissions") VALUES ('1','Administrator','2015-02-20 03:00:00','2015-02-20 14:20:01','{"account":["credentials","edit"],"cmshelp":["show","create","edit","delete","export","index"],"cmsuserroles":["show","create","edit","delete","export","index"],"cmsusers":["credentials","show","create","edit","delete","export","index"]}');
 
 ----
 -- Table structure for sessions
