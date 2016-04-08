@@ -245,11 +245,11 @@ class Authentication extends Base\Controller
     protected function loadAssets()
     {
         $this->renderer->assets->add(array(
-            'vendor/jquery/dist/jquery.min.js',
-            'vendor/bootstrap/dist/js/bootstrap.min.js',
-            'vendor/bootstrap/dist/css/bootstrap.css',
-            'css/bootstrap-theme.athlon.css',
-            'css/login.css',
+            'vendor/components/jquery/jquery.min.js',
+            'vendor/components/bootstrap/js/bootstrap.min.js',
+            'vendor/components/bootstrap/css/bootstrap.css',
+            'cms/assets/css/bootstrap-theme.athlon.css',
+            'cms/assets/css/login.css',
         ));
     }
 

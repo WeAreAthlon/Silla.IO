@@ -22,8 +22,8 @@
           {include '_shared/footer.html.tpl' inline}
         </div>
         <!--[if lt IE 9]>
-        {assets source=['vendor/html5shiv/dist/html5shiv.min.js','vendor/respond/dest/respond.min.js']}
+        {assets source=['vendor/afarkas/html5shiv/dist/html5shiv.min.js','vendor/rogeriopradoj/respond/dest/respond.min.js']}
         <![endif]-->
-        {assets source=['vendor/jquery/dist/jquery.min.js', 'vendor/bootstrap/dist/js/bootstrap.min.js']}
+        {assets source=['vendor/components/jquery/jquery.min.js', 'vendor/components/bootstrap/js/bootstrap.min.js']}
     </body>
 </html>

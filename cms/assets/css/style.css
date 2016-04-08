@@ -219,15 +219,14 @@ footer img {
 
 .filtering .chosen-container-single .chosen-single div b {
     margin-top: 5px;
-    background: none !important;
-    width: 0;
-    height: 0;
-    line-height: 18px;
-    display: inline-block;
 }
 
 .filtering .chosen-container-single .chosen-single abbr {
     margin-top: 3px;
+}
+
+.filtering .chosen-search input {
+    width: 100%;
 }
 
 /* Listing DataTables Tools */
@@ -293,24 +292,8 @@ footer img {
     bottom: 30px;
 }
 
-.datatable-tools .chosen-container .chosen-choices li.search-field input[type="text"] {
-    height: auto;
-    padding: 3px 0 0 0;
-    margin: 0;
-    width: 100% !important
-}
-
-.datatable-tools .chosen-container-single .chosen-single div b {
-    background: none !important;
-    width: 0;
-    height: 0;
-    line-height: 18px;
-    display: inline-block;
-}
-
-/* Date range picker */
-.daterangepicker_start_input, .daterangepicker_end_input {
-    display: none;
+.datatable-tools .chosen-container .chosen-search {
+    visibility: hidden;
 }
 
 /* Listing Sorting DataTables */

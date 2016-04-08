@@ -400,7 +400,7 @@ var CMS = {
 
             return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
         },
-        attachDaterange: function (selector, placement, callback, default_values) {
+        attachDaterange: function (selector, placement, drops, callback, default_values) {
             var daterangeLabel = {element: $('span', selector), title: selector.data('attributeTitle')};
             var daterangeRanges = {};
             var daterangeRangesLabels = selector.data('rangeLabels');
@@ -409,14 +409,15 @@ var CMS = {
 
             daterangeRanges[daterangeRangesLabels.all] = [d.setFullYear(1900, 0, 1), d.setFullYear(2100, 11, 1)];
             daterangeRanges[daterangeRangesLabels.today] = [moment(), moment()];
-            daterangeRanges[daterangeRangesLabels.yesterday] = [moment().subtract('days', 1), moment().subtract('days', 1)];
-            daterangeRanges[daterangeRangesLabels.last_7_days] = [moment().subtract('days', 6), new Date()];
-            daterangeRanges[daterangeRangesLabels.last_30_days] = [moment().subtract('days', 29), new Date()];
+            daterangeRanges[daterangeRangesLabels.yesterday] = [moment().subtract(1, 'days'), moment().subtract(1, 'days')];
+            daterangeRanges[daterangeRangesLabels.last_7_days] = [moment().subtract(6, 'days'), new Date()];
+            daterangeRanges[daterangeRangesLabels.last_30_days] = [moment().subtract(29, 'days'), new Date()];
             daterangeRanges[daterangeRangesLabels.current_month] = [moment().startOf('month'), moment().endOf('month')];
             daterangeRanges[daterangeRangesLabels.current_year] = [moment().startOf('year'), moment().endOf('year')];
 
             selector.daterangepicker({
                 opens: placement,
+                drops: drops,
                 startDate: moment(new Date(daterangeDefaultValues.start)),
                 endDate: moment(new Date(daterangeDefaultValues.end)),
                 ranges: daterangeRanges,

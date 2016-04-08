@@ -36,7 +36,7 @@
         {include '_shared/modals/default.html.tpl' type='inline'}
         {include '_shared/modals/default.html.tpl' type='external'}
         <!--[if lt IE 9]>
-        {assets source=['vendor/html5shiv/dist/html5shiv.min.js','vendor/respond/dest/respond.min.js']}
+        {assets source=['vendor/afarkas/html5shiv/dist/html5shiv.min.js','vendor/rogeriopradoj/respond/dest/respond.min.js']}
         <![endif]-->
         {assets source=$_assets.scripts}
     </body>

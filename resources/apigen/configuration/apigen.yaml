@@ -1,0 +1,20 @@
+source:
+    - ../../app
+    - ../../cms
+    - ../../core
+    - ../../configurations
+
+destination: ../../public/doc/
+
+title: Silla.IO API
+
+accessLevels:
+    - public
+    - protected
+    - private
+
+todo: true
+tree: true
+templateTheme: bootstrap
+download: true
+googleAnalytics: UA-57928677-1

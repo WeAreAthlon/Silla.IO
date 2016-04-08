@@ -178,7 +178,7 @@ DataTable.prototype.enable = function (functionality) {
             }
 
             $('.filtering .daterange', filter).each(function (idx, element) {
-                CMS.utils.attachDaterange($(element), 'left');
+                CMS.utils.attachDaterange($(element), 'left', 'down');
             });
 
             $('.filtering form', filter).on('submit', function (e) {
@@ -228,7 +228,7 @@ DataTable.prototype.enable = function (functionality) {
             }
 
             $('.daterange', self.table).each(function (idx, element) {
-                CMS.utils.attachDaterange($(element), 'bottom', function (start, end) {
+                CMS.utils.attachDaterange($(element), 'left', 'up', function (start, end) {
                     if (start.toDate().getFullYear() != 1900 && end.toDate().getFullYear() != 2100) {
                         self.params.filtering[$(element).data('attribute')] = {
                             start: CMS.utils.dateToYMD(start.toDate()),
@@ -293,7 +293,10 @@ DataTable.prototype._attach = function () {
 
     $.get(self.table.data('urlSource'), {view: 'table', query: self.params}, function (response) {
         self.table.html(response.data).fadeIn('slow');
-        $('select', self.table).chosen();
+
+        if (typeof $.fn.chosen === 'function') {
+            $('select', self.table).chosen();
+        }
 
         self.fire('initialize');
         self.fire('populate');
