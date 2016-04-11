@@ -19,11 +19,11 @@ $currentDir = getSillaRootProjectPath();
 require_once $currentDir . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
 
 if ($argc > 1) {
-    $parts   = explode(':', $argv[1]);
+    $parts = explode(':', $argv[1]);
     $command = implode(':', array_slice($parts, 1));
-    $class   = 'Core\CLI\\' . $parts[0];
+    $class = 'Core\CLI\\' . $parts[0];
 
-    if('db' === $command) {
+    if ('db' === $command) {
         $migrations = array_map(function ($item) {
             $name = substr($item, 0, -4);
 
@@ -41,9 +41,23 @@ if ($argc > 1) {
         });
 
         CLI\DB::$migrations = $migrations;
-    }
+    } elseif ('generate' === $command) {
+        call_user_func_array(array($class, $command), array_slice($argv, 2));
+    } else {
+        if (!class_exists($class)) {
+            $class = 'Core\CLI\\' . implode('\\', $parts);
+        }
 
-    call_user_func_array(array($class, $command), array_slice($argv, 2));
+        if (!class_exists($class)) {
+            $class = '\\' . implode('\\', $parts);
+        }
+
+        if (method_exists($class, 'init')) {
+            call_user_func_array(array($class, 'init'), array_slice($argv, 2));
+        }
+
+        call_user_func_array(array($class, 'run'), array_slice($argv, 2));
+    }
 }
 
 function getSillaRootProjectPath()
