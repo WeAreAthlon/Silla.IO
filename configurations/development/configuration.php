@@ -63,6 +63,30 @@ class Configuration extends Configurations\Staging\Configuration
     );
 
     /**
+     * @var (int|string)[] $MAILER Mailer configuration options.
+     *
+     * @example type        Type of the mailing infrastructure to use(Sendmail|SMTP).
+     * @example identity    Mailer identity signature.
+     * @example credentials Mailer service credentials.
+     */
+    public $MAILER = array(
+        'type' => 'Sendmail',
+        'debug' => true,
+        'identity' => array(
+            'name'  => 'Athlon Production',
+            'email' => 'hi@athlonproduction.com',
+        ),
+        'credentials' => array(
+            'smtp' => array(
+                'host' => 'localhost',
+                'port' => '25',
+                'user' => '',
+                'password' => '',
+            ),
+        ),
+    );
+
+    /**
      * @var (int|string)[] $DB DSN (Data source name).
      *
      * @example adapter        Adapter type (pdo_mysql|mysql|sqllite).
@@ -85,5 +109,20 @@ class Configuration extends Configurations\Staging\Configuration
         'tables_prefix'  => '',
         'encryption_key' => '25c6c7ff35bd13b0ff9979b151f2136c',
         'crypt_vector'   => 'dasn312321nssa1k',
+    );
+
+    /**
+     * @var string[] Captcha credentials.
+     *
+     * @example enabled     Flag whether to use Captcha or Not.
+     * @example public_key  Public key for Captcha.
+     * @example private_key Private key for Captcha.
+     *
+     * @link https://www.google.com/recaptcha/
+     */
+    public $CAPTCHA = array(
+        'enabled'     => true,
+        'public_key'  => '6LfSevQSAAAAAHUbl-gTGwQHi4C9UW219V0Nn6J5',
+        'private_key' => '6LfSevQSAAAAAB6H3f9OznBVUGBp0iMMZWX2OSFH',
     );
 }

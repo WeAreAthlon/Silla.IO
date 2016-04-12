@@ -47,74 +47,34 @@
         "wiki": "https://github.com/WeAreAthlon/silla.io/wiki"
     },
     "repositories" : [
-        {
-            "type": "package",
-            "package" : {
-                "name": "smarty/smarty",
-                "version": "3.1.21",
-                "dist": {
-                    "url": "http://www.smarty.net/files/Smarty-3.1.21.zip",
-                    "type": "zip"
-                },
-                "require": {
-                    "php": ">=5.2"
-                },
-                "autoload": {
-                    "classmap": [
-                        "libs/Smarty.class.php",
-                        "libs/sysplugins/smarty_security.php"
-                    ]
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "tcpdf/tcpdf",
-                "version": "6",
-                "description": "TCPDF is a PHP class for generating PDF documents.",
-                "homepage": "http://www.tcpdf.org/",
-                "dist": {
-                    "url": "https://staging.athlonproduction.com/cdn/silla.io/vendor/tcpdf_min_6_0_094.zip",
-                    "type": "zip"
-                },
-                "autoload": {
-                    "classmap": [
-                        "fonts",
-                        "config",
-                        "include",
-                        "tcpdf.php",
-                        "tcpdf_parser.php",
-                        "tcpdf_import.php",
-                        "tcpdf_barcodes_1d.php",
-                        "tcpdf_barcodes_2d.php",
-                        "include/tcpdf_colors.php",
-                        "include/tcpdf_filters.php",
-                        "include/tcpdf_font_data.php",
-                        "include/tcpdf_fonts.php",
-                        "include/tcpdf_images.php",
-                        "include/tcpdf_static.php",
-                        "include/barcodes/datamatrix.php",
-                        "include/barcodes/pdf417.php",
-                        "include/barcodes/qrcode.php"
-                    ]
-                }
-            }
-        }
     ],
     "require": {
         "php"                   : ">=5.3.7",
         "ext-PDO"               : "*",
-        "smarty/smarty"         : "3.1.21",
+        "smarty/smarty"         : "v3.1.21",
         "phpmailer/phpmailer"   : "v5.2.7",
         "mustangostang/spyc"    : "0.5.1",
         "imagine/imagine"       : "v0.5.0",
-        "tcpdf/tcpdf"           : "6",
+        "tecnickcom/tcpdf"      : "6.2.12",
         "recaptcha/php5"        : "v1.0.0",
         "kriswallsmith/assetic" : "1.2.0",
         "lmammino/jsmin4assetic": "1.0.0",
         "natxet/CssMin"         : "3.0.2",
-        "icanboogie/inflector"  : "*"
+        "icanboogie/inflector"  : "*",
+        "erusev/parsedown"      : "1.5.3",
+        "components/jquery"     : "1.11.1",
+        "components/bootstrap"  : "3.3.6",
+        "drmonty/ekko-lightbox" : "4.0.1",
+        "pnikolov/bootstrap-chosen" : "1.5.1",
+        "pnikolov/bootstrap-daterangepicker" : "2.1.19",
+        "pnikolov/bootbox"      : "4.4.0",
+        "pnikolov/bootstrap-maxlength" : "1.7.0",
+        "pnikolov/jquery-serialize-object": "2.5.0",
+        "pnikolov/spin.js"  : "2.3.2",
+        "mjolnic/bootstrap-colorpicker": "2.3.2",
+        "eonasdan/bootstrap-datetimepicker": "4.17.37",
+        "afarkas/html5shiv"     : "3.7.3",
+        "rogeriopradoj/respond" : "1.4.2"
     },
     "require-dev": {
         "phpunit/phpunit"            : "4.3.*",
@@ -125,13 +85,17 @@
         "squizlabs/php_codesniffer"  : "2.*",
         "pdepend/pdepend"            : "@stable",
         "phpmd/phpmd"                : "@stable",
-        "apigen/apigen"              : "2.8.1",
+        "apigen/apigen"              : "v4.1.2",
         "mikey179/vfsStream"         : "1.*",
         "predis/predis"              : "1.1.*@dev"
     },
     "suggest": {
         "predis/predis" : "1.1.*@dev",
         "leafo/lessphp" : "v0.4.0"
+    },
+    "config": {
+      "preferred-install": "dist",
+      "component-dir": "vendor/components"
     },
     "bin": [
         "silla"

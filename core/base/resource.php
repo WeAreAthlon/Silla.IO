@@ -28,7 +28,6 @@ abstract class Resource extends Controller
      * Stores the currently managed resource.
      *
      * @var Core\Base\Model
-     * @access public
      */
     public $resource = null;
 
@@ -36,7 +35,6 @@ abstract class Resource extends Controller
      * Stores all managed resources.
      *
      * @var mixed
-     * @access public
      */
     public $resources = null;
 
@@ -44,16 +42,63 @@ abstract class Resource extends Controller
      * Stores all validation errors.
      *
      * @var array
-     * @access public
      */
     public $errors = array();
+
+    /**
+     * Resource accessible attributes.
+     *
+     * @var array
+     */
+    protected $accessibleAttributes = array();
+
+    /**
+     * Resource Model Name.
+     *
+     * @var string
+     */
+    protected $resourceModel = '';
+
+    /**
+     * Resource Sections.
+     *
+     * @var array
+     */
+    public $sections = array();
+
+    /**
+     * Resource Attributes.
+     *
+     * @var array
+     */
+    public $attributes = array();
+
+    /**
+     * Resource constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        if ($this->resourceModel) {
+            $this->resource = new $this->resourceModel;
+            $this->accessibleAttributes = array_merge(
+                array_keys($this->resource->fields()),
+                array_keys($this->resource->hasMany),
+                array_keys($this->resource->hasAndBelongsToMany)
+            );
+
+            $this->addBeforeFilters(array('loadAttributeSections'), array('except' => 'delete'));
+            $this->addBeforeFilters(array('loadResource'), array('only' => array('show', 'edit', 'delete')));
+            $this->addAfterFilters(array('loadFlashMessage'));
+        }
+    }
 
     /**
      * Default index listing function.
      *
      * @param Request $request Current router request.
      *
-     * @access public
      * @uses   Helpers\DataTables
      *
      * @return void
@@ -63,21 +108,20 @@ abstract class Resource extends Controller
         if ($request->is('xhr')) {
             $this->renderer->setLayout(null);
             $this->renderer->setView(null);
-            $query = Helpers\DataTables::queryModel(new $this->model, $_REQUEST['query']);
+            $query = Helpers\DataTables::queryModel($this->resource, $request->variables('query'));
 
             $this->beforeIndex($query, $request);
             $this->resources = $query;
 
             $response = array(
-                'data'       => $this->getPartialOutput('_shared/entities/list/_' . $_REQUEST['view']),
+                'data'       => $this->getPartialOutput('_shared/entities/list/_' . $request->variables('view')),
                 'pagination' => $this->getPartialOutput('_shared/entities/list/_pagination'),
             );
 
             $this->renderer->setOutput(json_encode($response));
             $this->renderer->setOutputContentType('application/json');
         } else {
-            if ($this->getModelName()) {
-                $resource = new $this->model;
+            if ($this->resource) {
                 $params = $request->get();
                 $query = array(
                     'sorting' =>
@@ -88,9 +132,8 @@ abstract class Resource extends Controller
                             $params['filtering'] : null,
                 );
 
-                $query = Helpers\DataTables::queryModel($resource, $query);
+                $query = Helpers\DataTables::queryModel($this->resource, $query);
                 $this->beforeIndex($query, $request);
-
                 $this->resources = $query;
             } else {
                 $this->beforeIndex(new DB\Query, $request);
@@ -109,39 +152,18 @@ abstract class Resource extends Controller
      *
      * @param Request $request Current router request.
      *
-     * @access public
-     * @uses   Helpers\FlashMessage
-     * @uses   Core\Helpers\YAML
-     *
      * @return void
      */
     public function show(Request $request)
     {
         $this->renderer->setLayout('modal');
-
-        if (!$request->get('id')) {
-            $request->redirectTo('index');
-        }
-
-        $resourceModel = new $this->model;
-        $resource = $resourceModel::find()
-            ->where($resourceModel::primaryKeyField() . ' = ?', array($request->get('id')))->first();
-
-        if (!$resource) {
-            $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::set($labelsErrors['not_exists'], 'danger');
-
-            $request->redirectTo('index');
-        } else {
-            $this->beforeShow($resource, $request);
-            $this->resource = $resource;
-        }
+        $this->beforeShow($request);
 
         if (!$this->renderer->getView()) {
             $this->renderer->setView('_shared/entities/show/show');
         }
 
-        $this->afterShow($resource, $request);
+        $this->afterShow($request);
     }
 
     /**
@@ -149,24 +171,16 @@ abstract class Resource extends Controller
      *
      * @param Request $request Current router request.
      *
-     * @access public
-     * @uses   Helpers\FlashMessage
-     * @uses   Core\Helpers\YAML
-     *
      * @return void
      */
     public function create(Request $request)
     {
-        $resource = new $this->model;
-
-        $this->beforeCreate($resource, $request);
+        $this->beforeCreate($request);
 
         if ($request->is('post')) {
-            $resource->save($request->post());
-            $this->afterCreate($resource, $request);
+            $this->resource->save($this->filterAccessibleAttributesData($request->post()));
+            $this->afterCreate($request);
         }
-
-        $this->resource = $resource;
 
         if (!$this->renderer->getView()) {
             $this->renderer->setView('_shared/entities/form/form');
@@ -178,37 +192,16 @@ abstract class Resource extends Controller
      *
      * @param Request $request Current router request.
      *
-     * @access public
-     * @uses   Helpers\FlashMessage
-     * @uses   Core\Helpers\YAML
-     *
      * @return void
      */
     public function edit(Request $request)
     {
-        if (!$request->get('id')) {
-            $request->redirectTo('index');
-        }
-
-        $resourceModel = new $this->model;
-        $resource = $resourceModel::find()
-            ->where($resourceModel::primaryKeyField() . ' = ?', array($request->get('id')))->first();
-
-        if (!$resource) {
-            $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::set($labelsErrors['not_exists'], 'danger');
-
-            $request->redirectTo('index');
-        }
-
-        $this->beforeEdit($resource, $request);
+        $this->beforeEdit($request);
 
         if ($request->is('post')) {
-            $resource->save($request->post());
-            $this->afterEdit($resource, $request);
+            $this->resource->save($this->filterAccessibleAttributesData($request->post()));
+            $this->afterEdit($request);
         }
-
-        $this->resource = $resource;
 
         if (!$this->renderer->getView()) {
             $this->renderer->setView('_shared/entities/form/form');
@@ -220,7 +213,6 @@ abstract class Resource extends Controller
      *
      * @param Request $request Current router request.
      *
-     * @access public
      * @uses   Helpers\FlashMessage
      * @uses   Core\Helpers\YAML
      *
@@ -229,22 +221,13 @@ abstract class Resource extends Controller
     public function delete(Request $request)
     {
         if ($request->is('post') || $request->is('xhr') || $request->is('delete')) {
-            if (!$request->get('id')) {
-                $request->redirectTo('index');
-            }
-
-            $resourceModel = new $this->model;
-            $resource = $resourceModel::find()
-                ->where($resourceModel::primaryKeyField() . ' = ?', array($request->get('id')))->first();
-
-            if ($resource) {
-                $this->beforeDelete($resource, $request);
-                $resource->delete();
-                $this->afterDelete($resource, $request);
+            if ($this->resource->exists()) {
+                $this->beforeDelete($request);
+                $this->resource->delete();
+                $this->afterDelete($request);
             } else {
                 if (!$request->is('xhr')) {
-                    $labelsErrors = Core\Helpers\YAML::get('errors');
-                    Helpers\FlashMessage::set($labelsErrors['not_exists'], 'danger');
+                    Helpers\FlashMessage::set($this->labels['errors']['not_exists'], 'danger');
                 }
 
                 $request->redirectTo('index');
@@ -260,8 +243,6 @@ abstract class Resource extends Controller
      * @param DB\Query $query   Current query object.
      * @param Request  $request Current router request.
      *
-     * @access protected
-     *
      * @return void
      */
     protected function beforeIndex(DB\Query &$query, Request $request)
@@ -273,8 +254,6 @@ abstract class Resource extends Controller
      *
      * @param Request $request Current router request.
      *
-     * @access protected
-     *
      * @return void
      */
     protected function afterIndex(Request $request)
@@ -284,63 +263,87 @@ abstract class Resource extends Controller
     /**
      * Hook - executes on show action.
      *
-     * @param Model   $resource Currently processed resource.
-     * @param Request $request  Current router request.
-     *
-     * @access protected
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function beforeShow(Model $resource, Request $request)
+    protected function beforeShow(Request $request)
     {
     }
 
     /**
      * Hook - executes on show action.
      *
-     * @param Model   $resource Currently processed resource.
-     * @param Request $request  Current router request.
-     *
-     * @access protected
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function afterShow(Model $resource, Request $request)
+    protected function afterShow(Request $request)
     {
     }
 
     /**
      * Hook - executes before create action.
      *
-     * @param Model   $resource Currently processed resource.
-     * @param Request $request  Current router request.
-     *
-     * @access protected
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function beforeCreate(Model $resource, Request $request)
+    protected function beforeCreate(Request $request)
     {
+    }
+
+    /**
+     * Add access to a resource attribute.
+     *
+     * @param array $fields Attribute field names.
+     *
+     * @return void
+     */
+    protected function addAccessibleAttributes(array $fields)
+    {
+        $this->accessibleAttributes = array_unique(array_merge($this->accessibleAttributes, $fields));
+    }
+
+    /**
+     * Remove access to a resource attribute.
+     *
+     * @param array $fields Attribute field names.
+     *
+     * @return void
+     */
+    protected function removeAccessibleAttributes(array $fields)
+    {
+        $this->accessibleAttributes = array_filter($this->accessibleAttributes, function($attribute) use($fields) {
+            return !in_array($attribute, $fields, true);
+        });
+    }
+
+    /**
+     * Filter resource attributes per access scope.
+     *
+     * @param array $data Input data.
+     *
+     * @return array
+     */
+    protected function filterAccessibleAttributesData(array $data)
+    {
+        return array_intersect_key($data, array_flip($this->accessibleAttributes));
     }
 
     /**
      * Hook - executes after create action.
      *
-     * @param Model   $resource Currently processed resource.
-     * @param Request $request  Current router request.
-     *
-     * @access protected
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function afterCreate(Model $resource, Request $request)
+    protected function afterCreate(Request $request)
     {
-        if (!empty($resource->errors)) {
-            $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $resource->errors);
+        if ($this->resource->hasErrors()) {
+            Helpers\FlashMessage::set($this->labels['errors']['general'], 'danger', $this->resource->errors());
         } else {
-            $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-            Helpers\FlashMessage::set($labelsMessages['create']['success'], 'success');
+            Helpers\FlashMessage::set($this->labels['messages']['create']['success'], 'success');
 
             $request->redirectTo('index');
         }
@@ -349,67 +352,52 @@ abstract class Resource extends Controller
     /**
      * Hook - executes before edit action.
      *
-     * @param Model   $resource Currently processed resource.
-     * @param Request $request  Current router request.
-     *
-     * @access protected
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function beforeEdit(Model $resource, Request $request)
+    protected function beforeEdit(Request $request)
     {
     }
 
     /**
      * Hook - executes after edit action.
      *
-     * @param Model   $resource Currently processed resource.
-     * @param Request $request  Current router request.
-     *
-     * @access protected
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function afterEdit(Model $resource, Request $request)
+    protected function afterEdit(Request $request)
     {
-        if (!empty($resource->errors)) {
-            $labelsErrors = Core\Helpers\YAML::get('errors');
-            Helpers\FlashMessage::set($labelsErrors['general'], 'danger', $resource->errors);
+        if ($this->resource->hasErrors()) {
+            Helpers\FlashMessage::set($this->labels['errors']['general'], 'danger', $this->resource->errors());
         } else {
-            $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-            Helpers\FlashMessage::set($labelsMessages['edit']['success'], 'success');
+            Helpers\FlashMessage::set($this->labels['messages']['edit']['success'], 'success');
         }
     }
 
     /**
      * Hook - executes before delete action.
      *
-     * @param Model   $resource Currently processed resource.
-     * @param Request $request  Current router request.
-     *
-     * @access protected
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function beforeDelete(Model $resource, Request $request)
+    protected function beforeDelete(Request $request)
     {
     }
 
     /**
      * Hook - executes after delete action.
      *
-     * @param Model   $resource Currently processed resource.
-     * @param Request $request  Current router request.
-     *
-     * @access protected
+     * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function afterDelete(Model $resource, Request $request)
+    protected function afterDelete(Request $request)
     {
         if (!$request->is('xhr')) {
-            $labelsMessages = Core\Helpers\YAML::get('messages', $this->labels);
-            Helpers\FlashMessage::set($labelsMessages['delete']['success'], 'warning');
+            Helpers\FlashMessage::set($this->labels['messages']['delete']['success'], 'warning');
         }
 
         $request->redirectTo('index');
@@ -420,10 +408,8 @@ abstract class Resource extends Controller
      *
      * @param Request $request Current router request.
      *
-     * @access public
      * @uses   CMS\Helpers\Export
      * @uses   CMS\Helpers\CMSUsers
-     * @uses   Core\Helpers\YAML
      *
      * @return void
      */
@@ -436,8 +422,8 @@ abstract class Resource extends Controller
             $fieldsToExport = array();
             $attributes = array();
 
-            /* Determine which model data fields to export */
-            $sections = Core\Helpers\YAML::get('attributes', $this->labels);
+            /* Determine which model data fields to export. */
+            $sections = $this->labels['attributes'];
 
             foreach ($sections as $section) {
                 $attributes = array_merge($attributes, $section['fields']);
@@ -451,16 +437,15 @@ abstract class Resource extends Controller
                 }
             }
 
-            $model = new $this->model;
-            $query = Helpers\DataTables::toQuery($model, array_keys($fieldsToExport), $request->get());
-            $exportFile = Core\Config()->paths('tmp') . md5($this->model) . '.export.tmp';
+            $query = Helpers\DataTables::toQuery($this->resource, array_keys($fieldsToExport), $request->get());
+            $exportFile = Core\Config()->paths('tmp') . md5($this->resourceModel) . '.export.tmp';
 
             if (Helpers\Export::populateCsvfileCustomQuery(
                 array('fields' => $fieldsToExport, 'query' => $query),
                 $exportFile
             )) {
                 if ('pdf' === $request->get('type')) {
-                    $cmsLabels = Core\Helpers\YAML::getAll('globals');
+                    $cmsLabels = $this->labels;
 
                     $title  = $cmsLabels['export']['caption'] . ' ' .
                         $cmsLabels['modules'][$this->getControllerName()]['title'];
@@ -468,7 +453,7 @@ abstract class Resource extends Controller
                     $logo   = $assets['distribution'] . 'img' . DIRECTORY_SEPARATOR . 'logo.png';
                     $pdf    = new Helpers\PDF($title, 'freeserif', $logo);
 
-                    $pdf->SetAuthor($cmsLabels['client'], true);
+                    $pdf->SetAuthor($cmsLabels['client']);
                     $pdf->AddPage();
                     $pdf->embedContentTable(array_values($fieldsToExport), $pdf->LoadData($exportFile));
                     $pdf->Output();
@@ -478,6 +463,60 @@ abstract class Resource extends Controller
             }
         } else {
             $request->redirectTo('index');
+        }
+    }
+
+    /**
+     * Loads Resource object.
+     *
+     * @param Request $request Current router request.
+     *
+     * @return void
+     */
+    protected function loadResource(Request $request)
+    {
+        if (!$this->resource->exists()) {
+            if (!$request->get('id')) {
+                $request->redirectTo('index');
+            }
+
+            $resourceModel = $this->resource;
+            $this->resource = $resourceModel::find()
+                ->where($resourceModel::primaryKeyField() . ' = ?', array($request->get('id')))->first();
+
+            if (!$this->resource) {
+                Helpers\FlashMessage::set($this->labels['errors']['not_exists'], 'danger');
+
+                $request->redirectTo('index');
+            }
+        }
+    }
+
+    /**
+     * Loads Flash Messages.
+     *
+     * @return void
+     */
+    protected function loadFlashMessage()
+    {
+        $this->renderer->set('flash', Helpers\FlashMessage::get());
+    }
+
+    /**
+     * Loads Attribute Sections.
+     *
+     * @param Request $request Current router request.
+     *
+     * @return void
+     */
+    protected function loadAttributeSections(Request $request)
+    {
+        $this->sections = $this->labels['attributes'];
+
+        foreach ($this->sections as $section) {
+            if (isset($section['fields']) && $section['fields'] && is_array($section['fields'])) {
+                $this->attributes = array_merge($this->attributes, $section['fields']);
+            }
         }
     }
 }

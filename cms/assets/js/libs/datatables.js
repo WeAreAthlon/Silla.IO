@@ -14,7 +14,7 @@
  * @param table
  * @constructor
  */
-var DataTable = function(table) {
+var DataTable = function (table) {
     'use strict';
     var self = this;
 
@@ -43,9 +43,9 @@ var DataTable = function(table) {
     }
 
     self.params = {
-        sorting   : preferences['sorting'] || {field: null, order: null},
+        sorting: preferences['sorting'] || {field: null, order: null},
         pagination: preferences['pagination'] || {limit: null, page: null},
-        filtering : preferences['filtering'] || table.data('defaultFiltering') || {}
+        filtering: preferences['filtering'] || table.data('defaultFiltering') || {}
     };
 
     self._attach();
@@ -53,26 +53,26 @@ var DataTable = function(table) {
 
 DataTable.prototype = new Obj();
 
-DataTable.prototype.fixCaption = function() {
+DataTable.prototype.fixCaption = function () {
     'use strict';
     var i;
-    var self      = this;
-    var thead     = [];
+    var self = this;
+    var thead = [];
     var offsetTop = self.table.data('offsetTop') ? self.table.data('offsetTop') : 0;
 
-    $('tbody tr:eq(1) td', self.table).each(function(i, v) {
+    $('tbody tr:eq(1) td', self.table).each(function (i, v) {
         thead.push($(v).width());
     });
 
-    for(i = 0 ; i < thead.length; i++) {
+    for (i = 0; i < thead.length; i++) {
         $('thead th:eq(' + i + ')', self.table).width(thead[i]);
     }
 
-    $(window).on('scroll', function() {
+    $(window).on('scroll', function () {
 
         var windowTop = $(window).scrollTop();
 
-        if ( windowTop > (self.table.offset().top - offsetTop) ) {
+        if (windowTop > (self.table.offset().top - offsetTop)) {
             $('thead', self.table).addClass('fixed');
         }
         else {
@@ -81,11 +81,11 @@ DataTable.prototype.fixCaption = function() {
     });
 };
 
-DataTable.prototype.enable = function(functionality) {
+DataTable.prototype.enable = function (functionality) {
     'use strict';
     var self = this;
 
-    switch(functionality) {
+    switch (functionality) {
         case 'sorting':
             /* Apply preferences */
             if (self.params.sorting.field && self.params.sorting.order) {
@@ -94,11 +94,11 @@ DataTable.prototype.enable = function(functionality) {
                 $('.sort-btn', handler).removeClass('glyphicon-sort').addClass('accent-cta glyphicon-chevron-' + (self.params.sorting.order === 'asc' ? 'up' : 'down'));
             }
 
-            $('.sort', self.table).on('click', function(e) {
+            $('.sort', self.table).on('click', function (e) {
                 e.preventDefault();
-                var handler         = $(this);
-                var current_order   = handler.hasClass('desc') ? 'desc' : 'asc';
-                var preferences     = {};
+                var handler = $(this);
+                var current_order = handler.hasClass('desc') ? 'desc' : 'asc';
+                var preferences = {};
 
                 self.params.sorting.order = handler.hasClass('asc') ? 'desc' : 'asc';
                 self.params.sorting.field = handler.parent().data('field');
@@ -115,31 +115,31 @@ DataTable.prototype.enable = function(functionality) {
             });
             break;
         case 'pagination':
-            $('.pagination a', self.table).on('click', function(e) {
+            $('.pagination a', self.table).on('click', function (e) {
                 e.preventDefault();
-                var handler         = $(this);
+                var handler = $(this);
                 var handler_wrapper = handler.parent();
-                var preferences     = {};
+                var preferences = {};
                 self.params.pagination.page = handler.data('page');
 
                 preferences[self.table.data('controller')] = self.params.pagination;
                 self.preferences.setItem(self.session + 'pagination', JSON.stringify(preferences));
 
-                if ( !handler_wrapper.hasClass('disabled') ) {
+                if (!handler_wrapper.hasClass('disabled')) {
                     self._populate();
                 }
 
                 $('.pagination li', self.table).removeClass('disabled active');
 
-                if ( handler.data('page') === handler_wrapper.parent().parent().data('pageFirst') ) {
+                if (handler.data('page') === handler_wrapper.parent().parent().data('pageFirst')) {
                     handler_wrapper.addClass('disabled');
                     $('.pagination li.first', self.table).addClass('disabled');
                 } else {
                     handler_wrapper.removeClass('disabled');
-                   $('.pagination li.first', self.table).removeClass('disabled');
+                    $('.pagination li.first', self.table).removeClass('disabled');
                 }
 
-                if ( handler.data('page') === handler_wrapper.parent().parent().data('pageLast') ) {
+                if (handler.data('page') === handler_wrapper.parent().parent().data('pageLast')) {
                     handler_wrapper.addClass('disabled');
                     $('.pagination li.last', self.table).addClass('disabled');
                 } else {
@@ -164,10 +164,10 @@ DataTable.prototype.enable = function(functionality) {
                         var filtering_field = $('.filtering *[data-attribute="' + field + '"]', filter);
                         if (filtering_field.closest('li').hasClass('filter-data-type-select') || filtering_field.closest('li').hasClass('filter-data-type-multiselect') || filtering_field.closest('li').hasClass('filter-data-type-checkbox') || filtering_field.closest('li').hasClass('filter-data-type-radio')) {
                             filtering_field.val(self.params.filtering[field]).trigger('chosen:updated');
-                        } else if(filtering_field.parent().hasClass('filter-data-type-datetime')) {
+                        } else if (filtering_field.parent().hasClass('filter-data-type-datetime')) {
                             var default_field_value = self.params.filtering[field];
 
-                            if(default_field_value.start && default_field_value.end) {
+                            if (default_field_value.start && default_field_value.end) {
                                 $('span', filtering_field).html(moment(default_field_value.start).format(filtering_field.data('dateFormat').toUpperCase()) + ' - ' + moment(default_field_value.end).format(filtering_field.data('dateFormat').toUpperCase()));
                             }
                         } else {
@@ -177,22 +177,22 @@ DataTable.prototype.enable = function(functionality) {
                 }
             }
 
-            $('.filtering .daterange', filter).each(function(idx, element) {
-                CMS.utils.attachDaterange($(element), 'left');
+            $('.filtering .daterange', filter).each(function (idx, element) {
+                CMS.utils.attachDaterange($(element), 'left', 'down');
             });
 
-            $('.filtering form', filter).on('submit', function(e) {
+            $('.filtering form', filter).on('submit', function (e) {
                 e.preventDefault();
 
                 var form_filtering_fields = $(this).serializeObject();
-                var preferences           = {};
+                var preferences = {};
 
                 /**
                  * @TODO remove this code after updating to version 3.x of serializeObject()
                  * @see    https://github.com/macek/jquery-serialize-object/issues/38
                  */
                 for (var param in self.params.filtering) {
-                    if ( param != 'created_on' && !form_filtering_fields.hasOwnProperty(param) ) {
+                    if (param != 'created_on' && !form_filtering_fields.hasOwnProperty(param)) {
                         self.params.filtering[param] = [];
                     }
                 }
@@ -208,7 +208,7 @@ DataTable.prototype.enable = function(functionality) {
                 $('.filter-action-reset', filter).fadeIn('fast');
             });
 
-            $('.filter-action-reset', filter).on('click', function() {
+            $('.filter-action-reset', filter).on('click', function () {
                 $('form input', filter).val('');
                 $('form select:not(.basic)', filter).val(false).trigger('chosen:updated');
                 $('.filtering form', filter).trigger('submit');
@@ -227,10 +227,13 @@ DataTable.prototype.enable = function(functionality) {
                 $('span', tools).html(moment(default_values.start).format(tools.data('dateFormat').toUpperCase()) + ' - ' + moment(default_values.end).format(tools.data('dateFormat').toUpperCase()));
             }
 
-            $('.daterange', self.table).each(function(idx, element) {
-                CMS.utils.attachDaterange($(element), 'bottom', function(start, end) {
+            $('.daterange', self.table).each(function (idx, element) {
+                CMS.utils.attachDaterange($(element), 'left', 'up', function (start, end) {
                     if (start.toDate().getFullYear() != 1900 && end.toDate().getFullYear() != 2100) {
-                        self.params.filtering[$(element).data('attribute')] = {start: CMS.utils.dateToYMD(start.toDate()), end: CMS.utils.dateToYMD(end.toDate())};
+                        self.params.filtering[$(element).data('attribute')] = {
+                            start: CMS.utils.dateToYMD(start.toDate()),
+                            end: CMS.utils.dateToYMD(end.toDate())
+                        };
                     } else {
                         self.params.filtering[$(element).data('attribute')] = {start: null, end: null};
                     }
@@ -246,13 +249,13 @@ DataTable.prototype.enable = function(functionality) {
             });
 
             /* Apply preferences */
-            if( self.params.pagination.limit ) {
+            if (self.params.pagination.limit) {
                 $('.pagination-per-page-selector select', self.table).val(self.params.pagination.limit).trigger('chosen:updated');
             }
 
-            $('.pagination-per-page-selector select', self.table).on('change', function() {
+            $('.pagination-per-page-selector select', self.table).on('change', function () {
                 self.params.pagination.limit = $(this).val();
-                self.params.pagination.page  = 1;
+                self.params.pagination.page = 1;
 
                 var preferences = {};
                 preferences[self.table.data('controller')] = self.params.pagination;
@@ -261,7 +264,7 @@ DataTable.prototype.enable = function(functionality) {
                 self._populate();
             });
 
-            $('.data-export ul a', self.table).on('click', function(e) {
+            $('.data-export ul a', self.table).on('click', function (e) {
                 e.preventDefault();
 
                 self._export($(this).data('exportType'));
@@ -269,8 +272,8 @@ DataTable.prototype.enable = function(functionality) {
 
             break;
         case 'preview':
-            $('tbody tr').on('click', function(e) {
-                if ( $(e.target).parents('.column-actions').length == 0 ) {
+            $('tbody tr').on('click', function (e) {
+                if ($(e.target).parents('.column-actions').length == 0) {
                     e.preventDefault();
                     e.stopPropagation();
                     $('.btn-group a:first', $(this)).trigger('click');
@@ -281,26 +284,33 @@ DataTable.prototype.enable = function(functionality) {
     }
 };
 
-DataTable.prototype._attach = function() {
+DataTable.prototype._attach = function () {
     'use strict';
     var self = this;
 
     /* Default Tools options */
     self.params.pagination.limit = self.params.pagination.limit || $('.pagination-per-page-selector select', self.table).val();
 
-    $.get(self.table.data('urlSource'), {view: 'table', query: self.params}, function(response) {
+    $.get(self.table.data('urlSource'), {view: 'table', query: self.params}, function (response) {
         self.table.html(response.data).fadeIn('slow');
-        $('select', self.table).chosen();
+
+        if (typeof $.fn.chosen === 'function') {
+            $('select', self.table).chosen();
+        }
 
         self.fire('initialize');
         self.fire('populate');
     }, 'json');
 };
 
-DataTable.prototype._populate = function() {
+DataTable.prototype._populate = function () {
     'use strict';
     var self = this;
-    $.get(self.table.data('urlSource'), {view: 'tbody', query: self.params, page: self.params.pagination.page}, function(response) {
+    $.get(self.table.data('urlSource'), {
+        view: 'tbody',
+        query: self.params,
+        page: self.params.pagination.page
+    }, function (response) {
         $('tbody', self.table).html(response.data);
         $('.pagination-wrapper', self.table).html(response.pagination);
 
@@ -310,7 +320,7 @@ DataTable.prototype._populate = function() {
     }, 'json');
 };
 
-DataTable.prototype._export = function(type) {
+DataTable.prototype._export = function (type) {
     'use strict';
     var self = this;
     self.params['type'] = type;

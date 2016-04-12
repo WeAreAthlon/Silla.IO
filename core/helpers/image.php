@@ -72,6 +72,23 @@ class Image
     }
 
     /**
+     * Retrieve thumbnail file path.
+     *
+     * @param string $imagePath Path to the original image file.
+     * @param string $size      Thumbnail size.
+     * @param string $type      Thumbnail type.
+     *
+     * @return string
+     */
+    public static function getThumbnailFilePath($imagePath, $size, $type)
+    {
+        $meta = pathinfo($imagePath);
+        $meta['extension'] = isset($meta['extension']) ? ".{$meta['extension']}" : '';
+
+        return $meta['dirname'] . DIRECTORY_SEPARATOR . "{$meta['filename']}_{$size}_{$type}{$meta['extension']}";
+    }
+
+    /**
      * Generate one or more thumbnails of an input file.
      *
      * @param string  $imagePath   Path to the input image file.
@@ -83,22 +100,17 @@ class Image
      */
     private static function createThumbnail($imagePath, array $thumbsSizes, $quality, $mode)
     {
+        $thumbnails = array();
         $type = ($mode === 'inset') ? 'scaled' : 'cropped';
-
-        $meta = pathinfo($imagePath);
 
         $imagine = new Imagine();
         $image = $imagine->open($imagePath);
 
         foreach ($thumbsSizes as $size) {
             preg_match_all('/(\d+)/', $size, $thumbSize);
-
-            $size = new Box($thumbSize[0][0], $thumbSize[0][1]);
             $sizeName = "{$thumbSize[0][0]}x{$thumbSize[0][1]}";
-            $filePath =
-                $meta['dirname'] .
-                DIRECTORY_SEPARATOR .
-                "{$meta['filename']}_{$sizeName}_{$type}.{$meta['extension']}";
+            $filePath = self::getThumbnailFilePath($imagePath, $sizeName, $type);
+            $size = new Box($thumbSize[0][0], $thumbSize[0][1]);
 
             $image
                 ->thumbnail($size, $mode)

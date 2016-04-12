@@ -3,18 +3,18 @@
 # CMS routes
 - route: /
   maps:
-    controller: cms
+    controller: authentication
+    action    : login
+
+- route: /authentication
+  maps:
+    controller: authentication
     action    : login
 
 - route: /:controller
   maps:
     controller: *
     action    : index
-
-- route: /:action
-  maps:
-    controller: cms
-    action    : *
 
 - route: /:controller/:action
   maps:

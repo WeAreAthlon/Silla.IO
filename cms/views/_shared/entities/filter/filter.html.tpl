@@ -13,9 +13,9 @@
                     <li class="filter-data-type-{$attr.type}">
                         <label for="filter-attribute-{$field}">{$attr.title}:</label>
                         {if "{$_controller}/_filter/{$field}.html.tpl"|template_exists}
-                            {include file="{$_controller}/_filter/{$field}.html.tpl"}
+                            {include "{$_controller}/_filter/{$field}.html.tpl"}
                         {elseif "_shared/entities/types/{$attr.type}/filter.html.tpl"|template_exists}
-                            {include file="_shared/entities/types/{$attr.type}/filter.html.tpl"}
+                            {include "_shared/entities/types/{$attr.type}/filter.html.tpl"}
                         {else}
                             Missing field type filter template: <code>{$_mode}views/_shared/entities/types/{$attr.type}/filter.html.tpl</code>
                         {/if}
@@ -24,8 +24,12 @@
                 {/foreach}
                     <li>
                          <label for="filtering-action">&nbsp;</label>
-                         <button type="submit" id="filtering-action" class="btn btn-primary btn-sm filter-action-submit" title="{$_labels.filtering.submit|escape}"><i class="glyphicon glyphicon-play-circle"></i></button>
-                         <button type="reset" class="btn btn-danger btn-sm filter-action-reset display-hidden" title="{$_labels.filtering.reset|escape}"><i class="glyphicon glyphicon-remove-circle"></i></button>
+                         <button type="submit" id="filtering-action" class="btn btn-outline btn-primary btn-sm filter-action-submit">
+                             {$_labels.filtering.submit}
+                         </button>
+                         <button type="reset" class="btn btn-outline btn-danger btn-sm filter-action-reset display-hidden">
+                             {$_labels.filtering.reset}
+                         </button>
                     </li>
                 </ul>
             </form>

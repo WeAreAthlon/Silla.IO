@@ -86,6 +86,7 @@ class Configuration extends Core\Base\Configuration
      */
     public $MAILER = array(
         'type' => 'Sendmail',
+        'debug' => false,
         'identity' => array(
             'name'  => 'Athlon Production',
             'email' => 'hi@athlonproduction.com',
@@ -141,12 +142,14 @@ class Configuration extends Core\Base\Configuration
     /**
      * @var string[] Captcha credentials.
      *
+     * @example enabled     Flag whether to use Captcha or Not.
      * @example public_key  Public key for Captcha.
      * @example private_key Private key for Captcha.
      *
      * @link https://www.google.com/recaptcha/
      */
     public $CAPTCHA = array(
+        'enabled'     => true,
         'public_key'  => '6LfSevQSAAAAAHUbl-gTGwQHi4C9UW219V0Nn6J5',
         'private_key' => '6LfSevQSAAAAAB6H3f9OznBVUGBp0iMMZWX2OSFH',
     );

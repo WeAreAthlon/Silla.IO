@@ -1,11 +1,13 @@
 /**
- * Base class, which has an custom event managment.
+ * Base class, which has an custom event management.
  *
- * @param {Object} obj An object, for copying all his proeprties to the new Obj.
- *  Warinig: if the properties are of Reference type, they won't be copied, only referenced
+ * Warning: if the properties are of Reference type, they won't be copied, only referenced.
+ *
+ * @param {Object} obj An object, for copying all his properties to the new Obj.
+ *
  * @version 1.0
  */
-var Obj = function(obj) {
+var Obj = function (obj) {
     'use strict';
 
     if (obj && !(obj instanceof Object)) {
@@ -13,7 +15,7 @@ var Obj = function(obj) {
     }
 
     var i;
-    for(i in obj) {
+    for (i in obj) {
         this[i] = obj[i];
     }
 };
@@ -28,7 +30,7 @@ var Obj = function(obj) {
  *
  * @TODO add attaching of multiple handlers
  */
-Obj.prototype.attach = function(event, handler, scope) {
+Obj.prototype.attach = function (event, handler, scope) {
     'use strict';
     if (!(this.events instanceof Object)) {
         this.events = {};
@@ -47,15 +49,16 @@ Obj.prototype.attach = function(event, handler, scope) {
 };
 
 /**
- * Detach a particular event handler or all handler if omitted
+ * Detach a particular event handler or all handler if omitted.
+ *
  * @param {String} event
  * @param {Object} handler
  */
-Obj.prototype.detach = function(event, handler) {
+Obj.prototype.detach = function (event, handler) {
     'use strict';
     if (handler !== undefined) {
         var i;
-        for(i = 0; i < this.events[event].length; i++) {
+        for (i = 0; i < this.events[event].length; i++) {
             if (this.events[event][i].handler === handler) {
                 this.events[event].splice(i, 1);
                 break;
@@ -69,11 +72,12 @@ Obj.prototype.detach = function(event, handler) {
 };
 
 /**
- * Execute all handlers for the event
+ * Execute all handlers for the event.
+ *
  * @param {String} event
  * @param {Object} param Value to be received in the handlers
  */
-Obj.prototype.fire = function(event, param) {
+Obj.prototype.fire = function (event, param) {
     'use strict';
 
     if (!this.events || !this.events[event]) {
@@ -82,11 +86,11 @@ Obj.prototype.fire = function(event, param) {
 
     try {
         var i, toCall = [];
-        for(i = 0; i < this.events[event].length; i++) {
+        for (i = 0; i < this.events[event].length; i++) {
             toCall.push(this.events[event][i]);
         }
 
-        for(i = 0; i < toCall.length; i++) {
+        for (i = 0; i < toCall.length; i++) {
             if (toCall[i]) {
                 if (param instanceof Array) {
                     toCall[i].handler.apply(toCall[i].scope || this, param);

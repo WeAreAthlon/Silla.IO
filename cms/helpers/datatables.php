@@ -37,8 +37,8 @@ class DataTables
         if (isset($params['pagination']['limit'])) {
             $params['pagination']['limit'] = intval($params['pagination']['limit']);
         } else {
-            /* Get first pagination limit from the configuration */
-            $pagination = Core\Helpers\YAML::get('pagination');
+            /* Get first pagination limit from the configuration. */
+            $pagination = Core\Helpers\YAML::get('pagination', 'cms');
             $params['pagination']['limit'] = intval(current($pagination['limits']));
         }
 

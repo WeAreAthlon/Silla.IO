@@ -15,6 +15,7 @@ use Core;
 use Core\Base;
 use Core\Modules\Crypt\Crypt;
 use Core\Modules\DB\Decorators\Interfaces;
+use CMS;
 
 /**
  * Class CMSUser definition.
@@ -29,7 +30,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     public static $tableName = 'cms_users';
 
     /**
-     * Has many relation definition.
+     * Has many association definition.
      *
      * @var array
      */
@@ -38,9 +39,16 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
             'table' => 'cms_userroles',
             'key' => 'role_id',
             'relative_key' => 'id',
-            'class_name' => 'CMS\Models\CMSUserRole'
+            'class_name' => 'CMS\Models\CMSUserRole',
         ),
     );
+
+    /**
+     * Current password.
+     *
+     * @var string
+     */
+    private $currentPassword;
 
     /**
      * Definition of the timezone aware fields.
@@ -55,30 +63,56 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     }
 
     /**
-     * After validate actions.
+     * Additional validations.
      *
-     * @return void
+     * @inheritdoc
      */
     public function afterValidate()
     {
         if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $this->errors['email'] = 'invalid_format';
+            $this->setError('email', 'invalid_format');
         }
 
-        if (!$this->isNewRecord() && isset($this->errors['password'])) {
-            unset($this->errors['password'], $this->password);
+        if (!$this->getError('password') && !Core\Utils::validatePassword($this->password)) {
+            $this->setError('password', 'weak');
         }
     }
 
     /**
-     * Before save actions.
+     * Store current password for later reference.
      *
-     * @return void
+     * @inheritdoc
      */
-    public function beforeSave()
+    public function beforePopulate()
     {
-        if ($this->password && !in_array(Core\Router()->request->action(), array('login', 'reset'), true)) {
+        $this->currentPassword = $this->password;
+    }
+
+    /**
+     * Hashes the new password if the password is different form the stored one.
+     *
+     * @inheritdoc
+     */
+    public function afterPopulate()
+    {
+        if ($this->password && $this->password !== $this->currentPassword) {
             $this->password = Crypt::hash($this->password);
+        } else {
+            $this->password = $this->currentPassword;
         }
+    }
+
+    /**
+     * Get either a Gravatar URL or complete image tag for a specified email address.
+     *
+     * @param integer $size   Size in pixels, defaults to 80px [ 1 - 2048 ].
+     * @param string  $type   Default image-set to use [ 404 | mm | identicon | monsterid | wavatar ].
+     * @param string  $rating Maximum rating (inclusive) [ g | pg | r | x ].
+     *
+     * @return string
+     */
+    public function getAvatar($size = 70, $type = 'mm', $rating = 'g')
+    {
+        return CMS\Helpers\CMSUsers::getGravatar($this->email, $size, $type, $rating);
     }
 }

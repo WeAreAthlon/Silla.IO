@@ -3,9 +3,9 @@
     {if not $_labels.modules.$module.hidden|default:false}
     <div class="panel no-margin-top no-border no-border-radius no-box-shadow{if $_controller eq $module} panel-active{/if}">
         <div class="panel-heading no-border-radius">
-            <h4 class="panel-title text-thin">
+            <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#cms-modules" href="#collapse-module-{$module}" title="{$_labels.modules.$module.title|escape}">
-                    <i class="glyphicon glyphicon-{$_labels.modules.$module.icon}"></i>  &nbsp;{$_labels.modules.$module.title}
+                    <i class="glyphicon glyphicon-{$_labels.modules.$module.icon}"></i> {$_labels.modules.$module.title}
                 </a>
             </h4>
         </div>
@@ -24,9 +24,9 @@
     {if array_intersect($group.modules, $modules)}
     <div class="panel no-margin-top no-border no-border-radius no-box-shadow{if $_controller|in_array:$group.modules} panel-active{/if}">
         <div class="panel-heading no-border-radius">
-            <h4 class="panel-title text-thin">
+            <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#cms-modules" href="#collapse-module-{$group_slug}" title="{$group.title|escape}">
-                    <i class="glyphicon glyphicon-{$group.icon}"></i>  &nbsp;{$group.title}
+                    <i class="glyphicon glyphicon-{$group.icon}"></i> {$group.title}
                 </a>
             </h4>
         </div>

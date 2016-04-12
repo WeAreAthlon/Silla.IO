@@ -5,12 +5,12 @@
             {* Show regular values from the entitity *}
             {html_options options=$attr.value selected=$_get.filtering.$field|default:''}
         {else}
-            {* Analyze filtering field relations *}
-            {custom_class var=current_model class=$model}
+            {* Analyze filtering field associations *}
+            {custom_class var=current_model class=get_class($resource)}
             {if isset($current_model->hasAndBelongsToMany.$field) and is_array($current_model->hasAndBelongsToMany.$field)}
                 {* Show multiselect populated with all related resource values *}
                 {custom_class var=related_resource class=$current_model->hasAndBelongsToMany.$field.class_name}
-                {html_object_options options=$related_resource->find() selected=$_get.filtering.{$field}|default:''}
+                {html_object_options options=$related_resource->find() selected=$_get.filtering.$field|default:''}
             {/if}
         {/if}
     </select>

@@ -1,0 +1,2 @@
+<input type="hidden" name="{$attr.name}" value="0"{$attr.disabled}>
+<input type="checkbox" name="{$attr.name}" id="{$attr.id}"{if $attr.default} checked="checked"{elseif $_action eq 'add' and $attr.default|default:false eq 'checked'} checked="checked"{/if} value="1"{$attr.disabled}>

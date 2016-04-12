@@ -59,10 +59,10 @@ abstract class Model
      * @var array
      * @access protected
      */
-    public $errors = array();
+    protected $errors = array();
 
     /**
-     * Stores all relations of type "belongs to".
+     * Stores all associations of type "belongs to".
      *
      * @var array
      * @access public
@@ -70,7 +70,7 @@ abstract class Model
     public $belongsTo = array();
 
     /**
-     * Stores all relations of type "has many".
+     * Stores all associations of type "has many".
      *
      * @var array
      * @access public
@@ -78,7 +78,7 @@ abstract class Model
     public $hasMany = array();
 
     /**
-     * Stores all relations of type "has and belongs to many" (habtm).
+     * Stores all associations of type "has and belongs to many" (habtm).
      *
      * @var array
      * @access public
@@ -205,6 +205,16 @@ abstract class Model
     }
 
     /**
+     * Whether the record exists in the persistent storage. (DB)
+     *
+     * @return bool
+     */
+    final public function exists()
+    {
+        return (bool)$this->{static::$primaryKeyField};
+    }
+
+    /**
      * Generic set method.
      *
      * @param string $field Field to set.
@@ -219,7 +229,7 @@ abstract class Model
         if (array_key_exists($field, $this->fields)) {
             $this->fields[$field] = $value;
         } else {
-            $this->$field = $value;
+            $this->{$field} = $value;
         }
     }
 
@@ -240,7 +250,7 @@ abstract class Model
             return $this->fields[$field];
         }
 
-        return isset($this->$field) ? $this->$field : null;
+        return isset($this->{$field}) ? $this->{$field} : null;
     }
 
     /**
@@ -276,7 +286,7 @@ abstract class Model
     }
 
     /**
-     * Magic method __call used for accessing the results of the relations.
+     * Magic method __call used for accessing the results of the associations.
      *
      * @param string $name The name of the uninitialized method.
      * @param array  $args Array of the parameters passed to the method.
@@ -288,11 +298,11 @@ abstract class Model
     final public function __call($name, array $args)
     {
         if (array_key_exists($name, $this->belongsTo)) {
-            return $this->getRelation($this->belongsTo[$name], $name);
+            return $this->getAssociation($this->belongsTo[$name], $name);
         }
 
         if (array_key_exists($name, $this->hasMany)) {
-            return $this->getRelation($this->hasMany[$name], $name);
+            return $this->getAssociation($this->hasMany[$name], $name);
         }
 
         if (array_key_exists($name, $this->hasAndBelongsToMany)) {
@@ -302,6 +312,65 @@ abstract class Model
         if (method_exists('\Core\Modules\DB\Observer', $name)) {
             call_user_func_array(array('\Core\Modules\DB\Observer', $name), array_merge(array($this), $args));
         }
+    }
+
+    /**
+     * Retrieve resource validation errors.
+     *
+     * @return array
+     */
+    final public function errors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Check whether the resource has validation errors.
+     *
+     * @return boolean
+     */
+    final public function hasErrors()
+    {
+        return !empty($this->errors);
+    }
+
+    /**
+     * Retrieve resource validation error by field name.
+     *
+     * @param string $field Field name.
+     *
+     * @final
+     *
+     * @return mixed
+     */
+    final public function getError($field)
+    {
+        return isset($this->errors[$field]) ? $this->errors[$field] : null;
+    }
+
+    /**
+     * Set a validation error.
+     *
+     * @param string $field Field name.
+     * @param mixed  $type  Error type.
+     *
+     * @return void
+     */
+    final public function setError($field, $type)
+    {
+        $this->errors[$field] = $type;
+    }
+
+    /**
+     * Remove a validation error.
+     *
+     * @param string $field Field name.
+     *
+     * @return void
+     */
+    final public function removeError($field)
+    {
+        unset($this->errors[$field]);
     }
 
     /**
@@ -333,39 +402,39 @@ abstract class Model
     /**
      * Get the associated object.
      *
-     * @param array  $relation Relation params.
-     * @param string $name     Name of the relation.
+     * @param array  $association Association params.
+     * @param string $name        Name of the association.
      *
      * @access private
      *
      * @return object
      */
-    private function getRelation(array $relation, $name)
+    private function getAssociation(array $association, $name)
     {
-        $key = $relation['key'];
-        $relative_key = $relation['relative_key'];
-        $class_name = isset($relation['class_name']) ? $relation['class_name'] : $name;
+        $key = $association['key'];
+        $relative_key = $association['relative_key'];
+        $class_name = isset($association['class_name']) ? $association['class_name'] : $name;
 
-        return $this->$name = $class_name::find()->where("{$relative_key} = ?", array($this->$key));
+        return $this->{$name} = $class_name::find()->where("{$relative_key} = ?", array($this->{$key}));
     }
 
     /**
-     * Get the all associated objects of the "has and belongs to many" relation.
+     * Get the all associated objects of the "has and belongs to many" association.
      *
-     * @param array  $relation Relation params.
-     * @param string $name     Name of the relation.
+     * @param array  $association Association params.
+     * @param string $name        Name of the association.
      *
      * @access private
      *
      * @return array
      */
-    private function hasAndBelongsToMany(array $relation, $name)
+    private function hasAndBelongsToMany(array $association, $name)
     {
         $prefix = Core\Config()->DB['tables_prefix'];
-        $relation_table = $relation['table'];
-        $key = $relation['key'];
-        $relative_key = $relation['relative_key'];
-        $class_name = isset($relation['class_name']) ? $relation['class_name'] : $name;
+        $association_table = $association['table'];
+        $key = $association['key'];
+        $relative_key = $association['relative_key'];
+        $class_name = isset($association['class_name']) ? $association['class_name'] : $name;
 
         $mdl = new $class_name();
 
@@ -373,35 +442,35 @@ abstract class Model
 
         $query = $mdl::find($prefix . $class_name::$tableName . '.*' . $_fieldsI18n)
             ->join(
-                $relation_table,
-                "{$prefix}{$relation_table}.{$relative_key} = {$prefix}{$mdl::$tableName}." .
+                $association_table,
+                "{$prefix}{$association_table}.{$relative_key} = {$prefix}{$mdl::$tableName}." .
                 $class_name::primaryKeyField()
             )
-            ->where("{$prefix}{$relation_table}.{$key} = ?", array($this->{static::$primaryKeyField}));
+            ->where("{$prefix}{$association_table}.{$key} = ?", array($this->{static::$primaryKeyField}));
 
-        return $this->$name = $query;
+        return $this->{$name} = $query;
     }
 
     /**
-     * Save or update the relational objects.
+     * Save or update the associated objects.
      *
      * @access private
      *
      * @return void
      */
-    private function saveRelations()
+    private function saveAssociations()
     {
         /* Save the "has many" from habtm objects */
         foreach ($this->hasAndBelongsToMany as $k => $rel) {
-            if (isset($this->$k) && is_array($this->$k)) {
-                $relation_table = $rel['table'];
+            if (isset($this->{$k}) && is_array($this->{$k})) {
+                $association_table = $rel['table'];
                 $key = $rel['key'];
                 $relative_key = $rel['relative_key'];
                 $primary_key = $this->{static::$primaryKeyField};
 
                 $query = new DB\Query();
                 $result = Core\DB()->run(
-                    $query->select($relative_key)->from($relation_table)->where("{$key} = ?", array($primary_key))
+                    $query->select($relative_key)->from($association_table)->where("{$key} = ?", array($primary_key))
                 );
 
                 $original_ids = array();
@@ -412,7 +481,7 @@ abstract class Model
 
                 $habtm_values = array();
 
-                foreach ($this->$k as $item) {
+                foreach ($this->{$k} as $item) {
                     $habtm_values[] = (is_object($item) ? $item->id : $item);
                 }
 
@@ -424,7 +493,7 @@ abstract class Model
                             ->insert(array($key, $relative_key), array_map(function ($item) use ($primary_key) {
                                 return array($primary_key, $item);
                             }, $to_add))
-                            ->into($relation_table)
+                            ->into($association_table)
                     );
                 }
             }
@@ -432,35 +501,35 @@ abstract class Model
     }
 
     /**
-     * Delete relational objects and records.
+     * Delete associated objects and records.
      *
      * @access private
      *
      * @return void
      */
-    private function deleteRelations()
+    private function deleteAssociations()
     {
-        /* Delete objects of the habtm relations */
+        /* Delete objects of the habtm associations */
         foreach ($this->hasAndBelongsToMany as $k => $rel) {
-            if (isset($this->$k) && is_array($this->$k)) {
-                $relation_table = $rel['table'];
+            if (isset($this->{$k}) && is_array($this->{$k})) {
+                $association_table = $rel['table'];
                 $key = $rel['key'];
                 $relative_key = $rel['relative_key'];
                 $primary_key = $this->{static::$primaryKeyField};
 
-                /* Gets the id of the original relational objects */
+                /* Gets the id of the original associated objects */
                 $query = new DB\Query();
                 $result = Core\DB()->run(
-                    $query->select($relative_key)->from($relation_table)->where("{$key} = ?", array($primary_key))
+                    $query->select($relative_key)->from($association_table)->where("{$key} = ?", array($primary_key))
                 );
 
                 if ($result) {
                     $original_ids = Core\Utils::arrayFlatten($result);
 
-                    /* Fills the ids of the current relational objects */
+                    /* Fills the ids of the current associated objects */
                     $passed_ids = array();
 
-                    foreach ($this->$k as $item) {
+                    foreach ($this->{$k} as $item) {
                         $passed_ids[] = (is_object($item) ? $item->id : $item);
                     }
 
@@ -473,7 +542,7 @@ abstract class Model
                         Core\DB()->run(
                             $query
                                 ->remove()
-                                ->from($relation_table)
+                                ->from($association_table)
                                 ->where("{$key} = ?", array($primary_key))
                                 ->where("{$relative_key} IN (" . implode(',', array_map(function () {
                                     return '?';
@@ -492,17 +561,17 @@ abstract class Model
      *
      * @return void
      */
-    private function deleteRelationsDeep()
+    private function deleteAssociationsDeep()
     {
-        /* Has and belongs to many relations */
+        /* Has and belongs to many associations */
         foreach ($this->hasAndBelongsToMany as $k => $rel) {
-            $relation_table = $rel['table'];
+            $association_table = $rel['table'];
             $key = $rel['key'];
 
             $query = new DB\Query();
 
             Core\DB()->run(
-                $query->remove()->from($relation_table)->where("{$key} = ?", array($this->{static::$primaryKeyField}))
+                $query->remove()->from($association_table)->where("{$key} = ?", array($this->{static::$primaryKeyField}))
             );
         }
     }
@@ -777,6 +846,9 @@ abstract class Model
                 continue;
             }
 
+            /* Trim spacing. */
+            $value = trim($value);
+
             /*
              * We are using this "( is_null($value) || '' === $value )", instead of just empty($field)
              * because if $field is 0, empty(0) is true, and we can't pass 0's to a NOT_null field
@@ -794,7 +866,7 @@ abstract class Model
                         $this->errors[$field] = 'invalid_type';
                     }
 
-                    if (strlen($value) > $schema[$field]['length']) {
+                    if (mb_strlen($value) > $schema[$field]['length']) {
                         $this->errors[$field] = 'max_length_exceeded';
                     }
 
@@ -1000,8 +1072,8 @@ abstract class Model
         }
 
         if ($result) {
-            $this->deleteRelations();
-            $this->saveRelations();
+            $this->deleteAssociations();
+            $this->saveAssociations();
 
             $this->fire('afterSave', array($this));
         }
@@ -1023,7 +1095,7 @@ abstract class Model
 
         $result = $this->remove();
 
-        $this->deleteRelationsDeep();
+        $this->deleteAssociationsDeep();
 
         $this->fire('afterDelete', array($this));
 

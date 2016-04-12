@@ -231,7 +231,7 @@ abstract class Configuration
             'url'      => 'cms/',
         ),
         array(
-            'name'     => 'default',
+            'name'     => 'app',
             'location' => 'app/',
             'url'      => '/',
         ),
@@ -326,7 +326,7 @@ abstract class Configuration
         $this->PATHS['uploads'] =
             $this->PATHS['public'] . $mode['relative'] . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
 
-        $this->PATHS['assets']['source']       = $mode['location'] . 'assets' . DIRECTORY_SEPARATOR;
+        $this->PATHS['assets']['source']       = $this->PATHS['root'];
         $this->PATHS['assets']['distribution'] =
             $this->PATHS['public'] . $mode['relative'] . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
 

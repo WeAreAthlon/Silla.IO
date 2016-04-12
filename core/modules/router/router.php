@@ -134,8 +134,19 @@ final class Router
         $options = array_merge(array('controller' => $this->request->controller()), $options);
 
         if (!isset($_cache[$_cache_key])) {
-            $route = $this->routes->extractUrl($options);
-            $route['pattern'] = $this->routes->toRoute($route['pattern']);
+            $mode = isset($options['_mode']) ? Core\Config()->modes($options['_mode']) : $this->request->mode();
+
+            if ($mode != $this->request->mode()) {
+                $routes = new Routes($mode);
+                unset($options['_mode']);
+
+                $route = $routes->extractUrl($options);
+                $route['pattern'] = $routes->toRoute($route['pattern']);
+            } else {
+                unset($options['_mode']);
+                $route = $this->routes->extractUrl($options);
+                $route['pattern'] = $this->routes->toRoute($route['pattern']);
+            }
 
             foreach ($route['pattern'] as $key => $url_element) {
                 if (isset($url_element{0}) && ($url_element{0} === Core\Config()->ROUTER['variables_prefix'])) {
@@ -159,10 +170,9 @@ final class Router
             $_prefix = '';
 
             if (!Core\Config()->ROUTER['rewrite']) {
-                $_prefix = '?_path=';
+                $_prefix = '?';
             }
 
-            $mode = isset($options['_mode']) ? Core\Config()->modes($options['_mode']) : $this->request->mode();
             $mode['url'] = $mode['url'] ? $mode['url'] . Core\Config()->ROUTER['separator'] : '';
 
             $_cache[$_cache_key] =
@@ -176,6 +186,22 @@ final class Router
         }
 
         return $_cache[$_cache_key];
+    }
+
+    /**
+     * Generates an application full url.
+     *
+     * @param array $options Array of options.
+     *
+     * @access public
+     * @uses   toUrl
+     * @uses   Core\Config();
+     *
+     * @return string
+     */
+    public function toFullUrl(array $options)
+    {
+        return Core\Config()->urls('full') . $this->toUrl($options);
     }
 
     /**
@@ -344,5 +370,30 @@ final class Router
         }
 
         unset($process);
+    }
+
+    /**
+     * Retrieve the relative request query string.
+     *
+     * @param string $path Request query string.
+     *
+     * @return string
+     */
+    public static function normalizePath($path)
+    {
+        $path = explode('?', $path);
+
+        if (!Core\Config()->ROUTER['rewrite']) {
+            $path = explode('&', $path[1]);
+        }
+
+        $path = $path[0];
+        $applicationPath = Core\Config()->urls('relative');
+
+        if ($applicationPath !== '/') {
+            $path = '/' . str_replace($applicationPath, '', $path);
+        }
+
+        return ltrim($path, '/');
     }
 }

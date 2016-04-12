@@ -29,7 +29,7 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
     public static $tableName = 'cms_userroles';
 
     /**
-     * Belongs to relation definition.
+     * Belongs to association definition.
      *
      * @var array
      */
@@ -38,7 +38,7 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
             'table' => 'cms_users',
             'key' => 'id',
             'relative_key' => 'role_id',
-            'class_name' => 'CMS\Models\CMSUser'
+            'class_name' => 'CMS\Models\CMSUser',
         ),
     );
 

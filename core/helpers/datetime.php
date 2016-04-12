@@ -21,12 +21,13 @@ class DateTime
     /**
      * Fetches all available timezone codes.
      *
-     * @return array Of timezones with locations and location offsets from GMT.
+     * @return array Timezones with locations and location offsets from GMT.
      */
     public static function getTimezonesList()
     {
-        /* Get an array of all definied timezone identifiers. */
+        /* Get an array of all defined timezone identifiers. */
         $timezoneCodes = \DateTimeZone::listIdentifiers();
+        $timezones = array();
 
         foreach ($timezoneCodes as $timezoneCode) {
             /* Create a datetime object using the currently processed timezone. */

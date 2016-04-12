@@ -8,7 +8,7 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
-$(function() {
+$(function () {
     CMS.attach.xhrLoader();
     CMS.attach.tooltips();
     CMS.attach.formEnhancements();
@@ -21,14 +21,14 @@ $(function() {
     CMS.attach.modals.preview();
     CMS.attach.dataTables();
 
-    $('[data-toggle=offcanvas]').on('click', function() {
+    $('[data-toggle=offcanvas]').on('click', function () {
         $('.row-offcanvas').toggleClass('active');
     });
 
     $.ajaxSetup({data: {_token: Silla.token}});
 
-    $(document).ajaxError(function(event, request) {
-        switch(request.status) {
+    $(document).ajaxError(function (event, request) {
+        switch (request.status) {
             case 403:
                 bootbox.alert('<h4>' + Silla.labels.errors.access + '</h4>');
                 break;

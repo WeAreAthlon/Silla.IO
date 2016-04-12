@@ -1,33 +1,192 @@
 # YAML file
-login:
-  title    : Control Panel
-  username : Your email
-  password : Your password
-  forgotten_password: Forgotten password?
-  error   : Invalid credentials provided
+title  : Project Title
+client : Client Title
 
-reset:
-  title   : Forgotten password
-  email   : Email upon registration...
-  instructions: Written instruction how to change your password will be send to the provided email
-  send    : Send Instructions
-  success : Instructions how to change your password were have been send. Check the provided email.
-  error   : Invalid email provided
+general:
+  actions       : Actions
+  details       : Details
+  profile       : Account
+  has_access_to : Has access to
+  active        : Active
+  inactive      : Inactive
+  never         : no value
+  none          : none
+  no_results    : No result to display
+  select_option : Select...
+  all           : All
+  loading       : Please, wait
+  no_access     : You don't have enough permissions to acess the selected area. Notify an administrator for further assistance.
+  not_authorized: You are not authorized to execute the requested action. Notify an administrator for further assistance.
+  no_support    : Not supported.
+  toggle_nav    : Toggle navigation
+  select        : Select
+  attribute     : Attribute
+  value         : Value
+  last_login    : last session on
 
-captcha :
-  text : Enter the words above
-  audio: Enter the numbers you hear
-  error: Invalid CAPTCHA code
+buttons:
+  save   : Save changes
+  create : Create object
+  edit   : Edit object
+  cancel : Cancel
+  delete : Delete permanently
+  close  : Close
+  check  : Check
+  login  : Sign in
 
-reset_access:
-  title    : Reset user access to the CMS
-  success  : Your password has been reset successfully.
-  new_password: The following pass-phrase has been assigned to your user profile
+modules:
+  cmsusers:
+    title   : Users
+    desc    : Users. User accounts management.
+    icon    : user
+    index   : Listing
+    show    : View
+    create  : Create User
+    credentials: Credentials
+    edit    : Edit User
+    delete  : Delete User
+    export  : Export Users
+    hidden  : true
+  cmsuserroles:
+    title   : User Roles
+    desc    : Definition and management of access levels.
+    icon    : cog
+    show    : View
+    index   : Listing
+    create  : Create Role
+    edit    : Edit Role
+    delete  : Delete Role
+    export  : Export User Roles
+    hidden  : true
+  account:
+    title   : Account
+    desc    : Manage account profile data.
+    icon    : user
+    show    : View
+    edit    : Update Account
+    index   : Update Account
+    export  : Export Account data
+    credentials: Credentials
+    hidden  : true
+  cmshelp:
+    title   : Help
+    desc    : User manual for working with the CMS.
+    icon    : flag
+    show    : View
+    index   : Index
+    preview : Preview
+    create  : Create Page
+    edit    : Edit Page
+    delete  : Delete Page
+    export  : Export Pages
+    hidden  : true
 
-mails:
- reset:
-   subject      : Reset Access
-   greeting     : Dear
-   reason       : A request has been issued for resetting access to
-   instructions : Please visit this URL to reset your password
-   note         : 'Note that this link <b>will expire after 1 hour</b>'
+sections:
+  login      : User log in
+  logout     : Sign out
+  filter     : Filtering
+  reset      : Forgotten password
+  reset_access : Reset account access
+  export     : Export
+
+errors:
+  general          : The following errors have prevented the record from being saved
+  not_exists       : The selected resource does not exist!
+  not_empty        : Cannot be empty value.
+  invalid_format   : Invalid format.
+  duplication      : Duplicated value, this value has already been used by the application.
+  invalid_url      : Invalid URL format.
+  mismatch         : Mismatched values.
+  invalid_type     : Incompatible value type.
+  enum_no_match    : The value is not allowed.
+  max_length_exceeded : The value exceeds the system limit.
+  weak             : The entered value is weak. Please chooes a stronger phrase.
+
+status:
+  "0" : 'No'
+  "1" : 'Yes'
+
+pagination:
+  page     : Page
+  of       : of
+  first    : First
+  last     : Last
+  next     : '<span class="glyphicon glyphicon-menu-right"></span>'
+  prev     : '<span class="glyphicon glyphicon-menu-left"></span>'
+  per_page : Per page
+  limits   :
+    10 : 10
+    20 : 20
+    30 : 30
+    50 : 50
+
+files:
+  select   : Browse file...
+  remove   : Remove
+  preview  : Preview file
+  download : Download
+
+filtering:
+  title  : Filter data
+  submit : Apply
+  reset  : Reset
+
+datatable:
+  totals: Showing %d to %d of %d entries.
+
+daterange:
+  restriction: Date of creation
+  locales:
+    applyLabel: Apply
+    clearLabel: Clear
+    fromLabel: From
+    toLabel: To
+    weekLabel: W
+    customRangeLabel: Custom Range
+  ranges:
+    all           : All time
+    today         : Today
+    yesterday     : Yesterday
+    last_7_days   : Last 7 Days
+    last_30_days  : Last 30 Days
+    current_month : This Month
+    current_year  : This Year
+
+export:
+  title: Export
+  caption: 'Data export: '
+  formats:
+    csv: Download CSV
+    pdf: Download PDF
+
+page_not_found:
+  title: Resource cannot be found!
+  desc : The resource you are requesting does not exist.
+
+js:
+  no_results: No results found
+  delete_confirmation:
+    title     : Permanent Deletion
+    desc      : Delete permanently the selected resource from the application?
+    password  : Enter your current user password...
+    buttons:
+      confirm : '<span class="glyphicon glyphicon-trash"></span> Permanently Delete'
+      cancel  : '<span class="glyphicon glyphicon-menu-left"></span> Cancel'
+  validations:
+    maxlength : 'Used %charsTyped% of %charsTotal% chars.'
+  errors:
+   general : General Server Error
+   access  : Permission denied.
+
+credits:
+  author: powered by
+
+navigation_groups:
+  cms_settings:
+    title: CMS Settings
+    icon : cog
+    modules:
+      - account
+      - cmsusers
+      - cmsuserroles
+      - cmshelp

@@ -29,8 +29,8 @@ class Home extends Base\Controller
      */
     public function index(Request $request)
     {
-        $this->renderer->assets->add('css/styles.css');
-        $this->renderer->assets->add('css/print.css');
-        $this->renderer->assets->add('js/init.js');
+        $this->renderer->assets->add('app/assets/css/styles.css');
+        $this->renderer->assets->add('app/assets/css/print.css');
+        $this->renderer->assets->add('app/assets/js/init.js');
     }
 }

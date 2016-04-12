@@ -1,0 +1,1 @@
+<img src="{$resource->getAvatar(32)}" class="img-circle" style="width: 32px;" alt="{$resource->name|escape}"/>

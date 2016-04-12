@@ -1,0 +1,41 @@
+# YAML file
+attributes:
+  write:
+    meta:
+      title     : Write
+      icon      : flag
+      desc      : Describe help page contents.
+      serialize : false
+    fields:
+      title:
+        title   : Title
+        type    : text
+        desc    : Title of the Help Page.
+        icon    : flag
+        length  : 255
+      content:
+        title   : Contents
+        type    : format
+        desc    : 'Text formatting supportes <a href="https://daringfireball.net/projects/markdown/syntax" class="help-link"><span class="glyphicon glyphicon-share"></span> <strong>Parsedown</strong></a>.'
+        rows    : 15
+        list    : false
+        icon    : font
+  preview:
+    meta:
+      title     : Preview
+      icon      : cog
+      desc      : Formatted content.
+      serialize : false
+      custom    : true
+
+buttons:
+  create: Create Page
+  save: Update Page
+
+messages:
+  create:
+    success: The help page has been successfully added!
+  edit:
+    success: The help page has been successfully amended!
+  delete:
+    success: The selected help page has been permanently deleted!

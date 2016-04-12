@@ -13,6 +13,7 @@ namespace Core\Base;
 
 use Core;
 use Core\Modules;
+use Core\Modules\Router\Request;
 
 /**
  * Class Controller definition.
@@ -38,18 +39,10 @@ abstract class Controller
     /**
      * Labels name.
      *
-     * @var string|bool
+     * @var array|bool
      * @access public
      */
     public $labels;
-
-    /**
-     * Main Data Model name.
-     *
-     * @var string
-     * @access protected
-     */
-    protected $model;
 
     /**
      * Controller meta data.
@@ -58,6 +51,13 @@ abstract class Controller
      * @access protected
      */
     protected $meta = array();
+
+    /**
+     * Default layout name.
+     *
+     * @var string
+     */
+    protected $layout = 'default';
 
     /**
      * Action output cache.
@@ -91,7 +91,7 @@ abstract class Controller
             ),
         );
 
-        $this->labels          = $this->labels          ? $this->labels          : $this->meta['controller'];
+        $this->labels          = $this->labels          ? $this->labels          : array($this->meta['controller']);
         $this->rendererAdapter = $this->rendererAdapter ? $this->rendererAdapter : Core\Config()->RENDER['adapter'];
 
         if ($this->rendererAdapter) {
@@ -101,7 +101,7 @@ abstract class Controller
 
             self::setOutputDefaultHeaders();
 
-            $defaultLayout = 'default';
+            $defaultLayout = $this->layout;
             $defaultView   = $this->meta['controller'] . DIRECTORY_SEPARATOR . $this->meta['action'];
 
             if ($this->renderer->isLayout($defaultLayout)) {
@@ -112,17 +112,19 @@ abstract class Controller
                 $this->renderer->setView($defaultView);
             }
         }
+
+        $this->addBeforeFilters(array('loadLabels'));
     }
 
     /**
      * Executes an controller action.
      *
-     * @param string                 $action  Action name.
-     * @param Modules\Router\Request $request Request object.
+     * @param string  $action  Action name.
+     * @param Request $request Request object.
      *
      * @return void
      */
-    final public function __executeAction($action, Modules\Router\Request $request)
+    final public function __executeAction($action, Request $request)
     {
         $cache = array(
             'lifetime' => $this->getOutputCachingLifetime($action),
@@ -135,9 +137,9 @@ abstract class Controller
             $output = Core\Cache()->fetch($cache['id']);
 
             if (!$output['content']) {
-                $this->executeBeforeFilters($action);
+                $this->executeBeforeFilters($action, $request);
                 $this->$action($request);
-                $this->executeAfterFilters($action);
+                $this->executeAfterFilters($action, $request);
 
                 $output['content'] = $this->renderer->getOutput();
                 $output['headers'] = Core\Router()->response->getHeaders();
@@ -150,9 +152,9 @@ abstract class Controller
                 $this->renderer->render();
             }
         } else {
-            $this->executeBeforeFilters($action);
+            $this->executeBeforeFilters($action, $request);
             $this->$action($request);
-            $this->executeAfterFilters($action);
+            $this->executeAfterFilters($action, $request);
         }
     }
 
@@ -174,7 +176,7 @@ abstract class Controller
             $this->renderer->setView(null);
             $this->renderer->set('_controller', 'base');
             $this->renderer->set('_action', '404');
-            $this->renderer->set('_labels', Core\Helpers\YAML::getAll('globals'));
+            $this->renderer->set('_labels', self::loadLabelsFile(Core\Config()->mode('name')));
 
             Core\Router()->response->setHttpResponseCode(404);
         }
@@ -204,7 +206,7 @@ abstract class Controller
             $renderer = self::assignVariablesToRender($renderer);
             $renderer->set('_controller', 'base');
             $renderer->set('_action', '404');
-            $renderer->set('_labels', Core\Helpers\YAML::getAll('globals'));
+            $renderer->set('_labels', self::loadLabelsFile(Core\Config()->mode('name')));
             $renderer->setLayout('404');
 
             $renderer->setView(null);
@@ -324,19 +326,6 @@ abstract class Controller
     }
 
     /**
-     * Gets controller main model name.
-     *
-     * @access private
-     * @final
-     *
-     * @return string
-     */
-    final protected function getModelName()
-    {
-        return $this->model;
-    }
-
-    /**
      * Renders the assigned template.
      *
      * Manages static template caching. See see http://www.smarty.net/docs/en/caching.tpl
@@ -388,13 +377,14 @@ abstract class Controller
      * Executes the queued before action filters.
      *
      * @param string $action Current action.
+     * @param Request $request Current Router Request.
      *
      * @access private
      * @throws \BadMethodCallException When specifying non-existing method.
      *
      * @return void
      */
-    private function executeBeforeFilters($action)
+    private function executeBeforeFilters($action, Request $request)
     {
         $this->addAfterFilters(array('processOutput'));
 
@@ -411,7 +401,7 @@ abstract class Controller
 
                     if (!$only || ($only && in_array($action, $filters['conditions']['only'], true))) {
                         if (method_exists($this, $callback)) {
-                            $this->$callback();
+                            $this->$callback($request);
                         } else {
                             throw new \BadMethodCallException(
                                 'Before filter method ' . get_class($this) . "::{$callback}() is not defined."
@@ -426,14 +416,15 @@ abstract class Controller
     /**
      * Executes the queued after action filters.
      *
-     * @param string $action Current action.
+     * @param string  $action Current action.
+     * @param Request $request Current Router Request.
      *
      * @access private
      * @throws \BadMethodCallException When specifying non-existing method.
      *
      * @return void
      */
-    private function executeAfterFilters($action)
+    private function executeAfterFilters($action, Request $request)
     {
         if (!empty($this->meta['filters']['after'])) {
             foreach ($this->meta['filters']['after'] as $filters) {
@@ -448,7 +439,7 @@ abstract class Controller
 
                     if (!$only || ($only && in_array($action, $filters['conditions']['only'], true))) {
                         if (method_exists($this, $callback)) {
-                            $this->$callback();
+                            $this->$callback($request);
                         } else {
                             throw new \BadMethodCallException(
                                 'After filter method ' . get_class($this) . "::{$callback}() is not defined."
@@ -465,24 +456,38 @@ abstract class Controller
      *
      * @access private
      *
+     * @return void
+     */
+    protected function loadLabels()
+    {
+        $labels = self::loadLabelsFile(Core\Config()->mode('name'));
+
+        foreach ($this->labels as $labelsFile) {
+            $labels = Core\Utils::arrayExtend($labels, self::loadLabelsFile($labelsFile));
+        }
+
+        $this->labels = $labels;
+    }
+
+    /**
+     * Load Labels file.
+     *
+     * @param string $fileName Labels file name.
+     *
      * @return array
      */
-    private function loadLabels()
+    private static function loadLabelsFile($fileName)
     {
         if (Core\Config()->CACHE['labels']) {
-            $key    = '_silla_'
-                . Core\Config()->paths('mode')
-                . '_labels_'
-                . Core\Registry()->get('locale')
-                . $this->labels;
+            $key = '_silla_' . Core\Config()->paths('mode') . '_labels_' . Core\Registry()->get('locale') . $fileName;
             $labels = Core\Cache()->fetch($key);
 
             if (!$labels) {
-                $labels = Core\Helpers\YAML::getExtendWithGlobals($this->labels);
+                $labels = Core\Helpers\YAML::getAll($fileName);
                 Core\Cache()->store($key, $labels);
             }
         } else {
-            $labels = Core\Helpers\YAML::getExtendWithGlobals($this->labels);
+            $labels = Core\Helpers\YAML::getAll($fileName);
         }
 
         return $labels;
@@ -504,7 +509,7 @@ abstract class Controller
 
         /* Load local labels */
         if ($this->labels) {
-            $this->renderer->set('_labels', $this->loadLabels());
+            $this->renderer->set('_labels', $this->labels);
         }
 
         $locals = get_object_vars($this);

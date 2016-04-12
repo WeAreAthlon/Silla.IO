@@ -1,10 +1,3 @@
-{if not $attributes|default:false}
-    {$attributes = []}
-    {foreach from=$_labels.attributes item=section}
-        {$attributes = array_merge($attributes, $section.fields)}
-    {/foreach}
-{/if}
-
 {foreach from=$attributes key=field item=attr}
     {$attr.list = $attr.list|default:true}
     {if $attr.list !== false}
@@ -17,11 +10,11 @@
     {foreach from=$fields_to_display key=field item=type}
         <td class="column column-type-content-{$type}">
         {if "{$_controller}/_list/fields/{$field}.html.tpl"|template_exists}
-            {include file="{$_controller}/_list/fields/{$field}.html.tpl"}
+            {include "{$_controller}/_list/fields/{$field}.html.tpl"}
         {else}
             {if $resource->{$field}|default:false || isset($resource->hasAndBelongsToMany.$field)}
                 {if "_shared/entities/types/{$type}/list.html.tpl"|template_exists}
-                    {include file="_shared/entities/types/{$type}/list.html.tpl"}
+                    {include "_shared/entities/types/{$type}/list.html.tpl"}
                 {else}
                     <div class="well well-small">
                         Missing listing template: <code>{$_mode}views/_shared/entities/types/{$type}/list.html.tpl</code>
@@ -36,9 +29,9 @@
     {if {user_can controller=$_controller action=show} or {user_can controller=$_controller action=edit} or {user_can controller=$_controller action=delete}}
         <td class="column column-actions">
             {if "{$_controller}/_list/actions.html.tpl"|template_exists}
-                {include file="{$_controller}/_list/actions.html.tpl"}
+                {include "{$_controller}/_list/actions.html.tpl"}
             {else}
-                {include file='_shared/entities/list/actions.html.tpl'}
+                {include '_shared/entities/list/actions.html.tpl'}
             {/if}
         </td>
     {/if}

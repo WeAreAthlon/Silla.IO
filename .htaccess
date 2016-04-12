@@ -14,7 +14,7 @@
     # RewritBase /<path-to-silla>
 
     RewriteCond %{REQUEST_FILENAME} !(/public/)
-    RewriteRule ^(.*)$ index.php?_path=$1 [QSA,L]
+    RewriteRule .* index.php [QSA,L]
 </IfModule>
 
 # Error Documents

@@ -15,7 +15,7 @@ http://silla.io by [Athlon](http://weareathlon.com)
 * **Demo of the CMS app:** http://demo.silla.io/cms/
     * *Credentials*
         * **email:** _demo@silla.io_
-        * **password:** _demo_
+        * **password:** _DemoDemo1!_
 
 ***
 
@@ -67,5 +67,3 @@ The code base features *Model-View-Controller* pattern with additional support f
     * *`/public`*
 * **Package Managers**
   * *`Composer`* - PHP package manager
-  * *`Bower`* - Front-end Assets package manager
-    * *`BowerPHP` - can be also used
