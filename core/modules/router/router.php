@@ -170,7 +170,7 @@ final class Router
             $_prefix = '';
 
             if (!Core\Config()->ROUTER['rewrite']) {
-                $_prefix = '?_path=';
+                $_prefix = '?';
             }
 
             $mode['url'] = $mode['url'] ? $mode['url'] . Core\Config()->ROUTER['separator'] : '';
@@ -370,5 +370,30 @@ final class Router
         }
 
         unset($process);
+    }
+
+    /**
+     * Retrieve the relative request query string.
+     *
+     * @param string $path Request query string.
+     *
+     * @return string
+     */
+    public static function normalizePath($path)
+    {
+        $path = explode('?', $path);
+
+        if (!Core\Config()->ROUTER['rewrite']) {
+            $path = explode('&', $path[1]);
+        }
+
+        $path = $path[0];
+        $applicationPath = Core\Config()->urls('relative');
+
+        if ($applicationPath !== '/') {
+            $path = '/' . str_replace($applicationPath, '', $path);
+        }
+
+        return ltrim($path, '/');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Silla.IO HTTP Requests dispatcher loader.
+ * Silla.IO loader.
  *
  * Execution entry point.
  *
@@ -17,11 +17,11 @@ use Core;
 use Core\Modules\Router;
 
 /**
- * Define Silla.IO framework variables.
+ * Define Silla.IO application framework variables.
  */
 define(
-    'SILLA_ENVIRONMENT',
-    isset($_SERVER['HTTP_ENV_SILLA_ENVIRONMENT']) ? $_SERVER['HTTP_ENV_SILLA_ENVIRONMENT'] : 'development'
+'SILLA_ENVIRONMENT',
+isset($_SERVER['HTTP_ENV_SILLA_ENVIRONMENT']) ? $_SERVER['HTTP_ENV_SILLA_ENVIRONMENT'] : 'development'
 );
 
 /**
@@ -29,16 +29,11 @@ define(
  */
 require __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
 
-/**
- * Get Request String.
- */
-$requestString = isset($_GET['_path']) ? $_GET['_path'] : '';
-unset($_GET['_path']);
-
 try {
     /**
      * Detect Silla.IO Mode.
      */
+    $requestString = Router\Router::normalizePath($_SERVER['REQUEST_URI']);
     $mode = Router\Router::getMode($requestString);
     Config()->setMode($mode);
 
@@ -54,7 +49,7 @@ try {
     Core\Router()->dispatch($request, $routes);
 
 } catch(\Exception $e) {
-    if(!Core\Router()->response) {
+    if (!Core\Router()->response) {
         Core\Router()->response = new Modules\Router\Response;
     }
 
