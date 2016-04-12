@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="//fonts.googleapis.com/css?family=Open+Sans:400&amp;subset=latin" rel="stylesheet" type="text/css">
-    {assets source=['vendor/bootstrap/dist/css/bootstrap.css', 'css/bootstrap-theme.athlon.css', 'css/style.css'] media="all"}
+    {assets source=['vendor/components/bootstrap/css/bootstrap.css', 'cms/assets/css/bootstrap-theme.athlon.css', 'cms/assets/css/style.css'] media="all"}
     <link href="{$_urls.assets}img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
 </head>
     <body>
