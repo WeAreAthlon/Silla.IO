@@ -171,13 +171,14 @@ a:hover, a:focus, .btn-link:hover, .btn-link:focus {
     color: #B92C28;
 }
 
-.btn-danger:hover, .has-error .btn-default:hover, .btn-primary:focus, .has-error .btn-default:focus {
+.btn-danger:hover, .has-error .btn-default:hover, .has-error .btn-default:focus {
+    color: #FFFFFF;
     background: #C12E2A;
 }
 
 .has-error .btn-default {
-    color: #FFFFFF;
-    text-shadow: none !important;
+    color: #B92C28;
+    border-color: #B92C28;
 }
 
 .navbar-default {
@@ -269,7 +270,7 @@ a:hover, a:focus, .btn-link:hover, .btn-link:focus {
 
 .accent-light {
     background: #FFFFFF;
-    background: linear-gradient(to bottom, #ffffff 0%, #F2F2F2 50%, #F0F0F0 60%, #ffffff 100%);
+    background: linear-gradient(to bottom, #FFFFFF 0%, #F2F2F2 50%, #F0F0F0 60%, #FFFFFF 100%);
 }
 
 .navbar-header .breadcrumb {
@@ -319,5 +320,14 @@ a:hover, a:focus, .btn-link:hover, .btn-link:focus {
 .btn-info.btn-outline:hover,
 .btn-warning.btn-outline:hover,
 .btn-danger.btn-outline:hover {
-    color: #fff;
+    color: #FFFFFF;
+}
+
+.btn-default.btn-outline:focus,
+.btn-primary.btn-outline:focus,
+.btn-success.btn-outline:focus,
+.btn-info.btn-outline:focus,
+.btn-warning.btn-outline:focus,
+.btn-danger.btn-outline:focus {
+    color: #FFFFFF;
 }
