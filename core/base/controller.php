@@ -546,6 +546,7 @@ abstract class Controller
         $renderer->set('_request', Core\Router()->request);
         $renderer->set('_get', Core\Router()->request->get());
         $renderer->set('_post', Core\Router()->request->post());
+        $renderer->set('_environment', SILLA_ENVIRONMENT);
 
         return $renderer;
     }
