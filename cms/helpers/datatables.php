@@ -167,7 +167,7 @@ class DataTables
                                 }
                             }
                         }
-                    } else {
+                    } elseif (strlen($value)) {
                         if ($model_fields[$field]['type'] === 'string') {
                             $value_to_match = trim(Core\DB()->escapeString($value), "'");
                             $query = $query->where("{$field} LIKE \"%{$value_to_match}%\"");
