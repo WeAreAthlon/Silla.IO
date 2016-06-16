@@ -1,1 +1,1 @@
-{$resource->$field}|date_format:#time#}
+{$resource->$field|date_format:#time#}
