@@ -50,7 +50,12 @@ abstract class Controller
      * @var array
      * @access protected
      */
-    protected $meta = array();
+    protected $meta = array(
+        'filters' => array(
+            'before' => array(),
+            'after'  => array(),
+        ),
+    );
 
     /**
      * Default layout name.
@@ -78,18 +83,14 @@ abstract class Controller
     {
         $viewsPaths = Core\Config()->paths('views');
 
-        $this->meta = array(
+        $this->meta = array_merge($this->meta, array(
             'controller' => Core\Router()->request->controller(),
             'action'     => Core\Router()->request->action(),
             'paths'      => array(
                 'views'   => $viewsPaths['templates'] . Core\Router()->request->controller() . DIRECTORY_SEPARATOR,
                 'layouts' => $viewsPaths['layouts'],
             ),
-            'filters' => array(
-                'before' => array(),
-                'after'  => array(),
-            ),
-        );
+        ));
 
         $this->labels          = $this->labels          ? $this->labels          : array($this->meta['controller']);
         $this->rendererAdapter = $this->rendererAdapter ? $this->rendererAdapter : Core\Config()->RENDER['adapter'];
