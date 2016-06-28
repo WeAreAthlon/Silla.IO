@@ -14,7 +14,7 @@
 namespace Core;
 
 use Core;
-use Core\Modules\Router;
+use Core\Modules\Http;
 
 /**
  * Require Silla.IO boot loader.
@@ -26,23 +26,26 @@ try {
     /**
      * Detect Silla.IO Mode.
      */
-    $requestString = Router\Router::normalizePath(urldecode($_SERVER['REQUEST_URI']));
-    $mode          = Router\Router::getMode($requestString);
+    $requestString = Http\Router::normalizePath($_SERVER['REQUEST_URI']);
+    $mode = Http\Router::getMode($requestString);
     Config()->setMode($mode);
 
     /**
      * Setup Router variables.
      */
-    $routes  = new Router\Routes($mode);
-    $request = new Router\Request($mode, Router\Router::parseRequestQueryString($requestString, $routes), $GLOBALS);
+    $namespace = $mode['namespace'];
+    $routes = "\\{$namespace}\\Configuration\\Routes";
+    $routes  = new $routes();
+    $request = new Http\Request($mode, $requestString, $GLOBALS);
 
     /**
      * Dispatch Request.
      */
-    Core\Router()->dispatch($request, $routes);
-} catch (\Exception $e) {
+    Core\Router()->dispatch($request, $routes->getAll());
+
+} catch(\Exception $e) {
     if (!Core\Router()->response) {
-        Core\Router()->response = new Modules\Router\Response;
+        Core\Router()->response = new Modules\Http\Response;
     }
 
     if (!Core\Router()->response->hasContent()) {

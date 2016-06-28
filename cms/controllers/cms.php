@@ -12,8 +12,8 @@
 namespace CMS\Controllers;
 
 use Core;
+use Core\Modules\Http\Request;
 use Core\Modules\DB;
-use Core\Modules\Router\Request;
 use CMS\Helpers;
 
 /**
@@ -104,7 +104,7 @@ abstract class CMS extends Core\Base\Entity
         if (!Helpers\CMSUsers::userCan(array('controller' => $controller, 'action' => $action))) {
             Helpers\FlashMessage::set($this->labels['general']['no_access'], 'danger');
 
-            $request->redirectTo(array('controller' => 'account'));
+            $request->redirectTo('CMSUser.edit');
         }
 
         return true;

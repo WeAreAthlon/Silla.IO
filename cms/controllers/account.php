@@ -70,7 +70,7 @@ class Account extends CMSUsers
     protected function assignCurrentUserAsResource(Request $request)
     {
         if (in_array($request->action(), array('edit', 'delete', 'show', 'export'), true)) {
-            $request->redirectTo('index');
+            $request->redirectTo('CMSAccount.edit');
         }
 
         $this->resource = $this->user;

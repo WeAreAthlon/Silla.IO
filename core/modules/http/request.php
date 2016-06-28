@@ -9,7 +9,7 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
-namespace Core\Modules\Router;
+namespace Core\Modules\Http;
 
 use Core;
 
@@ -19,10 +19,16 @@ use Core;
 final class Request
 {
     /**
+     * Request string path.
+     *
+     * @var string
+     */
+    private $path = '';
+
+    /**
      * Request elements.
      *
      * @var array
-     * @access private
      */
     private $elements = array();
 
@@ -30,7 +36,6 @@ final class Request
      * Request context.
      *
      * @var array
-     * @access private
      */
     private $context;
 
@@ -55,48 +60,75 @@ final class Request
      *
      * Renew token on each request.
      *
-     * @param array $mode     Request Mode.
-     * @param array $elements Request Elements. All Routed variables.
-     * @param array $context  Request Context Server data.
+     * @param array  $mode     Request Mode.
+     * @param string $path     Request string path.
+     * @param array  $context  Request Context Server data.
      */
-    public function __construct(array $mode, array $elements, array $context)
+    public function __construct(array $mode, $path, array $context)
     {
-        $this->elements = $elements;
+        $this->elements = array();
         $this->context  = $context;
         $this->mode     = $mode;
         $this->token    = '';
+        $this->path     = $path ? Core\Utils::replaceFirstOccurrence($this->mode['url'], '', $path) : '/';
 
         /* Make all routed variables accessible as a GET variables */
-        $context               = isset($this->context['_GET']) ? $this->context['_GET'] : array();
-        $this->context['_GET'] = array_merge($context, $elements);
+        $this->context['_GET'] = array_merge($this->context['_GET'], $this->elements);
     }
 
     /**
      * Retrieves the controller action name.
      *
-     * @access public
-     *
      * @return string
      */
     public function controller()
     {
-        return $this->elements['controller'];
+        return isset($this->elements['controller']) ? $this->elements['controller'] : '';
     }
 
     /**
      * Retrieves the request action name.
      *
-     * @access public
-     *
      * @return string
      */
     public function action()
     {
-        return $this->elements['action'];
+        return isset($this->elements['action']) ? $this->elements['action'] : '';
     }
 
     /**
-     * Retrives request mode or part of it.
+     * Retrieves the request query string path.
+     *
+     * @return string
+     */
+    public function path()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Sets routed elements.
+     *
+     * @param mixed $elements Routed elements.
+     *
+     * @return void
+     */
+    public function setRoutedElements($elements)
+    {
+        if (isset($elements['action']) && strpos($elements['action'], '.')) {
+            $action = explode('.', $elements['action']);
+            $elements['controller'] = isset($action[0]) ? Core\Inflection()->pluralize($action[0]) : '';
+            $elements['action'] = isset($action[1]) ? $action[1] : '';
+        }
+
+        $this->elements = $elements;
+
+        /* Make all routed variables accessible as a GET variables */
+        $this->context['_GET'] = array_merge($this->context['_GET'], $elements);
+    }
+
+    /**
+     * Retrieves request mode or part of it.
      *
      * @param string $segment Mode segment name.
      *
@@ -116,8 +148,6 @@ final class Request
      *
      * @param string $key Name of the parameter(optional).
      *
-     * @access public
-     *
      * @return mixed
      */
     public function get($key = null)
@@ -134,8 +164,6 @@ final class Request
      *
      * @param string $key Name of the parameter(optional).
      *
-     * @access public
-     *
      * @return mixed
      */
     public function post($key = null)
@@ -151,8 +179,6 @@ final class Request
      * Retrieves the FILES request params - $context[_FILES] contents.
      *
      * @param string $key Name of the parameter(optional).
-     *
-     * @access public
      *
      * @return mixed
      */
@@ -216,8 +242,6 @@ final class Request
     /**
      * Type of the request.
      *
-     * @access public
-     *
      * @return string
      */
     public function type()
@@ -228,8 +252,6 @@ final class Request
 
     /**
      * Method of the request.
-     *
-     * @access public
      *
      * @return string
      */
@@ -272,36 +294,39 @@ final class Request
     /**
      * Redirects the browser to a specified target.
      *
-     * @param mixed   $url    Array/String representation of url.
-     * @param integer $status Redirect status code according to HTTP specification (301, 302, 303, 307).
+     * @param mixed   $path        Array/String representation of a url.
+     * @param array   $parameters  Additional path parameters.
+     * @param integer $status      Redirect status code according to HTTP specification (301, 302, 303, 307).
      *
-     * @access public
      * @uses   Core\Config()
      * @uses   Core\Router()
      * @example
      * <code>
-     *  redirectTo(array('action' => 'show', 'id' => 5))
-     *  redirectTo('http://www.athlonproduction.com')
-     *  redirectTo('back') - Only current controller action name.
+     *  redirectTo('route_name')
+     *  redirectTo('route_name', array(params))
+     *  redirectTo(array('for' => 'route_name', 'param' => 'value')
+     *  redirectTo('http://www.silla.io')
+     *  redirectTo('back') - Redirects back.
      * </code>
      *
      * @return void
      */
-    public function redirectTo($url, $status = 302)
+    public function redirectTo($path, array $parameters = array(), $status = 302)
     {
-        if (is_array($url)) {
-            $url = Core\Config()->urls('relative') . Core\Router()->toUrl($url);
-        } elseif ($url === 'back') {
+        $url = '';
+
+        if (is_array($path)) {
+            $url = Core\Config()->urls('relative') . Core\Router()->toUrl($path);
+        } elseif ($path === 'back') {
             $url = $this->context['_SERVER']['HTTP_REFERER'];
-        } elseif (strpos($url, '/') === false) {
-            $url = Core\Config()->urls('relative') .
-                   Core\Router()->toUrl(array('controller' => $this->controller(), 'action' => $url));
+        } elseif (strpos($path, '/') === false) {
+            $url = Core\Config()->urls('relative') . Core\Router()->toUrl(array_merge(array('for' => $path), $parameters));
         }
 
         if (headers_sent() || $this->is('xhr')) {
             echo '<script type="text/javascript">' .
-                 "setTimeout(function() { location.href = '{$url}'; }, 0);" .
-                 '</script>';
+                "setTimeout(function() { location.href = '{$url}'; }, 0);" .
+                '</script>';
             exit;
         }
 
@@ -333,8 +358,6 @@ final class Request
      * Checks the type of the request.
      *
      * @param string $type Type of the request to check.
-     *
-     * @access public
      *
      * @return boolean
      */
@@ -373,5 +396,17 @@ final class Request
         }
 
         return true;
+    }
+
+    /**
+     * Modifies the Request method name.
+     *
+     * @param string $method Request method name.
+     *
+     * @return void
+     */
+    public function setMethod($method)
+    {
+        $this->context['_SERVER']['REQUEST_METHOD'] = strtoupper($method);
     }
 }

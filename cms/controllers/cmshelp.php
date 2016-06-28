@@ -11,7 +11,7 @@
 
 namespace CMS\Controllers;
 
-use Core\Modules\Router\Request;
+use Core\Modules\Http\Request;
 use Parsedown;
 
 /**

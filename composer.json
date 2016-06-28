@@ -76,7 +76,8 @@
         "itsjavi/bootstrap-colorpicker": "2.4.0",
         "eonasdan/bootstrap-datetimepicker": "4.17.37",
         "afarkas/html5shiv"     : "3.7.3",
-        "rogeriopradoj/respond" : "1.4.2"
+        "rogeriopradoj/respond" : "1.4.2",
+        "aura/router" : "2.3.0"
     },
     "require-dev": {
         "phpunit/phpunit"            : "4.8.35",

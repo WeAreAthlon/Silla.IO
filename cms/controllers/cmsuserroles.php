@@ -11,7 +11,7 @@
 
 namespace CMS\Controllers;
 
-use Core\Modules\Router\Request;
+use Core\Modules\Http\Request;
 use Core\Modules\Crypt\Crypt;
 use CMS\Helpers;
 
@@ -35,15 +35,25 @@ class CMSUserRoles extends CMS
     protected $scope = array();
 
     /**
-     * Remove current password validation.
+     * Remove current password verification.
      *
      * @param Request $request Current router request.
      *
      * @return void
      */
-    protected function beforeCreate(Request $request)
+    protected function beforeAdd(Request $request)
     {
         unset($this->sections['general']['fields']['current_password']);
+    }
+
+    /**
+     * Remove current password verification.
+     *
+     * @inheritdoc
+     */
+    protected function beforeCreate(Request $request)
+    {
+        $this->beforeAdd($request);
     }
 
     /**
@@ -53,12 +63,10 @@ class CMSUserRoles extends CMS
      *
      * @return void
      */
-    protected function beforeEdit(Request $request)
+    protected function beforeUpdate(Request $request)
     {
-        if ($request->is('post')) {
-            if (!Crypt::hashCompare($this->user->password, $request->post('current_password'))) {
-                $this->resource->setError('current_password', 'mismatch');
-            }
+        if (!Crypt::hashCompare($this->user->password, $request->post('current_password'))) {
+            $this->resource->setError('current_password', 'mismatch');
         }
     }
 

@@ -13,7 +13,7 @@ namespace Core\Base;
 
 use Core;
 use Core\Modules;
-use Core\Modules\Router\Request;
+use Core\Modules\Http\Request;
 
 /**
  * Class Controller definition.
@@ -194,7 +194,7 @@ abstract class Controller
      *
      * @return void
      */
-    final public static function resourceNotFound(Modules\Router\Request $request)
+    final public static function resourceNotFound(Modules\Http\Request $request)
     {
         if (Core\Config()->RENDER['adapter']) {
             $renderer = new Core\Modules\Render\Render(Core\Config()->RENDER['adapter']);

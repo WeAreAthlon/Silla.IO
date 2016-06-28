@@ -14,7 +14,7 @@
 namespace Core\Base;
 
 use Core;
-use Core\Modules\Router\Request;
+use Core\Modules\Http\Request;
 use Core\Modules\DB;
 use CMS\Helpers;
 
@@ -107,13 +107,13 @@ abstract class Entity extends Controller
     /**
      * Default index listing function.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @uses   Helpers\DataTables
      *
      * @return void
      */
-    public function index(Request $request)
+    public function browse(Request $request)
     {
         $resourceModel = $this->resourceModel;
         $query         = $resourceModel::find();
@@ -122,7 +122,7 @@ abstract class Entity extends Controller
             $this->renderer->setLayout(null);
             $this->renderer->setView(null);
 
-            $this->beforeIndex($query, $request);
+            $this->beforeBrowse($query, $request);
             $query = Helpers\DataTables::formatQuery($query, $request->variables('query'));
 
             $this->resources = $query;
@@ -149,11 +149,11 @@ abstract class Entity extends Controller
                             $params['filtering'] : null,
                 );
 
-                $this->beforeIndex($query, $request);
+                $this->beforeBrowse($query, $request);
                 $query           = Helpers\DataTables::formatQuery($query, $queryParams);
                 $this->resources = $query;
             } else {
-                $this->beforeIndex($query, $request);
+                $this->beforeBrowse($query, $request);
             }
 
             if (!$this->renderer->getView()) {
@@ -161,43 +161,61 @@ abstract class Entity extends Controller
             }
         }
 
-        $this->afterIndex($request);
+        $this->afterBrowse($request);
     }
 
     /**
      * Show resource.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
-    public function show(Request $request)
+    public function read(Request $request)
     {
         $this->renderer->setLayout('modal');
-        $this->beforeShow($request);
+        $this->beforeRead($request);
 
         if (!$this->renderer->getView()) {
             $this->renderer->setView('_shared/entities/show/show');
         }
 
-        $this->afterShow($request);
+        $this->afterRead($request);
+    }
+
+    public function add(Request $request)
+    {
+        $this->beforeAdd($request);
+
+        if (!$this->renderer->getView()) {
+            $this->renderer->setView('_shared/entities/form/form');
+        }
     }
 
     /**
      * Create resource - saves model into the database.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
     public function create(Request $request)
     {
         $this->beforeCreate($request);
+        $this->resource->save($this->filterAccessibleAttributesData($request->post()));
+        $this->afterCreate($request);
+    }
 
-        if ($request->is('post')) {
-            $this->resource->save($this->filterAccessibleAttributesData($request->post()));
-            $this->afterCreate($request);
-        }
+    /**
+     * Renders the resource update form.
+     *
+     * @param Request $request Current Http request.
+     *
+     * @return void
+     */
+    public function edit(Request $request)
+    {
+        $this->beforeEdit($request);
 
         if (!$this->renderer->getView()) {
             $this->renderer->setView('_shared/entities/form/form');
@@ -207,28 +225,21 @@ abstract class Entity extends Controller
     /**
      * Modifies resource - updates model into the database.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
-    public function edit(Request $request)
+    public function update(Request $request)
     {
-        $this->beforeEdit($request);
-
-        if ($request->is('post')) {
-            $this->resource->save($this->filterAccessibleAttributesData($request->post()));
-            $this->afterEdit($request);
-        }
-
-        if (!$this->renderer->getView()) {
-            $this->renderer->setView('_shared/entities/form/form');
-        }
+        $this->beforeUpdate($request);
+        $this->resource->save($this->filterAccessibleAttributesData($request->post()));
+        $this->afterUpdate($request);
     }
 
     /**
      * Deletes resource - deletes model from the database.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @uses   Helpers\FlashMessage
      * @uses   Core\Helpers\YAML
@@ -258,51 +269,62 @@ abstract class Entity extends Controller
      * Hook - executes before index query.
      *
      * @param DB\Query $query   Current query object.
-     * @param Request  $request Current router request.
+     * @param Request  $request Current Http request.
      *
      * @return void
      */
-    protected function beforeIndex(DB\Query &$query, Request $request)
+    protected function beforeBrowse(DB\Query &$query, Request $request)
     {
     }
 
     /**
      * Hook - executes after index action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
-    protected function afterIndex(Request $request)
+    protected function afterBrowse(Request $request)
     {
     }
 
     /**
      * Hook - executes on show action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
-    protected function beforeShow(Request $request)
+    protected function beforeRead(Request $request)
     {
     }
 
     /**
      * Hook - executes on show action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
-    protected function afterShow(Request $request)
+    protected function afterRead(Request $request)
     {
     }
 
     /**
      * Hook - executes before create action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
+     *
+     * @return void
+     */
+    protected function beforeAdd(Request $request)
+    {
+    }
+
+    /**
+     * Hook - executes before create action.
+     *
+     * @param Request $request Current Http request.
      *
      * @return void
      */
@@ -351,7 +373,7 @@ abstract class Entity extends Controller
     /**
      * Hook - executes after create action.
      *
-     * @param Request $request  Current router request.
+     * @param Request $request Current Http request.
      * @param mixed   $redirect Request redirect destination.
      *
      * @return void
@@ -372,7 +394,7 @@ abstract class Entity extends Controller
     /**
      * Hook - executes before edit action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
@@ -381,14 +403,30 @@ abstract class Entity extends Controller
     }
 
     /**
-     * Hook - executes after edit action.
+     * Hook - executes before update action.
+     *
+     * @param Request $request Current Http request.
+     *
+     * @return void
+     */
+    protected function beforeUpdate(Request $request)
+    {
+        if ($this->resource->hasErrors()) {
+            Helpers\FlashMessage::set($this->labels['errors']['general'], 'danger', $this->resource->errors());
+        } else {
+            Helpers\FlashMessage::set($this->labels['messages']['edit']['success'], 'success');
+        }
+    }
+
+    /**
+     * Hook - executes after update resource action.
      *
      * @param Request $request  Current router request.
      * @param mixed   $redirect Request redirect destination.
      *
      * @return void
      */
-    protected function afterEdit(Request $request, $redirect = false)
+    protected function afterUpdate(Request $request, $redirect = false)
     {
         if ($this->resource->hasErrors()) {
             Helpers\FlashMessage::set($this->labels['errors']['general'], 'danger', $this->resource->errors());
@@ -404,7 +442,7 @@ abstract class Entity extends Controller
     /**
      * Hook - executes before delete action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
@@ -415,7 +453,7 @@ abstract class Entity extends Controller
     /**
      * Hook - executes after delete action.
      *
-     * @param Request $request  Current router request.
+     * @param Request $request Current Http request.
      * @param mixed   $redirect Request redirect destination.
      *
      * @return void
@@ -434,7 +472,7 @@ abstract class Entity extends Controller
     /**
      * Exports data from a database model.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @uses   \CMS\Helpers\Export
      * @uses   \CMS\Helpers\CMSUsers
@@ -503,7 +541,7 @@ abstract class Entity extends Controller
     /**
      * Loads Resource object.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
@@ -541,7 +579,7 @@ abstract class Entity extends Controller
     /**
      * Loads Attribute Sections.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current Http request.
      *
      * @return void
      */
