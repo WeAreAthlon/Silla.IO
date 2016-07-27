@@ -93,12 +93,10 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
      *
      * @inheritdoc
      */
-    public function afterPopulate()
+    public function beforeSave()
     {
-        if ($this->password && $this->password !== $this->currentPassword) {
+        if ($this->password !== $this->currentPassword) {
             $this->password = Crypt::hash($this->password);
-        } else {
-            $this->password = $this->currentPassword;
         }
     }
 

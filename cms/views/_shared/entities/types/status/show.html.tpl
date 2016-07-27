@@ -1,0 +1,1 @@
+<strong>{$_labels.state[$resource->$field|default:0]}</strong>

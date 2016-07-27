@@ -100,7 +100,7 @@ abstract class Controller
                 'Core\Modules\Render\Adapters\\' . $this->rendererAdapter
             );
 
-            self::setOutputDefaultHeaders();
+            static::setOutputDefaultHeaders();
 
             $defaultLayout = $this->layout;
             $defaultView   = $this->meta['controller'] . DIRECTORY_SEPARATOR . $this->meta['action'];
@@ -203,7 +203,7 @@ abstract class Controller
                 'Core\Modules\Render\Adapters\\' . Core\Config()->RENDER['adapter']
             );
 
-            self::setOutputDefaultHeaders();
+            static::setOutputDefaultHeaders();
             $renderer = self::assignVariablesToRender($renderer);
             $renderer->set('_controller', 'base');
             $renderer->set('_action', '404');
@@ -475,6 +475,8 @@ abstract class Controller
      *
      * @param string $fileName Labels file name.
      *
+     * @access private
+     *
      * @return array
      */
     private static function loadLabelsFile($fileName)
@@ -532,6 +534,8 @@ abstract class Controller
      * Assigns common template engine vars.
      *
      * @param Modules\Render\Render $renderer Render module object.
+     *
+     * @access private
      *
      * @return Modules\Render\Render
      */

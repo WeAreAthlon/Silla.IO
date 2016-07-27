@@ -103,33 +103,37 @@ errors:
   weak             : The entered value is weak. Please chooes a stronger phrase.
 
 status:
-  "0" : 'No'
-  "1" : 'Yes'
+  '0' : '<i class="glyphicon glyphicon-eye-open opacity-half"></i>'
+  '1' : '<i class="glyphicon glyphicon-eye-open"></i>'
+
+state:
+  '0' : 'No'
+  '1' : 'Yes'
 
 pagination:
-  page     : Page
-  of       : of
-  first    : First
-  last     : Last
-  next     : '<span class="glyphicon glyphicon-menu-right"></span>'
-  prev     : '<span class="glyphicon glyphicon-menu-left"></span>'
-  per_page : Per page
-  limits   :
-    10 : 10
-    20 : 20
-    30 : 30
-    50 : 50
+  page    : Page
+  of      : of
+  first   : First
+  last    : Last
+  next    : '<span class="glyphicon glyphicon-menu-right"></span>'
+  prev    : '<span class="glyphicon glyphicon-menu-left"></span>'
+  per_page: Per page
+  limits  :
+    10: 10
+    20: 20
+    30: 30
+    50: 50
 
 files:
-  select   : Browse file...
-  remove   : Remove
-  preview  : Preview file
-  download : Download
+  select  : Browse file...
+  remove  : Remove
+  preview : Preview file
+  download: Download
 
 filtering:
-  title  : Filter data
-  submit : Apply
-  reset  : Reset
+  title : Filter data
+  submit: Apply
+  reset : Reset
 
 datatable:
   totals: Showing %d to %d of %d entries.
@@ -139,18 +143,18 @@ daterange:
   locales:
     applyLabel: Apply
     clearLabel: Clear
-    fromLabel: From
-    toLabel: To
-    weekLabel: W
+    fromLabel : From
+    toLabel   : To
+    weekLabel : W
     customRangeLabel: Custom Range
   ranges:
-    all           : All time
-    today         : Today
-    yesterday     : Yesterday
-    last_7_days   : Last 7 Days
-    last_30_days  : Last 30 Days
-    current_month : This Month
-    current_year  : This Year
+    all          : All time
+    today        : Today
+    yesterday    : Yesterday
+    last_7_days  : Last 7 Days
+    last_30_days : Last 30 Days
+    current_month: This Month
+    current_year : This Year
 
 export:
   title: Export
@@ -166,17 +170,17 @@ page_not_found:
 js:
   no_results: No results found
   delete_confirmation:
-    title     : Permanent Deletion
-    desc      : Delete permanently the selected resource from the application?
-    password  : Enter your current user password...
+    title    : Permanent Deletion
+    desc     : Delete permanently the selected resource from the application?
+    password : Enter your current user password...
     buttons:
-      confirm : '<span class="glyphicon glyphicon-trash"></span> Permanently Delete'
-      cancel  : '<span class="glyphicon glyphicon-menu-left"></span> Cancel'
+      confirm: '<span class="glyphicon glyphicon-trash"></span> Permanently Delete'
+      cancel : '<span class="glyphicon glyphicon-menu-left"></span> Cancel'
   validations:
-    maxlength : 'Used %charsTyped% of %charsTotal% chars.'
+    maxlength: 'Used %charsTyped% of %charsTotal% chars.'
   errors:
-   general : General Server Error
-   access  : Permission denied.
+    general: General Server Error
+    access : Permission denied.
 
 credits:
   author: powered by
