@@ -17,6 +17,7 @@
         </ul>
     </div>
 </div>
+
 {form action={url resource=$resource action=create} method="post" role='form' class='data-form form-horizontal' accept-charset='UTF-8' upload={'Core\Utils::arraySearchRecursive'|call_user_func_array:[['file', 'photo'], $_labels.attributes]}}
     <div class="tab-content">
     {foreach from=$sections key=section_key item=section name=form_sections_contents}

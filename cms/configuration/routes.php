@@ -51,7 +51,7 @@ final class Routes extends Core\Modules\Http\Routes
         $this->routes->attachResource('CMSUser', '/cms-users');
         $this->routes->attachResource('CMSUserRole', '/cms-user-roles');
         $this->routes->attachResource('CMSHelp', '/cms-help');
-
+     
         /* Default routes */
         $this->routes->addGet('default', '/{controller}/{action}');
     }
