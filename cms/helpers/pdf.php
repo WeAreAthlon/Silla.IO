@@ -11,8 +11,6 @@
 
 namespace CMS\Helpers;
 
-use Core;
-
 /**
  * Generates PDF document from a set of data.
  */
@@ -57,19 +55,13 @@ class PDF extends \TCPDF
     {
         parent::__construct();
 
-        $_path = Core\Config()->paths('resources') . 'fonts' . DIRECTORY_SEPARATOR;
-
-        $this->AddFont('freeserif', '', $_path . 'freeserif.php');
-        $this->AddFont('freeserif', 'B', $_path . 'freeserifb.php');
-        $this->AddFont('freeserif', 'I', $_path . 'freeserifi.php');
-        $this->AddFont('freeserif', 'BI', $_path . 'freeserifbi.php');
-
         $this->title = $title;
         $this->logo = $logo;
         $this->font = $font;
 
         $this->SetTitle($title);
         $this->setFontSubsetting(true);
+        $this->setCellPaddings(3, 3, 3, 3);
     }
 
     /**
@@ -81,13 +73,12 @@ class PDF extends \TCPDF
      */
     public function header()
     {
-        if ($this->logo) {
-            $this->Image($this->logo, 10, 10, 15, '', '', '', 'T');
+        if ($this->logo && file_exists($this->logo)) {
+            $this->Image($this->logo, 10, 7, 15, 0, '', '', 'T', false, 300, 'R');
         }
 
         $this->SetFont($this->font, 'B', 16);
-        $this->setY(17);
-        $this->setX(28);
+        $this->SetY(15);
         $this->SetTextColor(100);
         $this->Cell(0, 20, $this->title, 0, false, 'L', 0, '', 0, false, 'M', 'M');
     }
@@ -118,17 +109,11 @@ class PDF extends \TCPDF
      */
     public function loadData($file)
     {
-        $lines = file($file);
+        $csv = fopen($file, 'r');
         $data  = array();
 
-        foreach ($lines as $line) {
-            $fields = array();
-            $tmp = explode(',', trim($line));
-            foreach ($tmp as $field) {
-                $fields[] = trim($field, "'\"");
-            }
-
-            $data[] = $fields;
+        while (($line = fgetcsv($csv)) !== false) {
+            $data[] = $line;
         }
 
         unset($data[0]);
@@ -162,17 +147,8 @@ class PDF extends \TCPDF
                 $current_y = $this->GetY();
                 $current_x = $this->GetX();
 
-                $this->MultiCell(
-                    $this->tableCellWidth,
-                    6,
-                    str_pad($col, $this->tableCellWidth - mb_strlen($col) + 10, ' '),
-                    'LR',
-                    'L',
-                    $fill
-                );
-
-                $cell_heights[] = $this->getY();
-
+                $this->MultiCell($this->tableCellWidth, 6, $col, 'LR', 'L', $fill);
+                $cell_heights[] = $this->GetY();
                 $this->SetXY($current_x + $this->tableCellWidth, $current_y);
             }
 
@@ -180,10 +156,10 @@ class PDF extends \TCPDF
 
             $fill = !$fill;
 
-            if ($this->getY() >= 260) {
+            if ($this->GetY() >= 260) {
                 $this->AddPage();
                 $this->generateTableCaption($header);
-                $this->setY($this->getY() + 9);
+                $this->SetY($this->GetY() + 9);
             }
         }
     }
