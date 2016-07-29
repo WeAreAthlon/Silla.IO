@@ -12,10 +12,8 @@
 namespace CMS\Controllers;
 
 use Core;
-use Core\Base;
 use Core\Modules\Router\Request;
 use Core\Modules\Crypt\Crypt;
-use CMS\Models;
 use CMS\Helpers;
 
 /**
@@ -83,6 +81,7 @@ class CMSUsers extends CMS
     public function credentials(Request $request)
     {
         $this->loadResource($request);
+        $this->loadFormAssets();
 
         /* Prevent access to other resource attributes except credentials. */
         $this->removeAccessibleAttributes(array_merge(
@@ -151,7 +150,7 @@ class CMSUsers extends CMS
     {
         parent::loadAttributeSections($request);
 
-        if($request->action() === 'edit') {
+        if ($request->action() === 'edit') {
             $this->removeAccessibleAttributes(array_keys($this->sections['credentials']['fields']));
             unset($this->sections['credentials']);
         }

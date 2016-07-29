@@ -11,11 +11,8 @@
 
 namespace CMS\Controllers;
 
-use Core;
-use Core\Base;
 use Core\Modules\Router\Request;
 use Core\Modules\Crypt\Crypt;
-use CMS\Models;
 use CMS\Helpers;
 
 /**

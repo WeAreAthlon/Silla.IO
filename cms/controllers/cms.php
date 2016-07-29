@@ -13,7 +13,6 @@ namespace CMS\Controllers;
 
 use Core;
 use Core\Modules\Router\Request;
-use CMS\Models;
 use CMS\Helpers;
 
 /**
