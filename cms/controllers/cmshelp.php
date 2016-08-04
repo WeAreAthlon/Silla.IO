@@ -27,7 +27,7 @@ class CMSHelp extends CMS
     public $resourceModel = 'CMS\Models\CMSHelp';
 
     /**
-     * @inheritdoc
+     * @var array
      */
     public $skipAclFor = array('preview');
 

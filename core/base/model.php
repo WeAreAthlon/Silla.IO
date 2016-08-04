@@ -207,7 +207,7 @@ abstract class Model
     /**
      * Whether the record exists in the persistent storage.
      *
-     * @return bool
+     * @return boolean
      */
     final public function exists()
     {
@@ -571,7 +571,8 @@ abstract class Model
             $query = new DB\Query();
 
             Core\DB()->run(
-                $query->remove()->from($association_table)->where("{$key} = ?", array($this->{static::$primaryKeyField}))
+                $query->remove()->from($association_table)
+                    ->where("{$key} = ?", array($this->{static::$primaryKeyField}))
             );
         }
     }

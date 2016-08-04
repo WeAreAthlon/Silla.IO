@@ -42,7 +42,7 @@ class CMSUsers
             $builtin_actions = array_merge($builtin_actions, get_class_methods($resource));
         }
 
-        $builtin_actions = array_filter($builtin_actions, function($action) {
+        $builtin_actions = array_filter($builtin_actions, function ($action) {
             return !in_array($action, array('create', 'show', 'edit', 'delete', 'export'), true);
         });
 
