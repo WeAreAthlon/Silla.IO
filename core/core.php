@@ -10,10 +10,9 @@
  */
 
 /**
- * Framework Core namespace
+ * Framework Core namespace.
  */
 namespace Core {
-
     /* Hook the default auto-load class function. */
     spl_autoload_extensions('.php');
     spl_autoload_register('spl_autoload');
