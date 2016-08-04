@@ -10,10 +10,10 @@ class StandardTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $_SERVER['SERVER_NAME'] = 'www.example.com';
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.5 [en] (X11; U; Linux 2.2.9 i586)';
-        $this->standardSession = new Standard();
+//        $_SERVER['SERVER_NAME'] = 'www.example.com';
+//        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+//        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.5 [en] (X11; U; Linux 2.2.9 i586)';
+//        $this->standardSession = new Standard();
     }
 
     /**
