@@ -35,33 +35,6 @@ buttons:
   login  : Sign in
 
 modules:
-  categories:
-    title : Categories
-    index : Listing
-    show  : View
-    edit  : Edit Category
-    delete: Delete Category
-    create: Create Sector
-    export: Export
-    ownership: true
-  sectors:
-    title : Sectors
-    index : Listing
-    show  : View
-    edit  : Edit Sector
-    delete: Delete Sector
-    create: Create Sector
-    export: Export
-    ownership: true
-  news:
-    title : News
-    index : Listing
-    show  : View
-    edit  : Edit Category
-    delete: Delete Category
-    create: Create News
-    export: Export
-    ownership: true
   cmsusers:
     title   : Users
     desc    : Users. User accounts management.
