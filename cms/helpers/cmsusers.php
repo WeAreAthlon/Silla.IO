@@ -117,7 +117,7 @@ class CMSUsers
         return $query->select("{$resourceTable}.*")
             ->join($ownershipTable, "{$resourceTable}.{$resourcePrimaryKey} = {$ownershipTablePrefixed}.resource_id")
             ->where(
-                "{$ownershipTablePrefixed}.owner_id = ? AND model = ?",
+                "{$ownershipTablePrefixed}.owner_id = ? AND {$ownershipTablePrefixed}.model = ?",
                 array($owner->{$owner::primaryKeyField()}, $resourceModel)
             );
     }
@@ -169,7 +169,7 @@ class CMSUsers
      * Verifies whether a user owns a specific resource instance.
      *
      * @param \Core\Base\Model      $resource Resource Instance.
-     * @param \Core\Base\Model|null $owner    Owner instance to check.
+     * @param \Core\Base\Model|null $owner    Owner instance to verify.
      *
      * @access public
      * @static

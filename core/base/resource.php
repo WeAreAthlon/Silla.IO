@@ -17,7 +17,6 @@ use Core;
 use Core\Modules\Router\Request;
 use Core\Modules\DB;
 use CMS\Helpers;
-use CMS\Models;
 
 /**
  * Class Resource definition.
@@ -114,7 +113,6 @@ abstract class Resource extends Controller
 
             $this->beforeIndex($query, $request);
             $query = Helpers\DataTables::formatQuery($query, $request->variables('query'));
-            $this->whileIndex($query, $request);
 
             $this->resources = $query;
 
@@ -139,11 +137,9 @@ abstract class Resource extends Controller
 
                 $this->beforeIndex($query, $request);
                 $query = Helpers\DataTables::formatQuery($query, $queryParams);
-                $this->whileIndex($query, $request);
                 $this->resources = $query;
             } else {
                 $this->beforeIndex($query, $request);
-                $this->whileIndex($query, $request);
             }
 
             if (!$this->renderer->getView()) {
@@ -253,18 +249,6 @@ abstract class Resource extends Controller
      * @return void
      */
     protected function beforeIndex(DB\Query &$query, Request $request)
-    {
-    }
-
-    /**
-     * Hook - executes after index query.
-     *
-     * @param DB\Query $query   Current query object.
-     * @param Request  $request Current router request.
-     *
-     * @return void
-     */
-    protected function whileIndex(DB\Query &$query, Request $request)
     {
     }
 
