@@ -1,7 +1,7 @@
 ----
 -- phpLiteAdmin database dump (https://bitbucket.org/phpliteadmin/public)
 -- phpLiteAdmin version: 1.9.6
--- Exported: 2:30pm on August 4, 2016 (UTC)
+-- Exported: 3:14pm on August 4, 2016 (UTC)
 -- database file: ./silla.db3
 ----
 BEGIN TRANSACTION;
@@ -19,12 +19,12 @@ INSERT INTO "cms_users" ("id","role_id","password","email","name","timezone","cr
 ----
 -- Table structure for cms_userroles
 ----
-CREATE TABLE 'cms_userroles' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT NOT NULL, 'created_on' DATETIME, 'updated_on' DATETIME, 'permissions' TEXT);
+CREATE TABLE 'cms_userroles' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT NOT NULL, 'created_on' DATETIME, 'updated_on' DATETIME, 'permissions' TEXT, 'ownership' TEXT);
 
 ----
 -- Data dump for cms_userroles, a total of 1 rows
 ----
-INSERT INTO "cms_userroles" ("id","title","created_on","updated_on","permissions") VALUES ('1','Administrator','2015-02-20 03:00:00','2015-02-20 14:20:01','{"account":["credentials","edit"],"cmshelp":["show","create","edit","delete","export","index"],"cmsuserroles":["show","create","edit","delete","export","index"],"cmsusers":["credentials","show","create","edit","delete","export","index"]}');
+INSERT INTO "cms_userroles" ("id","title","created_on","updated_on","permissions","ownership") VALUES ('1','Administrator','2015-02-20 03:00:00','2015-02-20 14:20:01','{"account":["credentials","edit"],"cmshelp":["show","create","edit","delete","export","index"],"cmsuserroles":["show","create","edit","delete","export","index"],"cmsusers":["credentials","show","create","edit","delete","export","index"]}',NULL);
 
 ----
 -- Table structure for sessions
@@ -69,12 +69,6 @@ INSERT INTO "cms_help" ("id","title","content","created_on","updated_on") VALUES
 CREATE TABLE 'cms_ownership' ('owner_id' INTEGER NOT NULL, 'resource_id' INTEGER NOT NULL, 'model' TEXT NOT NULL, PRIMARY KEY ('owner_id', 'resource_id', 'model'));
 
 ----
--- structure for index cms_ownership on table cms_users
-----
-CREATE INDEX 'owner' ON "cms_ownership" ("owner_id");
-CREATE INDEX 'resource' ON "cms_ownership" ("resource_id");
-
-----
 -- Data dump for cms_ownership, a total of 0 rows
 ----
 
@@ -88,19 +82,18 @@ CREATE INDEX 'resource' ON "cms_ownership" ("resource_id");
 ----
 ;
 
-
 ----
--- structure for index userrole on table cms_users
+-- structure for index  userrole on table cms_users
 ----
 CREATE INDEX 'userrole' ON "cms_users" ("role_id");
 
 ----
--- structure for index email on table cms_users
+-- structure for index  email on table cms_users
 ----
 CREATE UNIQUE INDEX 'email' ON "cms_users" ("email");
 
 ----
--- structure for index title on table cms_help
+-- structure for index  title on table cms_help
 ----
 CREATE UNIQUE INDEX 'title' ON "cms_help" ("title");
 
@@ -108,4 +101,14 @@ CREATE UNIQUE INDEX 'title' ON "cms_help" ("title");
 -- structure for index sqlite_autoindex_cms_ownership_1 on table cms_ownership
 ----
 ;
+
+----
+-- structure for index owner on table cms_ownership
+----
+CREATE INDEX 'owner' ON "cms_ownership" ("owner_id");
+
+----
+-- structure for index resource on table cms_ownership
+----
+CREATE INDEX 'resource' ON "cms_ownership" ("resource_id");
 COMMIT;
