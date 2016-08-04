@@ -13,7 +13,6 @@ namespace CMS\Models;
 
 use Core;
 use Core\Base;
-use Core\Modules\Crypt\Crypt;
 use Core\Modules\DB\Decorators\Interfaces;
 
 /**
@@ -43,7 +42,7 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
     );
 
     /**
-     * Definition of the fields to be serialized.
+     * Definition of the serializable fields.
      *
      * @static
      *
@@ -52,7 +51,8 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
     public static function serializableFields()
     {
         return array(
-            'permissions' => 'json'
+            'permissions' => 'json',
+            'ownership' => 'json',
         );
     }
 }

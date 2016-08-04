@@ -76,7 +76,7 @@ final class DB
      * @static
      * @final
      *
-     * @return DB
+     * @return Adapters\PdoMySql|Adapters\MySQLi|Adapters\MySQL|Adapters\SQLite Adapter Instance.
      */
     final public static function getInstance(array $dsn)
     {
@@ -99,7 +99,7 @@ final class DB
      * @static
      * @throws \DomainException Unsupported Database adapter.
      *
-     * @return mixed
+     * @return Adapters\PdoMySql|Adapters\MySQLi|Adapters\MySQL|Adapters\SQLite Adapter Instance.
      */
     private static function createInstance(array $dsn)
     {

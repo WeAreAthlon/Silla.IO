@@ -24,7 +24,7 @@ class CMSHelp extends CMS
      *
      * @var string
      */
-    protected $resourceModel = 'CMS\Models\CMSHelp';
+    public $resourceModel = 'CMS\Models\CMSHelp';
 
     /**
      * @inheritdoc

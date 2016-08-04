@@ -25,24 +25,14 @@ class CMSUserRoles extends CMS
      *
      * @var string
      */
-    protected $resourceModel = 'CMS\Models\CMSUserRole';
+    public $resourceModel = 'CMS\Models\CMSUserRole';
 
     /**
-     * Permissions scope for the current user session.
+     * Access scope for the current user session.
      *
      * @var array
      */
-    protected $permissionsScope = array();
-
-    /**
-     * UserRoles constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->addBeforeFilters(array('loadPermissionsScope'), array('only' => array('create', 'edit')));
-    }
+    protected $scope = array();
 
     /**
      * Remove current password validation.
@@ -97,12 +87,17 @@ class CMSUserRoles extends CMS
     }
 
     /**
-     * Loads permissions scope.
+     * Loads access scope.
      *
      * @return void
      */
-    protected function loadPermissionsScope()
+    protected function loadAccessibilityScope()
     {
-        $this->permissionsScope = Helpers\CMSUsers::getAccessibilityScope();
+        parent::loadAccessibilityScope();
+
+        $this->scope = array(
+            'permissions' => Helpers\CMSUsers::getAccessibilityScope(),
+            'ownership' => Helpers\CMSUsers::getOwnershipScope(),
+        );
     }
 }

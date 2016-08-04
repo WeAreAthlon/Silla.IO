@@ -201,15 +201,20 @@ footer img {
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 
+.filtering .filter-data-type-multiselect .chosen-container-multi ul.chosen-choices {
+    padding: 1px 10px;
+    height: 30px !important;
+}
+
 .filtering .filter-data-type-multiselect .chosen-container-multi ul.chosen-choices li.search-choice {
     background: #EFEFEF !important;
     box-shadow: none;
     color: #555555;
-    margin: 2px 4px 1px 0;
+    margin: 3px 4px 0 0;
 }
 
 .filtering .filter-data-type-multiselect .chosen-container-multi ul.chosen-choices li.search-field input {
-    padding: 2px 0 0;
+    padding: 0;
 }
 
 .filtering a.filtering-area-trigger:hover,

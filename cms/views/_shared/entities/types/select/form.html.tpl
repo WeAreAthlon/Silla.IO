@@ -9,13 +9,17 @@
 
         {if $associations[$attr.name]|default:false}
             {$property = $associations.$field.name}
-            {if not $resource->$property|is_object}
-                {custom_class var=related_resource class=$associations.$field.class_name}
+            {if $user->hasOwnershipOver($associations.$field.class_name)}
+                {assign var=related_resource value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), call_user_func(array($associations.$field.class_name, 'find')), $associations.$field.class_name)}
             {else}
-                {assign var=related_resource value=$resource->$property()}
+                {if not $resource->$property|is_object}
+                    {assign var=related_resource value=call_user_func(array($associations.$field.class_name, 'find'))}
+                {else}
+                    {assign var=related_resource value=$resource->$property()}
+                {/if}
             {/if}
 
-            {html_object_options options=$related_resource->find() selected=$attr.default|default:$attr.default_value|default:'' obj_name=$attr.association_title|default:'title'}
+            {html_object_options options=$related_resource selected=$attr.default|default:$attr.default_value|default:'' obj_name=$attr.association_title|default:'title'}
         {/if}
     {/if}
 </select>

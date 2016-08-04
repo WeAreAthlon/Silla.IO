@@ -53,6 +53,18 @@ attributes:
         type     : custom
         list     : false
         export   : false
+  ownership:
+    meta:
+      title     : Ownership
+      icon      : magnet
+      desc      : Define access to the available CMS modules.
+      serialize : false
+    fields:
+      ownership:
+        title    : Limited Access to
+        type     : custom
+        desc     : Role members has access only to self-created items.
+        list     : false
 
 buttons:
   create: Create Role

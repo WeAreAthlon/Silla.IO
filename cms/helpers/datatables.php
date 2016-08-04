@@ -23,14 +23,14 @@ class DataTables
     /**
      * Queries and formats the data from the database to be used via DataTables.
      *
-     * @param Base\Model $model  Instance of BaseModel or its children.
-     * @param array      $params Query params.
+     * @param DB\Query $query  Query instance.
+     * @param array    $params Query params.
      *
      * @static
      *
      * @return DB\Query
      */
-    public static function queryModel(Base\Model $model, array $params)
+    public static function formatQuery(DB\Query $query, array $params)
     {
         $params['pagination']['page'] = isset($params['pagination']['page']) ? (int)$params['pagination']['page'] : 0;
 
@@ -42,8 +42,7 @@ class DataTables
             $params['pagination']['limit'] = intval(current($pagination['limits']));
         }
 
-        $result = $model::find();
-        $result = self::assignFilter($result, $params);
+        $result = self::assignFilter($query, $params);
         $result = self::assignOrder($result, $params)
             ->page($params['pagination']['page'], $params['pagination']['limit']);
 

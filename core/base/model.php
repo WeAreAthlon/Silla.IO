@@ -1283,4 +1283,33 @@ abstract class Model
     {
         return $this->fieldsI18n;
     }
+
+    /**
+     * Retrieve association meta data by associated key.
+     *
+     * @param string $key Associated key.
+     *
+     * @return array|false
+     */
+    public function getAssociationMetaDataByKey($key)
+    {
+        $associationsByType = array(
+            'has_many' => $this->hasMany,
+            'habtm' => $this->hasAndBelongsToMany,
+            'belongs_to' => $this->belongsTo,
+        );
+
+        foreach ($associationsByType as $type => $associations) {
+            foreach ($associations as $name => $association) {
+                if ($association['key'] == $key) {
+                    $association['name'] = $name;
+                    $association['type'] = $type;
+
+                    return $association;
+                }
+            }
+        }
+
+        return false;
+    }
 }

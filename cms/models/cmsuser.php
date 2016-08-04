@@ -30,7 +30,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     public static $tableName = 'cms_users';
 
     /**
-     * Has many association definition.
+     * Belongs To association definition.
      *
      * @var array
      */
@@ -40,6 +40,20 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
             'key' => 'role_id',
             'relative_key' => 'id',
             'class_name' => 'CMS\Models\CMSUserRole',
+        ),
+    );
+
+    /**
+     * Has Many association definition.
+     *
+     * @var array
+     */
+    public $hasMany = array(
+        'resources' => array(
+            'table' => 'cms_ownership',
+            'key' => 'owner_id',
+            'relative_key' => 'id',
+            'class_name' => 'CMS\Models\CmsResource',
         ),
     );
 
@@ -98,6 +112,20 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
         if ($this->password !== $this->currentPassword) {
             $this->password = Crypt::hash($this->password);
         }
+    }
+
+    /**
+     * Checks whether the user has ownership over an entity model.
+     *
+     * @param string $entityModel Entity Model class name.
+     *
+     * @return boolean
+     */
+    public function hasOwnershipOver($entityModel)
+    {
+        $ownership = $this->role()->ownership;
+
+        return (isset($ownership[$entityModel]) && $ownership[$entityModel]);
     }
 
     /**

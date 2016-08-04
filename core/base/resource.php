@@ -57,7 +57,7 @@ abstract class Resource extends Controller
      *
      * @var string
      */
-    protected $resourceModel = '';
+    public $resourceModel = '';
 
     /**
      * Resource Sections.
@@ -105,12 +105,17 @@ abstract class Resource extends Controller
      */
     public function index(Request $request)
     {
+        $resourceModel = $this->resourceModel;
+        $query = $resourceModel::find();
+
         if ($request->is('xhr')) {
             $this->renderer->setLayout(null);
             $this->renderer->setView(null);
-            $query = Helpers\DataTables::queryModel($this->resource, $request->variables('query'));
 
             $this->beforeIndex($query, $request);
+            $query = Helpers\DataTables::formatQuery($query, $request->variables('query'));
+            $this->whileIndex($query, $request);
+
             $this->resources = $query;
 
             $response = array(
@@ -123,7 +128,7 @@ abstract class Resource extends Controller
         } else {
             if ($this->resource) {
                 $params = $request->get();
-                $query = array(
+                $queryParams = array(
                     'sorting' =>
                         isset($params['sort'], $params['order']) ?
                             array('field' => $params['sort'], 'order' => $params['order']) : null,
@@ -132,11 +137,13 @@ abstract class Resource extends Controller
                             $params['filtering'] : null,
                 );
 
-                $query = Helpers\DataTables::queryModel($this->resource, $query);
                 $this->beforeIndex($query, $request);
+                $query = Helpers\DataTables::formatQuery($query, $queryParams);
+                $this->whileIndex($query, $request);
                 $this->resources = $query;
             } else {
-                $this->beforeIndex(new DB\Query, $request);
+                $this->beforeIndex($query, $request);
+                $this->whileIndex($query, $request);
             }
 
             if (!$this->renderer->getView()) {
@@ -238,7 +245,7 @@ abstract class Resource extends Controller
     }
 
     /**
-     * Hook - executes before index action.
+     * Hook - executes before index query.
      *
      * @param DB\Query $query   Current query object.
      * @param Request  $request Current router request.
@@ -246,6 +253,18 @@ abstract class Resource extends Controller
      * @return void
      */
     protected function beforeIndex(DB\Query &$query, Request $request)
+    {
+    }
+
+    /**
+     * Hook - executes after index query.
+     *
+     * @param DB\Query $query   Current query object.
+     * @param Request  $request Current router request.
+     *
+     * @return void
+     */
+    protected function whileIndex(DB\Query &$query, Request $request)
     {
     }
 

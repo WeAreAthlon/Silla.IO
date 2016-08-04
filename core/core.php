@@ -13,7 +13,6 @@
  * Framework Core namespace
  */
 namespace Core {
-
     /* Hook the default auto-load class function. */
     spl_autoload_extensions('.php');
     spl_autoload_register('spl_autoload');
@@ -73,7 +72,10 @@ namespace Core {
     /**
      * For easier access to DB.
      *
-     * @return Modules\DB\DB
+     * @return Modules\DB\Adapters\PdoMySql|
+     *         Modules\DB\Adapters\MySQLi|
+     *         Modules\DB\Adapters\MySQL|
+     *         Modules|DB\AdaptersSQLite Adapter Instance.
      */
     function DB()
     {

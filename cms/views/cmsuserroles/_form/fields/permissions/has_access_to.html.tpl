@@ -1,5 +1,5 @@
 <div class="panel-group" id="accordion-permissions-scope">
-    {foreach from=$permissionsScope key=section_name item=section}
+    {foreach from=$scope.permissions key=section_name item=section}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-permissions-scope" href="#collapse-{$section_name}">

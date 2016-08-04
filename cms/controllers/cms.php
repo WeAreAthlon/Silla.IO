@@ -12,6 +12,7 @@
 namespace CMS\Controllers;
 
 use Core;
+use Core\Modules\DB;
 use Core\Modules\Router\Request;
 use CMS\Helpers;
 
@@ -46,8 +47,6 @@ abstract class CMS extends Core\Base\Resource
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->addBeforeFilters(array('checkLogged'));
         $this->addBeforeFilters(array('checkPermissions'), array('except' => $this->skipAclFor));
         $this->addBeforeFilters(array('loadVendorAssets'));
@@ -61,6 +60,8 @@ abstract class CMS extends Core\Base\Resource
         ));
 
         $this->addAfterFilters(array('loadAccessibilityScope', 'loadCmsAssets'));
+
+        parent::__construct();
     }
 
     /**
@@ -202,5 +203,122 @@ abstract class CMS extends Core\Base\Resource
             'cms/assets/js/libs/obj.js',
             'cms/assets/js/libs/datatables.js',
         ));
+    }
+
+    protected function beforeIndex(DB\Query &$query, Request $request)
+    {
+        parent::beforeIndex($query, $request);
+
+        if ($this->user->hasOwnershipOver($this->resourceModel)) {
+            $query = Helpers\CMSUsers::filterOwnResources($query, $this->resourceModel);
+        }
+    }
+
+    /**
+     * Prevent association of not "owned" resources.
+     *
+     * @param \Core\Modules\Router\Request $request Current router request.
+     *
+     * @return void
+     */
+    protected function beforeCreate(Request $request)
+    {
+        parent::beforeCreate($request);
+
+        if ($request->is('post')) {
+            $this->preventAssociationOfNotOwnedResource($request);
+        }
+    }
+
+    /**
+     * Assign "ownership" to the created resource.
+     *
+     * @param \Core\Modules\Router\Request $request
+     *
+     * @return void
+     */
+    protected function afterCreate(Request $request)
+    {
+        if (!$this->resource->hasErrors()) {
+            Helpers\CMSUsers::assignResource($this->resource);
+        }
+
+        parent::afterCreate($request);
+    }
+
+    /**
+     * Prevent association of not "owned" resources.
+     *
+     * @param \Core\Modules\Router\Request $request Current router request
+     *
+     * @return void
+     */
+    protected function beforeEdit(Request $request)
+    {
+        parent::beforeEdit($request);
+
+        if ($request->is('post')) {
+            $this->preventAssociationOfNotOwnedResource($request);
+        }
+    }
+
+    /**
+     * Retract "ownership" to the deleted resource.
+     *
+     * @param \Core\Modules\Router\Request $request
+     *
+     * @return void
+     */
+    protected function afterDelete(Request $request)
+    {
+        Helpers\CMSUsers::retractResource($this->resource);
+
+        parent::afterDelete($request);
+    }
+
+    /**
+     * Ensure that the current requested resource is within the ownership scope.
+     *
+     * @param \Core\Modules\Router\Request $request Current Router Request.
+     *
+     * @return void
+     */
+    protected function loadResource(Request $request)
+    {
+        parent::loadResource($request);
+
+        $resourceModel = $this->resourceModel;
+
+        if ($this->user->hasOwnershipOver($resourceModel) && !Helpers\CMSUsers::userOwnsResource($this->resource)) {
+            Helpers\FlashMessage::set($this->labels['errors']['not_exists'], 'danger');
+
+            $request->redirectTo('index', 404);
+        }
+    }
+
+    /**
+     * Prevents Association of not owned resource.
+     *
+     * @param \Core\Modules\Router\Request $request Request object.
+     *
+     * @return void
+     */
+    private function preventAssociationOfNotOwnedResource(Request $request)
+    {
+        foreach ($this->attributes as $attribute => $options) {
+            if ($request->post($attribute)) {
+                $association = $this->resource->getAssociationMetaDataByKey($attribute);
+
+                if (!$association && isset($this->resource->hasAndBelongsToMany[$attribute])) {
+                    $association = $this->resource->hasAndBelongsToMany[$attribute];
+                }
+
+                if ($association && $this->user->hasOwnershipOver($association['class_name'])) {
+                    if (!Helpers\CMSUsers::userOwns($request->post($attribute), $association['class_name'])) {
+                        $this->resource->setError($attribute, 'not_exists');
+                    }
+                }
+            }
+        }
     }
 }

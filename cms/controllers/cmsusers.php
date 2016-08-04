@@ -26,7 +26,7 @@ class CMSUsers extends CMS
      *
      * @var string
      */
-    protected $resourceModel = 'CMS\Models\CMSUser';
+    public $resourceModel = 'CMS\Models\CMSUser';
 
     /**
      * Additional validation rules to ensure password confirmation.
