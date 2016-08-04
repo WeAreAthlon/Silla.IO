@@ -1,7 +1,7 @@
 ----
 -- phpLiteAdmin database dump (https://bitbucket.org/phpliteadmin/public)
 -- phpLiteAdmin version: 1.9.6
--- Exported: 2:18pm on April 8, 2016 (UTC)
+-- Exported: 2:30pm on August 4, 2016 (UTC)
 -- database file: ./silla.db3
 ----
 BEGIN TRANSACTION;
@@ -64,6 +64,21 @@ CREATE TABLE 'cms_help' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title
 INSERT INTO "cms_help" ("id","title","content","created_on","updated_on") VALUES ('1','Overview','{"formatted":"<h1>Overview<\/h1>\n<hr \/>\n<h3>Silla.IO is a MVC based PHP Application Development Framework<\/h3>\n<p>Reusable software environment that provides particular functionality as part of a larger software platform to facilitate development of software applications, products and solutions.<\/p>\n<p>The framework comes with a CMS Application to enable building user defined content management systems.<\/p>\n<ul>\n<li>Used to run projects for global brands<\/li>\n<li>3 years in active development by a professional team<\/li>\n<li>Covers best practices and system architecture<\/li>\n<li>Complete development history available<\/li>\n<li>Complete code Documentation and available examples of CMS user documentation<\/li>\n<li>Penetration tested\n<ul>\n<li>The framework has been penetration tested by industry leading experts.<\/li>\n<li>Tested against: DoS, CSRF, Persistent and reflected XSS, Exposed download links, ClickJacking, Text injection, Order injection, Insecure HTTP methods as well as issues with password management, authentication and e-mail harvesting<\/li>\n<li>To live up to standards of multinational blue chip clients and their data security needs<\/li>\n<\/ul><\/li>\n<\/ul>\n<p><em>Learn more at <a href=\"http:\/\/silla.io\/\">Silla.IO<\/a><\/em> <\/p>","raw":"# Overview\r\n***\r\n### Silla.IO is a MVC based PHP Application Development Framework\r\n\r\nReusable software environment that provides particular functionality as part of a larger software platform to facilitate development of software applications, products and solutions.\r\n\r\nThe framework comes with a CMS Application to enable building user defined content management systems.\r\n* Used to run projects for global brands\r\n* 3 years in active development by a professional team\r\n* Covers best practices and system architecture\r\n* Complete development history available\r\n* Complete code Documentation and available examples of CMS user documentation\r\n* Penetration tested\r\n  * The framework has been penetration tested by industry leading experts.\r\n  * Tested against: DoS, CSRF, Persistent and reflected XSS, Exposed download links, ClickJacking, Text injection, Order injection, Insecure HTTP methods as well as issues with password management, authentication and e-mail harvesting\r\n  * To live up to standards of multinational blue chip clients and their data security needs\r\n\r\n*Learn more at [Silla.IO](http:\/\/silla.io\/)*"}','2016-03-01 00:00:00','2016-03-01 00:00:00');
 
 ----
+-- Table structure for cms_ownership
+----
+CREATE TABLE 'cms_ownership' ('owner_id' INTEGER NOT NULL, 'resource_id' INTEGER NOT NULL, 'model' TEXT NOT NULL, PRIMARY KEY ('owner_id', 'resource_id', 'model'));
+
+----
+-- structure for index cms_ownership on table cms_users
+----
+CREATE INDEX 'owner' ON "cms_ownership" ("owner_id");
+CREATE INDEX 'resource' ON "cms_ownership" ("resource_id");
+
+----
+-- Data dump for cms_ownership, a total of 0 rows
+----
+
+----
 -- structure for index sqlite_autoindex_sessions_1 on table sessions
 ----
 ;
@@ -73,18 +88,24 @@ INSERT INTO "cms_help" ("id","title","content","created_on","updated_on") VALUES
 ----
 ;
 
-----
--- structure for index  userrole on table cms_users
-----
-CREATE INDEX ' userrole' ON "cms_users" ("role_id");
 
 ----
--- structure for index  email on table cms_users
+-- structure for index userrole on table cms_users
 ----
-CREATE UNIQUE INDEX ' email' ON "cms_users" ("email");
+CREATE INDEX 'userrole' ON "cms_users" ("role_id");
 
 ----
--- structure for index  title on table cms_help
+-- structure for index email on table cms_users
 ----
-CREATE UNIQUE INDEX ' title' ON "cms_help" ("title");
+CREATE UNIQUE INDEX 'email' ON "cms_users" ("email");
+
+----
+-- structure for index title on table cms_help
+----
+CREATE UNIQUE INDEX 'title' ON "cms_help" ("title");
+
+----
+-- structure for index sqlite_autoindex_cms_ownership_1 on table cms_ownership
+----
+;
 COMMIT;
