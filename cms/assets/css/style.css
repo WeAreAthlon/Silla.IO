@@ -376,7 +376,6 @@ table.data-table tbody tr td {
 
 table.data-table thead.fixed {
     position: fixed;
-    top: 50px;
     z-index: 1000;
 }
 

@@ -30,7 +30,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     public static $tableName = 'cms_users';
 
     /**
-     * Belongs To association definition.
+     * Belongs To associations definition.
      *
      * @var array
      */
@@ -40,20 +40,6 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
             'key' => 'role_id',
             'relative_key' => 'id',
             'class_name' => 'CMS\Models\CMSUserRole',
-        ),
-    );
-
-    /**
-     * Has Many association definition.
-     *
-     * @var array
-     */
-    public $hasMany = array(
-        'resources' => array(
-            'table' => 'cms_ownership',
-            'key' => 'owner_id',
-            'relative_key' => 'id',
-            'class_name' => 'CMS\Models\CmsResource',
         ),
     );
 

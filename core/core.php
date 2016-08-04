@@ -10,7 +10,7 @@
  */
 
 /**
- * Framework Core namespace
+ * Framework Core namespace.
  */
 namespace Core {
     /* Hook the default auto-load class function. */
