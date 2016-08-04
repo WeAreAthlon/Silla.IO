@@ -23,6 +23,7 @@ general:
   attribute     : Attribute
   value         : Value
   last_login    : last session on
+  no_supported_entities: No supporoted content entities.
 
 buttons:
   save   : Save changes
@@ -82,7 +83,7 @@ modules:
     edit    : Edit Page
     delete  : Delete Page
     export  : Export Pages
-    ownership: true
+    ownership: false
     hidden  : true
 
 sections:
