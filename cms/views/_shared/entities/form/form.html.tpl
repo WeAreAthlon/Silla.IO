@@ -31,7 +31,7 @@
                     </span>
                 </legend>
                 <div class="form-fields-wrapper">
-                    {include '_shared/entities/form/_fields.html.tpl' section=$section_key attributes=$section.fields|default:[] serialize=$section.meta.serialize|default:false}
+                    {include '_shared/entities/form/_fields.html.tpl' section=$section_key attributes=$section.fields|default:array() serialize=$section.meta.serialize|default:false}
                 </div>
             </fieldset>
         </div>

@@ -1284,6 +1284,10 @@ abstract class Model
         return $this->fieldsI18n;
     }
 
+    public function getPrimaryKeyValue()
+    {
+        return $this->{$this::$primaryKeyField};
+    }
     /**
      * Retrieve association meta data by associated key.
      *

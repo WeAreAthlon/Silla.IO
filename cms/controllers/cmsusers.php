@@ -115,7 +115,7 @@ class CMSUsers extends CMS
             $request->redirectTo('index');
         }
 
-        if ($this->resource->id == $this->user->id) {
+        if ($this->resource->getPrimaryKeyValue() == $this->user->getPrimaryKeyValue()) {
             if (!$request->is('xhr')) {
                 Helpers\FlashMessage::set($this->labels['messages']['delete']['self'], 'danger');
             }
@@ -135,9 +135,11 @@ class CMSUsers extends CMS
     {
         parent::afterEdit($request);
 
-        if ($request->is('post') && !$this->resource->hasErrors() && ($this->resource->id == $this->user->id)) {
-            Core\Session()->set('cms_user_info', rawurlencode(serialize($this->resource)));
-            $this->user = $this->resource;
+        if ($request->is('post') && !$this->resource->hasErrors()) {
+            if ($this->resource->getPrimaryKeyValue() == $this->user->getPrimaryKeyValue()) {
+                Core\Session()->set('cms_user_info', rawurlencode(serialize($this->resource)));
+                $this->user = $this->resource;
+            }
         }
     }
 

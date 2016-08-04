@@ -12,7 +12,7 @@
         {$value = $resource->$property()->first()->title|default:$resource->$property()->first()->name|default:''}
     {/if}
 {else}
-    {if $section.fields.$field.value|default:[]}
+    {if $section.fields.$field.value|default:array()}
         {* The field is not part of a association, so assign the available values. *}
         {$value = $section.fields.$field.value[$resource->$field]}
     {else}

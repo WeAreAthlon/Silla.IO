@@ -1,5 +1,5 @@
 {* Analyze resource hasAndBelonsToMany associations *}
-{$values = []}
+{$values = array()}
 {if isset($resource->hasAndBelongsToMany.$field)}
     {* If the field is part of a association assign the association title/name values *}
     {foreach from=$resource->$field()->all() item=related_resource}

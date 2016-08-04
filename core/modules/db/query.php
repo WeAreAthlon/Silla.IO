@@ -430,7 +430,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      * @param string $field     Column name.
      * @param string $direction Order direction(ASC|DESC).
      *
-     * @return object Query
+     * @return Query Query object.
      */
     public function order($field, $direction)
     {
@@ -692,7 +692,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     /**
      * Fetch first record from the database matching a certain criteria.
      *
-     * @return object
+     * @return \Core\Base\Model
      */
     public function first()
     {

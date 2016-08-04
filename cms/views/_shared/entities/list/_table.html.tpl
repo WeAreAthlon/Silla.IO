@@ -1,4 +1,4 @@
-{assign var=fields_to_display value=$fields_to_display|default:[]}
+{assign var=fields_to_display value=$fields_to_display|default:array()}
 <thead>
 <tr>
     {foreach from=$attributes key=field item=attr}

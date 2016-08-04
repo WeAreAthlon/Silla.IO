@@ -5,8 +5,8 @@
     {if $flash.additional|default:false}
     <dl class="clearfix no-padding-left">
 {if $flash.layout eq 'danger'}
-    {foreach from=$sections|default:[] key=section_key item=section}
-        {foreach from=$flash.additional|default:[] key=item item=reason}
+    {foreach from=$sections|default:array() key=section_key item=section}
+        {foreach from=$flash.additional|default:array() key=item item=reason}
             {if $section.fields.$item|default:false}
                 <dt class="{$item} field clear-left" rel="{$section_key}-{$item}" data-section="{$section_key}">
                     <i class="glyphicon glyphicon-remove-circle"></i> {$section.meta.title} / {$section.fields.$item.title} /
@@ -16,7 +16,7 @@
         {/foreach}
     {/foreach}
 {else}
-    {foreach from=$flash.additional|default:[] key=item item=reason}
+    {foreach from=$flash.additional|default:array() key=item item=reason}
         <dt class="{$item} no-margin">{$item}</dt>
         <dd>{$reason}</dd>
     {/foreach}

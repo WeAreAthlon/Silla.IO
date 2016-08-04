@@ -118,7 +118,7 @@ class CMSUsers
             ->join($ownershipTable, "{$resourceTable}.{$resourcePrimaryKey} = {$ownershipTablePrefixed}.resource_id")
             ->where(
                 "{$ownershipTablePrefixed}.owner_id = ? AND {$ownershipTablePrefixed}.model = ?",
-                array($owner->{$owner::primaryKeyField()}, $resourceModel)
+                array($owner->getPrimaryKeyValue(), $resourceModel)
             );
     }
 
@@ -139,7 +139,7 @@ class CMSUsers
         $query = new Core\Modules\DB\Query;
         Core\DB()->run($query->insert(
             array('owner_id', 'resource_id', 'model'),
-            array($owner->{$owner::primaryKeyField()}, $resource->{$resource::primaryKeyField()}, get_class($resource))
+            array($owner->getPrimaryKeyValue(), $resource->getPrimaryKeyValue(), get_class($resource))
         )->into('cms_ownership'));
     }
 
@@ -161,7 +161,7 @@ class CMSUsers
 
         Core\DB()->run($query->remove()->from('cms_ownership')->where(
             'resource_id = ? AND owner_id = ? AND model = ?',
-            array($resource->{$resource::primaryKeyField()}, $owner->{$owner::primaryKeyField()}, get_class($resource))
+            array($resource->getPrimaryKeyValue(), $owner->getPrimaryKeyValue(), get_class($resource))
         ));
     }
 
@@ -182,7 +182,7 @@ class CMSUsers
             $owner = Core\Registry()->get('current_cms_user');
         }
 
-        return self::userOwns($resource->{$resource::primaryKeyField()}, get_class($resource), $owner);
+        return self::userOwns($resource->getPrimaryKeyValue(), get_class($resource), $owner);
     }
 
     /**
@@ -210,7 +210,7 @@ class CMSUsers
             $query = new Core\Modules\DB\Query;
             $result = $query->select('owner_id')->from('cms_ownership')->where(
                 'resource_id = ? AND owner_id = ? AND model = ?',
-                array($resourceId , $owner->{$owner::primaryKeyField()}, $resourceModel))
+                array($resourceId, $owner->getPrimaryKeyValue(), $resourceModel))
                 ->exists();
 
             if (!$result) {
