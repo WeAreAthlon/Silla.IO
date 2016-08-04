@@ -55,6 +55,7 @@ The code base features *Model-View-Controller* pattern with additional support f
   * *Configuration:*
     * Runtime change enabled via `ini_set()`
     * *Extensions*
+      * `mbstring` - *Provides multibyte specific string functions that help dealing with multibyte encodings.*
       * `PDO`, `PDO_mysql`, `mysqli`, `SQLite3` (*depends on on the configured database adapter*)
       * `GD` - *in order to work with media*
 * **Database**
