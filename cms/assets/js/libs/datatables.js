@@ -69,14 +69,13 @@ DataTable.prototype.fixCaption = function () {
     }
 
     $(window).on('scroll', function () {
-
         var windowTop = $(window).scrollTop();
 
         if (windowTop > (self.table.offset().top - offsetTop)) {
-            $('thead', self.table).addClass('fixed');
+            $('thead', self.table).addClass('fixed').css({top: offsetTop + 'px'});
         }
         else {
-            $('thead', self.table).removeClass('fixed');
+            $('thead', self.table).removeClass('fixed').css({top: 'auto'});
         }
     });
 };
@@ -155,7 +154,6 @@ DataTable.prototype.enable = function (functionality) {
             var filter = self.table.parent().parent();
 
             if (!CMS.utils.isObjectEmpty(self.params.filtering)) {
-
                 $('.filtering-area-trigger', filter).trigger('click');
                 $('.filter-action-reset', filter).fadeIn('fast');
 
@@ -178,7 +176,7 @@ DataTable.prototype.enable = function (functionality) {
             }
 
             $('.filtering .daterange', filter).each(function (idx, element) {
-                CMS.utils.attachDaterange($(element), 'left', 'down');
+                CMS.utils.attachDateRange($(element), 'left', 'down');
             });
 
             $('.filtering form', filter).on('submit', function (e) {
@@ -228,8 +226,8 @@ DataTable.prototype.enable = function (functionality) {
             }
 
             $('.daterange', self.table).each(function (idx, element) {
-                CMS.utils.attachDaterange($(element), 'left', 'up', function (start, end) {
-                    if (start.toDate().getFullYear() != 1900 && end.toDate().getFullYear() != 2100) {
+                CMS.utils.attachDateRange($(element), 'left', 'up', function (start, end) {
+                    if (start.toDate().getFullYear() != 1970 && end.toDate().getFullYear() != 2100) {
                         self.params.filtering[$(element).data('attribute')] = {
                             start: CMS.utils.dateToYMD(start.toDate()),
                             end: CMS.utils.dateToYMD(end.toDate())
@@ -306,6 +304,7 @@ DataTable.prototype._attach = function () {
 DataTable.prototype._populate = function () {
     'use strict';
     var self = this;
+
     $.get(self.table.data('urlSource'), {
         view: 'tbody',
         query: self.params,
@@ -323,6 +322,7 @@ DataTable.prototype._populate = function () {
 DataTable.prototype._export = function (type) {
     'use strict';
     var self = this;
+
     self.params['type'] = type;
 
     window.open(self.table.data('urlExport') + '?' + $.param(self.params));
