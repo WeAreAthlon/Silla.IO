@@ -317,7 +317,7 @@ abstract class Resource extends Controller
      */
     protected function removeAccessibleAttributes(array $fields)
     {
-        $this->accessibleAttributes = array_filter($this->accessibleAttributes, function($attribute) use($fields) {
+        $this->accessibleAttributes = array_filter($this->accessibleAttributes, function ($attribute) use ($fields) {
             return !in_array($attribute, $fields, true);
         });
     }

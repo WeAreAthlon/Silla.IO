@@ -205,6 +205,14 @@ abstract class CMS extends Core\Base\Resource
         ));
     }
 
+    /**
+     * Filter resources to only owned resources.
+     *
+     * @param \Core\Modules\DB\Query       $query   Initial resource query.
+     * @param \Core\Modules\Router\Request $request Current router request.
+     *
+     * @return void
+     */
     protected function beforeIndex(DB\Query &$query, Request $request)
     {
         parent::beforeIndex($query, $request);
@@ -233,7 +241,7 @@ abstract class CMS extends Core\Base\Resource
     /**
      * Assign "ownership" to the created resource.
      *
-     * @param \Core\Modules\Router\Request $request
+     * @param \Core\Modules\Router\Request $request Current router request.
      *
      * @return void
      */
@@ -249,7 +257,7 @@ abstract class CMS extends Core\Base\Resource
     /**
      * Prevent association of not "owned" resources.
      *
-     * @param \Core\Modules\Router\Request $request Current router request
+     * @param \Core\Modules\Router\Request $request Current router request.
      *
      * @return void
      */
@@ -265,7 +273,7 @@ abstract class CMS extends Core\Base\Resource
     /**
      * Retract "ownership" to the deleted resource.
      *
-     * @param \Core\Modules\Router\Request $request
+     * @param \Core\Modules\Router\Request $request Current router request.
      *
      * @return void
      */

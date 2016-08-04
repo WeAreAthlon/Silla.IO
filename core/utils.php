@@ -323,7 +323,8 @@ final class Utils
      *
      * @return boolean
      */
-    public static function validatePassword($candidate) {
+    public static function validatePassword($candidate)
+    {
         $r1 = '/[A-Z]/';
         $r2 = '/[a-z]/';
         $r3 = '!@#$%^&*()\-_=+{};:,<.>][';

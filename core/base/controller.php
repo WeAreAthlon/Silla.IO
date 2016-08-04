@@ -377,7 +377,7 @@ abstract class Controller
     /**
      * Executes the queued before action filters.
      *
-     * @param string $action Current action.
+     * @param string  $action  Current action.
      * @param Request $request Current Router Request.
      *
      * @access private
@@ -417,7 +417,7 @@ abstract class Controller
     /**
      * Executes the queued after action filters.
      *
-     * @param string  $action Current action.
+     * @param string  $action  Current action.
      * @param Request $request Current Router Request.
      *
      * @access private

@@ -71,7 +71,7 @@ final class Clear
                 if (is_array(self::$CACHES[$cache])) {
                     foreach (self::$CACHES[$cache] as $path) {
                         self::deleteFolder($cwd . $path);
-                    } 
+                    }
                 } else {
                     self::deleteFolder($cwd . self::$CACHES[$cache]);
                 }
@@ -81,7 +81,7 @@ final class Clear
                 if (is_array($path)) {
                     foreach ($path as $p) {
                         self::deleteFolder($cwd . $p);
-                    } 
+                    }
                 } else {
                     self::deleteFolder($cwd . $path);
                 }

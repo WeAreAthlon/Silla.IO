@@ -46,7 +46,7 @@ class Account extends CMSUsers
      * Account action.
      *
      * Prevent credentials management on action.
-     * 
+     *
      * @param Request $request Current router request.
      *
      * @return void

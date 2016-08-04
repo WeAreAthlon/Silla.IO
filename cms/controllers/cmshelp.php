@@ -50,7 +50,9 @@ class CMSHelp extends CMS
     }
 
     /**
-     * @inheritdoc
+     * Include additional form assets.
+     *
+     * @return void
      */
     protected function loadFormAssets()
     {

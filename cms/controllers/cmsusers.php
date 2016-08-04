@@ -31,7 +31,9 @@ class CMSUsers extends CMS
     /**
      * Additional validation rules to ensure password confirmation.
      *
-     * @inheritdoc
+     * @param Request $request Current router request.
+     *
+     * @return void
      */
     protected function beforeCreate(Request $request)
     {
@@ -54,7 +56,9 @@ class CMSUsers extends CMS
     /**
      * Additional validation rules to ensure user is authorized to edit this resource.
      *
-     * @inheritdoc
+     * @param Request $request Current router request.
+     *
+     * @return void
      */
     protected function beforeEdit(Request $request)
     {
@@ -103,7 +107,9 @@ class CMSUsers extends CMS
      *
      * Request current user password before deletion of any users.
      *
-     * @inheritdoc
+     * @param Request $request Current router request.
+     *
+     * @return void
      */
     protected function beforeDelete(Request $request)
     {
@@ -129,7 +135,9 @@ class CMSUsers extends CMS
     /**
      * Reloads current user info stored in the application session.
      *
-     * @inheritdoc
+     * @param Request $request Current router request.
+     *
+     * @return void
      */
     protected function afterEdit(Request $request)
     {
@@ -146,7 +154,9 @@ class CMSUsers extends CMS
     /**
      * Prevent credentials management on edit action.
      *
-     * @inheritdoc
+     * @param Request $request Current router request.
+     *
+     * @return void
      */
     protected function loadAttributeSections(Request $request)
     {

@@ -210,8 +210,8 @@ class CMSUsers
             $query = new Core\Modules\DB\Query;
             $result = $query->select('owner_id')->from('cms_ownership')->where(
                 'resource_id = ? AND owner_id = ? AND model = ?',
-                array($resourceId, $owner->getPrimaryKeyValue(), $resourceModel))
-                ->exists();
+                array($resourceId, $owner->getPrimaryKeyValue(), $resourceModel)
+            )->exists();
 
             if (!$result) {
                 break;

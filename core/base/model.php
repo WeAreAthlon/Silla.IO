@@ -205,7 +205,7 @@ abstract class Model
     }
 
     /**
-     * Whether the record exists in the persistent storage. (DB)
+     * Whether the record exists in the persistent storage.
      *
      * @return bool
      */
@@ -1284,10 +1284,16 @@ abstract class Model
         return $this->fieldsI18n;
     }
 
+    /**
+     * Retrieve primary key value for an object.
+     *
+     * @return mixed
+     */
     public function getPrimaryKeyValue()
     {
         return $this->{$this::$primaryKeyField};
     }
+
     /**
      * Retrieve association meta data by associated key.
      *

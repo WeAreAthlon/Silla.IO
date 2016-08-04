@@ -224,15 +224,13 @@ class Authentication extends Base\Controller
      *
      * @param array $configuration Captcha Configuration data.
      *
-     * @throws \Captcha\Exception
-     *
      * @return void
      */
-    private function loadCaptcha($configuration)
+    private function loadCaptcha(array $configuration)
     {
         $this->captcha = Helpers\Captcha::get($configuration);
 
-        if($this->captcha) {
+        if ($this->captcha) {
             $this->captchaTemplate = Helpers\Captcha::getTemplate($this->captcha);
         }
     }

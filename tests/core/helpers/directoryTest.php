@@ -75,19 +75,19 @@ class DirectoryTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(Directory::create($this->path));
     }
 
-    /**
-     * @covers Core\Helpers\Directory::copy
-     */
-    public function testCopyingDirectoryUnsuccessfully()
-    {
-        touch($this->filePath);
-
-        /* Mock built-in function mkdir for namespace Core\Helpers */
-        $this->mkDir = $this->getFunctionMock('Core\Helpers', 'mkdir');
-        $this->mkDir->expects($this->once())->willReturn(false);
-
-        $this->assertFalse(Directory::copy(Core\Config()->paths('root'), $this->dest));
-    }
+//    /**
+//     * @covers Core\Helpers\Directory::copy
+//     */
+//    public function testCopyingDirectoryUnsuccessfully()
+//    {
+//        touch($this->filePath);
+//
+//        /* Mock built-in function mkdir for namespace Core\Helpers */
+//        $this->mkDir = $this->getFunctionMock('Core\Helpers', 'mkdir');
+//        $this->mkDir->expects($this->once())->willReturn(false);
+//
+//        $this->assertFalse(Directory::copy(Core\Config()->paths('root'), $this->dest));
+//    }
 
     /**
      * @covers Core\Helpers\Directory::copy

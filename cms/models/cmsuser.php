@@ -65,7 +65,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     /**
      * Additional validations.
      *
-     * @inheritdoc
+     * @return void
      */
     public function afterValidate()
     {
@@ -81,7 +81,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     /**
      * Store current password for later reference.
      *
-     * @inheritdoc
+     * @return void
      */
     public function beforePopulate()
     {
@@ -91,7 +91,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     /**
      * Hashes the new password if the password is different form the stored one.
      *
-     * @inheritdoc
+     * @return void
      */
     public function beforeSave()
     {
