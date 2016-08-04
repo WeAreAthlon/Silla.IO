@@ -30,7 +30,7 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     public static $tableName = 'cms_users';
 
     /**
-     * Has many association definition.
+     * Belongs To associations definition.
      *
      * @var array
      */

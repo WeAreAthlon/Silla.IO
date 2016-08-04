@@ -23,15 +23,37 @@ final class Clear
      *
      * @var array
      */
-    private static $CACHES = array(
-        'system' => 'temp/cache',
-        'assets' => array(
-            'public/cms/assets/css',
-            'public/cms/assets/js',
-            'public/app/assets/css',
-            'public/app/assets/js',
-        ),
-    );
+    private static $CACHES;
+
+    /**
+     * Initializer. Setup paths to temporary resources.
+     *
+     * @param mixed $params Params from the command line.
+     *
+     * @return void
+     */
+    public static function init($params)
+    {
+        self::$CACHES = array(
+            'system' => 'temp/cache',
+        );
+
+        $modes = Core\Config()->modes();
+
+        foreach ($modes as $mode) {
+            Core\Config()->setMode($mode);
+            $assetsPath = Core\Config()->paths('assets');
+            $assets = Core\Utils::replaceFirstOccurrence(Core\Config()->paths('root'), '', $assetsPath['distribution']);
+
+            if (file_exists($assetsPath['distribution'] . 'js')) {
+                self::$CACHES['assets'][] = $assets . 'js';
+            }
+
+            if (file_exists($assetsPath['distribution'] . 'css')) {
+                self::$CACHES['assets'][] = $assets . 'css';
+            }
+        }
+    }
 
     /**
      * Clears all cache types.

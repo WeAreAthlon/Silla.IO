@@ -29,7 +29,7 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
     public static $tableName = 'cms_userroles';
 
     /**
-     * Belongs to association definition.
+     * Has many associations definition.
      *
      * @var array
      */

@@ -16,7 +16,7 @@ Thumbs.db
 composer.lock
 
 # Ignore all log files and temp files.
-/temp
+/temp/*
 
 # Ignore front-end vendor assets
 /*/assets/vendor
