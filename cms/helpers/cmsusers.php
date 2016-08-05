@@ -97,8 +97,8 @@ class CMSUsers
     /**
      * Filter owner resources.
      *
-     * @param string                 $resourceModel Name of the resource model.
-     * @param \Core\Base\Model|null  $owner         User Owner.
+     * @param string                $resourceModel Name of the resource model.
+     * @param \Core\Base\Model|null $owner         User Owner.
      *
      * @return \Core\Modules\DB\Query
      */
