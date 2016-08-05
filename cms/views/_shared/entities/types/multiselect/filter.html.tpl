@@ -10,7 +10,7 @@
                 {* Show multiselect populated with all related resource values *}
                 {assign var=related_resource value=call_user_func(array($resource->hasAndBelongsToMany[$field]['class_name'], 'find'))}
                 {if $user->hasOwnershipOver($resource->hasAndBelongsToMany[$field]['class_name'])}
-                    {assign var=related_resource value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $related_resource, $resource->hasAndBelongsToMany[$field]['class_name'])}
+                    {assign var=related_resource value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $resource->hasAndBelongsToMany[$field]['class_name'])}
                 {/if}
                 {html_object_options options=$related_resource selected=$_get.filtering.$field|default:''}
             {/if}

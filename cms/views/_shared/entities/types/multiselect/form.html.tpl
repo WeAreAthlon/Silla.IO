@@ -6,16 +6,16 @@
         {if isset($resource->hasAndBelongsToMany.$field) and $resource->hasAndBelongsToMany.$field|is_array}
             {assign var=related_obj value=call_user_func(array($resource->hasAndBelongsToMany[$field]['class_name'], 'find'))}
             {if $user->hasOwnershipOver($resource->hasAndBelongsToMany[$field]['class_name'])}
-                {assign var=related_obj value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $related_obj, $resource->hasAndBelongsToMany[$field]['class_name'])}
+                {assign var=related_obj value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $resource->hasAndBelongsToMany[$field]['class_name'])}
             {/if}
             {$related_object_ids = array()}
             {foreach from=$resource->$field()->all() item=related_object}
-                {append var='related_object_ids' value={$related_object->{$related_object->primaryKeyField()}}}
+                {append var='related_object_ids' value=$related_object->getPrimaryKeyValue()}
             {/foreach}
             {if $related_object_ids}
                 {html_object_options options=$related_obj selected=$related_object_ids obj_name=$attr.association_title|default:'title'}
             {else}
-                {html_object_options options=$related_obj selected=$smarty.post[$attr.name]|default:array() obj_name=$attr.association_title|default:'title'}
+                {html_object_options options=$related_obj selected=$_post[$attr.name]|default:array() obj_name=$attr.association_title|default:'title'}
             {/if}
         {/if}
     {/if}

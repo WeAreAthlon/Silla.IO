@@ -10,7 +10,7 @@
         {if $associations[$attr.name]|default:false}
             {$property = $associations.$field.name}
             {if $user->hasOwnershipOver($associations.$field.class_name)}
-                {assign var=related_resource value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), call_user_func(array($associations.$field.class_name, 'find')), $associations.$field.class_name)}
+                {assign var=related_resource value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $associations.$field.class_name)}
             {else}
                 {if not $resource->$property|is_object}
                     {assign var=related_resource value=call_user_func(array($associations.$field.class_name, 'find'))}

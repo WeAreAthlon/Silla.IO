@@ -6,7 +6,7 @@
             </a>
         </div>
         <div class="collapse navbar-collapse navbar-filter-collapse no-border">
-            <form class="navbar-form navbar-left width-full text-center padding-vertical no-margin no-border" method="get" action="{$smarty.server.REQUEST_URI}" role="search">
+            <form class="navbar-form navbar-left width-full text-center padding-vertical no-margin no-border" method="get" action="{$_request->meta('REQUEST_URI')}" role="search">
                 <ul class="filtering-container nav navbar-nav no-padding no-margin text-left">
                 {foreach from=$attributes key=field item=attr}
                     {if $attr.filter|default:false}

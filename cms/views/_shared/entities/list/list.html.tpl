@@ -12,7 +12,7 @@
         {/if}
     {/foreach}
     <div class="table-responsive">
-        <table class="table table-striped table-hover data-table data-table-{$_controller}" data-offset-top="50" data-url-source="{$smarty.server.REQUEST_URI}" data-url-export="{link_to controller=$_controller action=export}" data-controller="{$_controller}" data-type="{$type|default:'xhr'}" data-default-filtering='{$filtering_default|default:false|json_encode}'>
+        <table class="table table-striped table-hover data-table data-table-{$_controller}" data-offset-top="50" data-url-source="{$_request->meta('REQUEST_URI')}" data-url-export="{link_to controller=$_controller action=export}" data-controller="{$_controller}" data-type="{$type|default:'xhr'}" data-default-filtering='{$filtering_default|default:false|json_encode}'>
             {include file='_shared/entities/list/_table.html.tpl' inline}
         </table>
     </div>

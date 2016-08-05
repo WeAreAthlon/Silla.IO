@@ -6,7 +6,7 @@
 {/foreach}
 
 {foreach from=$resources item=resource}
-    <tr data-id="{$resource->{$resource->primaryKeyField()}}">
+    <tr data-id="{$resource->getPrimaryKeyValue()}">
     {foreach from=$fields_to_display key=field item=type}
         <td class="column column-type-content-{$type}">
         {if "{$_controller}/_list/fields/{$field}.html.tpl"|template_exists}

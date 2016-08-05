@@ -1,6 +1,6 @@
 {if $_action eq 'edit' and {user_can controller=$_controller action=delete}}
 <div class="btn-group pull-left" role="toolbar">
-    <a href="{link_to controller=$_controller action=delete id=$resource->{$resource->primaryKeyField()}}" data-controller="{$_controller}" class="btn btn-outline btn-danger navbar-btn action-delete">
+    <a href="{link_to controller=$_controller action=delete id=$resource->getPrimaryKeyValue()}" data-controller="{$_controller}" class="btn btn-outline btn-danger navbar-btn action-delete">
         <span class="glyphicon glyphicon-trash"></span> {$_labels.buttons.delete}
     </a>
 </div>

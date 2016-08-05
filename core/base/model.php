@@ -612,7 +612,7 @@ abstract class Model
     /**
      * Populates the object fields with content mainly called from the constructor.
      *
-     * @param array $params Example [fields => values].
+     * @param array $params Example array(fields => values).
      *
      * @access private
      *
@@ -632,7 +632,7 @@ abstract class Model
     /**
      * Updates the object fields with content called on save method.
      *
-     * @param array $params Example [fields => values].
+     * @param array $params Example array(fields => values).
      *
      * @access private
      *
@@ -657,7 +657,7 @@ abstract class Model
      *
      * @access private
      *
-     * @return array Example [$fields => $values].
+     * @return array Example array($fields => $values).
      */
     private function extractFields()
     {

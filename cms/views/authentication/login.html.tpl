@@ -1,8 +1,8 @@
 <h1 class="text-center">{$_labels.login.title}</h1>
-<form action="{$smarty.server.REQUEST_URI}" method="post" role="form">
+<form action="{$_request->meta('REQUEST_URI')}" method="post" role="form">
     <div class="form-group">
         <label for="email"><i class="glyphicon glyphicon-user"></i> {$_labels.login.username}</label>
-        <input name="email" type="email" id="email" class="form-control text-thin" placeholder="..." tabindex="1" value="{$smarty.post.email|escape|default:''}">
+        <input name="email" type="email" id="email" class="form-control text-thin" placeholder="..." tabindex="1" value="{$_post.email|escape|default:''}">
     </div>
     <div class="form-group">
         <label for="password"><i class="glyphicon glyphicon-cog"></i> {$_labels.login.password}</label>

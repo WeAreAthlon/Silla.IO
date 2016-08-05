@@ -218,7 +218,7 @@ abstract class CMS extends Core\Base\Resource
         parent::beforeIndex($query, $request);
 
         if ($this->user->hasOwnershipOver($this->resourceModel)) {
-            $query = Helpers\CMSUsers::filterOwnResources($query, $this->resourceModel);
+            $query = Helpers\CMSUsers::filterOwnResources($this->resourceModel);
         }
     }
 

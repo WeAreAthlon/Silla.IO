@@ -97,24 +97,24 @@ class CMSUsers
     /**
      * Filter owner resources.
      *
-     * @param \Core\Modules\DB\Query $query         Resource query.
      * @param string                 $resourceModel Name of the resource model.
      * @param \Core\Base\Model|null  $owner         User Owner.
      *
      * @return \Core\Modules\DB\Query
      */
-    public static function filterOwnResources(DB\Query $query, $resourceModel, Base\Model $owner = null)
+    public static function filterOwnResources($resourceModel, Base\Model $owner = null)
     {
         if (!$owner) {
             $owner = Core\Registry()->get('current_cms_user');
         }
 
+        $query = new DB\Query($resourceModel);
         $ownershipTable = 'cms_ownership';
         $resourceTable = Core\Config()->DB['tables_prefix'] . $resourceModel::$tableName;
         $ownershipTablePrefixed = Core\Config()->DB['tables_prefix'] . 'cms_ownership';
         $resourcePrimaryKey = $resourceModel::primaryKeyField();
 
-        return $query->select("{$resourceTable}.*")
+        return $query->select("{$resourceTable}.*")->from($resourceModel::$tableName)
             ->join($ownershipTable, "{$resourceTable}.{$resourcePrimaryKey} = {$ownershipTablePrefixed}.resource_id")
             ->where(
                 "{$ownershipTablePrefixed}.owner_id = ? AND {$ownershipTablePrefixed}.model = ?",

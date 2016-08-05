@@ -15,7 +15,7 @@
                 {* Show dropdown populated with all related resource values *}
                 {assign var=related_resource value=call_user_func(array($associations.$field.class_name, 'find'))}
                 {if $user->hasOwnershipOver($associations.$field.class_name)}
-                    {assign var=related_resource value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $related_resource, $associations.$field.class_name)}
+                    {assign var=related_resource value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $associations.$field.class_name)}
                 {/if}
                 {if $attributes.association_title|default:false}
                     {html_object_options options=$related_resource selected=$_get.filtering.$field|default:'' obj_name=$attributes.association_title|default:'title'}
