@@ -81,7 +81,7 @@ class CMSUserRoles extends CMS
             $request->redirectTo('index');
         }
 
-        if ($this->user->getPrimaryKeyValue() == $this->resource->getPrimaryKeyValue()) {
+        if ($this->user->role_id == $this->resource->getPrimaryKeyValue()) {
             if (!$request->is('xhr')) {
                 Helpers\FlashMessage::set($this->labels['errors']['delete']['self'], 'danger');
             }
