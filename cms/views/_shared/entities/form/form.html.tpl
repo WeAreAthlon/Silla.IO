@@ -17,7 +17,7 @@
         </ul>
     </div>
 </div>
-<form action="{$smarty.server.REQUEST_URI}" method="post" role="form" class="data-form form-horizontal"{if {'Core\Utils::arraySearchRecursive'|call_user_func_array:[['file', 'photo'], $_labels.attributes]}} enctype="multipart/form-data"{/if} accept-charset="UTF-8">
+<form action="{$smarty.server.REQUEST_URI}" method="post" role="form" class="data-form form-horizontal"{if Core\Utils::arraySearchRecursive(array('file', 'photo'), $_labels.attributes)} enctype="multipart/form-data"{/if} accept-charset="UTF-8">
     <div class="tab-content">
     {foreach from=$sections key=section_key item=section name=form_sections_contents}
         <div class="tab-pane {if $smarty.foreach.form_sections_contents.first} in active{/if}" id="form-section-{$section_key}">

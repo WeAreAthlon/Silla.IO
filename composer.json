@@ -51,7 +51,7 @@
     "require": {
         "php"                   : ">=5.3.7",
         "ext-PDO"               : "*",
-        "smarty/smarty"         : "v3.1.21",
+        "smarty/smarty"         : "v3.1.30",
         "phpmailer/phpmailer"   : "v5.2.7",
         "mustangostang/spyc"    : "0.5.1",
         "imagine/imagine"       : "v0.5.0",
