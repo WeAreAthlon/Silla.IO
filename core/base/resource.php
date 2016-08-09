@@ -116,8 +116,11 @@ abstract class Resource extends Controller
 
             $this->resources = $query;
 
+            $partialView = $request->variables('view');
+            $partialView = $partialView === 'tbody' ? $partialView : 'table';
+
             $response = array(
-                'data'       => $this->getPartialOutput('_shared/entities/list/_' . $request->variables('view')),
+                'data'       => $this->getPartialOutput('_shared/entities/list/_' . $partialView),
                 'pagination' => $this->getPartialOutput('_shared/entities/list/_pagination'),
             );
 
