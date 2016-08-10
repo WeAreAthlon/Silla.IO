@@ -57,12 +57,12 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
         $value = json_encode($value);
 
         if ($expire) {
-            $status = $this->redisClient->set($key, $value, 'EX', $expire);
+            $this->redisClient->set($key, $value, 'EX', $expire);
         } else {
-            $status = $this->redisClient->set($key, $value);
+            $this->redisClient->set($key, $value);
         }
 
-        return $status;
+        return true;
     }
 
     /**
