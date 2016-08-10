@@ -22,16 +22,12 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
     /**
      * Redis client.
      *
-     * @var string
-     * @access private
+     * @var Predis\Client
      */
     private $redisClient;
 
     /**
      * Redis constructor.
-     *
-     * @access public
-     * @uses Predis\Client;
      */
     public function __construct()
     {
@@ -46,9 +42,6 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
      * @param string  $key    Cache key.
      * @param mixed   $value  Cache value.
      * @param integer $expire Expire time, in seconds(optional).
-     *
-     * @access public
-     * @uses \Predis\Response
      *
      * @return boolean
      */
@@ -69,9 +62,6 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
      * Fetches stored value by key.
      *
      * @param string $key Cache key.
-     *
-     * @access public
-     * @uses Predis\Client;
      *
      * @return mixed
      */
