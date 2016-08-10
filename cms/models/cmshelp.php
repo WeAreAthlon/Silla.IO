@@ -11,7 +11,6 @@
 
 namespace CMS\Models;
 
-use Core;
 use Core\Base;
 use Core\Modules\DB\Decorators\Interfaces;
 

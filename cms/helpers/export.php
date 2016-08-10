@@ -11,8 +11,6 @@
 
 namespace CMS\Helpers;
 
-use Core;
-
 /**
  * Export Helper Class definition.
  */

@@ -74,9 +74,9 @@ class Directory
 
             /* Check whether the current entry is a directory and is not a symbolic link */
             if (is_dir($fullPath . DIRECTORY_SEPARATOR . $entry) && !is_link($fullPath)) {
-                $deleted = self::delete($fullPath . DIRECTORY_SEPARATOR . $entry);
+                self::delete($fullPath . DIRECTORY_SEPARATOR . $entry);
             } else {
-                $deleted = File::delete($fullPath . DIRECTORY_SEPARATOR . $entry);
+                File::delete($fullPath . DIRECTORY_SEPARATOR . $entry);
             }
         }
 

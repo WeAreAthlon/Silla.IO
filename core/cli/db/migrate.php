@@ -136,5 +136,7 @@ final class Migrate
                 return $migration;
             }
         }
+
+        return '';
     }
 }

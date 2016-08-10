@@ -173,21 +173,6 @@ final class DbCache
     }
 
     /**
-     * Set the state of a table.
-     *
-     * @param string  $name       Name of the table.
-     * @param boolean $is_changed Whether the schema has been changed.
-     *
-     * @access private
-     *
-     * @return void
-     */
-    private function setTable($name, $is_changed)
-    {
-        $this->tables[$name] = $is_changed;
-    }
-
-    /**
      * Get the state of a table.
      *
      * @param string $name Name of the table.
@@ -199,21 +184,6 @@ final class DbCache
     public function getTable($name)
     {
         return $this->tables[$name];
-    }
-
-    /**
-     * Cache a database statement.
-     *
-     * @param string $query     It's used for a key.
-     * @param mixed  $statement Statement to cache.
-     *
-     * @access private
-     *
-     * @return void
-     */
-    private function setStatement($query, $statement)
-    {
-        $this->statements[$query] = $statement;
     }
 
     /**

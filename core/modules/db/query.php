@@ -152,6 +152,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
 
             return $res;
         }
+
+        return null;
     }
 
     /**

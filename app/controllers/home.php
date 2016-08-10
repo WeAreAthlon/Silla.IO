@@ -11,7 +11,6 @@
 
 namespace App\Controllers;
 
-use Core;
 use Core\Base;
 use Core\Modules\Router\Request;
 

@@ -92,7 +92,7 @@ class MySQLi implements Interfaces\Adapter
      * @param string $sql         SQL string query.
      * @param array  $bind_params Array of parameter values.
      *
-     * @return array
+     * @return array|boolean
      */
     public function query($sql, array $bind_params = array())
     {
@@ -144,7 +144,7 @@ class MySQLi implements Interfaces\Adapter
      *
      * @param string $charset Charset type.
      *
-     * @return resource
+     * @return boolean
      */
     public function setCharset($charset = 'utf8')
     {

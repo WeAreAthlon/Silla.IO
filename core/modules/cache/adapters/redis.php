@@ -62,7 +62,7 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
             $status = $this->redisClient->set($key, $value);
         }
 
-        return true;
+        return $status;
     }
 
     /**

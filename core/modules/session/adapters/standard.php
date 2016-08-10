@@ -287,6 +287,8 @@ final class Standard implements Interfaces\Adapter
         if ($this->isValidHost() && isset($this->vars[$name])) {
             return $this->vars[$name];
         }
+
+        return null;
     }
 
     /**

@@ -267,6 +267,8 @@ abstract class Model
         if (array_key_exists($field, $this->fields)) {
             return isset($this->fields[$field]);
         }
+
+        return false;
     }
 
     /**
@@ -312,6 +314,8 @@ abstract class Model
         if (method_exists('\Core\Modules\DB\Observer', $name)) {
             call_user_func_array(array('\Core\Modules\DB\Observer', $name), array_merge(array($this), $args));
         }
+
+        return array();
     }
 
     /**

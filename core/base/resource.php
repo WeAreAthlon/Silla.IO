@@ -461,7 +461,7 @@ abstract class Resource extends Controller
 
                     $pdf->SetAuthor($cmsLabels['client']);
                     $pdf->AddPage();
-                    $pdf->embedContentTable(array_values($fieldsToExport), $pdf->LoadData($exportFile));
+                    $pdf->embedContentTable(array_values($fieldsToExport), $pdf->loadData($exportFile));
                     $pdf->Output();
                 } else {
                     Helpers\Export::getCsvBuffered($exportFile);

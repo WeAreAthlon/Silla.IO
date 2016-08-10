@@ -40,7 +40,7 @@ function smarty_modifier_date_format($string, $format = SMARTY_RESOURCE_DATE_FOR
     } elseif ($default_date != '') {
         $timestamp = smarty_make_timestamp($default_date);
     } else {
-        return;
+        return '';
     }
     if ($formatter=='strftime'||($formatter=='auto'&&strpos($format, '%')!==false)) {
         if (DS == '\\') {

@@ -133,14 +133,10 @@ final class DB implements Interfaces\Adapter
 
                 $this->updateTimestamp($this->sessionKey);
                 $this->killOld();
-
-                return true;
             }
 
             $this->sessionKey = null;
             $this->start();
-
-            return true;
         }
     }
 
@@ -261,7 +257,7 @@ final class DB implements Interfaces\Adapter
         $this->vars = array();
         $query = "SELECT name, value FROM {$this->storageVariablesTable} WHERE session_key = ? AND private_key = ?";
 
-        if ($results = $this->db->query($query, array($key, $this->getHash()), 'assoc_array')) {
+        if ($results = $this->db->query($query, array($key, $this->getHash()))) {
             foreach ($results as $result) {
                 $this->vars[$result['name']] = unserialize($result['value']);
             }
@@ -358,6 +354,8 @@ final class DB implements Interfaces\Adapter
         if ($this->isValidHost() && isset($this->vars[$name])) {
             return $this->vars[$name];
         }
+
+        return null;
     }
 
     /**
