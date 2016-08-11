@@ -50,7 +50,7 @@ The code base features *Model-View-Controller* pattern with additional support f
     * `mod_rewrite` - *in order to have custom(pretty) URLs*
     * `mod_env` - *in order to easily switch configuration environments*
 * **PHP**
-  * *Type:* Standard (*SAPI - Apache Handler or CLI/CGI/FCGI*)
+  * *Type:* `Standard` (*SAPI - Apache Handler or CLI/CGI/FCGI*)
   * *Version:* `5.3.7` (*or newer*)
   * *Configuration:*
     * Runtime change enabled via `ini_set()`
@@ -67,4 +67,4 @@ The code base features *Model-View-Controller* pattern with additional support f
     * *`/temp`*
     * *`/public`*
 * **Package Managers**
-  * *`Composer`* - PHP package manager
+  * *`Composer`* - *PHP package manager*
