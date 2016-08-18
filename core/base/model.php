@@ -136,7 +136,7 @@ abstract class Model
      * @access protected
      * @static
      */
-    protected static $i18nLocaleField = 'locale';
+    protected static $i18nLocaleField = 'i18n_locale';
 
     /**
      * Suffix to be appended to the corresponding i18n table if not i18nTableName presented.
