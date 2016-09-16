@@ -80,17 +80,28 @@ abstract class Resource extends Controller
         parent::__construct();
 
         if ($this->resourceModel) {
-            $this->resource = new $this->resourceModel;
-            $this->accessibleAttributes = array_merge(
-                array_keys($this->resource->fields()),
-                array_keys($this->resource->hasMany),
-                array_keys($this->resource->hasAndBelongsToMany)
-            );
-
+            $this->addBeforeFilters(array('loadDefaultResource'));
             $this->addBeforeFilters(array('loadAttributeSections'), array('except' => 'delete'));
             $this->addBeforeFilters(array('loadResource'), array('only' => array('show', 'edit', 'delete')));
             $this->addAfterFilters(array('loadFlashMessage'));
         }
+    }
+    
+    /**
+     * Loads Default Resource object.
+     *
+     * @param Request $request Current router request.
+     *
+     * @return void
+     */
+    protected function loadDefaultResource(Request $request)
+    {
+        $this->resource             = new $this->resourceModel;
+        $this->accessibleAttributes = array_merge(
+            array_keys($this->resource->fields()),
+            array_keys($this->resource->hasMany),
+            array_keys($this->resource->hasAndBelongsToMany)
+        );
     }
 
     /**
