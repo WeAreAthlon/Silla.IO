@@ -96,7 +96,7 @@ abstract class Resource extends Controller
      */
     protected function loadDefaultResource(Request $request)
     {
-        $this->resource             = new $this->resourceModel;
+        $this->resource = new $this->resourceModel;
         $this->accessibleAttributes = array_merge(
             array_keys($this->resource->fields()),
             array_keys($this->resource->hasMany),
