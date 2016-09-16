@@ -14,7 +14,7 @@ namespace Core;
 
 use Core\CLI;
 
-$currentDir = getSillaRootProjectPath();
+$currentDir = __DIR__;
 
 require_once $currentDir . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
 
@@ -58,19 +58,4 @@ if ($argc > 1) {
 
         call_user_func_array(array($class, 'run'), array_slice($argv, 2));
     }
-}
-
-function getSillaRootProjectPath()
-{
-    $cwd = getcwd();
-
-    while ($cwd !== DIRECTORY_SEPARATOR) {
-        if (file_exists($cwd . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php')) {
-            return $cwd;
-        } else {
-            $cwd = dirname($cwd);
-        }
-    }
-
-    return $cwd;
 }
