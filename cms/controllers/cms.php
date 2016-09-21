@@ -136,16 +136,16 @@ abstract class CMS extends Core\Base\Resource
     protected function loadVendorAssets()
     {
         $this->renderer->assets->add(array(
-            'vendor/components/jquery/jquery.min.js',
-            'vendor/components/bootstrap/js/bootstrap.min.js',
+            'vendor/components/jquery/jquery.js',
+            'vendor/components/bootstrap/js/bootstrap.js',
             'vendor/components/bootstrap/css/bootstrap.css',
-            'vendor/pnikolov/bootstrap-chosen/js/chosen.jquery.min.js',
-            'vendor/pnikolov/bootstrap-chosen/css/chosen.min.css',
-            'vendor/drmonty/ekko-lightbox/js/ekko-lightbox.min.js',
-            'vendor/drmonty/ekko-lightbox/css/ekko-lightbox.min.css',
+            'vendor/pnikolov/bootstrap-chosen/js/chosen.jquery.js',
+            'vendor/pnikolov/bootstrap-chosen/css/chosen.css',
+            'vendor/drmonty/ekko-lightbox/js/ekko-lightbox.js',
+            'vendor/drmonty/ekko-lightbox/css/ekko-lightbox.css',
             'vendor/pnikolov/bootbox/js/bootbox.js',
-            'vendor/pnikolov/spin.js/js/spin.min.js',
-            'cms/assets/css/bootstrap-theme.athlon.css',
+            'vendor/pnikolov/spin.js/js/spin.js',
+            'cms/assets/css/bootstrap-theme.silla.css',
         ));
     }
 
@@ -157,9 +157,9 @@ abstract class CMS extends Core\Base\Resource
     protected function loadCmsAssets()
     {
         $this->renderer->assets->add(array(
-            'cms/assets/js/cms.js',
-            'cms/assets/js/init.js',
-            'cms/assets/css/style.css',
+            'cms/assets/js/cms.silla.js',
+            'cms/assets/js/init.silla.js',
+            'cms/assets/css/default.silla.css',
         ));
     }
 
@@ -174,13 +174,13 @@ abstract class CMS extends Core\Base\Resource
     {
         $this->renderer->assets->add(array(
             'vendor/moment/moment/min/moment.min.js',
-            'vendor/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-            'vendor/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
-            'vendor/pnikolov/bootstrap-maxlength/js/bootstrap-maxlength.min.js',
-            'vendor/pnikolov/bootstrap-daterangepicker/js/daterangepicker.min.js',
-            'vendor/pnikolov/bootstrap-daterangepicker/css/daterangepicker.min.css',
-            'vendor/mjolnic/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
-            'vendor/mjolnic/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css',
+            'vendor/eonasdan/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+            'vendor/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
+            'vendor/pnikolov/bootstrap-maxlength/js/bootstrap-maxlength.js',
+            'vendor/pnikolov/bootstrap-daterangepicker/js/daterangepicker.js',
+            'vendor/pnikolov/bootstrap-daterangepicker/css/daterangepicker.css',
+            'vendor/itsjaviaguilar/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
+            'vendor/itsjaviaguilar/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
         ));
     }
 
@@ -195,13 +195,13 @@ abstract class CMS extends Core\Base\Resource
     {
         $this->renderer->assets->add(array(
             'vendor/moment/moment/min/moment.min.js',
-            'vendor/pnikolov/bootstrap-daterangepicker/js/daterangepicker.min.js',
-            'vendor/pnikolov/bootstrap-daterangepicker/css/daterangepicker.min.css',
-            'vendor/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-            'vendor/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
-            'vendor/pnikolov/jquery-serialize-object/js/jquery.serialize-object.min.js',
-            'cms/assets/js/libs/obj.js',
-            'cms/assets/js/libs/datatables.js',
+            'vendor/pnikolov/bootstrap-daterangepicker/js/daterangepicker.js',
+            'vendor/pnikolov/bootstrap-daterangepicker/css/daterangepicker.css',
+            'vendor/eonasdan/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+            'vendor/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
+            'vendor/pnikolov/jquery-serialize-object/js/jquery.serialize-object.js',
+            'cms/assets/js/libs/obj.silla.js',
+            'cms/assets/js/libs/datatables.silla.js',
         ));
     }
 

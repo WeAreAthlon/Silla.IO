@@ -101,11 +101,11 @@ class Configuration extends Configurations\Staging\Configuration
      */
     public $DB = array(
         'adapter'        => 'pdo_mysql',
-        'host'           => '<DB_HOST>',
+        'host'           => 'localhost',
         'port'           => 3306,
-        'user'           => '<DB_USER>',
-        'password'       => '<DB_PASSWORD>',
-        'name'           => '<DB_NAME>',
+        'user'           => 'athlon',
+        'password'       => 'athlon_sofia',
+        'name'           => 'athlon_framework',
         'tables_prefix'  => '',
         'encryption_key' => '25c6c7ff35bd13b0ff9979b151f2136c',
         'crypt_vector'   => 'dasn312321nssa1k',

@@ -71,7 +71,7 @@
         "pnikolov/bootstrap-maxlength" : "1.7.0",
         "pnikolov/jquery-serialize-object": "2.5.0",
         "pnikolov/spin.js"  : "2.3.2",
-        "mjolnic/bootstrap-colorpicker": "2.3.2",
+        "itsjaviaguilar/bootstrap-colorpicker": "2.3.4",
         "eonasdan/bootstrap-datetimepicker": "4.17.37",
         "afarkas/html5shiv"     : "3.7.3",
         "rogeriopradoj/respond" : "1.4.2"

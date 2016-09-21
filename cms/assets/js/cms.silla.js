@@ -81,7 +81,7 @@ var CMS = {
                 });
 
                 /* Only Time pickers */
-                $('.timepicker-component').each(function() {
+                $('.timepicker-component').each(function () {
                     var elem = $(this);
                     elem.datetimepicker(elem.data());
                 });
