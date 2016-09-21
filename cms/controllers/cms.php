@@ -19,7 +19,7 @@ use CMS\Helpers;
 /**
  * Class CMS Controller definition.
  */
-abstract class CMS extends Core\Base\Resource
+abstract class CMS extends Core\Base\Entity
 {
     /**
      * Skips ACL generations for the listed methods.
@@ -92,7 +92,7 @@ abstract class CMS extends Core\Base\Resource
      *
      * @param Request $request Current Router Request.
      *
-     * @see    CMS\Helpers\CMSUsers::userCan()
+     * @see    \CMS\Helpers\CMSUsers::userCan()
      *
      * @return boolean
      */
@@ -113,7 +113,7 @@ abstract class CMS extends Core\Base\Resource
     /**
      * Loads CMS accessibility scope.
      *
-     * @see    CMS\Helpers\CMSUsers::userCan()
+     * @see    \CMS\Helpers\CMSUsers::userCan()
      *
      * @return void
      */
@@ -217,8 +217,8 @@ abstract class CMS extends Core\Base\Resource
     {
         parent::beforeIndex($query, $request);
 
-        if ($this->user->hasOwnershipOver($this->resourceModel)) {
-            $query = Helpers\CMSUsers::filterOwnResources($this->resourceModel);
+        if ($this->user->owns($this->resourceModel)) {
+            $query = Helpers\Ownership::filter($this->resourceModel);
         }
     }
 
@@ -248,7 +248,7 @@ abstract class CMS extends Core\Base\Resource
     protected function afterCreate(Request $request)
     {
         if (!$this->resource->hasErrors()) {
-            Helpers\CMSUsers::assignResource($this->resource);
+            Helpers\Ownership::assign($this->resource);
         }
 
         parent::afterCreate($request);
@@ -279,7 +279,7 @@ abstract class CMS extends Core\Base\Resource
      */
     protected function afterDelete(Request $request)
     {
-        Helpers\CMSUsers::retractResource($this->resource);
+        Helpers\Ownership::retract($this->resource);
 
         parent::afterDelete($request);
     }
@@ -297,7 +297,7 @@ abstract class CMS extends Core\Base\Resource
 
         $resourceModel = $this->resourceModel;
 
-        if ($this->user->hasOwnershipOver($resourceModel) && !Helpers\CMSUsers::userOwnsResource($this->resource)) {
+        if ($this->user->owns($resourceModel) && !Helpers\Ownership::check($this->resource)) {
             Helpers\FlashMessage::set($this->labels['errors']['not_exists'], 'danger');
 
             $request->redirectTo('index', 404);
@@ -321,8 +321,8 @@ abstract class CMS extends Core\Base\Resource
                     $association = $this->resource->hasAndBelongsToMany[$attribute];
                 }
 
-                if ($association && $this->user->hasOwnershipOver($association['class_name'])) {
-                    if (!Helpers\CMSUsers::userOwns($request->post($attribute), $association['class_name'])) {
+                if ($association && $this->user->owns($association['class_name'])) {
+                    if (!Helpers\Ownership::checkIds($request->post($attribute), $association['class_name'])) {
                         $this->resource->setError($attribute, 'not_exists');
                     }
                 }

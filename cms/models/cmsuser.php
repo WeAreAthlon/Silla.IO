@@ -107,11 +107,11 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
      *
      * @return boolean
      */
-    public function hasOwnershipOver($entityModel)
+    public function owns($entityModel)
     {
         $ownership = $this->role()->ownership;
 
-        return (isset($ownership[$entityModel]) && $ownership[$entityModel]);
+        return isset($ownership[$entityModel]) && $ownership[$entityModel];
     }
 
     /**

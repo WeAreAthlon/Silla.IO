@@ -21,7 +21,7 @@ use CMS\Helpers;
 /**
  * Class Resource definition.
  */
-abstract class Resource extends Controller
+abstract class Entity extends Controller
 {
     /**
      * Stores the currently managed resource.
