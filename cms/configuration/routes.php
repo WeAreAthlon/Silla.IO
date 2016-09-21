@@ -48,6 +48,7 @@ final class Routes extends Core\Modules\Http\Routes
             ->addValues(array('controller' => 'Authentication', 'action' => 'reset'));
 
         /* Resources */
+        $this->routes->attachResource('Account', '/cms-account');
         $this->routes->attachResource('CMSUser', '/cms-users');
         $this->routes->attachResource('CMSUserRole', '/cms-user-roles');
         $this->routes->attachResource('CMSHelp', '/cms-help');

@@ -196,6 +196,6 @@ navigation_groups:
     icon : cog
     modules:
       - Account
-      - CMSUsers
-      - CMSUserRoles
-      - CMShelp
+      - CMSUser
+      - CMSUserRole
+      - CMSHelp

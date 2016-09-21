@@ -12,7 +12,7 @@
 namespace App\Controllers;
 
 use Core\Base;
-use Core\Modules\Router\Request;
+use Core\Modules\Http\Request;
 
 /**
  * App controller definition.
@@ -22,7 +22,7 @@ class App extends Base\Controller
     /**
      * Index action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request Current http request.
      *
      * @return void
      */

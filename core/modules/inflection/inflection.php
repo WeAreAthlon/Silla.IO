@@ -23,7 +23,7 @@ final class Inflection
     /**
      * Reference to the current instance of the Registry object.
      *
-     * @var object
+     * @var Inflector
      * @access private
      * @static
      */
