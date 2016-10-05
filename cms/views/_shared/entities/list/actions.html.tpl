@@ -1,5 +1,5 @@
 <div class="btn-group">
-    <a href="{link_to controller=$_controller action=show id=$resource->getPrimaryKeyValue()}" title="{$resource->title|default:$resource->name|default:''}" class="btn btn-outline btn-sm btn-default modal-trigger-preview{if not {user_can controller=$_controller action=show}} disabled{/if}">
+    <a href="{link_to controller=$_controller action=show id=$resource->getPrimaryKeyValue()}" title="{$resource->title|default:$resource->name|default:''|escape}" class="btn btn-outline btn-sm btn-default modal-trigger-preview{if not {user_can controller=$_controller action=show}} disabled{/if}">
         <i class="glyphicon glyphicon-search"></i> {$_labels.modules.$_controller.show}
     </a>
 {if {user_can controller=$_controller action=edit}}
