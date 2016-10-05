@@ -263,7 +263,7 @@ var CMS = {
                     var eventTrigger = $(this);
 
                     if (eventTrigger.attr('title')) {
-                        $('.modal-title', modalElement).html(eventTrigger.attr('title'));
+                        $('.modal-title', modalElement).text(eventTrigger.attr('title'));
                     }
 
                     $('.modal-body', modalElement).html('').show().load(eventTrigger.attr('href'), function () {
@@ -282,7 +282,7 @@ var CMS = {
                     var eventTrigger = $(this);
 
                     if (eventTrigger.attr('title')) {
-                        $('.modal-title', modalElement).html(eventTrigger.attr('title'));
+                        $('.modal-title', modalElement).text(eventTrigger.attr('title'));
                     }
 
                     $('.modal-body', modalElement).html('').show().load(eventTrigger.attr('href'), function () {
@@ -302,7 +302,7 @@ var CMS = {
                     var contentHeight = eventTrigger.data('contentHegiht');
 
                     if (eventTrigger.attr('title')) {
-                        $('.modal-title', modalElement).html($(this).attr('title'));
+                        $('.modal-title', modalElement).text($(this).attr('title'));
                     }
 
                     modalElement.on('show.bs.modal', function () {
