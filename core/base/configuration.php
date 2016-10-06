@@ -141,9 +141,9 @@ abstract class Configuration
      */
     public $I18N = array(
         'support' => false,
-        'default' => 'en-US',
+        'default' => 'en_US',
         'locales' => array(
-            'en-US' => 'English (American)',
+            'en_US' => 'English (American)',
         ),
     );
 
