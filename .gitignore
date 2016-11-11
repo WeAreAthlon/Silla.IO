@@ -37,3 +37,4 @@ composer.lock
 .idea
 *.swp
 tags
+nbproject/*
