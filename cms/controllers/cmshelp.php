@@ -58,6 +58,6 @@ class CMSHelp extends CMS
     {
         parent::loadFormAssets();
 
-        $this->renderer->assets->add('cms/assets/js/help.js');
+        $this->renderer->assets->add('cms/assets/js/help.silla.js');
     }
 }
