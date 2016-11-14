@@ -100,7 +100,7 @@ attributes:
     meta:
       title     : Settings
       icon      : cog
-      desc      : Additinal user settings.
+      desc      : Additional user settings.
       serialize : false
     fields:
       timezone:
