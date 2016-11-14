@@ -241,7 +241,6 @@ abstract class Controller
     protected static function setOutputDefaultHeaders()
     {
         Core\Router()->response->addHeaders(array(
-            'X-Powered-By: Silla.IO',
             'X-Frame-Options: SAMEORIGIN',
         ));
     }
