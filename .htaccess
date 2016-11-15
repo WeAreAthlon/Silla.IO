@@ -12,11 +12,16 @@
     RewriteEngine On
 
     # RewritBase /<path-to-silla>
-
     RewriteCond %{REQUEST_FILENAME} !(/public/)
+    RewriteCond %{REQUEST_URI} !.*(favicon\.ico|sitemap\.xml|robots\.txt)$
+    
     RewriteRule .* index.php [QSA,L]
 </IfModule>
 
+# Override META specified charset. Work for content-type text/plain and text/html. Improve CEO and resolve some encoding problems
+AddDefaultCharset utf-8
+
 # Error Documents
 ErrorDocument 403 '<h2>403 Application Forbidden</h2>'
+ErrorDocument 404 '<h2>404 Not Found</h2>'
 ErrorDocument 500 '<h2>Application error</h2>Application failed to start properly'
