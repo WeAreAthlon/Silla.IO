@@ -5,7 +5,7 @@
     {/if}
 {/foreach}
 
-{foreach from=$resources item=resource}
+{foreach from=$resources->all() item=resource}
     <tr data-id="{$resource->getPrimaryKeyValue()}">
     {foreach from=$fields_to_display key=field item=type}
         <td class="column column-type-content-{$type}">
