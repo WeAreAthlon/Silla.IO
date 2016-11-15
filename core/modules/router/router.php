@@ -383,7 +383,7 @@ final class Router
     {
         $path = explode('?', $path);
 
-        if (!Core\Config()->ROUTER['rewrite']) {
+        if (!Core\Config()->ROUTER['rewrite'] && isset($path[1])) {
             $path = explode('&', $path[1]);
         }
 
