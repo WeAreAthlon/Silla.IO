@@ -76,6 +76,20 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     );
 
     /**
+     * Object associations container.
+     *
+     * @var array
+     */
+    private $associations = array();
+
+    /**
+     * Query inclusions container.
+     *
+     * @var array
+     */
+    private $inclusion = array();
+
+    /**
      * Whether tables names prefix has been appended.
      *
      * @var boolean
@@ -206,6 +220,73 @@ class Query implements \ArrayAccess, \Countable, \Iterator
 
             if (!is_array($this->items)) {
                 $this->items = array($this->items);
+            }
+
+            /* Inject Associations */
+            if ($this->items) {
+                foreach ($this->inclusion as $field => $include) {
+                    switch ($include['type']) {
+                        case 'has_many' :
+                            $items = $include['meta']['class_name']::find()->all();
+                            $_items = array();
+
+                            foreach ($items as $item) {
+                                $_items[$item->{$include['meta']['relative_key']}][] = $item;
+                            }
+
+                            $items = $_items;
+
+                            foreach ($this->items as &$item) {
+                                if (isset($items[$item->$include['meta']['key']])) {
+                                    $item->$field = $items[$item->$include['meta']['key']];
+                                }
+                            }
+
+                            unset($item);
+
+                            break;
+                        case 'belongs_to' :
+                            $items = $include['meta']['class_name']::find()->all(true);
+
+                            foreach ($this->items as &$item) {
+                                if (isset($items[$item->$include['meta']['key']])) {
+                                    $item->$field = $items[$item->$include['meta']['key']];
+                                }
+                            }
+                            unset($item);
+
+                            break;
+                        case 'habtm' :
+                            $associatedTable = $include['meta']['class_name']::$tableName;
+                            $associatedKey = $include['meta']['class_name']::primaryKeyField();
+                            $meta = $include['meta'];
+
+                            $items = $meta['class_name']::find()->join(
+                                $meta['table'],
+                                "`{$meta['table']}`.`{$meta['relative_key']}` = `{$associatedTable}`.`{$associatedKey}`"
+                            )->all();
+
+                            $_items = array();
+
+                            foreach ($items as $item) {
+                                $_items[$item->{$meta['key']}][] = $item;
+                            }
+
+                            $items = $_items;
+
+                            foreach ($this->items as &$item) {
+                                $key = $item::primaryKeyField();
+
+                                if (isset($items[$item->$key])) {
+                                    $item->$field = $items[$item->$key];
+                                }
+                            }
+
+                            unset($item);
+
+                            break;
+                    }
+                }
             }
         }
     }
@@ -407,6 +488,38 @@ class Query implements \ArrayAccess, \Countable, \Iterator
         );
 
         return $obj;
+    }
+
+    /**
+     * Injects associated resources.
+     *
+     * @param string $with Association name.
+     *
+     * @return Query
+     */
+    public function inject($with)
+    {
+        if (!$this->associations) {
+            $relatedObject = $this->getObject();
+
+            $this->associations = array(
+                'belongs_to' => $relatedObject->belongsTo,
+                'habtm' => $relatedObject->hasAndBelongsToMany,
+                'has_many' => $relatedObject->hasMany,
+            );
+        }
+
+        foreach ($this->associations as $type => $associations) {
+            if (isset($associations[$with])) {
+                $this->inclusion[$with] = array(
+                    'type' => $type,
+                    'field' => $with,
+                    'meta' => $associations[$with],
+                );
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -706,13 +819,24 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     /**
      * Fetch all records from the database.
      *
+     * @param boolean $keys Whether to preserve keys.
+     *
      * @return array of objects
      */
-    public function all()
+    public function all($keys = false)
     {
         $this->run();
+        $result = array();
 
-        return $this->items;
+        if ($keys) {
+            foreach ($this->items as $item) {
+                $result[$item->getPrimaryKeyValue()] = $item;
+            }
+        } else {
+            $result = $this->items;
+        }
+
+        return $result;
     }
 
     /**
