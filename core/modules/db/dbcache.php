@@ -59,13 +59,24 @@ final class DbCache
     private $statements = array();
 
     /**
+     * Data source name.
+     *
+     * @var array Array containing the credentials.
+     */
+    private $dsn;
+
+    /**
      * Initialize DB Cache.
+     *
+     * @param array $dsn Data source name.
      *
      * @uses   setSchema()
      */
-    public function __construct()
+    public function __construct(array $dsn)
     {
-        $names = Core\DB()->getTables(Core\Config()->DB['name']);
+        $this->dsn = $dsn;
+
+        $names = Core\DB()->getTables($this->dsn['name']);
 
         if (empty($names)) {
             return;
@@ -226,7 +237,8 @@ final class DbCache
      */
     public function getSchema($table)
     {
-        return $this->schema[Core\Config()->DB['tables_prefix'] . $table];
+        return isset($this->schema[$this->dsn['tables_prefix'] . $table]) ?
+            $this->schema[$this->dsn['tables_prefix'] . $table] : array();
     }
 
     /**
@@ -270,7 +282,7 @@ final class DbCache
     {
         $fields_meta = array();
 
-        $results = Core\DB()->getTableSchema($tableName, Core\Config()->DB['name']);
+        $results = Core\DB()->getTableSchema($tableName, $this->dsn['name']);
 
         foreach ($results as $result) {
             $fields_meta[$result['COLUMN_NAME']]['type'] = $this->associateType($result['DATA_TYPE']);

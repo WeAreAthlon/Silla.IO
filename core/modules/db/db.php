@@ -135,7 +135,7 @@ final class DB
             }
 
             self::$instances[$hash] = $instance;
-            $instance->cache = new DbCache();
+            $instance->cache = new DbCache($dsn);
         }
 
         return self::$instances[$hash];
