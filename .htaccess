@@ -12,13 +12,14 @@
     RewriteEngine On
 
     # RewritBase /<path-to-silla>
+
     RewriteCond %{REQUEST_FILENAME} !(/public/)
     RewriteCond %{REQUEST_URI} !.*(favicon\.ico|sitemap\.xml|robots\.txt)$
     
     RewriteRule .* index.php [QSA,L]
 </IfModule>
 
-# Override META specified charset. Work for content-type text/plain and text/html. Improve CEO and resolve some encoding problems
+# Overrides META specified charset.
 AddDefaultCharset utf-8
 
 # Error Documents
