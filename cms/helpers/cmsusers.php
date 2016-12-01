@@ -49,7 +49,7 @@ class CMSUsers
 
             if ($resource !== 'cms') {
                 $controller_name = '\CMS\Controllers\\' . $resource;
-                $controller_class = new \ReflectionClass($controller_name) ;
+                $controller_class = new \ReflectionClass($controller_name);
 
                 if ($controller_class->isAbstract()) {
                     continue;
