@@ -51,10 +51,11 @@ class CMSUsers
                 $controller_name = '\CMS\Controllers\\' . $resource;
                 $controller_class = new \ReflectionClass($controller_name);
 
-                if ($controller_class->isAbstract()) {
+                if (!$controller_class->isInstantiable()) {
                     continue;
                 }
 
+                /* Create instance only if the controller class is instantiable */
                 $controller_object = new $controller_name;
 
                 if ($controller_object instanceof CMS\Controllers\CMS) {
