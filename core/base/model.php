@@ -146,7 +146,14 @@ abstract class Model
      * @static
      */
     protected static $i18nTableNameSuffix = '_i18n';
-
+    
+    /**
+     * Localisation.
+     *
+     * @var string
+     */
+    protected $i18nLocalisation;
+    
     /**
      * Query object to be used for communication with the DB layer.
      *
@@ -1326,5 +1333,28 @@ abstract class Model
         }
 
         return false;
+    }
+    
+    /**
+     * Modifies the current I18N locale value.
+     *
+     * @param string $i18nLocale Locale value.
+     *
+     * @return void
+     */
+    public function setI18nLocale($i18nLocale)
+    {
+        static::$i18nLocale = $i18nLocale;
+        $this->i18nLocalisation = $i18nLocale;
+    }
+
+    /**
+     * Retrieve the current I18N locale value.
+     *
+     * @return string Locale value.
+     */
+    public function getI18nLocale()
+    {
+        return $this->i18nLocalisation ? $this->i18nLocalisation : static::$i18nLocale;
     }
 }
