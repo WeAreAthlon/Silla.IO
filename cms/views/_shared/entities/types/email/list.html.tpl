@@ -1,1 +1,1 @@
-<a href="mailto:{$resource->$field}">{$resource->field}</a>
+<a href="mailto:{$resource->$field}">{$resource->$field}</a>
