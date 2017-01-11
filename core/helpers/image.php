@@ -85,7 +85,7 @@ class Image
         $meta = pathinfo($imagePath);
         $meta['extension'] = isset($meta['extension']) ? ".{$meta['extension']}" : '';
 
-        return $meta['dirname'] . DIRECTORY_SEPARATOR . "{$meta['filename']}_{$size}_{$type}{$meta['extension']}";
+        return $meta['dirname'] . "/{$meta['filename']}_{$size}_{$type}{$meta['extension']}";
     }
 
     /**
