@@ -118,7 +118,7 @@ class DataTables
             }
 
             foreach ($params['filtering'] as $field => $value) {
-                if ($value && isset($model_fields[$field])) {
+                if (($value !== null) && isset($model_fields[$field])) {
                     if (is_array($value)) {
                         if (isset($value['start'], $value['end']) && !empty($value['start']) && !empty($value['end'])) {
                             if (in_array($model_fields[$field]['type'], array('date', 'datetime'), true)) {
