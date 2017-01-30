@@ -179,8 +179,8 @@ abstract class CMS extends Core\Base\Entity
             'vendor/pnikolov/bootstrap-maxlength/js/bootstrap-maxlength.js',
             'vendor/pnikolov/bootstrap-daterangepicker/js/daterangepicker.js',
             'vendor/pnikolov/bootstrap-daterangepicker/css/daterangepicker.css',
-            'vendor/itsjaviaguilar/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
-            'vendor/itsjaviaguilar/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
+            'vendor/itsjavi/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
+            'vendor/itsjavi/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
         ));
     }
 
