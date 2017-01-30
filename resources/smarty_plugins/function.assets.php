@@ -76,7 +76,7 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
 
         if ($caching_enabled) {
             if ($combination_enabled) {
-                if (array_intersect(array('css', 'less', 'scass'), array_keys($assets))) {
+                if (array_intersect(array('css', 'less', 'scss'), array_keys($assets))) {
                     $cached_asset = 'css' . DIRECTORY_SEPARATOR . $assets_id . '.css';
 
                     if (file_exists($dist_path . $cached_asset)) {
@@ -100,7 +100,7 @@ function smarty_function_assets(array $options, Smarty_Internal_Template $templa
                     switch ($type) {
                         case 'css':
                         case 'less':
-                        case 'scass':
+                        case 'scss':
                             foreach ($files as $file) {
                                 $filename = basename($file, '.css');
                                 $filename = basename($filename, '.less');

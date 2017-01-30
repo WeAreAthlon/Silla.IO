@@ -45,7 +45,7 @@ class Configuration extends Configurations\Staging\Configuration
         'adapter'       => 'FileSystem',
         'routes'        => false,
         'labels'        => false,
-        'db_schema'     => false,
+        'db_schema'     => true,
         'database' => array(
             'table_name' => 'cache',
             'fields'     => array(
