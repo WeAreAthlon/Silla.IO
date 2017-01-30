@@ -17,8 +17,8 @@
                 {if $user->hasOwnershipOver($associations.$field.class_name)}
                     {assign var=related_resource value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $associations.$field.class_name)}
                 {/if}
-                {if $attributes.association_title|default:false}
-                    {html_object_options options=$related_resource selected=$_get.filtering.$field|default:'' obj_name=$attributes.association_title|default:'title'}
+                {if $attr.association_title|default:false}
+                    {html_object_options options=$related_resource selected=$_get.filtering.$field|default:'' obj_name=$attr.association_title|default:'title'}
                 {else}
                     {html_object_options options=$related_resource selected=$_get.filtering.$field|default:''}
                 {/if}
