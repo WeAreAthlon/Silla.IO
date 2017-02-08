@@ -58,6 +58,7 @@ DataTable.prototype.fixCaption = function () {
     var i;
     var self = this;
     var thead = [];
+    var fixed = false;
     var offsetTop = self.table.data('offsetTop') ? self.table.data('offsetTop') : 0;
 
     $('tbody tr:eq(1) td', self.table).each(function (i, v) {
@@ -71,11 +72,17 @@ DataTable.prototype.fixCaption = function () {
     $(window).on('scroll', function () {
         var windowTop = $(window).scrollTop();
 
+        if (fixed) {
+            windowTop += $('thead', self.table).height();
+        }
+        
         if (windowTop > (self.table.offset().top - offsetTop)) {
             $('thead', self.table).addClass('fixed').css({top: offsetTop + 'px'});
+            fixed = true;
         }
         else {
             $('thead', self.table).removeClass('fixed').css({top: 'auto'});
+            fixed = false;
         }
     });
 };
