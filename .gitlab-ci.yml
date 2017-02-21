@@ -1,0 +1,5 @@
+image: composer/composer:php5
+
+install:
+  script:
+  - composer install --prefer-dist
