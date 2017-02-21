@@ -81,8 +81,8 @@ abstract class Entity extends Controller
 
         if ($this->resourceModel) {
             $this->addBeforeFilters(array('loadDefaultResource'));
-            $this->addBeforeFilters(array('loadAttributeSections'), array('except' => 'delete'));
             $this->addBeforeFilters(array('loadResource'), array('only' => array('show', 'edit', 'delete')));
+            $this->addBeforeFilters(array('loadAttributeSections'), array('except' => 'delete'));
             $this->addAfterFilters(array('loadFlashMessage'));
         }
     }
@@ -351,18 +351,21 @@ abstract class Entity extends Controller
     /**
      * Hook - executes after create action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request  Current router request.
+     * @param mixed   $redirect Request redirect destination.
      *
      * @return void
      */
-    protected function afterCreate(Request $request)
+    protected function afterCreate(Request $request, $redirect = 'index')
     {
         if ($this->resource->hasErrors()) {
             Helpers\FlashMessage::set($this->labels['errors']['general'], 'danger', $this->resource->errors());
         } else {
             Helpers\FlashMessage::set($this->labels['messages']['create']['success'], 'success');
 
-            $request->redirectTo('index');
+            if ($redirect) {
+                $request->redirectTo($redirect);
+            }
         }
     }
 
@@ -380,16 +383,21 @@ abstract class Entity extends Controller
     /**
      * Hook - executes after edit action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request  Current router request.
+     * @param mixed   $redirect Request redirect destination.
      *
      * @return void
      */
-    protected function afterEdit(Request $request)
+    protected function afterEdit(Request $request, $redirect = false)
     {
         if ($this->resource->hasErrors()) {
             Helpers\FlashMessage::set($this->labels['errors']['general'], 'danger', $this->resource->errors());
         } else {
             Helpers\FlashMessage::set($this->labels['messages']['edit']['success'], 'success');
+        }
+
+        if ($redirect) {
+            $request->redirectTo($redirect);
         }
     }
 
@@ -407,17 +415,20 @@ abstract class Entity extends Controller
     /**
      * Hook - executes after delete action.
      *
-     * @param Request $request Current router request.
+     * @param Request $request  Current router request.
+     * @param mixed   $redirect Request redirect destination.
      *
      * @return void
      */
-    protected function afterDelete(Request $request)
+    protected function afterDelete(Request $request, $redirect = 'index')
     {
         if (!$request->is('xhr')) {
             Helpers\FlashMessage::set($this->labels['messages']['delete']['success'], 'warning');
         }
 
-        $request->redirectTo('index');
+        if ($redirect) {
+            $request->redirectTo($redirect);
+        }
     }
 
     /**
@@ -425,8 +436,8 @@ abstract class Entity extends Controller
      *
      * @param Request $request Current router request.
      *
-     * @uses   CMS\Helpers\Export
-     * @uses   CMS\Helpers\CMSUsers
+     * @uses   \CMS\Helpers\Export
+     * @uses   \CMS\Helpers\CMSUsers
      *
      * @return void
      */

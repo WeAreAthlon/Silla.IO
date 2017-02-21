@@ -28,9 +28,10 @@ class Smarty implements Core\Modules\Render\Interfaces\Adapter
     /**
      * Initialize the template engine.
      *
-     * @param array $config Template config variable.
+     * @param array $config  Template configuration.
+     * @param array $options Additional options.
      */
-    public function __construct(array $config)
+    public function __construct(array $config, array $options = array())
     {
         $this->tpl = new \Smarty;
 
@@ -38,9 +39,13 @@ class Smarty implements Core\Modules\Render\Interfaces\Adapter
             ->setCompileDir($config['compiled'])
             ->setCacheDir($config['cache'])
             ->setConfigDir($config['config'])
-            ->addPluginsDir(Core\Config()->paths('resources') . 'smarty_plugins');
+            ->addPluginsDir($config['plugins']);
 
         $this->tpl->configLoad('globals.conf');
+
+        if (isset($options['strip_white_space']) && $options['strip_white_space']) {
+            $this->tpl->loadFilter('output', 'trimwhitespace');
+        }
     }
 
     /**
@@ -78,6 +83,32 @@ class Smarty implements Core\Modules\Render\Interfaces\Adapter
     public function removeVariable($name)
     {
         $this->tpl->clearAssign($name);
+    }
+
+    /**
+     * Applies a render filter.
+     *
+     * @param string $type       Filter type.
+     * @param string $filterName Filter name.
+     *
+     * @return boolean
+     */
+    public function applyFilter($type, $filterName)
+    {
+        return $this->tpl->loadFilter($type, $filterName);
+    }
+
+    /**
+     * Removes a render filter.
+     *
+     * @param string $type       Filter type.
+     * @param string $filterName Filter name.
+     *
+     * @return void
+     */
+    public function removeFilter($type, $filterName)
+    {
+        $this->tpl->unloadFilter($type, $filterName);
     }
 
     /**

@@ -86,15 +86,15 @@ final class Render
      * Creates a render instance.
      *
      * @param string $adapter Adapter class name.
+     * @param array  $options Adapter options.
      */
-    public function __construct($adapter)
+    public function __construct($adapter, array $options = array())
     {
-        $this->configuration  = Core\Config()->paths('views');
-        $this->setAdapter($adapter);
+        $this->setAdapter($adapter, Core\Config()->paths('views'), $options);
         $this->filesExtension = $this->render->getTemplatesFileExtension();
         $this->contentType = $this->render->getRenderedContentType();
 
-        $this->assets  = new Assets;
+        $this->assets = new Assets;
     }
 
     /**
@@ -102,13 +102,14 @@ final class Render
      *
      * @param string $adapter       Adapter class name.
      * @param array  $configuration Adapter configuration.
+     * @param array  $options       Adapter additional options.
      *
      * @throws \DomainException          Not supported Renderer adapter.
      * @throws \InvalidArgumentException Not compatible Renderer adapter.
      *
      * @return void
      */
-    public function setAdapter($adapter, array $configuration = array())
+    public function setAdapter($adapter, array $configuration, array $options = array())
     {
         if (!class_exists($adapter)) {
             throw new \DomainException('Not supported Render adapter type: ' . $adapter);
@@ -118,11 +119,9 @@ final class Render
             throw new \InvalidArgumentException('Not compatible Render adapter type: ' . $adapter);
         }
 
-        if (!$configuration) {
-            $configuration = $this->configuration;
-        }
+        $this->configuration = $configuration;
 
-        $this->render = new $adapter($configuration);
+        $this->render = new $adapter($configuration, $options);
     }
 
     /**

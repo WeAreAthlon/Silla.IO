@@ -36,6 +36,26 @@ interface Adapter
     public function getVariable($name);
 
     /**
+     * Applies a render filter.
+     *
+     * @param string $type       Filter type.
+     * @param string $filterName Filter name.
+     *
+     * @return boolean
+     */
+    public function applyFilter($type, $filterName);
+
+    /**
+     * Removes a render filter.
+     *
+     * @param string $type       Filter type.
+     * @param string $filterName Filter name.
+     *
+     * @return void
+     */
+    public function removeFilter($type, $filterName);
+
+    /**
      * Removes an assigned template variable.
      *
      * @param string $name Name of the variable.

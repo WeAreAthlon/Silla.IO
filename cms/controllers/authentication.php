@@ -31,14 +31,11 @@ class Authentication extends Base\Controller
     public $layout = 'public';
 
     /**
+     * Captcha feature.
+     *
      * @var \Captcha\Captcha
      */
     public $captcha;
-
-    /**
-     * @var string
-     */
-    public $captchaTemplate;
 
     /**
      * @var array
@@ -153,12 +150,12 @@ class Authentication extends Base\Controller
             if (!$this->errors) {
                 $user->save(array('updated_on' => gmdate('Y-m-d H:i:s')), true);
 
-                $this->name = $user->name;
-                $this->password_reset_link = Core\Router()->toFullUrl(array(
+                $this->renderer->set('name', $user->name);
+                $this->renderer->set('password_reset_link', Core\Router()->toFullUrl(array(
                     'controller' => 'authentication',
                     'action'     => 'renew',
                     'id'         => sha1($user->password . Core\Config()->USER_AUTH['cookie_salt'] . $user->email),
-                ));
+                )));
 
                 $mailForPasswordReset = array(
                     'from' => array(
@@ -231,7 +228,7 @@ class Authentication extends Base\Controller
         $this->captcha = Helpers\Captcha::get($configuration);
 
         if ($this->captcha) {
-            $this->captchaTemplate = Helpers\Captcha::getTemplate($this->captcha);
+            $this->renderer->set('captchaTemplate', Helpers\Captcha::getTemplate($this->captcha));
         }
     }
 

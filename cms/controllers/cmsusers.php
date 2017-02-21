@@ -135,20 +135,21 @@ class CMSUsers extends CMS
     /**
      * Reloads current user info stored in the application session.
      *
-     * @param Request $request Current router request.
+     * @param Request $request  Current router request.
+     * @param mixed   $redirect Request redirect destination.
      *
      * @return void
      */
-    protected function afterEdit(Request $request)
+    protected function afterEdit(Request $request,  $redirect = false)
     {
-        parent::afterEdit($request);
-
         if ($request->is('post') && !$this->resource->hasErrors()) {
             if ($this->resource->getPrimaryKeyValue() == $this->user->getPrimaryKeyValue()) {
                 Core\Session()->set('cms_user_info', rawurlencode(serialize($this->resource)));
                 $this->user = $this->resource;
             }
         }
+
+        parent::afterEdit($request);
     }
 
     /**

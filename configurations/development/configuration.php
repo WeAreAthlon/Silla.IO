@@ -63,6 +63,18 @@ class Configuration extends Configurations\Staging\Configuration
     );
 
     /**
+     * @var string[] $RENDER Render engine configuration.
+     *
+     * @example adapter Render adapter name.
+     */
+    public $RENDER = array(
+        'adapter' => 'Core\Modules\Render\Adapters\Smarty',
+        'options' => array(
+            'strip_white_space' => true,
+        ),
+    );
+
+    /**
      * @var (int|string)[] $MAILER Mailer configuration options.
      *
      * @example type        Type of the mailing infrastructure to use(Sendmail|SMTP).
@@ -101,11 +113,11 @@ class Configuration extends Configurations\Staging\Configuration
      */
     public $DB = array(
         'adapter'        => 'pdo_mysql',
-        'host'           => 'localhost',
+        'host'           => '<DB_HOST>',
         'port'           => 3306,
-        'user'           => 'athlon',
-        'password'       => 'athlon_sofia',
-        'name'           => 'athlon_framework',
+        'user'           => '<DB_USER>',
+        'password'       => '<DB_PASSWORD>',
+        'name'           => '<DB_NAME>',
         'tables_prefix'  => '',
         'encryption_key' => '25c6c7ff35bd13b0ff9979b151f2136c',
         'crypt_vector'   => 'dasn312321nssa1k',

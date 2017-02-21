@@ -96,9 +96,7 @@ abstract class Controller
         $this->rendererAdapter = $this->rendererAdapter ? $this->rendererAdapter : Core\Config()->RENDER['adapter'];
 
         if ($this->rendererAdapter) {
-            $this->renderer = new Core\Modules\Render\Render(
-                'Core\Modules\Render\Adapters\\' . $this->rendererAdapter
-            );
+            $this->renderer = new Core\Modules\Render\Render($this->rendererAdapter, Core\Config()->RENDER['options']);
 
             static::setOutputDefaultHeaders();
 
@@ -199,9 +197,7 @@ abstract class Controller
     final public static function resourceNotFound(Modules\Router\Request $request)
     {
         if (Core\Config()->RENDER['adapter']) {
-            $renderer = new Core\Modules\Render\Render(
-                'Core\Modules\Render\Adapters\\' . Core\Config()->RENDER['adapter']
-            );
+            $renderer = new Core\Modules\Render\Render(Core\Config()->RENDER['adapter']);
 
             static::setOutputDefaultHeaders();
             $renderer = self::assignVariablesToRender($renderer);

@@ -241,17 +241,18 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Assign "ownership" to the created resource.
      *
-     * @param \Core\Modules\Router\Request $request Current router request.
+     * @param \Core\Modules\Router\Request $request  Current router request.
+     * @param mixed                        $redirect Request redirect destination.
      *
      * @return void
      */
-    protected function afterCreate(Request $request)
+    protected function afterCreate(Request $request, $redirect = 'index')
     {
         if (!$this->resource->hasErrors()) {
             Helpers\Ownership::assign($this->resource);
         }
 
-        parent::afterCreate($request);
+        parent::afterCreate($request, $redirect);
     }
 
     /**
@@ -273,15 +274,16 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Retract "ownership" to the deleted resource.
      *
-     * @param \Core\Modules\Router\Request $request Current router request.
+     * @param \Core\Modules\Router\Request $request  Current router request.
+     * @param mixed                        $redirect Request redirect destination.
      *
      * @return void
      */
-    protected function afterDelete(Request $request)
+    protected function afterDelete(Request $request, $redirect = 'index')
     {
         Helpers\Ownership::retract($this->resource);
 
-        parent::afterDelete($request);
+        parent::afterDelete($request, $redirect);
     }
 
     /**

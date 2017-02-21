@@ -34,10 +34,13 @@ abstract class Configuration
     /**
      * @var string[] $RENDER Render engine configuration.
      *
-     * @example adapter Caching adapter name.
+     * @example adapter Render adapter name.
      */
     public $RENDER = array(
-        'adapter' => 'Smarty',
+        'adapter' => 'Core\Modules\Render\Adapters\Smarty',
+        'options' => array(
+            'strip_white_space' => false,
+        ),
     );
 
     /**
@@ -296,6 +299,7 @@ abstract class Configuration
 
         $this->PATHS['views']['compiled'] = $this->PATHS['cache'] . 'compiled' . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['cache']    = $this->PATHS['cache'] . 'views'    . DIRECTORY_SEPARATOR;
+        $this->PATHS['views']['plugins']  = $this->PATHS['resources'] . 'smarty_plugins' . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['config']   = $this->PATHS['root']  .
             'configurations' . DIRECTORY_SEPARATOR . SILLA_ENVIRONMENT .
             DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;

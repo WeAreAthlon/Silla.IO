@@ -102,6 +102,18 @@ class Configuration extends Core\Base\Configuration
     );
 
     /**
+     * @var string[] $RENDER Render engine configuration.
+     *
+     * @example adapter Render adapter name.
+     */
+    public $RENDER = array(
+        'adapter' => 'Core\Modules\Render\Adapters\Smarty',
+        'options' => array(
+            'strip_white_space' => true,
+        ),
+    );
+
+    /**
      * @var (int|string)[] $DB DSN (Data source name).
      *
      * @example adapter        Adapter type (pdo_mysql|mysqli|mysql|sqlite).
