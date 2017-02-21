@@ -1,10 +1,11 @@
 source:
-    - ../../app
-    - ../../cms
-    - ../../core
-    - ../../configurations
+    - app
+    - cms
+    - core
+    - tasks
+    - configurations
 
-destination: ../../public/doc/
+destination: public/doc/
 
 title: Silla.IO API
 
