@@ -345,7 +345,7 @@ final class Request
             return 'XMLHttpRequest' === $this->meta('HTTP_X_REQUESTED_WITH');
         }
 
-        return strtoupper($type) === $this->method();
+        return $type === $this->method();
     }
 
     /**
