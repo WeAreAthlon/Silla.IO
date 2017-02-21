@@ -1,5 +1,4 @@
 ## Silla.IO - PHP Application Development Framework
-[![Build Status](https://img.shields.io/jenkins/s/http/jenkins.athlonsofia.com/silla.io.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
 [![Tests Status](https://img.shields.io/jenkins/t/http/jenkins.athlonsofia.com/silla.io.svg?style=flat-square)](http://jenkins.athlonsofia.com/job/silla.io/)
 [![Github Issues](https://img.shields.io/github/issues/WeAreAthlon/silla.io.svg?style=flat-square)](https://github.com/WeAreAthlon/silla.io/issues)
 [![Release](https://img.shields.io/github/release/WeAreAthlon/silla.io.svg?style=flat-square)] (https://github.com/WeAreAthlon/silla.io/releases)
