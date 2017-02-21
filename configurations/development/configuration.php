@@ -70,7 +70,7 @@ class Configuration extends Configurations\Staging\Configuration
     public $RENDER = array(
         'adapter' => 'Core\Modules\Render\Adapters\Smarty',
         'options' => array(
-            'strip_white_space' => true,
+            'strip_white_space' => false,
         ),
     );
 
