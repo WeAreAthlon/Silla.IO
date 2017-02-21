@@ -146,6 +146,15 @@ abstract class Model
      * @static
      */
     protected static $i18nTableNameSuffix = '_i18n';
+
+    /**
+     * Join type for i18n data.
+     *
+     * @var string
+     * @access protected
+     * @static
+     */
+    protected static $i18nJoinType = 'INNER';
     
     /**
      * Localisation.
@@ -1153,7 +1162,8 @@ abstract class Model
                     . ' AND '
                     . $prefix . static::$i18nTableName . '.' . static::$i18nLocaleField
                     . ' = "'
-                    . static::$i18nLocale . '"'
+                    . static::$i18nLocale . '"',
+                    static::$i18nJoinType
                 );
         }
 
