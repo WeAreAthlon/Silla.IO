@@ -47,9 +47,8 @@ final class Router
      * All routing routes container.
      *
      * @var Routes
-     * @access private
      */
-    private $routes;
+    public $routes;
 
     /**
      * Filters all input.

@@ -150,7 +150,7 @@ final class Generate
         $tpl->setCompileDir($config['compiled'])
             ->setCacheDir($config['cache'])
             ->setConfigDir($config['config'])
-            ->addPluginsDir(Core\Config()->paths('resources') . 'smarty_plugins');
+            ->addPluginsDir($config['smarty_plugins']);
 
         foreach ($params as $key => $value) {
             $tpl->assign($key, $value);

@@ -28,11 +28,11 @@ final class Clear
     /**
      * Initializer. Setup paths to temporary resources.
      *
-     * @param mixed $params Params from the command line.
+     * @param array $params Params from the command line.
      *
      * @return void
      */
-    public static function init($params)
+    public static function init(array $params = array())
     {
         self::$CACHES = array(
             'system' => 'temp/cache',

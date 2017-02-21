@@ -14,9 +14,24 @@ namespace Core;
 
 use Core\CLI;
 
+$environment = 'development';
+$mode = 'app';
+
+/* Get environment from the CLI parameters */
+foreach ($argv as $key => $parameter) {
+    if (strpos($parameter, '--environment') === 0) {
+        $environment = str_replace('--environment=', '', $parameter);
+    } else if(strpos($parameter, '--mode') === 0) {
+        $mode = str_replace('--mode=', '', $parameter);
+    }
+}
+/* Define configuration environment */
+define('SILLA_ENVIRONMENT', $environment);
+
 $currentDir = __DIR__;
 
 require_once $currentDir . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
+Config()->setMode(Config()->modes($mode));
 
 if ($argc > 1) {
     $parts = explode(':', $argv[1]);
@@ -53,9 +68,9 @@ if ($argc > 1) {
         }
 
         if (method_exists($class, 'init')) {
-            call_user_func_array(array($class, 'init'), array_slice($argv, 2));
+            call_user_func_array(array($class, 'init'), array(array_slice($argv, 2)));
         }
 
-        call_user_func_array(array($class, 'run'), array_slice($argv, 2));
+        call_user_func_array(array($class, 'run'), array(array_slice($argv, 2)));
     }
 }
