@@ -100,6 +100,10 @@ final class Clear
      */
     private static function deleteFolder($path)
     {
+        if (!file_exists($path)) {
+            return;
+        }
+        
         $i = new \DirectoryIterator($path);
 
         foreach ($i as $f) {
