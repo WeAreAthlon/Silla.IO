@@ -1,3 +1,7 @@
+stages:
+  - build
+  - test
+
 variables:
   MYSQL_DATABASE: silla_io
   MYSQL_ROOT_PASSWORD: dbs1cret
@@ -25,9 +29,8 @@ before_script:
 build:php5.6:
   image: php:5.6
   stage: build
-  before_script:
-    - php composer.phar require --dev jakub-onderka/php-parallel-lint
   script:
+    - php composer.phar require --dev jakub-onderka/php-parallel-lint
     - ./vendor/bin/parallel-lint --exclude vendor .
   cache:
     untracked: true
@@ -37,9 +40,8 @@ build:php5.6:
 build:php7:
   image: php:7
   stage: build
-  before_script:
-    - php composer.phar require --dev jakub-onderka/php-parallel-lint
   script:
+    - php composer.phar require --dev jakub-onderka/php-parallel-lint
     - ./vendor/bin/parallel-lint --exclude vendor .
   cache:
     untracked: true
@@ -49,9 +51,8 @@ build:php7:
 build:php-latest:
   image: php:latest
   stage: build
-  before_script:
-    - php composer.phar require --dev jakub-onderka/php-parallel-lint
   script:
+    - php composer.phar require --dev jakub-onderka/php-parallel-lint
     - ./vendor/bin/parallel-lint --exclude vendor .
   cache:
     untracked: true
@@ -62,6 +63,8 @@ build:php-latest:
 test:php5.6:mysql5.6:
   image: php:5.6
   stage: test
+  dependencies:
+    - build:php5.6
   services:
     - mysql:5.6
   script:
@@ -72,6 +75,8 @@ test:php5.6:mysql5.6:
 test:php7:mysql5.7:
   image: php:7
   stage: test
+  dependencies:
+    - build:php7
   services:
     - mysql:5.7
   script:
@@ -82,6 +87,8 @@ test:php7:mysql5.7:
 test:php-latest:mysql-latest:
   image: php:latest
   stage: test
+  dependencies:
+    - build:php-latest
   services:
     - mysql:latest
   script:
