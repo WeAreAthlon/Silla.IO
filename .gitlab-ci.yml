@@ -37,8 +37,8 @@ build:php5.6:
   only:
     - master
 
-build:php7:
-  image: php:7
+build:php7.0:
+  image: php:7.0
   stage: build
   script:
     - php composer.phar require --dev jakub-onderka/php-parallel-lint
@@ -72,11 +72,11 @@ test:php5.6:mysql5.6:
   only:
     - master
 
-test:php7:mysql5.7:
-  image: php:7
+test:php7.0:mysql5.7:
+  image: php:7.0
   stage: test
   dependencies:
-    - build:php7
+    - build:php7.0
   services:
     - mysql:5.7
   script:
