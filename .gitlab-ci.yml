@@ -1,4 +1,5 @@
 stages:
+  - build
   - test
 
 variables:
@@ -11,10 +12,10 @@ cache:
 
 before_script:
   - apt-get update -yqq
-  - apt-get install git libcurl4-gnutls-dev libjpeg-dev libpng-dev zlib1g-dev libfreetype6-dev libxml2-dev libsqlite3-dev libpcre3-dev -yqq
+  - apt-get install git libcurl4-gnutls-dev libjpeg-dev libpng-dev zlib1g-dev libfreetype6-dev libsqlite3-dev libpcre3-dev -yqq
 
   # Compile PHP, include these extensions.
-  - docker-php-ext-install mbstring pdo_mysql curl json gd xml zip
+  - docker-php-ext-install mbstring pdo_mysql curl json gd zip
 
   # Install Composer and project dependencies.
   - curl -sS https://getcomposer.org/installer | php
@@ -23,6 +24,45 @@ before_script:
   # Run database create
   - php ./silla tasks:db:create resources/db/mysql/dump.mysql.sql
 
+# Build stage jobs
+
+build:php5.6:
+  image: php:5.6
+  stage: build
+  before_script:
+      - composer require --dev jakub-onderka/php-parallel-lint
+  script:
+      - vendor/bin/parallel-lint --exclude vendor .
+  cache:
+    untracked: true
+  only:
+    - master
+
+build:php7:
+  image: php:7
+  stage: build
+  before_script:
+      - composer require --dev jakub-onderka/php-parallel-lint
+  script:
+      - vendor/bin/parallel-lint --exclude vendor .
+  cache:
+    untracked: true
+  only:
+    - master
+
+build:php-latest:
+  image: php:latest
+  stage: build
+  before_script:
+      - composer require --dev jakub-onderka/php-parallel-lint
+  script:
+      - vendor/bin/parallel-lint --exclude vendor .
+  cache:
+    untracked: true
+  only:
+    - master
+
+# Test Stage jobs
 test:php5.6:mysql5.6:
   image: php:5.6
   stage: test

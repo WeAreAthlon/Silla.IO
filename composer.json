@@ -79,7 +79,7 @@
         "rogeriopradoj/respond" : "1.4.2"
     },
     "require-dev": {
-        "phpunit/phpunit"            : "4.3.*",
+        "phpunit/phpunit"            : "4.8.35",
         "php-mock/php-mock-phpunit"  : "0.2",
         "eloquent/phpunit-extensions": "@stable",
         "phploc/phploc"              : "*",
@@ -88,7 +88,8 @@
         "phpmd/phpmd"                : "@stable",
         "apigen/apigen"              : "v4.1.2",
         "mikey179/vfsStream"         : "1.*",
-        "predis/predis"              : "1.1.*@dev"
+        "predis/predis"              : "1.1.*@dev",
+        "jakub-onderka/php-parallel-lint" : "@stable"
     },
     "suggest": {
         "predis/predis" : "1.1.*@dev",
