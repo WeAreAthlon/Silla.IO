@@ -30,7 +30,7 @@ build:php5.6:
   image: php:5.6
   stage: build
   before_script:
-      - composer require --dev jakub-onderka/php-parallel-lint
+      - php composer.phar require --dev jakub-onderka/php-parallel-lint
   script:
       - vendor/bin/parallel-lint --exclude vendor .
   cache:
@@ -42,7 +42,7 @@ build:php7:
   image: php:7
   stage: build
   before_script:
-      - composer require --dev jakub-onderka/php-parallel-lint
+      - php composer.phar require --dev jakub-onderka/php-parallel-lint
   script:
       - vendor/bin/parallel-lint --exclude vendor .
   cache:
@@ -54,7 +54,7 @@ build:php-latest:
   image: php:latest
   stage: build
   before_script:
-      - composer require --dev jakub-onderka/php-parallel-lint
+      - php composer.phar require --dev jakub-onderka/php-parallel-lint
   script:
       - vendor/bin/parallel-lint --exclude vendor .
   cache:
