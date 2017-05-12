@@ -28,7 +28,7 @@ The code base features *Model-View-Controller* pattern with additional support f
 * `ORM` layer for persistent data management
 * `Template rendering` engine support for output management
 * `URL Routing`
-* `Base\Resource` for consolidation of `CRUD` operations
+* `Base\Entity` for consolidation of `CRUD` operations
 * `Mailer API`
 * `Cache API`
 * `Session API`
@@ -54,7 +54,7 @@ The code base features *Model-View-Controller* pattern with additional support f
   * *Configuration:*
     * Runtime change enabled via `ini_set()`
     * *Extensions*
-      * `mbstring` - *Provides multibyte specific string functions that help dealing with multibyte encodings.*
+      * `mbstring` - *Provides multibyte specific string functions that help dealing with multi-byte encodings.*
       * `PDO`, `PDO_mysql`, `mysqli`, `SQLite3` (*depends on on the configured database adapter*)
       * `GD` - *in order to work with media*
 * **Database**

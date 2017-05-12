@@ -475,4 +475,30 @@ abstract class Configuration
 
         return $modes;
     }
+
+    /**
+     * Modifies configuration path.
+     *
+     * @param string $key   Configuration path name.
+     * @param string $value New value for configuration path.
+     *
+     * @return void
+     */
+    final public function modifyPath($key, $value)
+    {
+        $this->PATHS[$key] = $value;
+    }
+
+    /**
+     * Modifies configuration URL.
+     *
+     * @param string $key   Configuration URL name.
+     * @param string $value New value for configuration url.
+     *
+     * @return void
+     */
+    final public function modifyURL($key, $value)
+    {
+        $this->URLS[$key] = $value;
+    }
 }

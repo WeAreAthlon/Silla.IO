@@ -6,20 +6,14 @@ use Core\Modules\Router\Routes;
  */
 class RoutesTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Core\Modules\Router\Routes
+     */
     protected $routes;
 
     protected function setUp()
     {
-        $this->routes = Routes::getInstance();
-    }
-
-    /**
-     * @covers Core\Modules\Router\Routes::__clone
-     * @expectedException PHPUnit_Framework_Error
-     */
-    public function testClonningIsDisallowed()
-    {
-        clone $this->routes;
+        $this->routes = new Routes(Core\Config()->mode());
     }
 
     /**

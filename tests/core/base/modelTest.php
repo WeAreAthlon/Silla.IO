@@ -1,39 +1,48 @@
 <?php
+
 class ModelTest extends PHPUnit_Framework_TestCase
 {
+    protected $model;
+
+    protected function setUp()
+    {
+        $this->model = $this->getMockForAbstractClass('Core\\Base\\Model', array(), '', false);
+        $reflection  = new ReflectionClass($this->model);
+        $reflection->setStaticPropertyValue('tableName', 'tests');
+    }
+
     public function testBasicConstruction()
     {
-//        $mdl = new Core\Base\Model(array(
-//            'title'             => 'Test title',
-//            'description'       => 'Test description',
-//            'category_id'       => 1,
-//            'expiration_date'   => '2014-10-10'
-//        ));
-//
-//        $this->assertEquals($mdl->title, 'Test title');
-//        $this->assertEquals($mdl->description, 'Test description');
-//        $this->assertEquals($mdl->category_id, 1);
-//        $this->assertEquals($mdl->expiration_date, '2014-10-10');
-//
-//        return $mdl;
-        return true;
+        $mdl = new $this->model(array(
+            'title'           => 'Test title',
+            'description'     => 'Test description',
+            'category_id'     => 1,
+            'expiration_date' => '2014-10-10',
+        ));
+
+        $this->assertEquals($mdl->title, 'Test title');
+        $this->assertEquals($mdl->description, 'Test description');
+        $this->assertEquals($mdl->category_id, 1);
+        $this->assertEquals($mdl->expiration_date, '2014-10-10');
+
+        return $mdl;
     }
 
     public function testBasicSettingProperties()
     {
-//        $mdl = new Core\Base\Model();
-//        $mdl->title = 'Test title';
-//        $mdl->description = 'Test description';
-//        $mdl->category_id = 1;
-//        $mdl->expiration_date = '2014-10-10';
-//
-//        $this->assertEquals($mdl->title, 'Test title');
-//        $this->assertEquals($mdl->description, 'Test description');
-//        $this->assertEquals($mdl->category_id, 1);
-//        $this->assertEquals($mdl->expiration_date, '2014-10-10');
-//
-//        return $mdl;
-        return true;
+        $mdl = new $this->model;
+
+        $mdl->title           = 'Test title';
+        $mdl->description     = 'Test description';
+        $mdl->category_id     = 1;
+        $mdl->expiration_date = '2014-10-10';
+
+        $this->assertEquals($mdl->title, 'Test title');
+        $this->assertEquals($mdl->description, 'Test description');
+        $this->assertEquals($mdl->category_id, 1);
+        $this->assertEquals($mdl->expiration_date, '2014-10-10');
+
+        return $mdl;
     }
 
     /**

@@ -1,0 +1,21 @@
+source:
+    - app
+    - cms
+    - core
+    - configurations
+    - tasks
+
+destination: public/docs
+
+title: Silla API
+
+accessLevels:
+    - public
+    - protected
+    - private
+
+todo: true
+tree: true
+templateTheme: bootstrap
+download: true
+googleAnalytics: UA-57928677-1

@@ -193,7 +193,7 @@ class Ownership
     /**
      * Remove Ownership Data for an Owner.
      *
-     * @param \Core\Base\Model|null $owner Owner instance
+     * @param \Core\Base\Model|null $owner Owner instance.
      *
      * @return void
      */

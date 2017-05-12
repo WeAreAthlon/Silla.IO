@@ -16,7 +16,7 @@ use Core\Modules\DB;
 use Core\Modules\DB\Interfaces;
 
 /**
- * Database management driver wrapping mysql extension.
+ * Database management driver wrapping mysqli extension.
  */
 class MySQLi implements Interfaces\Adapter
 {
@@ -52,7 +52,7 @@ class MySQLi implements Interfaces\Adapter
      *
      * @param DB\Query $query Current query object.
      *
-     * @return mixed
+     * @return array|boolean
      */
     public function run(DB\Query $query)
     {
@@ -156,7 +156,7 @@ class MySQLi implements Interfaces\Adapter
      *
      * @param string $schema Schema definition.
      *
-     * @return mixed
+     * @return array
      */
     public function getTables($schema)
     {
@@ -171,7 +171,7 @@ class MySQLi implements Interfaces\Adapter
      * @param string $table  Table name.
      * @param string $schema Schema definition.
      *
-     * @return mixed
+     * @return array
      */
     public function getTableSchema($table, $schema)
     {
@@ -228,7 +228,7 @@ class MySQLi implements Interfaces\Adapter
      *
      * @param string $table Table name.
      *
-     * @return resource
+     * @return boolean
      */
     public function clearTable($table)
     {
@@ -250,7 +250,7 @@ class MySQLi implements Interfaces\Adapter
      *
      * @return string
      */
-    private function buildSql(DB\Query $query)
+    protected function buildSql(DB\Query $query)
     {
         $sql = array();
 

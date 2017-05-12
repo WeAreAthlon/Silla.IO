@@ -800,7 +800,6 @@ abstract class Model
             if (!$i18n_existing_record) {
                 list($fields, $values) = $this->extractFieldsI18n(true);
                 $query_i18n = $query_i18n->insert($fields, $values)->into(static::$i18nTableName);
-
             } else {
                 list($fields, $values) = $this->extractFieldsI18n();
                 $query_i18n = $query_i18n

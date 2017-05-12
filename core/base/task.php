@@ -33,7 +33,7 @@ abstract class Task
                 $requestString = '/';
                 $mode = Core\Config()->mode();
 
-                /**
+                /*
                  * Setup Router variables.
                  */
                 Core\Router()->routes = new Modules\Router\Routes($mode);
@@ -42,7 +42,6 @@ abstract class Task
                     Modules\Router\Router::parseRequestQueryString($requestString, Core\Router()->routes),
                     $GLOBALS
                 );
-
             } catch (\Exception $e) {
                 $message = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
 

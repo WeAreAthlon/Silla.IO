@@ -38,3 +38,6 @@ composer.lock
 *.swp
 tags
 nbproject/*
+
+# Ignore CI logs
+/build/logs/*

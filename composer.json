@@ -84,7 +84,6 @@
         "eloquent/phpunit-extensions": "@stable",
         "phploc/phploc"              : "*",
         "sebastian/phpcpd"           : "*",
-        "squizlabs/php_codesniffer"  : "2.*",
         "pdepend/pdepend"            : "@stable",
         "phpmd/phpmd"                : "@stable",
         "apigen/apigen"              : "v4.1.2",

@@ -17,14 +17,19 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->databaseCache = new Database();
-        $this->tableName = 'cache';
-        $this->fields = array('cache_key', 'value', 'expire');
+        try {
+            $this->databaseCache = new Database();
+            $this->tableName = 'cache';
+            $this->fields = array('cache_key', 'value', 'expire');
 
-        $this->key = 'foo';
-        $this->value = 'bar';
-        $this->expire = 2;
-
+            $this->key = 'foo';
+            $this->value = 'bar';
+            $this->expire = 2;
+        } catch (\Exception $e) {
+            $this->markTestSkipped(
+                'DB Connection is not available!'
+            );
+        }
     }
 
     /**

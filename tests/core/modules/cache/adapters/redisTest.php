@@ -24,7 +24,13 @@ class RedisTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->redisCache = new Redis();
+        try {
+            $this->redisCache = new Redis();
+        } catch (\Exception $e) {
+            $this->markTestSkipped(
+                'Redis connection is not available!'
+            );
+        }
 
         $this->key = 'foo';
         $this->value = 'bar';

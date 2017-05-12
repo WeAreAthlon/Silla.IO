@@ -6,11 +6,13 @@ use Core\Modules\Router\Router;
  */
 class RouterTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Core\Modules\Router\Router
+     */
     protected $router;
 
     protected function setUp()
     {
-        $_SERVER['SERVER_NAME'] = 'www.example.com';
         $this->router = Router::getInstance();
     }
 

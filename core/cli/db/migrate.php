@@ -107,7 +107,6 @@ final class Migrate
      */
     public static function status()
     {
-
     }
 
     /**

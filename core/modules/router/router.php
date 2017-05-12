@@ -60,6 +60,8 @@ final class Router
         if (get_magic_quotes_gpc()) {
             self::disableMagicQuotes();
         }
+
+        $this->request = new Request(Core\Config()->mode(), array(), $GLOBALS);
     }
 
     /**
@@ -73,7 +75,7 @@ final class Router
      *
      * @return void
      */
-    public function dispatch(Request &$request, Routes &$routes)
+    public function dispatch(Request $request, Routes $routes)
     {
         $this->routes  = $routes;
         $this->request = $request;

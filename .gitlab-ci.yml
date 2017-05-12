@@ -1,5 +1,54 @@
-image: composer/composer:php5
+stages:
+  - test
 
-install:
+variables:
+  MYSQL_DATABASE: silla_io
+  MYSQL_ROOT_PASSWORD: dbs1cret
+
+cache:
+  paths:
+    - vendor/
+
+before_script:
+  - apt-get update -yqq
+  - apt-get install git libcurl4-gnutls-dev libjpeg-dev libpng-dev zlib1g-dev libfreetype6-dev libxml2-dev libsqlite3-dev libpcre3-dev -yqq
+
+  # Compile PHP, include these extensions.
+  - docker-php-ext-install mbstring pdo_mysql curl json gd xml zip
+
+  # Install Composer and project dependencies.
+  - curl -sS https://getcomposer.org/installer | php
+  - php composer.phar install
+
+  # Run database create
+  - php ./silla tasks:db:create resources/db/mysql/dump.mysql.sql
+
+test:php5.6:mysql5.6:
+  image: php:5.6
+  stage: test
+  services:
+    - mysql:5.6
   script:
-  - composer install --prefer-dist
+    - vendor/bin/phpunit --stderr --configuration build/configurations/phpunit.xml
+  only:
+    - master
+
+test:php7:mysql5.7:
+  image: php:7
+  stage: test
+  services:
+    - mysql:5.7
+  script:
+    - vendor/bin/phpunit --stderr --configuration build/configurations/phpunit.xml
+  only:
+    - master
+
+test:php-latest:mysql-latest:
+  image: php:latest
+  stage: test
+  services:
+    - mysql:latest
+  script:
+    - vendor/bin/phpunit --stderr --configuration build/configurations/phpunit.xml
+  only:
+    - master

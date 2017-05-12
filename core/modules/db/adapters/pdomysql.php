@@ -102,7 +102,7 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
      * @param string $sql         SQL query string.
      * @param array  $bind_params Query parameters.
      *
-     * @return mixed
+     * @return boolean|integer
      */
     public function execute($sql, array $bind_params = array())
     {
@@ -214,7 +214,7 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
      *
      * @param string $table Table name.
      *
-     * @return mixed
+     * @return boolean|integer
      */
     public function clearTable($table)
     {

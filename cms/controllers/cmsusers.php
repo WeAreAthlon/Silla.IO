@@ -140,7 +140,7 @@ class CMSUsers extends CMS
      *
      * @return void
      */
-    protected function afterEdit(Request $request,  $redirect = false)
+    protected function afterEdit(Request $request, $redirect = false)
     {
         if ($request->is('post') && !$this->resource->hasErrors()) {
             if ($this->resource->getPrimaryKeyValue() == $this->user->getPrimaryKeyValue()) {

@@ -67,10 +67,15 @@ if ($argc > 1) {
             $class = '\\' . implode('\\', $parts);
         }
 
-        if (method_exists($class, 'init')) {
-            call_user_func_array(array($class, 'init'), array(array_slice($argv, 2)));
+        try {
+            if (method_exists($class, 'init')) {
+                call_user_func_array(array($class, 'init'), array(array_slice($argv, 2)));
+            }
+
+            call_user_func_array(array($class, 'run'), array(array_slice($argv, 2)));
+        } catch (\Exception $e) {
+            exit('[' . get_class($e) . '] ' . $e->getMessage() . PHP_EOL);
         }
 
-        call_user_func_array(array($class, 'run'), array(array_slice($argv, 2)));
     }
 }

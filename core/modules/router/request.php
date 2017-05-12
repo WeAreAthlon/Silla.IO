@@ -59,7 +59,7 @@ final class Request
      * @param array $elements Request Elements. All Routed variables.
      * @param array $context  Request Context Server data.
      */
-    public function __construct(array $mode, array $elements, array &$context)
+    public function __construct(array $mode, array $elements, array $context)
     {
         $this->elements = $elements;
         $this->context  = $context;
@@ -67,7 +67,7 @@ final class Request
         $this->token    = '';
 
         /* Make all routed variables accessible as a GET variables */
-        $this->context['_GET'] = array_merge($this->context['_GET'], $elements);
+        $this->context['_GET'] = array_merge(isset($this->context['_GET']) ? $this->context['_GET'] : array(), $elements);
     }
 
     /**

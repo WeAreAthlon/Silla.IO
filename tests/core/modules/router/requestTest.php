@@ -6,6 +6,9 @@ use Core\Modules\Router\Request;
  */
 class RequestTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Core\Modules\Router\Request
+     */
     protected $request;
 
     protected function setUp()
@@ -13,14 +16,11 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $elements = array(
             'controller' => 'controller',
             'action' => 'action',
-            'params' => array(
-                'controller' => 'controller',
-                'action' => 'action',
-                'id' => 'id'));
+            'id' => 'id',
+        );
 
-        $scope = array();
-        $context = array();
-        $this->request = new Request(array(), $elements, $scope, $context);
+        $context = $GLOBALS;
+        $this->request = new Request(array(), $elements, $context);
     }
 
     /**
@@ -40,7 +40,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Router\Request::params
+     * @covers Core\Modules\Router\Request::get
      */
     public function testRequestParamsAreAccessible()
     {
@@ -48,11 +48,12 @@ class RequestTest extends PHPUnit_Framework_TestCase
             'controller' => 'controller',
             'action' => 'action',
             'id' => 'id');
-        $this->assertEquals($params, $this->request->params());
+
+        $this->assertEquals($params, $this->request->get());
     }
 
     /**
-     * @covers Core\Modules\Router\Request::params
+     * @covers Core\Modules\Router\Request::get
      */
     public function testRequestParamNameReturnsParamValue()
     {
@@ -60,7 +61,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
             'controller' => 'controller',
             'action' => 'action',
             'id' => 'id');
-        $this->assertEquals($params['id'], $this->request->params('id'));
+        $this->assertEquals($params['id'], $this->request->get('id'));
     }
 
     /**
@@ -69,7 +70,8 @@ class RequestTest extends PHPUnit_Framework_TestCase
     public function testRequestMethodTypeIsAccessible()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->assertEquals('get', $this->request->type());
+
+        $this->assertEquals('GET', $this->request->method());
     }
 
     /**

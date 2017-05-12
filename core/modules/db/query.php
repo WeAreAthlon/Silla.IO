@@ -226,7 +226,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
             if ($this->items) {
                 foreach ($this->inclusion as $field => $include) {
                     switch ($include['type']) {
-                        case 'has_many' :
+                        case 'has_many':
                             $items = $include['meta']['class_name']::find()->all();
                             $_items = array();
 
@@ -245,7 +245,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
                             unset($item);
 
                             break;
-                        case 'belongs_to' :
+                        case 'belongs_to':
                             $items = $include['meta']['class_name']::find()->all(true);
 
                             foreach ($this->items as &$item) {
@@ -256,7 +256,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
                             unset($item);
 
                             break;
-                        case 'habtm' :
+                        case 'habtm':
                             $associatedTable = $include['meta']['class_name']::$tableName;
                             $associatedKey = $include['meta']['class_name']::primaryKeyField();
                             $meta = $include['meta'];
