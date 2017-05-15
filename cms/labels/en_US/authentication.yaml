@@ -5,6 +5,7 @@ login:
   password : Your password
   forgotten_password: Forgotten password?
   error   : Invalid credentials provided
+  blocked : This user have been blocked!
 
 reset:
   title   : Forgotten password
