@@ -56,8 +56,8 @@ class PDF extends \TCPDF
         parent::__construct();
 
         $this->title = $title;
-        $this->logo = $logo;
-        $this->font = $font;
+        $this->logo  = $logo;
+        $this->font  = $font;
 
         $this->SetTitle($title);
         $this->setFontSubsetting(true);
@@ -109,8 +109,8 @@ class PDF extends \TCPDF
      */
     public function loadData($file)
     {
-        $csv = fopen($file, 'r');
-        $data  = array();
+        $csv  = fopen($file, 'r');
+        $data = array();
 
         while (($line = fgetcsv($csv)) !== false) {
             $data[] = $line;
@@ -182,7 +182,7 @@ class PDF extends \TCPDF
         $this->SetLineWidth(0.2);
         $this->SetFont($this->font, 'B', 8);
 
-        $headerCount = count($header);
+        $headerCount          = count($header);
         $this->tableCellWidth = 190 / $headerCount;
 
         for ($i = 0; $i < $headerCount; $i++) {

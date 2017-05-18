@@ -81,7 +81,7 @@ abstract class Attachment implements Interfaces\Decorator
 
         foreach (self::$attachments as $name => $_attachment) {
             self::$attachmentsOld[$name] = $resource->{$name};
-            self::$isUploading[$name] = Helpers\File::uploadedFileExists($name);
+            self::$isUploading[$name]    = Helpers\File::uploadedFileExists($name);
         }
     }
 
@@ -171,8 +171,8 @@ abstract class Attachment implements Interfaces\Decorator
             /* Delete old attachment and its related files */
             if (!$_error_uploading) {
                 $attachment_old_file = Core\Config()->paths('root') .
-                    $resource->attachmentsStoragePath($name) .
-                    self::$attachmentsOld[$name];
+                                       $resource->attachmentsStoragePath($name) .
+                                       self::$attachmentsOld[$name];
 
                 if ((self::$attachmentsOld[$name] != $_attachment_name) && file_exists($attachment_old_file)) {
                     try {
@@ -208,8 +208,8 @@ abstract class Attachment implements Interfaces\Decorator
 
         foreach (self::$attachments as $name => $_attachment) {
             $attachment_file = Core\Config()->paths('root') .
-                $resource->attachmentsStoragePath($name) .
-                $resource->{$name};
+                               $resource->attachmentsStoragePath($name) .
+                               $resource->{$name};
 
             if (file_exists($attachment_file)) {
                 try {

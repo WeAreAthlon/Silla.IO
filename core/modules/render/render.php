@@ -92,7 +92,7 @@ final class Render
     {
         $this->setAdapter($adapter, Core\Config()->paths('views'), $options);
         $this->filesExtension = $this->render->getTemplatesFileExtension();
-        $this->contentType = $this->render->getRenderedContentType();
+        $this->contentType    = $this->render->getRenderedContentType();
 
         $this->assets = new Assets;
     }

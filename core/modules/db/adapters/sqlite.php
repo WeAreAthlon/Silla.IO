@@ -37,12 +37,15 @@ class SQLite extends \SQLite3 implements Interfaces\Adapter
     public function run(DB\Query $query)
     {
         $query->appendTablesPrefix(Core\Config()->DB['tables_prefix']);
-        $sql = $this->buildSql($query);
+        $sql        = $this->buildSql($query);
         $query_hash = md5(serialize(array('query' => $sql, 'bind_params' => $query->bind_params)));
 
-        $query_cache_name = implode(',', array($query->table, implode(',', array_map(function ($item) {
-            return $item['table'];
-        }, $query->join))));
+        $query_cache_name = implode(',', array(
+            $query->table,
+            implode(',', array_map(function ($item) {
+                return $item['table'];
+            }, $query->join)),
+        ));
 
         if (array_key_exists($query_hash, Core\DbCache()->getCache($query_cache_name))) {
             return Core\DbCache()->getCache($query_cache_name, $query_hash);
@@ -149,9 +152,9 @@ class SQLite extends \SQLite3 implements Interfaces\Adapter
      */
     public function getTableSchema($table, $schema)
     {
-        $columns = $this->query("PRAGMA table_info({$table})");
+        $columns      = $this->query("PRAGMA table_info({$table})");
         $indexes_list = $this->query("PRAGMA index_list({$table})");
-        $indexes = array();
+        $indexes      = array();
         foreach ($indexes_list as $index) {
             $indexes_info = $this->query("PRAGMA index_info({$index['name']})");
             foreach ($indexes_info as $index_info) {
@@ -163,14 +166,14 @@ class SQLite extends \SQLite3 implements Interfaces\Adapter
 
         foreach ($columns as $column) {
             $column_index = isset($indexes[$column['name']]) ? $indexes[$column['name']] : '';
-            $res[] = array(
-                'COLUMN_NAME' => $column['name'],
-                'DATA_TYPE' => $column['type'],
-                'IS_NULLABLE' => $column['notnull'] ? 'NO' : 'YES',
-                'COLUMN_DEFAULT' => $column['dflt_value'],
-                'COLUMN_KEY' => $column_index ? 'UNI' : '',
+            $res[]        = array(
+                'COLUMN_NAME'              => $column['name'],
+                'DATA_TYPE'                => $column['type'],
+                'IS_NULLABLE'              => $column['notnull'] ? 'NO' : 'YES',
+                'COLUMN_DEFAULT'           => $column['dflt_value'],
+                'COLUMN_KEY'               => $column_index ? 'UNI' : '',
                 'CHARACTER_MAXIMUM_LENGTH' => 2147483647,
-                'EXTRA' => $column['pk'] ? 'auto_increment' : ''
+                'EXTRA'                    => $column['pk'] ? 'auto_increment' : '',
             );
         }
 
@@ -290,6 +293,7 @@ class SQLite extends \SQLite3 implements Interfaces\Adapter
                 $sql[] = 'SELECT ' . implode(',', array_map(function ($item) {
                     return '? as ' . $item;
                 }, $query->db_fields));
+
                 $sql[] = implode(' ', array_map(function ($item) {
                     return 'UNION SELECT ' . implode(',', array_map(function () {
                         return '?';

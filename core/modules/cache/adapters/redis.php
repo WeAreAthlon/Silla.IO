@@ -31,7 +31,7 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
      */
     public function __construct()
     {
-        $connParams = Core\Config()->CACHE['redis'];
+        $connParams        = Core\Config()->CACHE['redis'];
         $this->redisClient = new Predis\Client($connParams);
         $this->redisClient->connect();
     }

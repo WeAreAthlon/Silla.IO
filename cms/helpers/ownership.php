@@ -33,12 +33,12 @@ class Ownership
 
         foreach ($modules as $name => $module) {
             if (isset($module['ownership']) && $module['ownership']) {
-                $controller_name = '\CMS\Controllers\\' . $name;
+                $controller_name   = '\CMS\Controllers\\' . $name;
                 $controller_object = new $controller_name;
 
                 $result[] = array(
-                    'name' => $name,
-                    'model' => $controller_object->resourceModel
+                    'name'  => $name,
+                    'model' => $controller_object->resourceModel,
                 );
             }
         }
@@ -60,15 +60,17 @@ class Ownership
             $owner = Core\Registry()->get('current_cms_user');
         }
 
-        $query = new DB\Query($resourceModel);
-        $ownershipTable = 'cms_ownership';
-        $resourceTable = Core\Config()->DB['tables_prefix'] . $resourceModel::$tableName;
+        $query                  = new DB\Query($resourceModel);
+        $ownershipTable         = 'cms_ownership';
+        $resourceTable          = Core\Config()->DB['tables_prefix'] . $resourceModel::$tableName;
         $ownershipTablePrefixed = Core\Config()->DB['tables_prefix'] . 'cms_ownership';
-        $resourcePrimaryKey = $resourceModel::primaryKeyField();
+        $resourcePrimaryKey     = $resourceModel::primaryKeyField();
 
         return $query->select("{$resourceTable}.*")->from($resourceModel::$tableName)
-            ->join($ownershipTable, "{$resourceTable}.{$resourcePrimaryKey} = {$ownershipTablePrefixed}.resource_id")
-            ->where(
+            ->join(
+                $ownershipTable,
+                "{$resourceTable}.{$resourcePrimaryKey} = {$ownershipTablePrefixed}.resource_id"
+            )->where(
                 "{$ownershipTablePrefixed}.owner_id = ? AND {$ownershipTablePrefixed}.model = ?",
                 array($owner->getPrimaryKeyValue(), $resourceModel)
             );
@@ -155,11 +157,11 @@ class Ownership
             $owner = Core\Registry()->get('current_cms_user');
         }
 
-        $result = false;
+        $result      = false;
         $resourceIds = is_array($resourceIds) ? array_filter($resourceIds) : array($resourceIds);
 
         foreach ($resourceIds as $resourceId) {
-            $query = new Core\Modules\DB\Query;
+            $query  = new Core\Modules\DB\Query;
             $result = $query->select('owner_id')->from('cms_ownership')->where(
                 'resource_id = ? AND owner_id = ? AND model = ?',
                 array($resourceId, $owner->getPrimaryKeyValue(), $resourceModel)

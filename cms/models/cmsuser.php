@@ -36,10 +36,10 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
      */
     public $belongsTo = array(
         'role' => array(
-            'table' => 'cms_userroles',
-            'key' => 'role_id',
+            'table'        => 'cms_userroles',
+            'key'          => 'role_id',
             'relative_key' => 'id',
-            'class_name' => 'CMS\Models\CMSUserRole',
+            'class_name'   => 'CMS\Models\CMSUserRole',
         ),
     );
 

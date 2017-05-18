@@ -1,11 +1,22 @@
 <?php
+/**
+ * DateTime Helper Tests.
+ *
+ * @package    Silla.IO
+ * @subpackage Tests\Core\Helpers
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
+ */
+
+namespace Tests\Core\Helpers;
+
 use Core\Helpers\DateTime;
 use phpmock\phpunit\PHPMock;
 
 /**
- * @covers Core\Helpers\DateTime
+ * @covers \Core\Helpers\DateTime
  */
-class DateTimeTest extends PHPUnit_Framework_TestCase
+class DateTimeTest extends \PHPUnit_Framework_TestCase
 {
     use PHPMock;
 
@@ -15,13 +26,13 @@ class DateTimeTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->timezone = 'Europe/Sofia';
-        $this->datetime = date('Y-m-d H:i:s');
+        $this->timezone    = 'Europe/Sofia';
+        $this->datetime    = date('Y-m-d H:i:s');
         $this->datetimeUtc = gmdate('Y-m-d H:i:s');
     }
 
     /**
-     * @covers Core\Helpers\DateTime::getTimezonesList
+     * @covers \Core\Helpers\DateTime::getTimezonesList
      */
     public function testGettingTimezonesList()
     {
@@ -29,7 +40,7 @@ class DateTimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Helpers\DateTime::setEnvironmentTimezone
+     * @covers \Core\Helpers\DateTime::setEnvironmentTimezone
      */
     public function testSettingInvalidEnvironmentTimezone()
     {
@@ -38,7 +49,7 @@ class DateTimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Helpers\DateTime::setEnvironmentTimezone
+     * @covers \Core\Helpers\DateTime::setEnvironmentTimezone
      */
     public function testSettingEmptyEnvironmentTimezone()
     {
@@ -47,7 +58,7 @@ class DateTimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Helpers\DateTime::setEnvironmentTimezone
+     * @covers \Core\Helpers\DateTime::setEnvironmentTimezone
      */
     public function testSettingEnvironmentTimezone()
     {
@@ -55,7 +66,7 @@ class DateTimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Helpers\DateTime::format
+     * @covers \Core\Helpers\DateTime::format
      */
     public function testFormattingDateTime()
     {
@@ -63,7 +74,7 @@ class DateTimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Helpers\DateTime::formatGmt
+     * @covers \Core\Helpers\DateTime::formatGmt
      */
     public function testFormattingGmtDateTime()
     {

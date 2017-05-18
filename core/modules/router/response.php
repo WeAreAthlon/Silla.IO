@@ -104,7 +104,7 @@ final class Response
         foreach ($headers as $header) {
             if (is_array($header)) {
                 $header['replace'] = isset($header['replace']) ? $header['replace'] : true;
-                $header['code'] = isset($header['code']) ? $header['code'] : null;
+                $header['code']    = isset($header['code']) ? $header['code'] : null;
                 $this->addHeader($header['string'], $header['replace'], $header['code']);
             } else {
                 $this->addHeader($header);

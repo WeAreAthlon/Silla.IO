@@ -87,7 +87,7 @@ class SQL
      * @access public
      * @static
      *
-     * @return string
+     * @return string|array
      */
     public static function filter(array $attributes, $use_prepared_statements = true)
     {
@@ -128,31 +128,30 @@ class SQL
         foreach ($attributes as $key => $attribute) {
             if ($attribute['value']) {
                 if (is_array($attribute['value'])) {
-                    if (
-                        isset($attribute['value']['start'], $attribute['value']['end'])
+                    if (isset($attribute['value']['start'], $attribute['value']['end'])
                         && !empty($attribute['value']['start'])
                         && !empty($attribute['value']['end'])
                     ) {
                         if ('datetime' === $attribute['type']) {
                             $sql[] = "({$key} BETWEEN "
-                                . DB()->escapeString($attribute['value']['start'] . ' 00:00:00')
-                                . " AND "
-                                . DB()->escapeString($attribute['value']['end'] . ' 23:59:59')
-                                . ')';
+                                     . Core\DB()->escapeString($attribute['value']['start'] . ' 00:00:00')
+                                     . " AND "
+                                     . Core\DB()->escapeString($attribute['value']['end'] . ' 23:59:59')
+                                     . ')';
                         } else {
                             $sql[] = "({$key} BETWEEN "
-                                . DB()->escapeString($attribute['value']['start'])
-                                . " AND "
-                                . DB()->escapeString($attribute['value']['end'])
-                                . ')';
+                                     . Core\DB()->escapeString($attribute['value']['start'])
+                                     . " AND "
+                                     . Core\DB()->escapeString($attribute['value']['end'])
+                                     . ')';
                         }
                     }
                 } else {
                     if ($attribute['type'] === 'string') {
-                        $value_to_match = trim(DB()->escapeString($attribute['value']), "'");
-                        $sql[] = "({$key} LIKE \"%{$value_to_match}%\")";
+                        $value_to_match = trim(Core\DB()->escapeString($attribute['value']), "'");
+                        $sql[]          = "({$key} LIKE \"%{$value_to_match}%\")";
                     } else {
-                        $sql[] = "({$key} = " . DB()->escapeString($attribute['value']) . ')';
+                        $sql[] = "({$key} = " . Core\DB()->escapeString($attribute['value']) . ')';
                     }
                 }
             }
@@ -175,7 +174,7 @@ class SQL
     public static function setOffsetLimit($offset, $limit)
     {
         $offset = intval($offset);
-        $limit = intval($limit);
+        $limit  = intval($limit);
 
         return "{$offset}, {$limit}";
     }

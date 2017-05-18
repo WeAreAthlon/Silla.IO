@@ -1,36 +1,48 @@
 <?php
+/**
+ * File System Cache Adapter Module Tests.
+ *
+ * @package    Silla.IO
+ * @subpackage Tests\Modules\Cache\Adapters
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
+ */
+
+namespace Tests\Modules\Cache\Adapters;
+
+use Core;
 use Core\Modules\Cache\Adapters\FileSystem;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 
 /**
- * @covers Core\Modules\Cache\Adapters\FileSystem
+ * @covers \Core\Modules\Cache\Adapters\FileSystem
  */
-class FileSystemTest extends PHPUnit_Framework_TestCase
+class FileSystemTest extends \PHPUnit_Framework_TestCase
 {
     protected $fileSystemCache;
     protected $key;
     protected $value;
     protected $expire;
 
+    /**
+     * Setup virtual file system. Modify root path to point to the virtual file system.
+     */
     public static function setUpBeforeClass()
     {
-        /* Setup virtual file system. */
         vfsStream::setup('root/');
-        /* Modify root path to point to the virtual file system. */
         Core\Config()->modifyPath('root', vfsStream::url('root/'));
     }
 
     protected function setUp()
     {
         $this->fileSystemCache = new FileSystem();
-        $this->key = 'foo';
-        $this->value = 'bar';
-        $this->expire = 2;
+        $this->key             = 'foo';
+        $this->value           = 'bar';
+        $this->expire          = 2;
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::store
+     * @covers \Core\Modules\Cache\Adapters\FileSystem::store
      */
     public function testStoringKeyValuePair()
     {
@@ -38,7 +50,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::exists
+     * @covers  \Core\Modules\Cache\Adapters\FileSystem::exists
      * @depends testStoringKeyValuePair
      */
     public function testKeyValuePairExists()
@@ -47,7 +59,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::fetch
+     * @covers  \Core\Modules\Cache\Adapters\FileSystem::fetch
      * @depends testStoringKeyValuePair
      */
     public function testFetchingKeyValuePair()
@@ -56,7 +68,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::remove
+     * @covers  \Core\Modules\Cache\Adapters\FileSystem::remove
      * @depends testStoringKeyValuePair
      */
     public function testRemovingKeyValuePair()
@@ -65,7 +77,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::store
+     * @covers \Core\Modules\Cache\Adapters\FileSystem::store
      */
     public function testStoringArray()
     {
@@ -73,7 +85,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::fetch
+     * @covers  \Core\Modules\Cache\Adapters\FileSystem::fetch
      * @depends testStoringArray
      */
     public function testFetchingArray()
@@ -82,7 +94,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::store
+     * @covers \Core\Modules\Cache\Adapters\FileSystem::store
      */
     public function testUpdatingKeyValuePair()
     {
@@ -90,7 +102,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::store
+     * @covers \Core\Modules\Cache\Adapters\FileSystem::store
      */
     public function testStoringKeyValuePairWithTimeout()
     {
@@ -98,7 +110,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::fetch
+     * @covers  \Core\Modules\Cache\Adapters\FileSystem::fetch
      * @depends testStoringKeyValuePairWithTimeout
      */
     public function testFetchingKeyValuePairWithTimeout()
@@ -107,7 +119,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::fetch
+     * @covers  \Core\Modules\Cache\Adapters\Database::fetch
      * @depends testStoringKeyValuePairWithTimeout
      */
     public function testFetchingExpiredKeyValuePair()
@@ -117,7 +129,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::fetch
+     * @covers \Core\Modules\Cache\Adapters\FileSystem::fetch
      */
     public function testFetchingNonexistentKeyValuePair()
     {
@@ -125,7 +137,7 @@ class FileSystemTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\FileSystem::remove
+     * @covers \Core\Modules\Cache\Adapters\FileSystem::remove
      */
     public function testRemovingNonexistentKeyValuePair()
     {

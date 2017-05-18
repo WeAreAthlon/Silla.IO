@@ -218,8 +218,8 @@ final class Utils
     public static function formatArrayOfFiles(array &$files)
     {
         $result = array();
-        $count = count($files['name']);
-        $keys = array_keys($files);
+        $count  = count($files['name']);
+        $keys   = array_keys($files);
 
         for ($i = 0; $i < $count; $i++) {
             foreach ($keys as $key) {
@@ -246,7 +246,7 @@ final class Utils
         }
 
         $sSuffix = substr($sSize, -1);
-        $iValue = substr($sSize, 0, -1);
+        $iValue  = substr($sSize, 0, -1);
 
         switch (strtoupper($sSuffix)) {
             /* Fall through the next value */
@@ -284,6 +284,7 @@ final class Utils
         foreach ($array as $key => $value) {
             $refs[$key] = &$array[$key];
         }
+
         return $refs;
     }
 

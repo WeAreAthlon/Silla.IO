@@ -1,7 +1,7 @@
 <phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.2/phpunit.xsd"
-    bootstrap="../../core/boot.php">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.2/phpunit.xsd"
+        bootstrap="../../core/boot.php">
     <testsuites>
         <testsuite name="Silla Test Suite">
             <directory>../../tests/core/base</directory>
@@ -18,11 +18,4 @@
         <log type="coverage-html" target="../coverage"/>
         <log type="testdox-html" target="../testdox/testdox.html"/>
     </logging>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">../../app</directory>
-            <directory suffix=".php">../../cms</directory>
-            <directory suffix=".php">../../core</directory>
-        </whitelist>
-    </filter>
 </phpunit>

@@ -82,12 +82,12 @@ abstract class Formatting implements Interfaces\Decorator
                 if (is_array($resource->{$field})) {
                     $resource->{$field} = json_encode(array(
                         'formatted' => $parser->parse($resource->{$field}['raw']),
-                        'raw' => $resource->{$field}['raw'],
+                        'raw'       => $resource->{$field}['raw'],
                     ));
                 } else {
                     $resource->{$field} = json_encode(array(
                         'formatted' => $parser->parse($resource->{$field}),
-                        'raw' => $resource->{$field},
+                        'raw'       => $resource->{$field},
                     ));
                 }
             } else {

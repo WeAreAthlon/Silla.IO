@@ -34,5 +34,6 @@ function smarty_modifier_capitalize($string, $uc_digits = false)
             }
         }
     }
+
     return $upper_string;
 }

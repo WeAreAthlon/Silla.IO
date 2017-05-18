@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-    <title>Page not found!</title>
+<title>Page not found!</title>
 </html>
 <body>
-    <h1>Page not found!</h1>
+<h1>Page not found!</h1>
 </body>

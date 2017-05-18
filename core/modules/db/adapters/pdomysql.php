@@ -38,12 +38,15 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
     {
         $query->appendTablesPrefix(Core\Config()->DB['tables_prefix']);
 
-        $sql = $this->buildSql($query);
+        $sql        = $this->buildSql($query);
         $query_hash = md5(serialize(array('query' => $sql, 'bind_params' => $query->bind_params)));
 
-        $query_cache_name = implode(',', array($query->table, implode(',', array_map(function ($item) {
-            return $item['table'];
-        }, $query->join))));
+        $query_cache_name = implode(',', array(
+            $query->table,
+            implode(',', array_map(function ($item) {
+                return $item['table'];
+            }, $query->join)),
+        ));
 
         if (array_key_exists($query_hash, Core\DbCache()->getCache($query_cache_name))) {
             return Core\DbCache()->getCache($query_cache_name, $query_hash);
@@ -107,7 +110,7 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
     public function execute($sql, array $bind_params = array())
     {
         if (count($bind_params) > 0) {
-            $stmt = $this->prepare($sql);
+            $stmt   = $this->prepare($sql);
             $result = $stmt->execute($bind_params);
         } else {
             $result = $this->exec($sql);
@@ -293,7 +296,7 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
             $sql[] = 'VALUES';
 
             if (isset($query->bind_params[0]) && is_array($query->bind_params[0])) {
-                $sql[] = implode(',', array_map(function ($item) {
+                $sql[]              = implode(',', array_map(function ($item) {
                     return '(' . implode(',', array_map(function () {
                         return '?';
                     }, $item)) . ')';
@@ -323,13 +326,13 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
                 return '(' . $item . ')';
             }, $query->where));
         } elseif ($query->type === 'create_table') {
-            $sql[] = 'CREATE TABLE IF NOT EXISTS';
-            $sql[] = $query->table;
+            $sql[]  = 'CREATE TABLE IF NOT EXISTS';
+            $sql[]  = $query->table;
             $fields = array();
 
             foreach ($query->db_fields as $field => $attributes) {
                 $is_primary_key = false;
-                $attrs = $this->convertAttributes($attributes);
+                $attrs          = $this->convertAttributes($attributes);
 
                 if ($pos = array_search('pk', $attrs)) {
                     unset($attrs[$pos]);
@@ -348,14 +351,14 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
         } elseif ($query->type === 'drop_table') {
             $sql[] = 'DROP TABLE ' . $query->table;
         } elseif ($query->type === 'add_columns') {
-            $sql[] = 'ALTER TABLE';
-            $sql[] = $query->table;
-            $sql[] = 'ADD COLUMN';
+            $sql[]  = 'ALTER TABLE';
+            $sql[]  = $query->table;
+            $sql[]  = 'ADD COLUMN';
             $fields = array();
 
             foreach ($query->db_fields as $field => $attributes) {
                 $is_primary_key = false;
-                $attrs = $this->convertAttributes($attributes);
+                $attrs          = $this->convertAttributes($attributes);
 
                 if ($pos = array_search('pk', $attrs)) {
                     unset($attrs[$pos]);
@@ -443,7 +446,15 @@ class PdoMySql extends \PDO implements Interfaces\Adapter
     public static function getSupportedJoinTypes()
     {
         return array(
-            'LEFT', 'RIGHT', 'INNER', 'OUTER', 'CROSS', 'LEFT OUTER', 'RIGHT OUTER', 'NATURAL', 'STRAIGHT_JOIN'
+            'LEFT',
+            'RIGHT',
+            'INNER',
+            'OUTER',
+            'CROSS',
+            'LEFT OUTER',
+            'RIGHT OUTER',
+            'NATURAL',
+            'STRAIGHT_JOIN',
         );
     }
 }

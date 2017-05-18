@@ -43,7 +43,7 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
     public function __construct()
     {
         $this->tableName = Core\Config()->CACHE['database']['table_name'];
-        $this->fields = Core\Config()->CACHE['database']['fields'];
+        $this->fields    = Core\Config()->CACHE['database']['fields'];
     }
 
     /**
@@ -65,7 +65,7 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
         }
         $value = json_encode($value);
 
-        $query = new Query();
+        $query  = new Query();
         $exists = $query
             ->select('all')
             ->from($this->tableName)
@@ -76,12 +76,14 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
             $insert = $query
                 ->insert($this->fields, array(md5($key), $value, $expire))
                 ->into($this->tableName);
+
             return Core\DB()->run($insert);
         } else {
             $update = $query
                 ->update($this->tableName)
                 ->set($this->fields, array(md5($key), $value, $expire))
                 ->where("{$this->fields[0]} = ?", array(md5($key)));
+
             return Core\DB()->run($update);
         }
     }
@@ -114,6 +116,7 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
 
         if ($expire && $expire < time()) {
             $query->remove()->run();
+
             return null;
         }
 
@@ -129,7 +132,7 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
      */
     public function exists($key)
     {
-        $query = new Query();
+        $query  = new Query();
         $exists = $query
             ->select('all')
             ->from($this->tableName)
@@ -156,6 +159,7 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
 
         if ($query->exists()) {
             $query->remove()->run();
+
             return true;
         } else {
             return false;

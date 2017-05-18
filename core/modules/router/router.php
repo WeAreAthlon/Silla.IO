@@ -77,8 +77,8 @@ final class Router
      */
     public function dispatch(Request $request, Routes $routes)
     {
-        $this->routes  = $routes;
-        $this->request = $request;
+        $this->routes   = $routes;
+        $this->request  = $request;
         $this->response = new Response;
 
         if (Core\Session()->get('_token')) {
@@ -99,7 +99,7 @@ final class Router
 
         if (class_exists($controller)) {
             $controller = new $controller;
-            $action = $request->action();
+            $action     = $request->action();
 
             /* Check if there is such action implemented and filter for magic methods like __construct, etc. */
             if (is_callable(array($controller, $action)) && false === strpos($action, '__')) {
@@ -141,17 +141,17 @@ final class Router
                 $routes = new Routes($mode);
                 unset($options['_mode']);
 
-                $route = $routes->extractUrl($options);
+                $route            = $routes->extractUrl($options);
                 $route['pattern'] = $routes->toRoute($route['pattern']);
             } else {
                 unset($options['_mode']);
-                $route = $this->routes->extractUrl($options);
+                $route            = $this->routes->extractUrl($options);
                 $route['pattern'] = $this->routes->toRoute($route['pattern']);
             }
 
             foreach ($route['pattern'] as $key => $url_element) {
                 if (isset($url_element{0}) && ($url_element{0} === Core\Config()->ROUTER['variables_prefix'])) {
-                    $option_key = str_replace(Core\Config()->ROUTER['variables_prefix'], '', $url_element);
+                    $option_key           = str_replace(Core\Config()->ROUTER['variables_prefix'], '', $url_element);
                     $options[$option_key] = isset($options[$option_key]) ? $options[$option_key] : null;
 
                     $route['pattern'][$key] = $options[$option_key];
@@ -302,6 +302,7 @@ final class Router
         }
 
         /* Default mode */
+
         return end($modes);
     }
 
@@ -338,7 +339,7 @@ final class Router
 
         foreach ($route['maps_to'] as $role => $value) {
             if ('*' === $value) {
-                $_element = array_search(Core\Config()->ROUTER['variables_prefix'] . $role, $routedUrl);
+                $_element        = array_search(Core\Config()->ROUTER['variables_prefix'] . $role, $routedUrl);
                 $elements[$role] = isset($requestElements[$_element]) ? $requestElements[$_element] : null;
             }
         }
@@ -363,7 +364,7 @@ final class Router
                 unset($process[$key][$k]);
                 if (is_array($v)) {
                     $process[$key][stripslashes($k)] = $v;
-                    $process[] = &$process[$key][stripslashes($k)];
+                    $process[]                       = &$process[$key][stripslashes($k)];
                 } else {
                     $process[$key][stripslashes($k)] = stripslashes($v);
                 }
@@ -388,7 +389,7 @@ final class Router
             $path = explode('&', $path[1]);
         }
 
-        $path = $path[0];
+        $path            = $path[0];
         $applicationPath = Core\Config()->urls('relative');
 
         if ($applicationPath !== '/') {

@@ -101,7 +101,7 @@ abstract class Migration
      */
     private function beforeUp()
     {
-        $query = new Query();
+        $query     = new Query();
         $migration = $query->select('*')->from('migrations')->where('version = ?', array($this->version))->first();
 
         if ($migration) {
@@ -116,7 +116,7 @@ abstract class Migration
      */
     private function beforeDown()
     {
-        $query = new Query();
+        $query     = new Query();
         $migration = $query->select('*')->from('migrations')->where('version = ?', array($this->version))->first();
 
         if (!$migration) {
@@ -237,7 +237,7 @@ abstract class Migration
     private function parseColumn($options)
     {
         $attributes = explode(';', $options);
-        $result = array();
+        $result     = array();
 
         foreach ($attributes as $attr) {
             if (strpos($attr, ':') !== false) {

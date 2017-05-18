@@ -51,10 +51,10 @@ final class DB
         $query = new Query();
         $query->createTable('migrations')->columns(array(
             'version' => array(
-                'type' => 'string',
-                'length' => '10',
-                'not_null' => true
-            )
+                'type'     => 'string',
+                'length'   => '10',
+                'not_null' => true,
+            ),
         ))->tableEngine('MyISAM')->run();
     }
 
@@ -67,10 +67,10 @@ final class DB
      */
     public static function migrate($version = null)
     {
-        $query = new Query();
-        $executed_migrations = Core\Utils::arrayFlatten($query->select('*')->from('migrations')->all());
+        $query                 = new Query();
+        $executed_migrations   = Core\Utils::arrayFlatten($query->select('*')->from('migrations')->all());
         $migrations_to_execute = array();
-        $dir = 'up';
+        $dir                   = 'up';
 
         if ($version) {
             /* Migrate to specific version */
@@ -117,7 +117,7 @@ final class DB
      */
     public static function rollback($step = 1)
     {
-        $query = new Query();
+        $query                 = new Query();
         $migrations_to_execute = $query->select('*')->from('migrations')->order('version', 'desc')->limit($step)->all();
 
         foreach ($migrations_to_execute as $item) {

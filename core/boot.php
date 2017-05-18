@@ -16,18 +16,18 @@ if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 }
 
 if (!defined('SILLA_ENVIRONMENT')) {
-    define('SILLA_ENVIRONMENT', 'development');
+    require __DIR__ . DIRECTORY_SEPARATOR . 'loader.php';
 }
 
 chdir(dirname(__DIR__));
 
 require dirname(__DIR__)
-    . DIRECTORY_SEPARATOR
-    . 'configurations'
-    . DIRECTORY_SEPARATOR
-    . SILLA_ENVIRONMENT
-    . DIRECTORY_SEPARATOR
-    . 'environment.php';
+        . DIRECTORY_SEPARATOR
+        . 'configurations'
+        . DIRECTORY_SEPARATOR
+        . SILLA_ENVIRONMENT
+        . DIRECTORY_SEPARATOR
+        . 'environment.php';
 require __DIR__ . DIRECTORY_SEPARATOR . 'core.php';
 
 Registry()->set('locale', Config()->I18N['default']);

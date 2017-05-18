@@ -1,11 +1,22 @@
 <?php
+/**
+ * Database Cache Adapter Module Tests.
+ *
+ * @package    Silla.IO
+ * @subpackage Tests\Modules\Cache\Adapters
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
+ */
+
+namespace Tests\Modules\Cache\Adapters;
+
 use Core\Modules\Cache\Adapters\Database;
 use Core\Modules\DB\Query;
 
 /**
- * @covers Core\Modules\Cache\Adapters\Database
+ * @covers \Core\Modules\Cache\Adapters\Database
  */
-class DatabaseTest extends PHPUnit_Framework_TestCase
+class DatabaseTest extends \PHPUnit_Framework_TestCase
 {
     protected $databaseCache;
     protected $tableName;
@@ -19,11 +30,11 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     {
         try {
             $this->databaseCache = new Database();
-            $this->tableName = 'cache';
-            $this->fields = array('cache_key', 'value', 'expire');
+            $this->tableName     = 'cache';
+            $this->fields        = array('cache_key', 'value', 'expire');
 
-            $this->key = 'foo';
-            $this->value = 'bar';
+            $this->key    = 'foo';
+            $this->value  = 'bar';
             $this->expire = 2;
         } catch (\Exception $e) {
             $this->markTestSkipped(
@@ -33,7 +44,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::store
+     * @covers \Core\Modules\Cache\Adapters\Database::store
      */
     public function testStoringKeyValuePair()
     {
@@ -48,7 +59,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::exists
+     * @covers  \Core\Modules\Cache\Adapters\Database::exists
      * @depends testStoringKeyValuePair
      */
     public function testKeyValuePairExists()
@@ -57,7 +68,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::fetch
+     * @covers  \Core\Modules\Cache\Adapters\Database::fetch
      * @depends testStoringKeyValuePair
      */
     public function testFetchingKeyValuePair()
@@ -66,7 +77,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::remove
+     * @covers  \Core\Modules\Cache\Adapters\Database::remove
      * @depends testStoringKeyValuePair
      */
     public function testRemovingKeyValuePair()
@@ -75,7 +86,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::store
+     * @covers \Core\Modules\Cache\Adapters\Database::store
      */
     public function testStoringArray()
     {
@@ -83,7 +94,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::fetch
+     * @covers  \Core\Modules\Cache\Adapters\Database::fetch
      * @depends testStoringArray
      */
     public function testFetchingArray()
@@ -92,7 +103,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::store
+     * @covers \Core\Modules\Cache\Adapters\Database::store
      */
     public function testUpdatingKeyValuePair()
     {
@@ -100,7 +111,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::store
+     * @covers \Core\Modules\Cache\Adapters\Database::store
      */
     public function testStoringKeyValuePairWithTimeout()
     {
@@ -108,7 +119,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::fetch
+     * @covers  \Core\Modules\Cache\Adapters\Database::fetch
      * @depends testStoringKeyValuePairWithTimeout
      */
     public function testFetchingKeyValuePairWithTimeout()
@@ -117,7 +128,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::fetch
+     * @covers  \Core\Modules\Cache\Adapters\Database::fetch
      * @depends testStoringKeyValuePairWithTimeout
      */
     public function testFetchingExpiredKeyValuePair()
@@ -127,7 +138,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::fetch
+     * @covers \Core\Modules\Cache\Adapters\Database::fetch
      */
     public function testFetchingNonexistentKeyValuePair()
     {
@@ -135,7 +146,7 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Database::remove
+     * @covers \Core\Modules\Cache\Adapters\Database::remove
      */
     public function testRemovingNonexistentKeyValuePair()
     {

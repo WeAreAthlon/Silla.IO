@@ -103,7 +103,7 @@ class CMSUserRoles extends CMS
 
         $this->scope = array(
             'permissions' => Helpers\CMSUsers::getAccessibilityScope(),
-            'ownership' => Helpers\Ownership::getScope($this->labels['modules']),
+            'ownership'   => Helpers\Ownership::getScope($this->labels['modules']),
         );
     }
 }

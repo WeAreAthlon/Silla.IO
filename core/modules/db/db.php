@@ -103,7 +103,7 @@ final class DB
      */
     private static function createInstance(array $dsn)
     {
-        $hash = md5(serialize($dsn));
+        $hash     = md5(serialize($dsn));
         $instance = null;
 
         if (!isset(self::$instances[$hash])) {
@@ -135,7 +135,7 @@ final class DB
             }
 
             self::$instances[$hash] = $instance;
-            $instance->cache = new DbCache($dsn);
+            $instance->cache        = new DbCache($dsn);
         }
 
         return self::$instances[$hash];
@@ -176,7 +176,7 @@ final class DB
     final public static function with(array $dsn, $scope)
     {
         $default_instance = self::$instance;
-        self::$instance = self::createInstance($dsn);
+        self::$instance   = self::createInstance($dsn);
 
         if (is_callable($scope)) {
             $scope(self::$instance);

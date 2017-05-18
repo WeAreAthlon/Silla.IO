@@ -53,7 +53,7 @@ class FlashMessage
     /**
      * Returns flash message data.
      *
-     * @uses fetch() To fetch the flash message from the user session.
+     * @uses   fetch() To fetch the flash message from the user session.
      * @access public
      * @static
      *
@@ -73,7 +73,7 @@ class FlashMessage
             $layout = in_array($message['context'], $message_types, true) ? $message['context'] : 'info';
 
             $flash_data = array(
-                'layout' => $layout,
+                'layout'  => $layout,
                 'message' => $message['message'],
             );
 

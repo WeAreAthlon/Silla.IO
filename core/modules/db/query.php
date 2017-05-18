@@ -66,13 +66,13 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     private $query_options = array(
         'bind_params' => array(),
-        'where' => array(),
-        'table' => null,
-        'limit' => null,
-        'order' => array(),
-        'join' => array(),
-        'page' => null,
-        'per_page' => null,
+        'where'       => array(),
+        'table'       => null,
+        'limit'       => null,
+        'order'       => array(),
+        'join'        => array(),
+        'page'        => null,
+        'per_page'    => null,
     );
 
     /**
@@ -120,7 +120,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     {
         if (!self::$reflection->hasMethod($name) ||
             (self::$reflection->hasMethod($name) &&
-                self::$reflection->getMethod($name)->getNumberOfParameters() != count($args)
+             self::$reflection->getMethod($name)->getNumberOfParameters() != count($args)
             )
         ) {
             $this->run();
@@ -211,7 +211,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
 
             if ($this->objects_class) {
                 foreach ($items as $item) {
-                    $obj = new $this->objects_class($item);
+                    $obj           = new $this->objects_class($item);
                     $this->items[] = $obj;
                 }
             } else {
@@ -227,7 +227,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
                 foreach ($this->inclusion as $field => $include) {
                     switch ($include['type']) {
                         case 'has_many':
-                            $items = $include['meta']['class_name']::find()->all();
+                            $items  = $include['meta']['class_name']::find()->all();
                             $_items = array();
 
                             foreach ($items as $item) {
@@ -258,8 +258,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
                             break;
                         case 'habtm':
                             $associatedTable = $include['meta']['class_name']::$tableName;
-                            $associatedKey = $include['meta']['class_name']::primaryKeyField();
-                            $meta = $include['meta'];
+                            $associatedKey   = $include['meta']['class_name']::primaryKeyField();
+                            $meta            = $include['meta'];
 
                             $items = $meta['class_name']::find()->join(
                                 $meta['table'],
@@ -445,7 +445,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     {
         $obj = clone $this;
 
-        $obj->query_options['type'] = 'select';
+        $obj->query_options['type']      = 'select';
         $obj->query_options['db_fields'] = $fields;
 
         return $obj;
@@ -480,7 +480,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function join($table, $condition, $type = 'INNER')
     {
-        $obj = clone $this;
+        $obj                          = clone $this;
         $obj->query_options['join'][] = array(
             'table'     => $table,
             'condition' => $condition,
@@ -504,17 +504,17 @@ class Query implements \ArrayAccess, \Countable, \Iterator
 
             $this->associations = array(
                 'belongs_to' => $relatedObject->belongsTo,
-                'habtm' => $relatedObject->hasAndBelongsToMany,
-                'has_many' => $relatedObject->hasMany,
+                'habtm'      => $relatedObject->hasAndBelongsToMany,
+                'has_many'   => $relatedObject->hasMany,
             );
         }
 
         foreach ($this->associations as $type => $associations) {
             if (isset($associations[$with])) {
                 $this->inclusion[$with] = array(
-                    'type' => $type,
+                    'type'  => $type,
                     'field' => $with,
-                    'meta' => $associations[$with],
+                    'meta'  => $associations[$with],
                 );
             }
         }
@@ -549,7 +549,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function order($field, $direction)
     {
-        $obj = clone $this;
+        $obj                           = clone $this;
         $obj->query_options['order'][] = array(
             'field'     => $field,
             'direction' => $direction,
@@ -568,8 +568,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function limit($limit, $offset = null)
     {
-        $obj = clone $this;
-        $obj->query_options['limit'] = $limit;
+        $obj                          = clone $this;
+        $obj->query_options['limit']  = $limit;
         $obj->query_options['offset'] = $offset;
 
         return $obj;
@@ -585,8 +585,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function set(array $fields, array $values)
     {
-        $obj = clone $this;
-        $obj->query_options['db_fields'] = $fields;
+        $obj                               = clone $this;
+        $obj->query_options['db_fields']   = $fields;
         $obj->query_options['bind_params'] = array_merge($obj->query_options['bind_params'], $values);
 
         return $obj;
@@ -603,7 +603,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function into($tableName)
     {
-        $obj = clone $this;
+        $obj                         = clone $this;
         $obj->query_options['table'] = $tableName;
 
         return $obj;
@@ -619,7 +619,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function insert($fields, array $values)
     {
-        $obj = clone $this;
+        $obj                               = clone $this;
         $obj->query_options['type']        = 'insert';
         $obj->query_options['db_fields']   = $fields;
         $obj->query_options['bind_params'] = array_merge($obj->query_options['bind_params'], $values);
@@ -636,8 +636,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function update($tableName)
     {
-        $obj = clone $this;
-        $obj->query_options['type'] = 'update';
+        $obj                         = clone $this;
+        $obj->query_options['type']  = 'update';
         $obj->query_options['table'] = $tableName;
 
         return $obj;
@@ -650,7 +650,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function remove()
     {
-        $obj = clone $this;
+        $obj                        = clone $this;
         $obj->query_options['type'] = 'remove';
 
         return $obj;
@@ -665,8 +665,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function createTable($tableName)
     {
-        $obj = clone $this;
-        $obj->query_options['type'] = 'create_table';
+        $obj                         = clone $this;
+        $obj->query_options['type']  = 'create_table';
         $obj->query_options['table'] = $tableName;
 
         return $obj;
@@ -681,8 +681,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function dropTable($tableName)
     {
-        $obj = clone $this;
-        $obj->query_options['type'] = 'drop_table';
+        $obj                         = clone $this;
+        $obj->query_options['type']  = 'drop_table';
         $obj->query_options['table'] = $tableName;
 
         return $obj;
@@ -697,8 +697,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function addColumns($tableName)
     {
-        $obj = clone $this;
-        $obj->query_options['type'] = 'add_columns';
+        $obj                         = clone $this;
+        $obj->query_options['type']  = 'add_columns';
         $obj->query_options['table'] = $tableName;
 
         return $obj;
@@ -713,8 +713,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function dropColumns($tableName)
     {
-        $obj = clone $this;
-        $obj->query_options['type'] = 'drop_columns';
+        $obj                         = clone $this;
+        $obj->query_options['type']  = 'drop_columns';
         $obj->query_options['table'] = $tableName;
 
         return $obj;
@@ -729,7 +729,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function columns($columns)
     {
-        $obj = clone $this;
+        $obj                             = clone $this;
         $obj->query_options['db_fields'] = $columns;
 
         return $obj;
@@ -744,7 +744,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function tableEngine($engine)
     {
-        $obj = clone $this;
+        $obj                                = clone $this;
         $obj->query_options['table_engine'] = $engine;
 
         return $obj;
@@ -768,7 +768,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      */
     public function getCount()
     {
-        $obj = clone $this;
+        $obj                         = clone $this;
         $obj->query_options['limit'] = $obj->query_options['offset'] = null;
 
         return count(Core\DB()->run($obj));
@@ -786,9 +786,9 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     {
         $obj = clone $this;
 
-        $obj->page = $page;
-        $obj->per_page = $per;
-        $obj->query_options['limit'] = $per;
+        $obj->page                    = $page;
+        $obj->per_page                = $per;
+        $obj->query_options['limit']  = $per;
         $obj->query_options['offset'] = ($page > 0 ? ($page - 1) : 0) * $per;
 
         return $obj;
@@ -876,7 +876,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     {
         if (!$this->tablesPrefixAppended) {
             $this->query_options['table'] = $prefix . $this->query_options['table'];
-            $this->tablesPrefixAppended = true;
+            $this->tablesPrefixAppended   = true;
         }
     }
 }

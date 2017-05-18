@@ -52,11 +52,11 @@ abstract class CMS extends Core\Base\Entity
         $this->addBeforeFilters(array('loadVendorAssets'));
 
         $this->addBeforeFilters(array('loadFormAssets'), array(
-            'only' => array('create', 'edit')
+            'only' => array('create', 'edit'),
         ));
 
         $this->addBeforeFilters(array('loadListingAssets'), array(
-            'only' => array('index')
+            'only' => array('index'),
         ));
 
         $this->addAfterFilters(array('loadAccessibilityScope', 'loadCmsAssets'));

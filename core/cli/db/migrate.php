@@ -29,9 +29,9 @@ final class Migrate
     public static function create($name)
     {
         $migration_name = strtolower($name) . '_' . time();
-        $migration_tpl = file_get_contents(
+        $migration_tpl  = file_get_contents(
             Core\Config()->paths('root') . 'core' . DIRECTORY_SEPARATOR .
-            'cli' .  DIRECTORY_SEPARATOR . '_templates' .  DIRECTORY_SEPARATOR . 'migration.php.tpl'
+            'cli' . DIRECTORY_SEPARATOR . '_templates' . DIRECTORY_SEPARATOR . 'migration.php.tpl'
         );
 
         $name = self::getMigrationName($migration_name);
@@ -65,9 +65,9 @@ final class Migrate
      */
     public static function up($version)
     {
-        $migration = self::getMigration($version);
+        $migration     = self::getMigration($version);
         $migrationName = self::getMigrationName($migration['name']);
-        $name = 'DB\Migrations\\' . $migrationName;
+        $name          = 'DB\Migrations\\' . $migrationName;
         require_once(
             Core\Config()->paths('root') . implode(
                 DIRECTORY_SEPARATOR,
@@ -87,9 +87,9 @@ final class Migrate
      */
     public static function down($version)
     {
-        $migration = self::getMigration($version);
+        $migration     = self::getMigration($version);
         $migrationName = self::getMigrationName($migration['name']);
-        $name = 'DB\Migrations\\' . $migrationName;
+        $name          = 'DB\Migrations\\' . $migrationName;
         require_once(
             Core\Config()->paths('root') . implode(
                 DIRECTORY_SEPARATOR,

@@ -32,7 +32,7 @@ final class Create extends Core\Base\Task
     {
         $filename = isset($params[0]) && is_file($params[0]) ? $params[0] : null;
 
-        if ( ! $filename) {
+        if (!$filename) {
             throw new \InvalidArgumentException('The passed dump file cannot be found!');
         }
 

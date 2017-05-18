@@ -38,7 +38,7 @@ final class Routes
      *
      * @param array $mode Silla.IO mode.
      *
-     * @uses Core\Cache()
+     * @uses   Core\Cache()
      *
      * @access private
      */
@@ -104,17 +104,16 @@ final class Routes
      */
     public function extractRoute(array $url)
     {
-        $route = null;
-        $routes = $this->getAll();
+        $route         = null;
+        $routes        = $this->getAll();
         $default_route = end($routes);
 
         foreach ($url as $position => $element) {
             foreach ($routes as $key => $route) {
-                $route_elements = $this->toRoute($route['pattern']);
+                $route_elements            = $this->toRoute($route['pattern']);
                 $route_elements[$position] = isset($route_elements[$position]) ? $route_elements[$position] : null;
-                if (
-                    (($route_elements[$position] === '')
-                    || ($route_elements[$position]{0} !== Core\Config()->ROUTER['variables_prefix']))
+                if ((($route_elements[$position] === '')
+                     || ($route_elements[$position]{0} !== Core\Config()->ROUTER['variables_prefix']))
                     && ($route_elements[$position] !== $element)
                 ) {
                     unset($routes[$key]);
@@ -123,7 +122,7 @@ final class Routes
         }
 
         if ($routes) {
-            $route = reset($routes);
+            $route      = reset($routes);
             $routed_url = $this->toRoute($route['pattern']);
             $test_route = $route['maps_to'];
 
@@ -139,7 +138,7 @@ final class Routes
             $_controller = $this->mode['namespace'] . '\Controllers\\' . $test_route['controller'];
 
             if (!class_exists($_controller)) {
-                $route = next($routes);
+                $route       = next($routes);
                 $_controller = $this->mode['namespace'] . '\Controllers\\' . $route['maps_to']['controller'];
 
                 if (!method_exists($_controller, $test_route['controller'])) {
@@ -162,13 +161,12 @@ final class Routes
      */
     public function extractUrl(array $url_mapping)
     {
-        $routes = $this->getAll();
-        $default_route = end($routes);
+        $routes            = $this->getAll();
+        $default_route     = end($routes);
         $url_mapping_count = count($url_mapping);
 
         foreach ($routes as $key => $route) {
-            if (
-                $url_mapping_count != count($route['maps_to'])
+            if ($url_mapping_count != count($route['maps_to'])
                 || array_keys($url_mapping) !== array_keys($route['maps_to'])
             ) {
                 unset($routes[$key]);

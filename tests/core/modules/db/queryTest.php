@@ -1,7 +1,18 @@
 <?php
+/**
+ * DB Query Module Tests.
+ *
+ * @package    Silla.IO
+ * @subpackage Tests\Modules\DB
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
+ */
+
+namespace Tests\Modules\DB;
+
 use Core\Modules\DB;
 
-class QueryTest extends PHPUnit_Framework_TestCase
+class QueryTest extends \PHPUnit_Framework_TestCase
 {
     private $query;
 
@@ -80,7 +91,6 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
     public function testRand()
     {
-
     }
 
     public function testGet()
@@ -105,7 +115,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testIncompatibleObjectForCreate()
     {
@@ -113,7 +123,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testIncompatibleObjectForDelete()
     {

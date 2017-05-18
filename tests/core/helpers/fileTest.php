@@ -1,28 +1,43 @@
 <?php
+/**
+ * File Helper Tests.
+ *
+ * @package    Silla.IO
+ * @subpackage Tests\Core\Helpers
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
+ */
+
+namespace Tests\Core\Helpers;
+
+use Core;
 use Core\Helpers\File;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 use phpmock\phpunit\PHPMock;
 
 /**
- * @covers Core\Helpers\File
+ * @covers \Core\Helpers\File
  */
-class FileTest extends PHPUnit_Framework_TestCase
+class FileTest extends \PHPUnit_Framework_TestCase
 {
     use PHPMock;
 
     protected static $vfs;
     protected static $rootPath;
+
     protected $fullPath;
     protected $relativePath;
     protected $restrictedPath;
     protected $fileRoot;
     protected $moveUploadedFile;
     protected $uploadedFile;
+    protected $baseName;
 
+    /**
+     * Setup virtual file system. Modify root path to point to the virtual file system.
+     */
     public static function setUpBeforeClass()
     {
-        /* Setup virtual file system. */
         self::$vfs = vfsStream::setup('root/');
 
         /* Copy a plain text file for testing purposes. */
@@ -32,38 +47,40 @@ class FileTest extends PHPUnit_Framework_TestCase
         );
 
         self::$rootPath = Core\Config()->paths('root');
-        /* Modify root path to point to the virtual file system. */
         Core\Config()->modifyPath('root', vfsStream::url('root/'));
     }
 
+    /**
+     * Tear down virtual file system. Reset root path to point to the real file system.
+     */
     public static function tearDownAfterClass()
     {
-        /* Tear down virtual file system. */
         self::$vfs = null;
-        /* Reset root path to point to the real file system. */
         Core\Config()->modifyPath('root', self::$rootPath);
     }
 
+    /**
+     * Mock built-in function move_uploaded_file for namespace Core\Helpers.
+     */
     protected function setUp()
     {
-        $this->fullPath = Core\Config()->paths('root') . 'temp/cache';
-        $this->relativePath = 'temp/cache';
+        $this->fullPath       = Core\Config()->paths('root') . 'temp/cache';
+        $this->relativePath   = 'temp/cache';
         $this->restrictedPath = '../malicious_script.php';
-        $this->fileRoot = 'test';
-        $this->baseName = 'test.txt';
-        $this->uploadedFile = 'uploaded.txt';
+        $this->fileRoot       = 'test';
+        $this->baseName       = 'test.txt';
+        $this->uploadedFile   = 'uploaded.txt';
 
         $_FILES = array(
             'test' => array(
-                'name' => $this->baseName,
-                'type' => 'text/plain',
-                'size' => 2048,
+                'name'     => $this->baseName,
+                'type'     => 'text/plain',
+                'size'     => 2048,
                 'tmp_name' => Core\Config()->paths('root') . $this->baseName,
-                'error' => 0
-            )
+                'error'    => 0,
+            ),
         );
 
-        /* Mock built-in function move_uploaded_file for namespace Core\Helpers */
         $this->moveUploadedFile = $this->getFunctionMock('Core\Helpers', 'move_uploaded_file');
     }
 
@@ -154,7 +171,7 @@ class FileTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Core\Helpers\File::validate
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testValidatingFileDoesNotExist()
     {
@@ -209,11 +226,12 @@ class FileTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Mock built-in function move_uploaded_file to return TRUE.
+     *
      * @covers Core\Helpers\File::upload
      */
     public function testUploadingWithoutSaveName()
     {
-        /* Mock built-in function move_uploaded_file to return TRUE */
         $this->moveUploadedFile->expects($this->once())->willReturn(true);
 
         $this->assertTrue(
@@ -225,11 +243,12 @@ class FileTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Mock built-in function move_uploaded_file to return TRUE.
+     *
      * @covers Core\Helpers\File::upload
      */
     public function testUploadingWithNonExistentDirectory()
     {
-        /* Mock built-in function move_uploaded_file to return TRUE */
         $this->moveUploadedFile->expects($this->once())->willReturn(true);
 
         $this->assertTrue(
@@ -242,11 +261,12 @@ class FileTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Mock built-in function move_uploaded_file to return FALSE.
+     *
      * @covers Core\Helpers\File::upload
      */
     public function testUploadingUnsuccessfully()
     {
-        /* Mock built-in function move_uploaded_file to return FALSE */
         $this->moveUploadedFile->expects($this->once())->willReturn(false);
 
         $this->assertFalse(
@@ -303,7 +323,7 @@ class FileTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Core\Helpers\File::getContentsCurl
-     * @todo Test with credentials.
+     * @todo   Test with credentials.
      */
     public function testGettingContentsCurl()
     {
@@ -337,7 +357,7 @@ class FileTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Core\Helpers\File::delete
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testDeletingNonExistentFile()
     {

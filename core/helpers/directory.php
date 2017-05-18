@@ -68,7 +68,7 @@ class Directory
         /* Read entries from the directory handle. */
         while (($entry = readdir($handle)) !== false) {
             /* Skip directory handles for current and previous directories. */
-            if ($entry == '.'  || $entry == '..') {
+            if ($entry == '.' || $entry == '..') {
                 continue;
             }
 
@@ -114,7 +114,7 @@ class Directory
         /* Read entries from the directory handle. */
         while (($entry = readdir($handle)) !== false) {
             /* Skip directory handles for current and previous directories. */
-            if ($entry == '.'  || $entry == '..') {
+            if ($entry == '.' || $entry == '..') {
                 continue;
             }
 

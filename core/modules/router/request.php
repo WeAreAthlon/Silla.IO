@@ -67,7 +67,8 @@ final class Request
         $this->token    = '';
 
         /* Make all routed variables accessible as a GET variables */
-        $this->context['_GET'] = array_merge(isset($this->context['_GET']) ? $this->context['_GET'] : array(), $elements);
+        $context               = isset($this->context['_GET']) ? $this->context['_GET'] : array();
+        $this->context['_GET'] = array_merge($context, $elements);
     }
 
     /**
@@ -294,7 +295,7 @@ final class Request
             $url = $this->context['_SERVER']['HTTP_REFERER'];
         } elseif (strpos($url, '/') === false) {
             $url = Core\Config()->urls('relative') .
-                Core\Router()->toUrl(array('controller' => $this->controller(), 'action' => $url));
+                   Core\Router()->toUrl(array('controller' => $this->controller(), 'action' => $url));
         }
 
         if (headers_sent() || $this->is('xhr')) {

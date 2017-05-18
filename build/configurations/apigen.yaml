@@ -1,18 +1,18 @@
 source:
-    - app
-    - cms
-    - core
-    - configurations
-    - tasks
+  - app
+  - cms
+  - core
+  - tasks
+  - configurations
 
-destination: public/docs
+destination: public/doc/
 
-title: Silla API
+title: 'Silla.IO API'
 
 accessLevels:
-    - public
-    - protected
-    - private
+  - public
+  - protected
+  - private
 
 todo: true
 tree: true

@@ -42,8 +42,9 @@ final class Clear
 
         foreach ($modes as $mode) {
             Core\Config()->setMode($mode);
+            $rootPath   = Core\Config()->paths('root');
             $assetsPath = Core\Config()->paths('assets');
-            $assets = Core\Utils::replaceFirstOccurrence(Core\Config()->paths('root'), '', $assetsPath['distribution']);
+            $assets     = Core\Utils::replaceFirstOccurrence($rootPath, '', $assetsPath['distribution']);
 
             if (file_exists($assetsPath['distribution'] . 'js')) {
                 self::$CACHES['assets'][] = $assets . 'js';

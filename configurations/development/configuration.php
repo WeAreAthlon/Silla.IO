@@ -42,11 +42,11 @@ class Configuration extends Configurations\Staging\Configuration
      * @example redis     Redis cache adapter connection parameters.
      */
     public $CACHE = array(
-        'adapter'       => 'FileSystem',
-        'routes'        => false,
-        'labels'        => false,
-        'db_schema'     => true,
-        'database' => array(
+        'adapter'   => 'FileSystem',
+        'routes'    => false,
+        'labels'    => false,
+        'db_schema' => true,
+        'database'  => array(
             'table_name' => 'cache',
             'fields'     => array(
                 'cache_key',
@@ -54,11 +54,11 @@ class Configuration extends Configurations\Staging\Configuration
                 'expire',
             ),
         ),
-        'redis' => array(
-            'scheme'    => 'tcp',
-            'host'      => '127.0.0.1',
-            'port'      => 6379,
-            'timeout'   => 5.0,
+        'redis'     => array(
+            'scheme'  => 'tcp',
+            'host'    => '127.0.0.1',
+            'port'    => 6379,
+            'timeout' => 5.0,
         ),
     );
 
@@ -75,31 +75,31 @@ class Configuration extends Configurations\Staging\Configuration
     );
 
     /**
-     * @var (int|string)[] $MAILER Mailer configuration options.
+     * @var     (int|string)[] $MAILER Mailer configuration options.
      *
      * @example type        Type of the mailing infrastructure to use(Sendmail|SMTP).
      * @example identity    Mailer identity signature.
      * @example credentials Mailer service credentials.
      */
     public $MAILER = array(
-        'type' => 'Sendmail',
-        'debug' => true,
-        'identity' => array(
+        'type'        => 'Sendmail',
+        'debug'       => true,
+        'identity'    => array(
             'name'  => 'Athlon Production',
             'email' => 'hi@athlonproduction.com',
         ),
         'credentials' => array(
             'smtp' => array(
-                'host' => 'localhost',
-                'port' => '25',
-                'user' => '',
+                'host'     => 'localhost',
+                'port'     => '25',
+                'user'     => '',
                 'password' => '',
             ),
         ),
     );
 
     /**
-     * @var (int|string)[] $DB DSN (Data source name).
+     * @var     (int|string)[] $DB DSN (Data source name).
      *
      * @example adapter        Adapter type (pdo_mysql|mysql|sqllite).
      * @example host           Connection host name.
@@ -130,7 +130,7 @@ class Configuration extends Configurations\Staging\Configuration
      * @example public_key  Public key for Captcha.
      * @example private_key Private key for Captcha.
      *
-     * @link https://www.google.com/recaptcha/
+     * @link    https://www.google.com/recaptcha/
      */
     public $CAPTCHA = array(
         'enabled'     => true,

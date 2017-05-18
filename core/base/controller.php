@@ -92,7 +92,7 @@ abstract class Controller
             ),
         ));
 
-        $this->labels          = $this->labels          ? $this->labels          : array($this->meta['controller']);
+        $this->labels          = $this->labels ? $this->labels : array($this->meta['controller']);
         $this->rendererAdapter = $this->rendererAdapter ? $this->rendererAdapter : Core\Config()->RENDER['adapter'];
 
         if ($this->rendererAdapter) {
@@ -258,10 +258,10 @@ abstract class Controller
             $this->meta['filters']['before'],
             array(
                 array(
-                    'callbacks' => $methods,
+                    'callbacks'  => $methods,
                     'conditions' => array(
                         'except' => isset($scope['except']) ? (array)$scope['except'] : array(),
-                        'only' => isset($scope['only'])     ? (array)$scope['only']   : array(),
+                        'only'   => isset($scope['only']) ? (array)$scope['only'] : array(),
                     ),
                 ),
             )
@@ -285,10 +285,10 @@ abstract class Controller
             $this->meta['filters']['after'],
             array(
                 array(
-                    'callbacks' => $methods,
+                    'callbacks'  => $methods,
                     'conditions' => array(
                         'except' => isset($scope['except']) ? (array)$scope['except'] : array(),
-                        'only' => isset($scope['only'])     ? (array)$scope['only']   : array(),
+                        'only'   => isset($scope['only']) ? (array)$scope['only'] : array(),
                     ),
                 ),
             )
@@ -392,8 +392,8 @@ abstract class Controller
                     }
 
                     $only = isset($filters['conditions']['only']) &&
-                        !empty($filters['conditions']['only']) &&
-                        is_array($filters['conditions']['only']);
+                            !empty($filters['conditions']['only']) &&
+                            is_array($filters['conditions']['only']);
 
                     if (!$only || ($only && in_array($action, $filters['conditions']['only'], true))) {
                         if (method_exists($this, $callback)) {
@@ -430,8 +430,8 @@ abstract class Controller
                     }
 
                     $only = isset($filters['conditions']['only']) &&
-                        !empty($filters['conditions']['only']) &&
-                        is_array($filters['conditions']['only']);
+                            !empty($filters['conditions']['only']) &&
+                            is_array($filters['conditions']['only']);
 
                     if (!$only || ($only && in_array($action, $filters['conditions']['only'], true))) {
                         if (method_exists($this, $callback)) {
@@ -477,7 +477,8 @@ abstract class Controller
     private static function loadLabelsFile($fileName)
     {
         if (Core\Config()->CACHE['labels']) {
-            $key = '_silla_' . Core\Config()->paths('mode') . '_labels_' . Core\Registry()->get('locale') . $fileName;
+            $mode   = Core\Config()->paths('mode');
+            $key    = '_silla_' . $mode . '_labels_' . Core\Registry()->get('locale') . $fileName;
             $labels = Core\Cache()->fetch($key);
 
             if (!$labels) {

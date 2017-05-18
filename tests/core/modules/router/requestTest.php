@@ -1,13 +1,24 @@
 <?php
+/**
+ * Request Module Tests.
+ *
+ * @package    Silla.IO
+ * @subpackage Tests\Modules\Router
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
+ */
+
+namespace Tests\Modules\Router;
+
 use Core\Modules\Router\Request;
 
 /**
- * @covers Core\Modules\Router\Request
+ * @covers \Core\Modules\Router\Request
  */
-class RequestTest extends PHPUnit_Framework_TestCase
+class RequestTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Core\Modules\Router\Request
+     * @var \Core\Modules\Router\Request
      */
     protected $request;
 
@@ -15,16 +26,16 @@ class RequestTest extends PHPUnit_Framework_TestCase
     {
         $elements = array(
             'controller' => 'controller',
-            'action' => 'action',
-            'id' => 'id',
+            'action'     => 'action',
+            'id'         => 'id',
         );
 
-        $context = $GLOBALS;
+        $context       = $GLOBALS;
         $this->request = new Request(array(), $elements, $context);
     }
 
     /**
-     * @covers Core\Modules\Router\Request::controller
+     * @covers \Core\Modules\Router\Request::controller
      */
     public function testControllerNameIsAccessible()
     {
@@ -32,7 +43,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Router\Request::action
+     * @covers \Core\Modules\Router\Request::action
      */
     public function testActionNameIsAccessible()
     {
@@ -40,32 +51,34 @@ class RequestTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Router\Request::get
+     * @covers \Core\Modules\Router\Request::get
      */
     public function testRequestParamsAreAccessible()
     {
         $params = array(
             'controller' => 'controller',
-            'action' => 'action',
-            'id' => 'id');
+            'action'     => 'action',
+            'id'         => 'id',
+        );
 
         $this->assertEquals($params, $this->request->get());
     }
 
     /**
-     * @covers Core\Modules\Router\Request::get
+     * @covers \Core\Modules\Router\Request::get
      */
     public function testRequestParamNameReturnsParamValue()
     {
         $params = array(
             'controller' => 'controller',
-            'action' => 'action',
-            'id' => 'id');
+            'action'     => 'action',
+            'id'         => 'id',
+        );
         $this->assertEquals($params['id'], $this->request->get('id'));
     }
 
     /**
-     * @covers Core\Modules\Router\Request::type
+     * @covers \Core\Modules\Router\Request::type
      */
     public function testRequestMethodTypeIsAccessible()
     {
@@ -75,7 +88,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Router\Request::is
+     * @covers \Core\Modules\Router\Request::is
      */
     public function testCheckRequestMethodTypeIsPost()
     {
@@ -84,7 +97,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Router\Request::is
+     * @covers \Core\Modules\Router\Request::is
      */
     public function testCheckRequestMethodTypeIsGet()
     {
@@ -93,7 +106,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Router\Request::is
+     * @covers \Core\Modules\Router\Request::is
      */
     public function testCheckRequestMethodTypeIsXhr()
     {

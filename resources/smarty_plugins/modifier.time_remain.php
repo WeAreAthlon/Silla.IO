@@ -19,7 +19,7 @@
 function smarty_modifier_time_remain($string)
 {
     $original_date = strtotime($string);
-    $remain = time()  - ($original_date + 3600*48);
+    $remain        = time() - ($original_date + 3600 * 48);
 
-    return abs(floor($remain/3600));
+    return abs(floor($remain / 3600));
 }

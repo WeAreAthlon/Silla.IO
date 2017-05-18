@@ -72,6 +72,7 @@ class Authentication extends Base\Controller
             if ($this->captcha) {
                 if (!Helpers\Captcha::isValid($this->captcha)) {
                     Helpers\FlashMessage::set($this->labels['captcha']['error'], 'danger');
+
                     return;
                 }
             }
@@ -137,13 +138,14 @@ class Authentication extends Base\Controller
     {
         if ($request->is('post')) {
             $this->errors = array();
-            $user = new Models\CMSUser;
+            $user         = new Models\CMSUser;
+            $email        = $request->post('email');
 
             if ($this->captcha && !Helpers\Captcha::isValid($this->captcha)) {
                 $this->errors['captcha'] = true;
-            } elseif (filter_var($request->post('email'), FILTER_VALIDATE_EMAIL) === false) {
+            } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
                 $this->errors['email'] = true;
-            } elseif (!($user = Models\CMSUser::find()->where('email = ?', array($request->post('email')))->first())) {
+            } elseif (!($user = Models\CMSUser::find()->where('email = ?', array($email))->first())) {
                 $this->errors['email'] = true;
             }
 
@@ -158,11 +160,11 @@ class Authentication extends Base\Controller
                 )));
 
                 $mailForPasswordReset = array(
-                    'from' => array(
-                        Core\Config()->MAILER['identity']['email'] => Core\Config()->MAILER['identity']['name']
+                    'from'    => array(
+                        Core\Config()->MAILER['identity']['email'] => Core\Config()->MAILER['identity']['name'],
                     ),
-                    'to' => array(
-                        $user->email => $user->name
+                    'to'      => array(
+                        $user->email => $user->name,
                     ),
                     'subject' => $this->labels['mails']['reset']['subject'],
                     'content' => $this->getPartialOutput('authentication/mails/password_reset'),

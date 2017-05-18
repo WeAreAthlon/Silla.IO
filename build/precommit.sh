@@ -7,7 +7,7 @@ TOOLSDIR=vendor/bin
 PROMPT="read -p 'Continue...' -n1 -s"
 MOD_FILES=$(git diff --name-only HEAD)
 
-echo $MOD_FILES | xargs -n 1 -P 0 php --syntax-check
+echo $MOD_FILES | xargs -n 1 php --syntax-check
 
 eval $PROMPT
 
@@ -15,13 +15,11 @@ $TOOLSDIR/phploc --count-tests $MOD_FILES
 
 eval $PROMPT
 
-$TOOLSDIR/phpcs --report=full --standard=build/configurations/Athlon/ruleset.xml \
-    --extensions=php --ignore=tests/,build/,autoload.php $MOD_FILES
+$TOOLSDIR/phpcs --report=checkstyle --report-file=build/logs/checkstyle.xml --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
 
 eval $PROMPT
 
-$TOOLSDIR/phpcbf --standard=build/configurations/Athlon/ruleset.xml \
-    --extensions=php --ignore=tests/,build/,autoload.php $MOD_FILES
+$TOOLSDIR/phpcbf --standard=PSR2  --extensions=php --ignore=tests/,build/,autoload.php $MOD_FILES
 
 eval $PROMPT
 

@@ -285,11 +285,11 @@ final class DbCache
         $results = Core\DB()->getTableSchema($tableName, $this->dsn['name']);
 
         foreach ($results as $result) {
-            $fields_meta[$result['COLUMN_NAME']]['type'] = $this->associateType($result['DATA_TYPE']);
+            $fields_meta[$result['COLUMN_NAME']]['type']    = $this->associateType($result['DATA_TYPE']);
             $fields_meta[$result['COLUMN_NAME']]['is_null'] = $result['IS_NULLABLE'];
-            $fields_meta[$result['COLUMN_NAME']]['extra'] = $result['EXTRA'];
+            $fields_meta[$result['COLUMN_NAME']]['extra']   = $result['EXTRA'];
             $fields_meta[$result['COLUMN_NAME']]['default'] = $result['COLUMN_DEFAULT'];
-            $fields_meta[$result['COLUMN_NAME']]['unique'] = $result['COLUMN_KEY'] == 'UNI';
+            $fields_meta[$result['COLUMN_NAME']]['unique']  = $result['COLUMN_KEY'] == 'UNI';
 
             /* If the field is string, varchar, text etc. add the max length of this field into the schema */
             if ('string' === $fields_meta[$result['COLUMN_NAME']]['type']) {

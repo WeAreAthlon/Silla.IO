@@ -65,9 +65,9 @@ class Image
         $dimensions = getimagesize($imagePath);
 
         return array(
-            'width' => $dimensions[0],
+            'width'  => $dimensions[0],
             'height' => $dimensions[1],
-            'ratio' => $dimensions[0] / $dimensions[1]
+            'ratio'  => $dimensions[0] / $dimensions[1],
         );
     }
 
@@ -82,7 +82,7 @@ class Image
      */
     public static function getThumbnailFilePath($imagePath, $size, $type)
     {
-        $meta = pathinfo($imagePath);
+        $meta              = pathinfo($imagePath);
         $meta['extension'] = isset($meta['extension']) ? ".{$meta['extension']}" : '';
 
         return $meta['dirname'] . "/{$meta['filename']}_{$size}_{$type}{$meta['extension']}";
@@ -101,16 +101,16 @@ class Image
     private static function createThumbnail($imagePath, array $thumbsSizes, $quality, $mode)
     {
         $thumbnails = array();
-        $type = ($mode === 'inset') ? 'scaled' : 'cropped';
+        $type       = ($mode === 'inset') ? 'scaled' : 'cropped';
 
         $imagine = new Imagine();
-        $image = $imagine->open($imagePath);
+        $image   = $imagine->open($imagePath);
 
         foreach ($thumbsSizes as $size) {
             preg_match_all('/(\d+)/', $size, $thumbSize);
             $sizeName = "{$thumbSize[0][0]}x{$thumbSize[0][1]}";
             $filePath = self::getThumbnailFilePath($imagePath, $sizeName, $type);
-            $size = new Box($thumbSize[0][0], $thumbSize[0][1]);
+            $size     = new Box($thumbSize[0][0], $thumbSize[0][1]);
 
             $image
                 ->thumbnail($size, $mode)

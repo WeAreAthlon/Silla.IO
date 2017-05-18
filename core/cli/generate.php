@@ -45,10 +45,10 @@ final class Generate
     public static function controller($mode, $name)
     {
         $action_names = array_slice(func_get_args(), 2);
-        $result = self::parseTemplate('controller', array(
-            'mode' => $mode,
+        $result       = self::parseTemplate('controller', array(
+            'mode'       => $mode,
             'controller' => $name,
-            'actions' => $action_names
+            'actions'    => $action_names,
         ));
 
         Helpers\File::putContents(
@@ -65,11 +65,11 @@ final class Generate
 
         foreach ($action_names as $action) {
             $path = $mode . DIRECTORY_SEPARATOR . 'views'
-                . DIRECTORY_SEPARATOR . strtolower($name) . DIRECTORY_SEPARATOR . $action . '.html';
+                    . DIRECTORY_SEPARATOR . strtolower($name) . DIRECTORY_SEPARATOR . $action . '.html';
             $view = self::parseTemplate('view', array(
                 'controller' => $name,
-                'action' => $action,
-                'path' => $path
+                'action'     => $action,
+                'path'       => $path,
             ));
 
             Helpers\File::putContents($path, $view);
@@ -87,11 +87,11 @@ final class Generate
     public static function model($mode, $name)
     {
         $result = self::parseTemplate('model', array(
-            'mode' => $mode,
-            'model' => $name
+            'mode'  => $mode,
+            'model' => $name,
         ));
-        $path = $mode . DIRECTORY_SEPARATOR . 'models'
-            . DIRECTORY_SEPARATOR . strtolower($name) . '.php';
+        $path   = $mode . DIRECTORY_SEPARATOR . 'models'
+                  . DIRECTORY_SEPARATOR . strtolower($name) . '.php';
         Helpers\File::putContents($path, $result);
 
         /* Create migration */
@@ -115,20 +115,20 @@ final class Generate
         }
 
         $migration_name = strtolower($name) . '_' . time();
-        $tpl_vars = array(
+        $tpl_vars       = array(
             'migration_name' => self::getMigrationName($migration_name),
-            'name' => explode('_', $name),
-            'fields' => array_map(
+            'name'           => explode('_', $name),
+            'fields'         => array_map(
                 function ($item) {
                     return explode(':', $item);
                 },
                 $params
-            )
+            ),
         );
 
-            $path = Core\Config()->paths('root') . 'db' . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR;
-            $result = self::parseTemplate('migration', $tpl_vars);
-            Helpers\File::putContents($path . $migration_name . '.php', $result);
+        $path   = Core\Config()->paths('root') . 'db' . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR;
+        $result = self::parseTemplate('migration', $tpl_vars);
+        Helpers\File::putContents($path . $migration_name . '.php', $result);
     }
 
     /**
@@ -144,7 +144,7 @@ final class Generate
      */
     private static function parseTemplate($template, array $params)
     {
-        $tpl = new \Smarty();
+        $tpl    = new \Smarty();
         $config = Core\Config()->paths('views');
 
         $tpl->setCompileDir($config['compiled'])

@@ -12,6 +12,7 @@
 /**
  * Framework Core namespace.
  */
+
 namespace Core {
 
     /* Hook the default auto-load class function. */
@@ -95,6 +96,7 @@ namespace Core {
 }
 
 /* Global namespace. */
+
 namespace {
 
     /**

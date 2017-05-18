@@ -1,5 +1,5 @@
 {if $attributes.escape|default:true}
-    {$resource->$field|escape}
+  {$resource->$field|escape}
 {else}
-    {$resource->$field}
+  {$resource->$field}
 {/if}

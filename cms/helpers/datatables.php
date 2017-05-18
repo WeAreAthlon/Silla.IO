@@ -38,13 +38,13 @@ class DataTables
             $params['pagination']['limit'] = intval($params['pagination']['limit']);
         } else {
             /* Get first pagination limit from the configuration. */
-            $pagination = Core\Helpers\YAML::get('pagination', 'cms');
+            $pagination                    = Core\Helpers\YAML::get('pagination', 'cms');
             $params['pagination']['limit'] = intval(current($pagination['limits']));
         }
 
         $result = self::assignFilter($query, $params);
         $result = self::assignOrder($result, $params)
-            ->page($params['pagination']['page'], $params['pagination']['limit']);
+                      ->page($params['pagination']['page'], $params['pagination']['limit']);
 
         return $result;
     }
@@ -85,7 +85,8 @@ class DataTables
     {
         if (isset($params['sorting']['field'], $params['sorting']['order'])
             && array_key_exists($params['sorting']['field'], $query->getObject()->fields())
-            && in_array(strtolower($params['sorting']['order']), array('asc', 'desc'), true)) {
+            && in_array(strtolower($params['sorting']['order']), array('asc', 'desc'), true)
+        ) {
             return $query->order($params['sorting']['field'], $params['sorting']['order']);
         } else {
             $resource = $query->getObject();
@@ -128,7 +129,7 @@ class DataTables
                                         $value['start'] . date(' H:i:s'),
                                         'Y-m-d'
                                     );
-                                    $value['end'] = Core\Helpers\DateTime::formatGmt(
+                                    $value['end']   = Core\Helpers\DateTime::formatGmt(
                                         $value['end'] . date(' H:i:s'),
                                         'Y-m-d'
                                     );
@@ -150,10 +151,10 @@ class DataTables
                             if (isset($query->getObject()->hasAndBelongsToMany[$field]) &&
                                 $query->getObject()->hasAndBelongsToMany[$field]
                             ) {
-                                $related = $query->getObject()->hasAndBelongsToMany[$field];
-                                $obj = $query->getObject();
+                                $related    = $query->getObject()->hasAndBelongsToMany[$field];
+                                $obj        = $query->getObject();
                                 $primaryKey = $obj->primaryKeyField();
-                                $prefix = Core\Config()->DB['tables_prefix'];
+                                $prefix     = Core\Config()->DB['tables_prefix'];
 
                                 foreach ($value as $v) {
                                     $query = $query->join(
@@ -169,7 +170,7 @@ class DataTables
                     } elseif (strlen($value)) {
                         if ($model_fields[$field]['type'] === 'string') {
                             $value_to_match = trim(Core\DB()->escapeString($value), "'");
-                            $query = $query->where("{$field} LIKE \"%{$value_to_match}%\"");
+                            $query          = $query->where("{$field} LIKE \"%{$value_to_match}%\"");
                         } else {
                             $query = $query->where($field . ' = ' . Core\DB()->escapeString($value));
                         }

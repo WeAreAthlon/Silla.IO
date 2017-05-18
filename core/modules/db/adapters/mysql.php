@@ -52,7 +52,7 @@ class MySQL extends MySQLi implements Interfaces\Adapter
     public function query($sql, array $bind_params = array())
     {
         if (count($bind_params) > 0) {
-            $stmt = $this->prepare($sql, $bind_params);
+            $stmt     = $this->prepare($sql, $bind_params);
             $resource = mysql_query($stmt);
         } else {
             $resource = mysql_query($sql);
@@ -62,6 +62,7 @@ class MySQL extends MySQLi implements Interfaces\Adapter
             if (mysql_affected_rows()) {
                 return true;
             }
+
             return false;
         }
 
@@ -79,7 +80,7 @@ class MySQL extends MySQLi implements Interfaces\Adapter
     public function execute($sql, array $bind_params = array())
     {
         if (count($bind_params) > 0) {
-            $stmt = $this->prepare($sql, $bind_params);
+            $stmt   = $this->prepare($sql, $bind_params);
             $result = mysql_query($stmt);
         } else {
             $result = mysql_query($sql);
@@ -128,12 +129,12 @@ class MySQL extends MySQLi implements Interfaces\Adapter
             throw new \Exception('The number of values passed and placeholders mismatch');
         }
 
-        $keys = array();
+        $keys   = array();
         $values = array();
 
         foreach ($bind_params as $value) {
-            $keys[] = '/\{\{param' . count($values) . '\}\}/';
-            $sql = preg_replace('/\?/', '{{param' . count($values) . '}}', $sql, 1);
+            $keys[]   = '/\{\{param' . count($values) . '\}\}/';
+            $sql      = preg_replace('/\?/', '{{param' . count($values) . '}}', $sql, 1);
             $values[] = '"' . mysql_real_escape_string($value) . '"';
         }
         $res = preg_replace($keys, $values, $sql, 1);

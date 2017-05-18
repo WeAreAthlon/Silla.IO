@@ -48,7 +48,7 @@ final class DB implements Interfaces\Adapter
      *
      * @var string
      * @access private
-     * @link setcookie()
+     * @link   setcookie()
      */
     private $cookie_path;
 
@@ -108,17 +108,17 @@ final class DB implements Interfaces\Adapter
 
             $this->cookie_path = Core\Config()->urls('relative');
 
-            self::$ip = $_SERVER['REMOTE_ADDR'];
+            self::$ip        = $_SERVER['REMOTE_ADDR'];
             self::$userAgent = $_SERVER['HTTP_USER_AGENT'];
-            self::$started = true;
+            self::$started   = true;
 
-            $this->storageTable = Core\Config()->DB['tables_prefix'] . 'sessions';
+            $this->storageTable          = Core\Config()->DB['tables_prefix'] . 'sessions';
             $this->storageVariablesTable = Core\Config()->DB['tables_prefix'] . 'session_vars';
 
             if (Core\Config()->SESSION['transparency']) {
                 $_COOKIE[Core\Config()->SESSION['name']] =
                     isset($_REQUEST[Core\Config()->SESSION['parameter']]) ?
-                    $_REQUEST[Core\Config()->SESSION['parameter']] : null;
+                        $_REQUEST[Core\Config()->SESSION['parameter']] : null;
             }
 
             if (isset($_COOKIE[Core\Config()->SESSION['name']])
@@ -255,6 +255,7 @@ final class DB implements Interfaces\Adapter
     public function loadVars($key)
     {
         $this->vars = array();
+
         $query = "SELECT name, value FROM {$this->storageVariablesTable} WHERE session_key = ? AND private_key = ?";
 
         if ($results = $this->db->query($query, array($key, $this->getHash()))) {
@@ -298,7 +299,7 @@ final class DB implements Interfaces\Adapter
         if ($this->db->query($query, array($key))) {
             Core\Router()->deleteCookie(Core\Config()->SESSION['name']);
 
-            $this->vars = array();
+            $this->vars       = array();
             $this->sessionKey = null;
 
             return true;

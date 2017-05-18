@@ -27,13 +27,13 @@ class DateTime
     {
         /* Get an array of all defined timezone identifiers. */
         $timezoneCodes = \DateTimeZone::listIdentifiers();
-        $timezones = array();
+        $timezones     = array();
 
         foreach ($timezoneCodes as $timezoneCode) {
             /* Create a datetime object using the currently processed timezone. */
-            $now = new \DateTime('now', new \DateTimeZone($timezoneCode));
+            $now      = new \DateTime('now', new \DateTimeZone($timezoneCode));
             $location = explode('/', $timezoneCode);
-            $zone = $location[0];
+            $zone     = $location[0];
             /* Unset the zone. */
             unset($location[0]);
             /* Merge the location back together. */
@@ -75,6 +75,7 @@ class DateTime
         $datetimeUtc = new \DateTime($datetime, new \DateTimeZone('UTC'));
 
         /* Format datetime string to the currently set timezone. */
+
         return date($format, $datetimeUtc->format('U'));
     }
 
@@ -92,6 +93,7 @@ class DateTime
         $datetime = new \DateTime($datetime);
 
         /* Format datetime string to UTC/GMT. */
+
         return gmdate($format, $datetime->format('U'));
     }
 }

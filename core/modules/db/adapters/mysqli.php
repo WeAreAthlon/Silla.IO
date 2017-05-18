@@ -57,12 +57,15 @@ class MySQLi implements Interfaces\Adapter
     public function run(DB\Query $query)
     {
         $query->appendTablesPrefix(Core\Config()->DB['tables_prefix']);
-        $sql = $this->buildSql($query);
+        $sql        = $this->buildSql($query);
         $query_hash = md5(serialize(array('query' => $sql, 'bind_params' => $query->bind_params)));
 
-        $query_cache_name = implode(',', array($query->table, implode(',', array_map(function ($item) {
-            return $item['table'];
-        }, $query->join))));
+        $query_cache_name = implode(',', array(
+            $query->table,
+            implode(',', array_map(function ($item) {
+                return $item['table'];
+            }, $query->join)),
+        ));
 
         if (array_key_exists($query_hash, Core\DbCache()->getCache($query_cache_name))) {
             return Core\DbCache()->getCache($query_cache_name, $query_hash);
@@ -360,10 +363,11 @@ class MySQLi implements Interfaces\Adapter
 
         if ($stmt = $this->link->prepare($sql)) {
             $reflection = new \ReflectionClass('mysqli_stmt');
-            $method = $reflection->getMethod('bind_param');
+            $method     = $reflection->getMethod('bind_param');
 
             $param_types = array_reduce($bind_params, function ($carry) {
                 $carry .= 's';
+
                 return $carry;
             });
 
@@ -404,7 +408,15 @@ class MySQLi implements Interfaces\Adapter
     public static function getSupportedJoinTypes()
     {
         return array(
-            'LEFT', 'RIGHT', 'INNER', 'OUTER', 'CROSS', 'LEFT OUTER', 'RIGHT OUTER', 'NATURAL', 'STRAIGHT_JOIN'
+            'LEFT',
+            'RIGHT',
+            'INNER',
+            'OUTER',
+            'CROSS',
+            'LEFT OUTER',
+            'RIGHT OUTER',
+            'NATURAL',
+            'STRAIGHT_JOIN',
         );
     }
 }

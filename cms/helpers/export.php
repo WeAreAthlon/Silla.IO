@@ -119,7 +119,7 @@ class Export
                     fputcsv($csv_file, $row);
                 }
 
-                $fetched_records_count = count($items);
+                $fetched_records_count  = count($items);
                 $fetched_records_offset += $fetched_records_count;
 
                 if ($fetched_records_count < $walker_step) {

@@ -1,13 +1,23 @@
 <?php
+/**
+ * Base Model Tests.
+ *
+ * @package    Silla.IO
+ * @subpackage Tests\Core\Base
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
+ */
 
-class ModelTest extends PHPUnit_Framework_TestCase
+namespace Tests\Core\Base;
+
+class ModelTest extends \PHPUnit_Framework_TestCase
 {
     protected $model;
 
     protected function setUp()
     {
         $this->model = $this->getMockForAbstractClass('Core\\Base\\Model', array(), '', false);
-        $reflection  = new ReflectionClass($this->model);
+        $reflection  = new \ReflectionClass($this->model);
         $reflection->setStaticPropertyValue('tableName', 'tests');
     }
 

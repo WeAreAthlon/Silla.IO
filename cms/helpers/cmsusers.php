@@ -32,8 +32,8 @@ class CMSUsers
     {
         $scope = glob(Core\Config()->paths('mode') . 'controllers' . DIRECTORY_SEPARATOR . '*.php');
 
-        $builtin_scope = array('CMS\Controllers\CMS');
-        $builtin_actions = array();
+        $builtin_scope       = array('CMS\Controllers\CMS');
+        $builtin_actions     = array();
         $accessibility_scope = array();
 
         foreach ($builtin_scope as $resource) {
@@ -48,7 +48,7 @@ class CMSUsers
             $resource = basename(str_replace('.php', '', $resource));
 
             if ($resource !== 'cms') {
-                $controller_name = '\CMS\Controllers\\' . $resource;
+                $controller_name  = '\CMS\Controllers\\' . $resource;
                 $controller_class = new \ReflectionClass($controller_name);
 
                 if (!$controller_class->isInstantiable()) {
@@ -91,17 +91,17 @@ class CMSUsers
             $user = Core\Registry()->get('current_cms_user');
         }
 
-        $_cache_key = md5(serialize($user) . serialize($scope));
+        $cacheKey = md5(serialize($user) . serialize($scope));
 
-        static $user_access_scope_cache;
+        static $userAccessScopeCache;
 
-        if (!isset($user_access_scope_cache[$_cache_key])) {
-            $user_access_scope = $user->role()->permissions;
-            $user_access_scope_cache[$_cache_key] = array_key_exists($scope['controller'], $user_access_scope) &&
-                in_array($scope['action'], $user_access_scope[$scope['controller']], true);
+        if (!isset($userAccessScopeCache[$cacheKey])) {
+            $userAccessScope                 = $user->role()->permissions;
+            $userAccessScopeCache[$cacheKey] = isset($userAccessScope[$scope['controller']])
+                && in_array($scope['action'], $userAccessScope[$scope['controller']], true);
         }
 
-        return $user_access_scope_cache[$_cache_key];
+        return $userAccessScopeCache[$cacheKey];
     }
 
     /**

@@ -33,10 +33,10 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
      */
     public $hasMany = array(
         'users' => array(
-            'table' => 'cms_users',
-            'key' => 'id',
+            'table'        => 'cms_users',
+            'key'          => 'id',
             'relative_key' => 'role_id',
-            'class_name' => 'CMS\Models\CMSUser',
+            'class_name'   => 'CMS\Models\CMSUser',
         ),
     );
 
@@ -51,7 +51,7 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
     {
         return array(
             'permissions' => 'json',
-            'ownership' => 'json',
+            'ownership'   => 'json',
         );
     }
 }

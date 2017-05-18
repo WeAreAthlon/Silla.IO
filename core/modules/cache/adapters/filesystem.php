@@ -89,6 +89,7 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
     {
         $file = self::storagePath() . self::generateName($key);
         $file = File::getFullPath($file);
+
         return is_file($file);
     }
 
@@ -106,6 +107,7 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
             return File::delete($file);
         } catch (\Exception $e) {
             var_log($e->getMessage());
+
             return false;
         }
     }

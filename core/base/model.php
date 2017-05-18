@@ -155,14 +155,14 @@ abstract class Model
      * @static
      */
     protected static $i18nJoinType = 'INNER';
-    
+
     /**
      * Localisation.
      *
      * @var string
      */
     protected $i18nLocalisation;
-    
+
     /**
      * Query object to be used for communication with the DB layer.
      *
@@ -189,7 +189,7 @@ abstract class Model
 
         if (static::$isI18n) {
             if (!static::$i18nLocale) {
-                $_locale = Core\Registry()->get('locale');
+                $_locale            = Core\Registry()->get('locale');
                 static::$i18nLocale =
                     isset(Core\Config()->I18N['locales'][$_locale]) ? $_locale : Core\Config()->I18N['default'];
             }
@@ -431,9 +431,9 @@ abstract class Model
      */
     private function getAssociation(array $association, $name)
     {
-        $key = $association['key'];
+        $key          = $association['key'];
         $relative_key = $association['relative_key'];
-        $class_name = isset($association['class_name']) ? $association['class_name'] : $name;
+        $class_name   = isset($association['class_name']) ? $association['class_name'] : $name;
 
         return $this->{$name} = $class_name::find()->where("{$relative_key} = ?", array($this->{$key}));
     }
@@ -450,23 +450,23 @@ abstract class Model
      */
     private function hasAndBelongsToMany(array $association, $name)
     {
-        $prefix = Core\Config()->DB['tables_prefix'];
+        $prefix            = Core\Config()->DB['tables_prefix'];
         $association_table = $association['table'];
-        $key = $association['key'];
-        $relative_key = $association['relative_key'];
-        $class_name = isset($association['class_name']) ? $association['class_name'] : $name;
+        $key               = $association['key'];
+        $relative_key      = $association['relative_key'];
+        $class_name        = isset($association['class_name']) ? $association['class_name'] : $name;
 
         $mdl = new $class_name();
 
         $_fieldsI18n = $class_name::$isI18n ? ', ' . $class_name::$i18nTableName . '.*' : '';
 
         $query = $mdl::find($prefix . $class_name::$tableName . '.*' . $_fieldsI18n)
-            ->join(
-                $association_table,
-                "{$prefix}{$association_table}.{$relative_key} = {$prefix}{$mdl::$tableName}." .
-                $class_name::primaryKeyField()
-            )
-            ->where("{$prefix}{$association_table}.{$key} = ?", array($this->{static::$primaryKeyField}));
+                     ->join(
+                         $association_table,
+                         "{$prefix}{$association_table}.{$relative_key} = {$prefix}{$mdl::$tableName}." .
+                         $class_name::primaryKeyField()
+                     )
+                     ->where("{$prefix}{$association_table}.{$key} = ?", array($this->{static::$primaryKeyField}));
 
         return $this->{$name} = $query;
     }
@@ -484,11 +484,11 @@ abstract class Model
         foreach ($this->hasAndBelongsToMany as $k => $rel) {
             if (isset($this->{$k}) && is_array($this->{$k})) {
                 $association_table = $rel['table'];
-                $key = $rel['key'];
-                $relative_key = $rel['relative_key'];
-                $primary_key = $this->{static::$primaryKeyField};
+                $key               = $rel['key'];
+                $relative_key      = $rel['relative_key'];
+                $primary_key       = $this->{static::$primaryKeyField};
 
-                $query = new DB\Query();
+                $query  = new DB\Query();
                 $result = Core\DB()->run(
                     $query->select($relative_key)->from($association_table)->where("{$key} = ?", array($primary_key))
                 );
@@ -533,12 +533,12 @@ abstract class Model
         foreach ($this->hasAndBelongsToMany as $k => $rel) {
             if (isset($this->{$k}) && is_array($this->{$k})) {
                 $association_table = $rel['table'];
-                $key = $rel['key'];
-                $relative_key = $rel['relative_key'];
-                $primary_key = $this->{static::$primaryKeyField};
+                $key               = $rel['key'];
+                $relative_key      = $rel['relative_key'];
+                $primary_key       = $this->{static::$primaryKeyField};
 
                 /* Gets the id of the original associated objects */
-                $query = new DB\Query();
+                $query  = new DB\Query();
                 $result = Core\DB()->run(
                     $query->select($relative_key)->from($association_table)->where("{$key} = ?", array($primary_key))
                 );
@@ -586,13 +586,13 @@ abstract class Model
         /* Has and belongs to many associations */
         foreach ($this->hasAndBelongsToMany as $k => $rel) {
             $association_table = $rel['table'];
-            $key = $rel['key'];
+            $key               = $rel['key'];
 
             $query = new DB\Query();
 
             Core\DB()->run(
                 $query->remove()->from($association_table)
-                    ->where("{$key} = ?", array($this->{static::$primaryKeyField}))
+                      ->where("{$key} = ?", array($this->{static::$primaryKeyField}))
             );
         }
     }
@@ -623,7 +623,7 @@ abstract class Model
 
                 foreach ($keys as $field) {
                     $this->fields[$field] = null;
-                    $this->fieldsI18n[] = $field;
+                    $this->fieldsI18n[]   = $field;
                 }
             }
         }
@@ -681,8 +681,8 @@ abstract class Model
      */
     private function extractFields()
     {
-        $fields = array();
-        $values = array();
+        $fields      = array();
+        $values      = array();
         $fields_self = $this->fields;
 
         if (static::$isI18n) {
@@ -745,9 +745,9 @@ abstract class Model
     {
         list($fields, $values) = $this->extractFields();
 
-        $query = new DB\Query();
+        $query       = new DB\Query();
         $this->query = $query->insert($fields, $values)->into(static::$tableName);
-        $result = Core\DB()->run($this->query);
+        $result      = Core\DB()->run($this->query);
 
         $this->{static::$primaryKeyField} = Core\DB()->getLastInsertId();
 
@@ -779,14 +779,14 @@ abstract class Model
     {
         list($fields, $values) = $this->extractFields();
 
-        $query = new DB\Query();
+        $query       = new DB\Query();
         $this->query = $query
             ->update(static::$tableName)
             ->set($fields, $values)
             ->where(static::$primaryKeyField . ' = ?', array($this->{static::$primaryKeyField}));
 
         if (static::$isI18n) {
-            $query_i18n = new DB\Query();
+            $query_i18n           = new DB\Query();
             $i18n_existing_record = $query_i18n
                 ->select(static::$i18nLocaleField)
                 ->from(static::$i18nTableName)
@@ -827,7 +827,7 @@ abstract class Model
      */
     private function remove()
     {
-        $query = new DB\Query();
+        $query       = new DB\Query();
         $this->query = $query
             ->remove()
             ->from(static::$tableName)
@@ -1139,7 +1139,7 @@ abstract class Model
 
         if (static::$isI18n) {
             if (!static::$i18nLocale) {
-                $_locale = Core\Registry()->get('locale');
+                $_locale            = Core\Registry()->get('locale');
                 static::$i18nLocale =
                     isset(Core\Config()->I18N['locales'][$_locale]) ? $_locale : Core\Config()->I18N['default'];
             }
@@ -1325,8 +1325,8 @@ abstract class Model
     public function getAssociationMetaDataByKey($key)
     {
         $associationsByType = array(
-            'has_many' => $this->hasMany,
-            'habtm' => $this->hasAndBelongsToMany,
+            'has_many'   => $this->hasMany,
+            'habtm'      => $this->hasAndBelongsToMany,
             'belongs_to' => $this->belongsTo,
         );
 
@@ -1343,7 +1343,7 @@ abstract class Model
 
         return false;
     }
-    
+
     /**
      * Modifies the current I18N locale value.
      *
@@ -1353,7 +1353,7 @@ abstract class Model
      */
     public function setI18nLocale($i18nLocale)
     {
-        static::$i18nLocale = $i18nLocale;
+        static::$i18nLocale     = $i18nLocale;
         $this->i18nLocalisation = $i18nLocale;
     }
 

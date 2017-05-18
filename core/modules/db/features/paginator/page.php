@@ -39,7 +39,7 @@ class Page extends Paginator
     public function __construct(Paginator $paginator, $pageNumber)
     {
         $this->pageNumber = $pageNumber;
-        $this->paginator = $paginator;
+        $this->paginator  = $paginator;
     }
 
     /**

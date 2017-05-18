@@ -86,7 +86,7 @@ abstract class Entity extends Controller
             $this->addAfterFilters(array('loadFlashMessage'));
         }
     }
-    
+
     /**
      * Loads Default Resource object.
      *
@@ -96,7 +96,7 @@ abstract class Entity extends Controller
      */
     protected function loadDefaultResource(Request $request)
     {
-        $this->resource = new $this->resourceModel;
+        $this->resource             = new $this->resourceModel;
         $this->accessibleAttributes = array_merge(
             array_keys($this->resource->fields()),
             array_keys($this->resource->hasMany),
@@ -116,7 +116,7 @@ abstract class Entity extends Controller
     public function index(Request $request)
     {
         $resourceModel = $this->resourceModel;
-        $query = $resourceModel::find();
+        $query         = $resourceModel::find();
 
         if ($request->is('xhr')) {
             $this->renderer->setLayout(null);
@@ -139,9 +139,9 @@ abstract class Entity extends Controller
             $this->renderer->setOutputContentType('application/json');
         } else {
             if ($this->resource) {
-                $params = $request->get();
+                $params      = $request->get();
                 $queryParams = array(
-                    'sorting' =>
+                    'sorting'   =>
                         isset($params['sort'], $params['order']) ?
                             array('field' => $params['sort'], 'order' => $params['order']) : null,
                     'filtering' =>
@@ -150,7 +150,7 @@ abstract class Entity extends Controller
                 );
 
                 $this->beforeIndex($query, $request);
-                $query = Helpers\DataTables::formatQuery($query, $queryParams);
+                $query           = Helpers\DataTables::formatQuery($query, $queryParams);
                 $this->resources = $query;
             } else {
                 $this->beforeIndex($query, $request);
@@ -448,7 +448,7 @@ abstract class Entity extends Controller
 
         if ($request->get('type')) {
             $fieldsToExport = array();
-            $attributes = array();
+            $attributes     = array();
 
             /* Determine which model data fields to export. */
             $sections = $this->labels['attributes'];
@@ -465,18 +465,19 @@ abstract class Entity extends Controller
                 }
             }
 
-            $query = Helpers\DataTables::toQuery($this->resource, array_keys($fieldsToExport), $request->get());
+            $query      = Helpers\DataTables::toQuery($this->resource, array_keys($fieldsToExport), $request->get());
             $exportFile = Core\Config()->paths('tmp') . md5($this->resourceModel) . '.export.tmp';
 
             if (Helpers\Export::populateCsvfileCustomQuery(
                 array('fields' => $fieldsToExport, 'query' => $query),
                 $exportFile
-            )) {
+            )
+            ) {
                 if ('pdf' === $request->get('type')) {
                     $cmsLabels = $this->labels;
 
                     $title  = $cmsLabels['export']['caption'] . ' ' .
-                        $cmsLabels['modules'][$this->getControllerName()]['title'];
+                              $cmsLabels['modules'][$this->getControllerName()]['title'];
                     $assets = Core\Config()->paths('assets');
                     $logo   = $assets['distribution'] . 'img' . DIRECTORY_SEPARATOR . 'logo.png';
                     $pdf    = new Helpers\PDF($title, 'freeserif', $logo);
@@ -508,9 +509,11 @@ abstract class Entity extends Controller
                 $request->redirectTo('index');
             }
 
-            $resourceModel = $this->resource;
-            $this->resource = $resourceModel::find()
-                ->where($resourceModel::primaryKeyField() . ' = ?', array($request->get('id')))->first();
+            $resourceModel  = $this->resource;
+            $this->resource = $resourceModel::find()->where(
+                $resourceModel::primaryKeyField() . ' = ?',
+                array($request->get('id'))
+            )->first();
 
             if (!$this->resource) {
                 Helpers\FlashMessage::set($this->labels['errors']['not_exists'], 'danger');

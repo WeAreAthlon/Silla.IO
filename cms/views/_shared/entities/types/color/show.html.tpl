@@ -1,5 +1,5 @@
 {if $attributes.escape|default:true}
-    {$attr.default|escape}
+  {$attr.default|escape}
 {else}
-    {$attr.default}
+  {$attr.default}
 {/if}

@@ -332,6 +332,6 @@ a:hover, a:focus, .btn-link:hover, .btn-link:focus {
     color: #FFFFFF;
 }
 
-.btn-primary + .btn-default  {
+.btn-primary + .btn-default {
     border-left: 1px solid #2e6da4 !important;
 }

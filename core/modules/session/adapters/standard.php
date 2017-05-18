@@ -96,13 +96,13 @@ final class Standard implements Interfaces\Adapter
 
             header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
 
-            self::$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+            self::$ip        = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
             self::$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
             if (Core\Config()->SESSION['transparency']) {
                 $_COOKIE[Core\Config()->SESSION['name']] =
                     isset($_REQUEST[Core\Config()->SESSION['parameter']]) ?
-                    $_REQUEST[Core\Config()->SESSION['parameter']] : null;
+                        $_REQUEST[Core\Config()->SESSION['parameter']] : null;
             }
 
             if ($this->isValidHost()
@@ -134,6 +134,7 @@ final class Standard implements Interfaces\Adapter
             ) {
                 $this->destroy();
                 $this->start();
+
                 return;
             }
 
@@ -230,12 +231,12 @@ final class Standard implements Interfaces\Adapter
     {
         session_destroy();
 
-        $this->vars = array();
+        $this->vars       = array();
         $this->sessionKey = null;
 
         unset($_COOKIE[Core\Config()->SESSION['name']]);
         self::$started = false;
-        
+
         return true;
     }
 

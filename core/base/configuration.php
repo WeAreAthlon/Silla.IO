@@ -53,7 +53,7 @@ abstract class Configuration
     public $ROUTER = array(
         'rewrite'          => true,
         'separator'        => '/',
-        'variables_prefix' => ':'
+        'variables_prefix' => ':',
     );
 
     /**
@@ -67,11 +67,11 @@ abstract class Configuration
      * @example redis     Redis cache adapter connection parameters.
      */
     public $CACHE = array(
-        'adapter'       => 'FileSystem',
-        'routes'        => false,
-        'labels'        => false,
-        'db_schema'     => false,
-        'database' => array(
+        'adapter'   => 'FileSystem',
+        'routes'    => false,
+        'labels'    => false,
+        'db_schema' => false,
+        'database'  => array(
             'table_name' => 'cache',
             'fields'     => array(
                 'cache_key',
@@ -79,39 +79,39 @@ abstract class Configuration
                 'expire',
             ),
         ),
-        'redis' => array(
-            'scheme'    => 'tcp',
-            'host'      => '127.0.0.1',
-            'port'      => 6379,
-            'timeout'   => 5.0,
+        'redis'     => array(
+            'scheme'  => 'tcp',
+            'host'    => '127.0.0.1',
+            'port'    => 6379,
+            'timeout' => 5.0,
         ),
     );
 
     /**
-     * @var (int|string)[] $MAILER Mailer configuration options.
+     * @var     (int|string)[] $MAILER Mailer configuration options.
      *
      * @example type        Type of the mailing infrastructure to use(Sendmail|SMTP).
      * @example identity    Mailer identity signature.
      * @example credentials Mailer service credentials.
      */
     public $MAILER = array(
-        'type' => 'Sendmail',
-        'identity' => array(
+        'type'        => 'Sendmail',
+        'identity'    => array(
             'name'  => 'Athlon Production',
             'email' => 'hi@athlonproduction.com',
         ),
         'credentials' => array(
             'smtp' => array(
-                'host' => 'localhost',
-                'port' => '25',
-                'user' => '',
+                'host'     => 'localhost',
+                'port'     => '25',
+                'user'     => '',
                 'password' => '',
             ),
         ),
     );
 
     /**
-     * @var (int|string)[] $DB DSN (Data source name).
+     * @var     (int|string)[] $DB DSN (Data source name).
      *
      * @example adapter        Adapter type (pdo_mysql|mysql|sqllite).
      * @example host           Connection host name.
@@ -151,7 +151,7 @@ abstract class Configuration
     );
 
     /**
-     * @var (int|string)[] $SESSION Session related configuration options.
+     * @var     (int|string)[] $SESSION Session related configuration options.
      *
      * @example adapter      Type of session. Possible values (Standard|DB).
      * @example name         Name of the session (used as cookie name).
@@ -277,7 +277,7 @@ abstract class Configuration
 
         /* Check if the request is sent over HTTPS */
         $is_SSL = Core\Utils::httpRequestIsSsl();
-        $port = null;
+        $port   = null;
 
         if (isset($_SERVER['SERVER_PORT'])) {
             $port = in_array($_SERVER['SERVER_PORT'], array('80', '443', true)) ? null : $_SERVER['SERVER_PORT'];
@@ -288,21 +288,21 @@ abstract class Configuration
 
         if (isset($_SERVER['SERVER_NAME'])) {
             $this->URLS['full'] = $this->URLS['protocol'] . '://' .
-                $_SERVER['SERVER_NAME'] . $port . $this->URLS['relative'];
+                                  $_SERVER['SERVER_NAME'] . $port . $this->URLS['relative'];
         }
 
-        $this->PATHS['vendor'] = $this->PATHS['root'] . 'vendor' . DIRECTORY_SEPARATOR;
+        $this->PATHS['vendor']    = $this->PATHS['root'] . 'vendor' . DIRECTORY_SEPARATOR;
         $this->PATHS['resources'] = $this->PATHS['root'] . 'resources' . DIRECTORY_SEPARATOR;
-        $this->PATHS['tmp']    = $this->PATHS['root'] . 'temp'   . DIRECTORY_SEPARATOR;
-        $this->PATHS['cache']  = $this->PATHS['tmp']  . 'cache'  . DIRECTORY_SEPARATOR;
-        $this->PATHS['public'] = $this->PATHS['root'] . 'public' . DIRECTORY_SEPARATOR;
+        $this->PATHS['tmp']       = $this->PATHS['root'] . 'temp' . DIRECTORY_SEPARATOR;
+        $this->PATHS['cache']     = $this->PATHS['tmp'] . 'cache' . DIRECTORY_SEPARATOR;
+        $this->PATHS['public']    = $this->PATHS['root'] . 'public' . DIRECTORY_SEPARATOR;
 
         $this->PATHS['views']['compiled'] = $this->PATHS['cache'] . 'compiled' . DIRECTORY_SEPARATOR;
-        $this->PATHS['views']['cache']    = $this->PATHS['cache'] . 'views'    . DIRECTORY_SEPARATOR;
+        $this->PATHS['views']['cache']    = $this->PATHS['cache'] . 'views' . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['plugins']  = $this->PATHS['resources'] . 'smarty_plugins' . DIRECTORY_SEPARATOR;
-        $this->PATHS['views']['config']   = $this->PATHS['root']  .
-            'configurations' . DIRECTORY_SEPARATOR . SILLA_ENVIRONMENT .
-            DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
+        $this->PATHS['views']['config']   = $this->PATHS['root'] .
+                                            'configurations' . DIRECTORY_SEPARATOR . SILLA_ENVIRONMENT .
+                                            DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
 
         /* Process modes */
         $this->MODES = $this->setupModes($this->MODES);
@@ -326,7 +326,7 @@ abstract class Configuration
         $this->PATHS['views']['templates'] = $this->PATHS['mode'] . 'views' . DIRECTORY_SEPARATOR;
         $this->PATHS['views']['layouts']   = $this->PATHS['views']['templates'] . '_layouts' . DIRECTORY_SEPARATOR;
 
-        $this->PATHS['labels']  = $this->PATHS['mode']   . 'labels' . DIRECTORY_SEPARATOR;
+        $this->PATHS['labels']  = $this->PATHS['mode'] . 'labels' . DIRECTORY_SEPARATOR;
         $this->PATHS['uploads'] =
             $this->PATHS['public'] . $mode['relative'] . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
 
@@ -428,7 +428,7 @@ abstract class Configuration
     final public static function getInstance()
     {
         if (null === self::$instance) {
-            $configuration = get_called_class();
+            $configuration  = get_called_class();
             self::$instance = new $configuration;
         }
 
@@ -461,9 +461,9 @@ abstract class Configuration
         }
 
         foreach ($modes as &$mode) {
-            $mode['relative'] = trim($mode['location'], '/');
-            $mode['location'] = $this->PATHS['root'] . $mode['location'];
-            $mode['url'] = trim(
+            $mode['relative']  = trim($mode['location'], '/');
+            $mode['location']  = $this->PATHS['root'] . $mode['location'];
+            $mode['url']       = trim(
                 str_replace($this->URLS['relative'], '', $mode['url']),
                 $this->ROUTER['separator']
             );

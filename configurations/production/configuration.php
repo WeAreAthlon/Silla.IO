@@ -43,7 +43,7 @@ class Configuration extends Core\Base\Configuration
     public $ROUTER = array(
         'rewrite'          => true,
         'separator'        => '/',
-        'variables_prefix' => ':'
+        'variables_prefix' => ':',
     );
 
     /**
@@ -57,11 +57,11 @@ class Configuration extends Core\Base\Configuration
      * @example redis     Redis cache adapter connection parameters.
      */
     public $CACHE = array(
-        'adapter'       => 'FileSystem',
-        'routes'        => true,
-        'labels'        => true,
-        'db_schema'     => true,
-        'database' => array(
+        'adapter'   => 'FileSystem',
+        'routes'    => true,
+        'labels'    => true,
+        'db_schema' => true,
+        'database'  => array(
             'table_name' => 'cache',
             'fields'     => array(
                 'cache_key',
@@ -69,33 +69,33 @@ class Configuration extends Core\Base\Configuration
                 'expire',
             ),
         ),
-        'redis' => array(
-            'scheme'    => 'tcp',
-            'host'      => '127.0.0.1',
-            'port'      => 6379,
-            'timeout'   => 5.0,
+        'redis'     => array(
+            'scheme'  => 'tcp',
+            'host'    => '127.0.0.1',
+            'port'    => 6379,
+            'timeout' => 5.0,
         ),
     );
 
     /**
-     * @var (int|string)[] $MAILER Mailer configuration options.
+     * @var     (int|string)[] $MAILER Mailer configuration options.
      *
      * @example type        Type of the mailing infrastructure to use(Sendmail|SMTP).
      * @example identity    Mailer identity signature.
      * @example credentials Mailer service credentials.
      */
     public $MAILER = array(
-        'type' => 'Sendmail',
-        'debug' => false,
-        'identity' => array(
+        'type'        => 'Sendmail',
+        'debug'       => false,
+        'identity'    => array(
             'name'  => 'Athlon Production',
             'email' => 'hi@athlonproduction.com',
         ),
         'credentials' => array(
             'smtp' => array(
-                'host' => 'localhost',
-                'port' => '25',
-                'user' => '',
+                'host'     => 'localhost',
+                'port'     => '25',
+                'user'     => '',
                 'password' => '',
             ),
         ),
@@ -114,7 +114,7 @@ class Configuration extends Core\Base\Configuration
     );
 
     /**
-     * @var (int|string)[] $DB DSN (Data source name).
+     * @var     (int|string)[] $DB DSN (Data source name).
      *
      * @example adapter        Adapter type (pdo_mysql|mysqli|mysql|sqlite).
      * @example host           Connection host name, or sqlite db file location.
@@ -139,7 +139,7 @@ class Configuration extends Core\Base\Configuration
     );
 
     /**
-     * @var (int|string)[] User cookie authentication data.
+     * @var     (int|string)[] User cookie authentication data.
      *
      * @example cookie_name       Name of the cookie.
      * @example cookie_salt       Cookie value salt..
@@ -158,7 +158,7 @@ class Configuration extends Core\Base\Configuration
      * @example public_key  Public key for Captcha.
      * @example private_key Private key for Captcha.
      *
-     * @link https://www.google.com/recaptcha/
+     * @link    https://www.google.com/recaptcha/
      */
     public $CAPTCHA = array(
         'enabled'     => true,

@@ -108,7 +108,7 @@ class PasswordHash
             $output = '';
             for ($i = 0; $i < $count; $i += 16) {
                 $this->randomState = md5(microtime() . $this->randomState);
-                $output .= pack('H*', md5($this->randomState));
+                $output            .= pack('H*', md5($this->randomState));
             }
 
             $output = substr($output, 0, $count);
@@ -128,10 +128,10 @@ class PasswordHash
     public function encode64($input, $count)
     {
         $output = '';
-        $i = 0;
+        $i      = 0;
 
         do {
-            $value = ord($input[$i++]);
+            $value  = ord($input[$i++]);
             $output .= $this->itoa64[$value & 0x3f];
 
             if ($i < $count) {
@@ -284,21 +284,21 @@ class PasswordHash
 
         $i = 0;
         do {
-            $c1 = ord($input[$i++]);
+            $c1     = ord($input[$i++]);
             $output .= $itoa64[$c1 >> 2];
-            $c1 = ($c1 & 0x03) << 4;
+            $c1     = ($c1 & 0x03) << 4;
             if ($i >= 16) {
                 $output .= $itoa64[$c1];
                 break;
             }
 
-            $c2 = ord($input[$i++]);
-            $c1 |= $c2 >> 4;
+            $c2     = ord($input[$i++]);
+            $c1     |= $c2 >> 4;
             $output .= $itoa64[$c1];
-            $c1 = ($c2 & 0x0f) << 2;
+            $c1     = ($c2 & 0x0f) << 2;
 
-            $c2 = ord($input[$i++]);
-            $c1 |= $c2 >> 6;
+            $c2     = ord($input[$i++]);
+            $c1     |= $c2 >> 6;
             $output .= $itoa64[$c1];
             $output .= $itoa64[$c2 & 0x3f];
         } while (1);
@@ -319,7 +319,7 @@ class PasswordHash
 
         if (CRYPT_BLOWFISH == 1 && !$this->portableHashes) {
             $random = $this->getRandomBytes(16);
-            $hash = crypt($password, $this->gensaltBlowfish($random));
+            $hash   = crypt($password, $this->gensaltBlowfish($random));
 
             if (strlen($hash) == 60) {
                 return $hash;
@@ -352,6 +352,7 @@ class PasswordHash
          * in a crypt(3)-like function used _both_ for generating new
          * hashes and for validating passwords against existing hashes.
          */
+
         return '*';
     }
 

@@ -84,6 +84,7 @@ class Mailer
         $mail->SMTPAuth = $auth;
         $mail->Username = Core\Config()->MAILER['credentials']['smtp']['user'];
         $mail->Password = Core\Config()->MAILER['credentials']['smtp']['password'];
+
         /* $mail->SMTPSecure = 'tls'; */
 
         return self::processEmail($mail, $params);

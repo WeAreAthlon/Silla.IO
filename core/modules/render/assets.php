@@ -123,7 +123,7 @@ class Assets
         }
 
         $this->assets[$type][$file_extension][] = $file;
-        $this->assets[$type][$file_extension] = array_unique($this->assets[$type][$file_extension]);
+        $this->assets[$type][$file_extension]   = array_unique($this->assets[$type][$file_extension]);
     }
 
     /**

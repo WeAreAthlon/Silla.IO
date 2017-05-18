@@ -36,10 +36,10 @@ class Smarty implements Core\Modules\Render\Interfaces\Adapter
         $this->tpl = new \Smarty;
 
         $this->tpl->setTemplateDir($config['templates'])
-            ->setCompileDir($config['compiled'])
-            ->setCacheDir($config['cache'])
-            ->setConfigDir($config['config'])
-            ->addPluginsDir($config['plugins']);
+                  ->setCompileDir($config['compiled'])
+                  ->setCacheDir($config['cache'])
+                  ->setConfigDir($config['config'])
+                  ->addPluginsDir($config['plugins']);
 
         $this->tpl->configLoad('globals.conf');
 

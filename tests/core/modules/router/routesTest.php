@@ -1,10 +1,22 @@
 <?php
+/**
+ * Routes Router Module Tests.
+ *
+ * @package    Silla.IO
+ * @subpackage Tests\Modules\Router
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
+ */
+
+namespace Tests\Modules\Router;
+
+use Core;
 use Core\Modules\Router\Routes;
 
 /**
- * @covers Core\Modules\Router\Routes
+ * @covers \Core\Modules\Router\Routes
  */
-class RoutesTest extends PHPUnit_Framework_TestCase
+class RoutesTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Core\Modules\Router\Routes
@@ -17,18 +29,18 @@ class RoutesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Router\Routes::add
+     * @covers \Core\Modules\Router\Routes::add
      */
     public function testAddingRoutesAcceptsArray()
     {
-        $route = array ('url' => 'url', 'maps_to' => 'maps_to');
+        $route = array('url' => 'url', 'maps_to' => 'maps_to');
         $this->assertTrue($this->routes->add($route));
 
         return $route;
     }
 
     /**
-     * @covers Core\Modules\Router\Routes::add
+     * @covers  \Core\Modules\Router\Routes::add
      * @depends testAddingRoutesAcceptsArray
      */
     public function testAddingRoutesReturnsTrue(array $route)
@@ -37,7 +49,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Router\Routes::getAll
+     * @covers \Core\Modules\Router\Routes::getAll
      */
     public function testGettingAllRoutesReturnsAnArray()
     {
@@ -45,7 +57,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Router\Routes::toRoute
+     * @covers \Core\Modules\Router\Routes::toRoute
      */
     public function testPreparingUrlSplitsAndTrimsBySlash()
     {

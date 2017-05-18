@@ -216,7 +216,7 @@ class Paginator
 
             $range = array(
                 'first' => $this->page($first_in_range),
-                'last' => $this->page($last_in_range)
+                'last'  => $this->page($last_in_range),
             );
         }
 

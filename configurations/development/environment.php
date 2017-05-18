@@ -10,7 +10,7 @@
  */
 
 /* Error reporting */
-error_reporting(E_ALL|E_STRICT);
+error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', 'On');
 ini_set('log_errors', 'On');
 ini_set('error_log', 'temp/errors.log');

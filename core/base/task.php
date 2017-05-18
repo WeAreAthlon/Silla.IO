@@ -31,12 +31,12 @@ abstract class Task
         if (!Core\Router()->request) {
             try {
                 $requestString = '/';
-                $mode = Core\Config()->mode();
+                $mode          = Core\Config()->mode();
 
                 /*
                  * Setup Router variables.
                  */
-                Core\Router()->routes = new Modules\Router\Routes($mode);
+                Core\Router()->routes  = new Modules\Router\Routes($mode);
                 Core\Router()->request = new Modules\Router\Request(
                     $mode,
                     Modules\Router\Router::parseRequestQueryString($requestString, Core\Router()->routes),

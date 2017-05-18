@@ -1,10 +1,21 @@
 <?php
+/**
+ * Redis Cache Adapter Module Tests.
+ *
+ * @package    Silla.IO
+ * @subpackage Tests\Modules\Cache\Adapters
+ * @copyright  Copyright (c) 2015, Silla.io
+ * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
+ */
+
+namespace Tests\Modules\Cache\Adapters;
+
 use Core\Modules\Cache\Adapters\Redis;
 
 /**
- * @covers Core\Modules\Cache\Adapters\Redis
+ * @covers \Core\Modules\Cache\Adapters\Redis
  */
-class RedisTest extends PHPUnit_Framework_TestCase
+class RedisTest extends \PHPUnit_Framework_TestCase
 {
     protected $redisCache;
 
@@ -32,13 +43,13 @@ class RedisTest extends PHPUnit_Framework_TestCase
             );
         }
 
-        $this->key = 'foo';
-        $this->value = 'bar';
+        $this->key    = 'foo';
+        $this->value  = 'bar';
         $this->expire = 2;
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::store
+     * @covers \Core\Modules\Cache\Adapters\Redis::store
      */
     public function testStoringKeyValuePair()
     {
@@ -46,7 +57,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::exists
+     * @covers  \Core\Modules\Cache\Adapters\Redis::exists
      * @depends testStoringKeyValuePair
      */
     public function testKeyValuePairExists()
@@ -55,7 +66,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::fetch
+     * @covers  \Core\Modules\Cache\Adapters\Redis::fetch
      * @depends testStoringKeyValuePair
      */
     public function testFetchingKeyValuePair()
@@ -64,7 +75,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::remove
+     * @covers  \Core\Modules\Cache\Adapters\Redis::remove
      * @depends testStoringKeyValuePair
      */
     public function testRemovingKeyValuePair()
@@ -73,7 +84,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::store
+     * @covers \Core\Modules\Cache\Adapters\Redis::store
      */
     public function testStoringArray()
     {
@@ -81,7 +92,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::fetch
+     * @covers  \Core\Modules\Cache\Adapters\Redis::fetch
      * @depends testStoringArray
      */
     public function testFetchingArray()
@@ -90,7 +101,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::store
+     * @covers \Core\Modules\Cache\Adapters\Redis::store
      */
     public function testUpdatingKeyValuePair()
     {
@@ -98,7 +109,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::store
+     * @covers \Core\Modules\Cache\Adapters\Redis::store
      */
     public function testStoringKeyValuePairWithTimeout()
     {
@@ -106,8 +117,8 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::store
-     * @expectedException Predis\Response\ServerException
+     * @covers \Core\Modules\Cache\Adapters\Redis::store
+     * @expectedException \Predis\Response\ServerException
      */
     public function testStoringKeyValuePairWithIncorrectTimeout()
     {
@@ -115,7 +126,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::fetch
+     * @covers  \Core\Modules\Cache\Adapters\Redis::fetch
      * @depends testStoringKeyValuePairWithTimeout
      */
     public function testFetchingKeyValuePairWithTimeout()
@@ -124,7 +135,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::fetch
+     * @covers  \Core\Modules\Cache\Adapters\Redis::fetch
      * @depends testStoringKeyValuePairWithTimeout
      */
     public function testFetchingExpiredKeyValuePair()
@@ -134,7 +145,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::fetch
+     * @covers \Core\Modules\Cache\Adapters\Redis::fetch
      */
     public function testFetchingNonexistentKeyValuePair()
     {
@@ -142,7 +153,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Core\Modules\Cache\Adapters\Redis::remove
+     * @covers \Core\Modules\Cache\Adapters\Redis::remove
      */
     public function testRemovingNonexistentKeyValuePair()
     {
