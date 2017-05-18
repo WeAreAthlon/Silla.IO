@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - report
 
 variables:
   MYSQL_DATABASE: silla_io
@@ -32,6 +33,8 @@ build:php5.6:
   script:
     - php composer.phar require --dev jakub-onderka/php-parallel-lint
     - ./vendor/bin/parallel-lint --exclude vendor .
+    - php composer.phar require --dev squizlabs/php_codesniffer:2.9.0
+    - vendor/bin/phpcs --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
   cache:
     untracked: true
   only:
@@ -43,6 +46,8 @@ build:php7.0:
   script:
     - php composer.phar require --dev jakub-onderka/php-parallel-lint
     - ./vendor/bin/parallel-lint --exclude vendor .
+    - php composer.phar require --dev squizlabs/php_codesniffer:2.9.0
+    - vendor/bin/phpcs --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
   cache:
     untracked: true
   only:
@@ -54,6 +59,8 @@ build:php-latest:
   script:
     - php composer.phar require --dev jakub-onderka/php-parallel-lint
     - ./vendor/bin/parallel-lint --exclude vendor .
+    - php composer.phar require --dev squizlabs/php_codesniffer:2.9.0
+    - vendor/bin/phpcs --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
   cache:
     untracked: true
   only:

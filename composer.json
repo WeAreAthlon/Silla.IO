@@ -89,7 +89,8 @@
         "apigen/apigen"              : "v4.1.2",
         "mikey179/vfsStream"         : "1.*",
         "predis/predis"              : "1.1.*@dev",
-        "jakub-onderka/php-parallel-lint" : "@stable"
+        "jakub-onderka/php-parallel-lint" : "@stable",
+        "squizlabs/php_codesniffer" : "2.9.0"
     },
     "suggest": {
         "predis/predis" : "1.1.*@dev",
