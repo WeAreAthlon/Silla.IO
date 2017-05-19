@@ -18,6 +18,10 @@ before_script:
   # Compile PHP, include these extensions.
   - docker-php-ext-install mbstring pdo_mysql curl json gd zip
 
+  # Install and enable Xdebug
+  - pecl install xdebug
+  - docker-php-ext-enable xdebug
+
   # Install Composer and project dependencies.
   - curl -sS https://getcomposer.org/installer | php
   - php composer.phar install

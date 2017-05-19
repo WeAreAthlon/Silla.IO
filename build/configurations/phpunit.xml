@@ -11,11 +11,24 @@
             <directory>../../tests/core/modules/session</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../../</directory>
+            <exclude>
+                <directory>../../vendor</directory>
+                <directory>../../temp</directory>
+                <directory>../../resources</directory>
+                <directory>../../tests</directory>
+                <directory>../../build</directory>
+                <directory>../../public</directory>
+            </exclude>
+        </whitelist>
+    </filter>
     <logging>
         <log type="junit" target="../logs/junit.xml" logIncompleteSkipped="false"/>
         <log type="coverage-clover" target="../logs/clover.xml"/>
         <log type="coverage-crap4j" target="../logs/crap4j.xml"/>
-        <log type="coverage-html" target="../logs/coverage.html"/>
+        <log type="coverage-html" target="../logs/coverage"/>
         <log type="testdox-html" target="../logs/testdox.html"/>
     </logging>
 </phpunit>
