@@ -167,7 +167,7 @@ report:php7.0:
   only:
     - master
 
-report:php7.0:
+report:php-latest:
   image: php:latest
   stage: report
   allow_failure: true
