@@ -132,7 +132,7 @@ report:php5.6:
     paths:
       - ./public/doc/
       - ./build/logs/
-    expires_in: 1 week
+    expire_in: 1 week
   cache:
     untracked: true
   only:
@@ -161,7 +161,7 @@ report:php7.0:
     paths:
       - ./public/doc/
       - ./build/logs/
-    expires_in: 1 week
+    expire_in: 1 week
   cache:
     untracked: true
   only:
@@ -190,7 +190,7 @@ report:php7.0:
     paths:
       - ./public/doc/
       - ./build/logs/
-    expires_in: 1 week
+    expire_in: 1 week
   cache:
     untracked: true
   only:
