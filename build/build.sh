@@ -6,18 +6,26 @@ TOOLS_DIR=vendor/bin
 
 composer install --prefer-dist
 
-echo app cms core tasks tests | xargs -n 1 php --syntax-check
+# Basic Syntax check
+${TOOLS_DIR}/parallel-lint --exclude vendor --exclude temp .
 
-${TOOLS_DIR}/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml app cms core tests
+# Code Style Sniffer
+${TOOLS_DIR}/phpcs --report=checkstyle --report-file=build/logs/codesniffer-checkstyle.xml --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
 
-${TOOLS_DIR}/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependencies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg app,cms,core,tasks,tests
+# Calculate the size of a PHP project.
+${TOOLS_DIR}/phploc phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
 
-${TOOLS_DIR}/phpmd app,cms,core,tasks,tests xml codesize --reportfile build/logs/pmd.xml
+# Code Static Analysis Report
+${TOOLS_DIR}/pdepend --jdepend-xml=build/logs/pdepend-jdepend.xml --jdepend-chart=build/logs/pdepend-dependencies.svg --overview-pyramid=build/logs/pdepend-overview-pyramid.svg --ignore=vendor,public,resources,temp .
 
-${TOOLS_DIR}/phpcs --report=checkstyle --report-file=build/logs/checkstyle.xml --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
+# Code Mess detector
+${TOOLS_DIR}/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public
 
-${TOOLS_DIR}/phpcpd --log-pmd build/logs/pmd-cpd.xml app cms core tests tasks
+# Copy Paste detector
+${TOOLS_DIR}/phpcpd --log-pmd build/logs/pmd-cpd.xml --exclude vendor --exclude temp --exclude public .
 
+# Run Automated Tests
 ${TOOLS_DIR}/phpunit --stderr --configuration build/configurations/phpunit.xml
 
+# Generate Code Documentation Reference
 ${TOOLS_DIR}/apigen generate --quiet --config build/configurations/apigen.yaml

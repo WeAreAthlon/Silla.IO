@@ -82,20 +82,20 @@
         "phpunit/phpunit"            : "4.8.35",
         "php-mock/php-mock-phpunit"  : "0.2",
         "eloquent/phpunit-extensions": "@stable",
-        "phploc/phploc"              : "*",
-        "sebastian/phpcpd"           : "*",
+        "phploc/phploc"              : "@stable",
+        "sebastian/phpcpd"           : "@stable",
         "pdepend/pdepend"            : "@stable",
         "phpmd/phpmd"                : "@stable",
         "apigen/apigen"              : "v4.1.2",
         "mikey179/vfsStream"         : "1.*",
-        "predis/predis"              : "1.1.*@dev",
         "jakub-onderka/php-parallel-lint" : "@stable",
         "squizlabs/php_codesniffer" : "2.9.0"
     },
     "suggest": {
         "predis/predis" : "1.1.*@dev",
         "leafo/lessphp" : "v0.5.0",
-        "leafo/scssphp" : "v0.6.6"
+        "leafo/scssphp" : "v0.6.6",
+        "predis/predis" : "1.1.*@dev"
     },
     "config": {
       "preferred-install": "dist",
