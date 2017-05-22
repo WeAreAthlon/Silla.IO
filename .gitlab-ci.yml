@@ -121,15 +121,10 @@ report:php5.6:
       - build:php-latest
       - test:php5.6:mysql5.6
   script:
-    - php composer.phar require --dev apigen/apigen:v4.1.2
     - ./vendor/bin/apigen generate --quiet --config ./build/configurations/apigen.yaml
-    - php composer.phar require --dev phploc/phploc
     - ./vendor/bin/phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
-    - php composer.phar require --dev phpmd/phpmd
     - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public --ignore-violations-on-exit
-    - php composer.phar require --dev pdepend/pdepend
     - ./vendor/bin/pdepend --jdepend-xml=build/logs/pdepend-jdepend.xml --jdepend-chart=build/logs/pdepend-dependencies.svg --overview-pyramid=build/logs/pdepend-overview-pyramid.svg --ignore=vendor,public,resources,temp .
-    - php composer.phar require --dev sebastian/phpcpd
     - ./vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml --exclude vendor --exclude temp --exclude public .
   artifacts:
     name: "${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
@@ -150,15 +145,10 @@ report:php7.0:
       - build:php-latest
       - test:php7.0:mysql5.7
   script:
-    - php composer.phar require --dev apigen/apigen:v4.1.2
     - ./vendor/bin/apigen generate --quiet --config ./build/configurations/apigen.yaml
-    - php composer.phar require --dev phploc/phploc
     - ./vendor/bin/phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
-    - php composer.phar require --dev phpmd/phpmd
     - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public --ignore-violations-on-exit
-    - php composer.phar require --dev pdepend/pdepend
     - ./vendor/bin/pdepend --jdepend-xml=build/logs/pdepend-jdepend.xml --jdepend-chart=build/logs/pdepend-dependencies.svg --overview-pyramid=build/logs/pdepend-overview-pyramid.svg --ignore=vendor,public,resources,temp .
-    - php composer.phar require --dev sebastian/phpcpd
     - ./vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml --exclude vendor --exclude temp --exclude public .
   artifacts:
     name: "${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
@@ -179,15 +169,10 @@ report:php-latest:
       - build:php-latest
       - test:php-latest:mysql-latest
   script:
-    - php composer.phar require --dev apigen/apigen:v4.1.2
     - ./vendor/bin/apigen generate --quiet --config ./build/configurations/apigen.yaml
-    - php composer.phar require --dev phploc/phploc
     - ./vendor/bin/phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
-    - php composer.phar require --dev phpmd/phpmd
     - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public --ignore-violations-on-exit
-    - php composer.phar require --dev pdepend/pdepend
     - ./vendor/bin/pdepend --jdepend-xml=build/logs/pdepend-jdepend.xml --jdepend-chart=build/logs/pdepend-dependencies.svg --overview-pyramid=build/logs/pdepend-overview-pyramid.svg --ignore=vendor,public,resources,temp .
-    - php composer.phar require --dev sebastian/phpcpd
     - ./vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml --exclude vendor --exclude temp --exclude public .
   artifacts:
     name: "${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
