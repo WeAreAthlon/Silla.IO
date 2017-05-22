@@ -2,9 +2,9 @@
 
 # Environment configuration
 <IfModule mod_env.c>
-    SetEnv HTTP_ENV_SILLA_ENVIRONMENT 'development'
-#   SetEnv HTTP_ENV_SILLA_ENVIRONMENT 'staging'
-#   SetEnv HTTP_ENV_SILLA_ENVIRONMENT 'production'
+    SetEnv ENV_SILLA_ENVIRONMENT 'development'
+#   SetEnv ENV_SILLA_ENVIRONMENT 'staging'
+#   SetEnv ENV_SILLA_ENVIRONMENT 'production'
 </IfModule>
 
 # Rewrite rules

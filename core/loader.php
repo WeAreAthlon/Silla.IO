@@ -14,5 +14,5 @@
  */
 define(
     'SILLA_ENVIRONMENT',
-    isset($_SERVER['HTTP_ENV_SILLA_ENVIRONMENT']) ? $_SERVER['HTTP_ENV_SILLA_ENVIRONMENT'] : 'development'
+    isset($_SERVER['ENV_SILLA_ENVIRONMENT']) ? $_SERVER['ENV_SILLA_ENVIRONMENT'] : 'development'
 );

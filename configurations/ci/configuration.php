@@ -1,6 +1,6 @@
 <?php
 /**
- * Development Configuration class.
+ * Continues Integration Configuration class.
  *
  * @package    Silla.IO
  * @subpackage Configurations\Development
@@ -9,28 +9,15 @@
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
  */
 
-namespace Configurations\Development;
+namespace Configurations\CI;
 
 use Configurations;
 
 /**
  * Configuration class implementation.
  */
-class Configuration extends Configurations\Staging\Configuration
+class Configuration extends Configurations\Development\Configuration
 {
-    /**
-     * @var boolean[] $ASSETS Assets Management options flags.
-     *
-     * @example cache    Whether to cache all assets groups on the file system.
-     * @example combine  Whether to combine all assets groups in one file.
-     * @example optimize Whether to minify assets.
-     */
-    public $ASSETS = array(
-        'cache'    => false,
-        'combine'  => false,
-        'optimize' => false,
-    );
-
     /**
      * @var array $CACHE Cache related configuration options.
      *
@@ -59,18 +46,6 @@ class Configuration extends Configurations\Staging\Configuration
             'host'    => '127.0.0.1',
             'port'    => 6379,
             'timeout' => 5.0,
-        ),
-    );
-
-    /**
-     * @var string[] $RENDER Render engine configuration.
-     *
-     * @example adapter Render adapter name.
-     */
-    public $RENDER = array(
-        'adapter' => 'Core\Modules\Render\Adapters\Smarty',
-        'options' => array(
-            'strip_white_space' => false,
         ),
     );
 
@@ -113,28 +88,13 @@ class Configuration extends Configurations\Staging\Configuration
      */
     public $DB = array(
         'adapter'        => 'pdo_mysql',
-        'host'           => '<DB_HOST>',
+        'host'           => 'mysql',
         'port'           => 3306,
-        'user'           => '<DB_USER>',
-        'password'       => '<DB_PASSWORD>',
-        'name'           => '<DB_NAME>',
+        'user'           => 'root',
+        'password'       => 'dbs1cret',
+        'name'           => 'silla_io',
         'tables_prefix'  => '',
         'encryption_key' => '25c6c7ff35bd13b0ff9979b151f2136c',
         'crypt_vector'   => 'dasn312321nssa1k',
-    );
-
-    /**
-     * @var string[] Captcha credentials.
-     *
-     * @example enabled     Flag whether to use Captcha or Not.
-     * @example public_key  Public key for Captcha.
-     * @example private_key Private key for Captcha.
-     *
-     * @link    https://www.google.com/recaptcha/
-     */
-    public $CAPTCHA = array(
-        'enabled'     => true,
-        'public_key'  => '6LfSevQSAAAAAHUbl-gTGwQHi4C9UW219V0Nn6J5',
-        'private_key' => '6LfSevQSAAAAAB6H3f9OznBVUGBp0iMMZWX2OSFH',
     );
 }

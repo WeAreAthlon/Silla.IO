@@ -4,6 +4,7 @@ stages:
   - report
 
 variables:
+  ENV_SILLA_ENVIRONMENT: ci
   MYSQL_DATABASE: silla_io
   MYSQL_ROOT_PASSWORD: dbs1cret
 
