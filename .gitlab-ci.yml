@@ -79,6 +79,7 @@ test:php5.6:mysql5.6:
     - build:php5.6
   services:
     - mysql:5.6
+    - redis:latest
   script:
     - ./silla tasks:db:create ./resources/db/mysql/dump.mysql.sql
     - ./vendor/bin/phpunit --stderr --coverage-text --colors=never --configuration ./build/configurations/phpunit.xml
@@ -93,6 +94,7 @@ test:php7.0:mysql5.7:
     - build:php7.0
   services:
     - mysql:5.7
+    - redis:latest
   script:
     - ./silla tasks:db:create ./resources/db/mysql/dump.mysql.sql
     - ./vendor/bin/phpunit --stderr --coverage-text --colors=never --configuration ./build/configurations/phpunit.xml
@@ -107,6 +109,7 @@ test:php-latest:mysql-latest:
     - build:php-latest
   services:
     - mysql:latest
+    - redis:latest
   script:
     - ./silla tasks:db:create ./resources/db/mysql/dump.mysql.sql
     - ./vendor/bin/phpunit --stderr --coverage-text --colors=never --configuration ./build/configurations/phpunit.xml
