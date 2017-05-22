@@ -14,37 +14,38 @@ namespace Core;
 
 use Core\CLI;
 
-$environment = 'development';
 $mode = 'app';
 
 /* Get environment from the CLI parameters */
 foreach ($argv as $key => $parameter) {
     if (strpos($parameter, '--environment') === 0) {
         $environment = str_replace('--environment=', '', $parameter);
-    } else if(strpos($parameter, '--mode') === 0) {
+    } else if (strpos($parameter, '--mode') === 0) {
         $mode = str_replace('--mode=', '', $parameter);
     }
 }
-/* Define configuration environment */
-define('SILLA_ENVIRONMENT', $environment);
 
-$currentDir = __DIR__;
+if (isset($environment)) {
+    putenv("ENV_SILLA_ENVIRONMENT=$environment");
+}
 
-require_once $currentDir . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'loader.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boot.php';
+
 Config()->setMode(Config()->modes($mode));
 
 if ($argc > 1) {
-    $parts = explode(':', $argv[1]);
+    $parts   = explode(':', $argv[1]);
     $command = implode(':', array_slice($parts, 1));
-    $class = 'Core\CLI\\' . $parts[0];
+    $class   = 'Core\CLI\\' . $parts[0];
 
     if ('db' === $command) {
         $migrations = array_map(function ($item) {
             $name = substr($item, 0, -4);
 
             return array(
-                'name' => $name,
-                'version' => substr($name, -10)
+                'name'    => $name,
+                'version' => substr($name, -10),
             );
         }, array_slice(
             scandir(Config()->paths('root') . 'db' . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR),
