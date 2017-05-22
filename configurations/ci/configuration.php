@@ -3,7 +3,7 @@
  * Continues Integration Configuration class.
  *
  * @package    Silla.IO
- * @subpackage Configurations\Development
+ * @subpackage Configurations\CI
  * @author     Plamen Nikolov <plamen@athlonsofia.com>
  * @copyright  Copyright (c) 2015, Silla.io
  * @license    http://opensource.org/licenses/GPL-3.0 GNU General Public License, version 3.0 (GPLv3)
