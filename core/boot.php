@@ -16,7 +16,7 @@ if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 }
 
 if (!defined('SILLA_ENVIRONMENT')) {
-    require __DIR__ . DIRECTORY_SEPARATOR . 'loader.php';
+    require_once __DIR__ . DIRECTORY_SEPARATOR . 'loader.php';
 }
 
 chdir(dirname(__DIR__));

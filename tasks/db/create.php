@@ -32,6 +32,11 @@ final class Create extends Core\Base\Task
      */
     public static function run(array $params = array())
     {
+        d('-----');
+        d($_ENV);
+        d(getenv('ENV_SILLA_ENVIRONMENT'));
+        d('-----');
+
         $filename = isset($params[0]) && is_file($params[0]) ? $params[0] : null;
 
         if (!$filename) {
