@@ -28,7 +28,7 @@ before_script:
   - php composer.phar install
 
   # Run database create
-  - php ./silla tasks:db:create resources/db/mysql/dump.mysql.sql
+  - ./silla tasks:db:create ./resources/db/mysql/dump.mysql.sql
 
 # Build stage jobs
 

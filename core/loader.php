@@ -13,8 +13,8 @@
  * Define Silla.IO application framework variables.
  */
 
-if (isset($_ENV['ENV_SILLA_ENVIRONMENT']) && !empty($_ENV['ENV_SILLA_ENVIRONMENT'])) {
-    define('SILLA_ENVIRONMENT', $_SERVER['ENV_SILLA_ENVIRONMENT']);
+if (getenv('ENV_SILLA_ENVIRONMENT')) {
+    define('SILLA_ENVIRONMENT', getenv('ENV_SILLA_ENVIRONMENT'));
 } elseif (isset($_SERVER['ENV_SILLA_ENVIRONMENT']) && !empty($_SERVER['ENV_SILLA_ENVIRONMENT'])) {
     define('SILLA_ENVIRONMENT', $_SERVER['ENV_SILLA_ENVIRONMENT']);
 } else {
