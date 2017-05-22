@@ -28,7 +28,6 @@
         <log type="junit" target="../logs/junit.xml" logIncompleteSkipped="false"/>
         <log type="coverage-clover" target="../logs/clover.xml"/>
         <log type="coverage-crap4j" target="../logs/crap4j.xml"/>
-        <log type="coverage-html" target="../logs/coverage"/>
         <log type="testdox-html" target="../logs/testdox.html"/>
     </logging>
 </phpunit>
