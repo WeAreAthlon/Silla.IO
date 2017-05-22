@@ -126,7 +126,7 @@ report:php5.6:
     - php composer.phar require --dev phploc/phploc
     - ./vendor/bin/phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
     - php composer.phar require --dev phpmd/phpmd
-    - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public
+    - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public --ignore-violations-on-exit
     - php composer.phar require --dev pdepend/pdepend
     - ./vendor/bin/pdepend --jdepend-xml=build/logs/pdepend-jdepend.xml --jdepend-chart=build/logs/pdepend-dependencies.svg --overview-pyramid=build/logs/pdepend-overview-pyramid.svg --ignore=vendor,public,resources,temp .
     - php composer.phar require --dev sebastian/phpcpd
@@ -155,7 +155,7 @@ report:php7.0:
     - php composer.phar require --dev phploc/phploc
     - ./vendor/bin/phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
     - php composer.phar require --dev phpmd/phpmd
-    - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public
+    - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public --ignore-violations-on-exit
     - php composer.phar require --dev pdepend/pdepend
     - ./vendor/bin/pdepend --jdepend-xml=build/logs/pdepend-jdepend.xml --jdepend-chart=build/logs/pdepend-dependencies.svg --overview-pyramid=build/logs/pdepend-overview-pyramid.svg --ignore=vendor,public,resources,temp .
     - php composer.phar require --dev sebastian/phpcpd
@@ -184,7 +184,7 @@ report:php-latest:
     - php composer.phar require --dev phploc/phploc
     - ./vendor/bin/phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
     - php composer.phar require --dev phpmd/phpmd
-    - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public
+    - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public --ignore-violations-on-exit
     - php composer.phar require --dev pdepend/pdepend
     - ./vendor/bin/pdepend --jdepend-xml=build/logs/pdepend-jdepend.xml --jdepend-chart=build/logs/pdepend-dependencies.svg --overview-pyramid=build/logs/pdepend-overview-pyramid.svg --ignore=vendor,public,resources,temp .
     - php composer.phar require --dev sebastian/phpcpd
