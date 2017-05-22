@@ -23,6 +23,8 @@ final class Optimize extends Core\Base\Task
      *
      * @param array $params Additional command line parameters.
      *
+     * @example ./silla tasks:db:optimize
+     *
      * @return void
      */
     public static function run(array $params = array())

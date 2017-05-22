@@ -12,7 +12,11 @@
 /**
  * Define Silla.IO application framework variables.
  */
-define(
-    'SILLA_ENVIRONMENT',
-    isset($_SERVER['ENV_SILLA_ENVIRONMENT']) ? $_SERVER['ENV_SILLA_ENVIRONMENT'] : 'development'
-);
+
+if (isset($_ENV['ENV_SILLA_ENVIRONMENT']) && !empty($_ENV['ENV_SILLA_ENVIRONMENT'])) {
+    define('SILLA_ENVIRONMENT', $_SERVER['ENV_SILLA_ENVIRONMENT']);
+} elseif (isset($_SERVER['ENV_SILLA_ENVIRONMENT']) && !empty($_SERVER['ENV_SILLA_ENVIRONMENT'])) {
+    define('SILLA_ENVIRONMENT', $_SERVER['ENV_SILLA_ENVIRONMENT']);
+} else {
+    define('SILLA_ENVIRONMENT', 'development');
+}

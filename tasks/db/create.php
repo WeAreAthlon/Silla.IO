@@ -19,12 +19,14 @@ use Core;
 final class Create extends Core\Base\Task
 {
     /**
-     * Optimize database tables.
+     * Imports database dump file.
      *
      * @param array $params Additional command line parameters.
      *
      * @throws \InvalidArgumentException When missing dump file is passed.
      * @throws \LogicException           When cannot execute queries.
+     *
+     * @example ./silla tasks:db:create resources/db/mysql/dump.mysql.sql
      *
      * @return void
      */
