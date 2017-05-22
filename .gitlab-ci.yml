@@ -82,7 +82,7 @@ test:php5.6:mysql5.6:
   services:
     - mysql:5.6
   script:
-    - ./vendor/bin/phpunit --stderr --configuration ./build/configurations/phpunit.xml
+    - ./vendor/bin/phpunit --stderr --coverage-text --colors=never --configuration ./build/configurations/phpunit.xml
   only:
     - develop
     - master
@@ -95,7 +95,7 @@ test:php7.0:mysql5.7:
   services:
     - mysql:5.7
   script:
-    - ./vendor/bin/phpunit --stderr --configuration ./build/configurations/phpunit.xml
+    - ./vendor/bin/phpunit --stderr --coverage-text --colors=never --configuration ./build/configurations/phpunit.xml
   only:
     - develop
     - master
@@ -108,7 +108,7 @@ test:php-latest:mysql-latest:
   services:
     - mysql:latest
   script:
-    - ./vendor/bin/phpunit --stderr --configuration ./build/configurations/phpunit.xml
+    - ./vendor/bin/phpunit --stderr --coverage-text --colors=never --configuration ./build/configurations/phpunit.xml
   only:
     - develop
     - master
