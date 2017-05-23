@@ -373,7 +373,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     /**
      * Rewind method.
      *
-     * @return mixed|void
+     * @return mixed
      */
     public function rewind()
     {
@@ -405,7 +405,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
     /**
      * Get next method.
      *
-     * @return mixed|void
+     * @return mixed
      */
     public function next()
     {
@@ -474,7 +474,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      * @param string $condition Condition upon joining.
      * @param string $type      Type of the join.
      *
-     * @TODO add support for prepared statements.
+     * @TODO Add support for prepared statements.
      *
      * @return Query
      */
@@ -821,7 +821,7 @@ class Query implements \ArrayAccess, \Countable, \Iterator
      *
      * @param boolean $keys Whether to preserve keys.
      *
-     * @return array of objects
+     * @return array Array of objects.
      */
     public function all($keys = false)
     {
