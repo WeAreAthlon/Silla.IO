@@ -37,9 +37,10 @@ class DirectoryTest extends \PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        self::$vfs      = vfsStream::setup('root/');
+        $uniqueString = md5(Core\Config()->paths('root'));
+        self::$vfs      = vfsStream::setup('root/' . $uniqueString . '/');
         self::$rootPath = Core\Config()->paths('root');
-        Core\Config()->modifyPath('root', vfsStream::url('root/'));
+        Core\Config()->modifyPath('root', vfsStream::url('root/' . $uniqueString . '/'));
     }
 
     /**
@@ -51,6 +52,9 @@ class DirectoryTest extends \PHPUnit_Framework_TestCase
         Core\Config()->modifyPath('root', self::$rootPath);
     }
 
+    /**
+     * Setup paths.
+     */
     protected function setUp()
     {
         $this->path     = 'foo/bar';
