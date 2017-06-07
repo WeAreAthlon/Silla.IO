@@ -165,4 +165,15 @@ class Configuration extends Core\Base\Configuration
         'public_key'  => '6LfSevQSAAAAAHUbl-gTGwQHi4C9UW219V0Nn6J5',
         'private_key' => '6LfSevQSAAAAAB6H3f9OznBVUGBp0iMMZWX2OSFH',
     );
+
+    /**
+     * @var int Number of unsuccessful CMS user login attempts that block the user
+     *
+     */
+    public $USER_MAX_LOGIN_ATT = 3;
+
+    /**
+     * @var int Number of unsuccessful CMS user login attempts before showing CAPTCHA
+     */
+    public $CAPTCHA_LOGIN_ATT = 2;
 }

@@ -64,6 +64,12 @@ class CMSUsers extends CMS
     {
         parent::beforeEdit($request);
 
+        /* Prevent self blocking */
+        if ($this->resource->getPrimaryKeyValue() === $this->user->getPrimaryKeyValue()) {
+            $this->removeAccessibleAttributes(array('is_active'));
+            unset($this->sections['general']['fields']['is_active']);
+        }
+
         if ($request->is('post')) {
             if (!Crypt::hashCompare($this->user->password, $request->post('current_password'))) {
                 $this->resource->setError('current_password', 'mismatch');

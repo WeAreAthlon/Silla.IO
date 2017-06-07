@@ -32,6 +32,8 @@ ENGINE = MyISAM;
 CREATE TABLE IF NOT EXISTS `cms_users` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `role_id` SMALLINT(5) UNSIGNED NOT NULL,
+  `is_active` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+  `login_attempts` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `password` VARCHAR(100) NOT NULL,
   `email` VARCHAR(150) NOT NULL,
   `name` VARCHAR(255) NOT NULL,
@@ -41,7 +43,9 @@ CREATE TABLE IF NOT EXISTS `cms_users` (
   `login_on` DATETIME NULL,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `email` USING BTREE (`email` ASC) ,
-  INDEX `role_id` USING BTREE (`role_id` ASC) )
+  INDEX `role_id` USING BTREE (`role_id` ASC) ,
+  INDEX `is_active` USING BTREE (`is_active` ASC)
+)
 ENGINE = MyISAM;
 
 

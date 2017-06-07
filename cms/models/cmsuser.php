@@ -127,4 +127,19 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     {
         return CMS\Helpers\CMSUsers::getGravatar($this->email, $size, $type, $rating);
     }
+
+    /**
+     * Increments User Login attempts.
+     *
+     * @param string $email Email of the user.
+     *
+     * @return void
+     */
+    public static function incrementLoginAttempts($email)
+    {
+        Core\DB()->query(
+            'UPDATE ' . self::$tableName . ' SET `login_attempts` ' . '= `login_attempts` + 1 WHERE `email` = ?',
+            array($email)
+        );
+    }
 }

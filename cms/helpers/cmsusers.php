@@ -20,6 +20,13 @@ use CMS;
 class CMSUsers
 {
     /**
+     * Access block user notification type.
+     *
+     * @type string
+     */
+    const NOTIFY = '';
+    
+    /**
      * Get Global Application CMS accessibility scope.
      *
      * @access public
@@ -125,5 +132,27 @@ class CMSUsers
         $url .= '?' . http_build_query(array('s' => $s, 'd' => $d, 'r' => $r), '', '&amp;');
 
         return $url;
+    }
+
+    /**
+     * Flags a user as blocked.
+     *
+     * @param \CMS\Models\CMSUser $user   User instance
+     * @param string              $action Type of notification action.
+     *
+     * @return void
+     */
+    public static function block(CMS\Models\CMSUser $user, $action = 'block')
+    {
+        if ($action == self::NOTIFY) {
+            Core\Helpers\Mailer::send(array(
+                'to' => '',
+                'from' => '',
+                'content' => '',
+                'subject' => 'Exceeded login attempts limit',
+            ));
+        }
+
+        $user->save(array('is_active' => '0'), true);
     }
 }

@@ -24,6 +24,15 @@ attributes:
         sort    : false
         export  : false
         caption : false
+      is_active:
+        title   : Active
+        type    : select
+        desc    : Whether the user can login.
+        value   :
+          '0' : 'No'
+          '1' : 'Yes'
+        list: false
+        filter: true
       name:
         title   : Name
         type    : text
