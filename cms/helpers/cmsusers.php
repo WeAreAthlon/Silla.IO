@@ -19,6 +19,8 @@ use CMS;
  */
 class CMSUsers
 {
+    const NOTIFY = 'notify';
+    
     /**
      * Get Global Application CMS accessibility scope.
      *
@@ -125,5 +127,23 @@ class CMSUsers
         $url .= '?' . http_build_query(array('s' => $s, 'd' => $d, 'r' => $r), '', '&amp;');
 
         return $url;
+    }
+
+    public static function block(CMS\Models\CMSUser $user, $action = 'block')
+    {
+        if ($action == self::NOTIFY) {
+            // Send mail that the user profile has reached max login attempts
+            Core\Helpers\Mailer::send(array(
+                'to' => '',
+                'from' => '',
+                'content' => '',
+                'subject' => 'Exceeden login attempts limit',
+            ));
+
+            echo "Administrator has been notified!";
+            return;
+        }
+
+        $user->save(array('is_active' => 0), true);
     }
 }

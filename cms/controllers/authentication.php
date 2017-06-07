@@ -77,16 +77,36 @@ class Authentication extends Base\Controller
                 }
             }
 
-            $user = Models\CMSUser::find()->where('email = ?', array($request->post('email')))->first();
+            $user = Models\CMSUser::find()->where('email = ?',
+                array($request->post('email')))->first();
 
-            if ($user && Crypt::hashCompare($user->password, $request->post('password'))) {
-                $user->save(array('login_on' => gmdate('Y-m-d H:i:s')), true);
+            if (!$user) {
+                $this->processInvalidCredentials();
+
+                return;
+            }
+
+            if ($user->login_attempts >= Core\Config()->USER_MAX_LOGIN_ATT) {
+                Helpers\CMSUsers::block($user);
+            }
+
+            if (!$user->is_active) {
+                Helpers\FlashMessage::set($this->labels['login']['blocked'], 'danger');
+
+                return;
+            }
+
+            if (Crypt::hashCompare($user->password, $request->post('password'))) {
+                $user->save(array(
+                    'login_on'       => gmdate('Y-m-d H:i:s'),
+                    'login_attempts' => 0,
+                ), true);
 
                 /* Regenerate Session key for prevent session id fixation. */
                 Core\Session()->regenerateKey();
                 Core\Session()->set('cms_user_info', rawurlencode(serialize($user)));
                 Core\Session()->set('cms_user_logged', 1);
-                Core\Session()->remove('authentication_error');
+                Core\Session()->remove('login_attempts');
                 Core\Session()->remove('captcha');
 
                 /* Regenerate CSRF token for prevent token fixation. */
@@ -99,17 +119,11 @@ class Authentication extends Base\Controller
                     $request->redirectTo(array('controller' => 'account'));
                 }
             } else {
-                Helpers\FlashMessage::set($this->labels['login']['error'], 'danger');
-                Core\Session()->set('authentication_error', true);
-
-                if (Core\Config()->CAPTCHA['enabled']) {
-                    $this->loadCaptcha(Core\Config()->CAPTCHA);
-                }
+                Models\CMSUser::icrementLoginAttempts($request->post('email'));
+                $this->processInvalidCredentials();
             }
-        } else {
-            if (Core\Session()->get('cms_user_logged') === 1) {
-                $request->redirectTo(array('controller' => 'account'));
-            }
+        } else if (Core\Session()->get('cms_user_logged') === 1) {
+            $request->redirectTo(array('controller' => 'account'));
         }
     }
 
@@ -172,7 +186,7 @@ class Authentication extends Base\Controller
 
                 Core\Helpers\Mailer::send($mailForPasswordReset);
                 Helpers\FlashMessage::set($this->labels['reset']['success'], 'success');
-                Core\Session()->remove('authentication_error');
+                Core\Session()->remove('login_attempts');
                 Core\Session()->remove('captcha');
             } else {
                 if ($this->captcha) {
@@ -181,7 +195,7 @@ class Authentication extends Base\Controller
                     Helpers\FlashMessage::set($this->labels['reset']['error'], 'danger');
                 }
 
-                Core\Session()->set('authentication_error', true);
+                $this->loginFailIncrement();
 
                 if (Core\Config()->CAPTCHA['enabled']) {
                     $this->loadCaptcha(Core\Config()->CAPTCHA);
@@ -258,5 +272,34 @@ class Authentication extends Base\Controller
     protected function loadFlashMessage()
     {
         $this->renderer->set('flash', Helpers\FlashMessage::get());
+    }
+
+    /**
+     * Increment session authentication errors
+     *
+     * @return void
+     */
+    protected function loginFailIncrement()
+    {
+        $attempts = Core\Session()->get('login_attempts')
+                    ? (int)Core\Session()->get('login_attempts') : 0;
+
+        Core\Session()->set('login_attempts', ++$attempts);
+    }
+
+    /**
+     * Set error message, increment session fail attempts and show captcha if needed
+     *
+     * @return void
+     */
+    protected function processInvalidCredentials()
+    {
+        $this->loginFailIncrement();
+
+        Helpers\FlashMessage::set($this->labels['login']['error'], 'danger');
+
+        if (Core\Config()->CAPTCHA['enabled']) {
+            $this->loadCaptcha(Core\Config()->CAPTCHA);
+        }
     }
 }
