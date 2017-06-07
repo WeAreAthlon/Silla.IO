@@ -23,7 +23,7 @@ general:
   attribute     : Attribute
   value         : Value
   last_login    : last session on
-  no_supported_entities: No supporoted content entities.
+  no_supported_entities: No supported content entities.
 
 buttons:
   save   : Save changes
