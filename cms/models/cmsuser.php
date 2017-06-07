@@ -100,12 +100,6 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
         }
     }
 
-    public function beforeValidate()
-    {
-        $this->is_active      = 1;
-        $this->login_attempts = 0;
-    }
-
     /**
      * Checks whether the user has ownership over an entity model.
      *
@@ -134,9 +128,18 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
         return CMS\Helpers\CMSUsers::getGravatar($this->email, $size, $type, $rating);
     }
 
-    public static function icrementLoginAttempts($userEmail)
+    /**
+     * Increments User Login attempts.
+     *
+     * @param string $email Email of the user.
+     *
+     * @return void
+     */
+    public static function incrementLoginAttempts($email)
     {
-        Core\DB()->query('UPDATE '.self::$tableName.' SET `login_attempts` '
-                . '= `login_attempts` + 1 WHERE `email` = ?', array($userEmail));
+        Core\DB()->query(
+            'UPDATE ' . self::$tableName . ' SET `login_attempts` ' . '= `login_attempts` + 1 WHERE `email` = ?',
+            array($email)
+        );
     }
 }

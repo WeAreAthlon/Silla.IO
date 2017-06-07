@@ -19,7 +19,12 @@ use CMS;
  */
 class CMSUsers
 {
-    const NOTIFY = 'notify';
+    /**
+     * Access block user notification type.
+     *
+     * @type string
+     */
+    const NOTIFY = '';
     
     /**
      * Get Global Application CMS accessibility scope.
@@ -129,21 +134,25 @@ class CMSUsers
         return $url;
     }
 
+    /**
+     * Flags a user as blocked.
+     *
+     * @param \CMS\Models\CMSUser $user   User instance
+     * @param string              $action Type of notification action.
+     *
+     * @return void
+     */
     public static function block(CMS\Models\CMSUser $user, $action = 'block')
     {
         if ($action == self::NOTIFY) {
-            // Send mail that the user profile has reached max login attempts
             Core\Helpers\Mailer::send(array(
                 'to' => '',
                 'from' => '',
                 'content' => '',
-                'subject' => 'Exceeden login attempts limit',
+                'subject' => 'Exceeded login attempts limit',
             ));
-
-            echo "Administrator has been notified!";
-            return;
         }
 
-        $user->save(array('is_active' => 0), true);
+        $user->save(array('is_active' => '0'), true);
     }
 }

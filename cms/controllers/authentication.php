@@ -77,8 +77,7 @@ class Authentication extends Base\Controller
                 }
             }
 
-            $user = Models\CMSUser::find()->where('email = ?',
-                array($request->post('email')))->first();
+            $user = Models\CMSUser::find()->where('email = ?', array($request->post('email')))->first();
 
             if (!$user) {
                 $this->processInvalidCredentials();
@@ -86,7 +85,7 @@ class Authentication extends Base\Controller
                 return;
             }
 
-            if ($user->login_attempts >= Core\Config()->USER_MAX_LOGIN_ATT) {
+            if ($user->login_attempts > Core\Config()->USER_MAX_LOGIN_ATT) {
                 Helpers\CMSUsers::block($user);
             }
 
@@ -119,10 +118,10 @@ class Authentication extends Base\Controller
                     $request->redirectTo(array('controller' => 'account'));
                 }
             } else {
-                Models\CMSUser::icrementLoginAttempts($request->post('email'));
+                Models\CMSUser::incrementLoginAttempts($request->post('email'));
                 $this->processInvalidCredentials();
             }
-        } else if (Core\Session()->get('cms_user_logged') === 1) {
+        } elseif (Core\Session()->get('cms_user_logged') === 1) {
             $request->redirectTo(array('controller' => 'account'));
         }
     }
@@ -275,7 +274,7 @@ class Authentication extends Base\Controller
     }
 
     /**
-     * Increment session authentication errors
+     * Increment session authentication errors.
      *
      * @return void
      */
@@ -288,7 +287,7 @@ class Authentication extends Base\Controller
     }
 
     /**
-     * Set error message, increment session fail attempts and show captcha if needed
+     * Set error message, increment session fail attempts and show captcha if needed.
      *
      * @return void
      */

@@ -32,9 +32,7 @@ class Captcha
     {
         $captcha = Core\Session()->get('captcha');
 
-        if (!$captcha && Core\Session()->get('login_attempts') >=
-            Core\Config()->CAPTCHA_LOGIN_ATT)
-        {
+        if (!$captcha && Core\Session()->get('login_attempts') >= Core\Config()->CAPTCHA_LOGIN_ATT) {
             $captcha = new \Captcha\Captcha();
             $captcha->setPublicKey($configuration['public_key']);
             $captcha->setPrivateKey($configuration['private_key']);
