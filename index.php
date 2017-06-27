@@ -26,7 +26,7 @@ try {
     /**
      * Detect Silla.IO Mode.
      */
-    $requestString = Router\Router::normalizePath($_SERVER['REQUEST_URI']);
+    $requestString = Router\Router::normalizePath(urldecode($_SERVER['REQUEST_URI']));
     $mode          = Router\Router::getMode($requestString);
     Config()->setMode($mode);
 
