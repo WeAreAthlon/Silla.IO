@@ -167,7 +167,7 @@ final class Routes
 
         foreach ($routes as $key => $route) {
             if ($url_mapping_count != count($route['maps_to'])
-                || array_keys($url_mapping) !== array_keys($route['maps_to'])
+                || array_diff_key($url_mapping, $route['maps_to'])
             ) {
                 unset($routes[$key]);
             } else {
