@@ -1,7 +1,7 @@
 ## Silla.IO - PHP Application Development Framework
 
-[![build status](http://gitlab.athlonsofia.com/athlon/silla.io/badges/master/build.svg)](http://gitlab.athlonsofia.com/athlon/silla.io/commits/master)
-[![coverage report](http://gitlab.athlonsofia.com/athlon/silla.io/badges/master/coverage.svg)](http://gitlab.athlonsofia.com/athlon/silla.io/commits/master)
+[![build status](https://gitlab.athlonsofia.com/athlon/silla.io/badges/master/build.svg)](https://gitlab.athlonsofia.com/athlon/silla.io/commits/master)
+[![coverage report](https://gitlab.athlonsofia.com/athlon/silla.io/badges/master/coverage.svg)](https://gitlab.athlonsofia.com/athlon/silla.io/commits/master)
 [![Github Issues](https://img.shields.io/github/issues/WeAreAthlon/silla.io.svg?style=flat-square)](https://github.com/WeAreAthlon/silla.io/issues)
 [![License](https://img.shields.io/badge/license-GPL-blue.svg?style=flat-square)](https://github.com/WeAreAthlon/silla.io/blob/master/LICENSE.txt)
 [![Packagist](https://img.shields.io/packagist/dt/weareathlon/silla.io.svg?style=flat-square)](https://packagist.org/packages/weareathlon/silla.io)
