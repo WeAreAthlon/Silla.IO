@@ -47,7 +47,7 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
      */
     public function store($key, $value, $expire = 0)
     {
-        $value = json_encode($value);
+        $value = serialize($value);
 
         if ($expire) {
             $this->redisClient->set($key, $value, 'EX', $expire);
@@ -69,7 +69,7 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
     {
         $response = $this->redisClient->get($key);
 
-        return json_decode($response);
+        return unserialize($response);
     }
 
     /**
@@ -93,6 +93,6 @@ class Redis implements Core\Modules\Cache\Interfaces\Adapter
      */
     public function remove($key)
     {
-        return $this->redisClient->del($key);
+        return $this->redisClient->del(array($key));
     }
 }

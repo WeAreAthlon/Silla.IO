@@ -63,7 +63,7 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
         if ($expire) {
             $expire = time() + $expire;
         }
-        $value = json_encode($value);
+        $value = serialize($value);
 
         $query  = new Query();
         $exists = $query
@@ -120,7 +120,7 @@ class Database implements Core\Modules\Cache\Interfaces\Adapter
             return null;
         }
 
-        return json_decode($value, true);
+        return unserialize($value);
     }
 
     /**

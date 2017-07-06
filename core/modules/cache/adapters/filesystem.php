@@ -38,7 +38,7 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
         }
         $content = array($expire, $value);
 
-        return File::putContents(self::storagePath() . self::generateName($key), json_encode($content));
+        return File::putContents(self::storagePath() . self::generateName($key), serialize($content));
     }
 
     /**
@@ -59,7 +59,7 @@ class FileSystem implements Core\Modules\Cache\Interfaces\Adapter
         try {
             $content = File::getContents($file);
             if ($content) {
-                list($expire, $value) = json_decode($content, true);
+                list($expire, $value) = unserialize($content);
             }
         } catch (\Exception $e) {
             return null;
