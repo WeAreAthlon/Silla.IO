@@ -1,5 +1,5 @@
 <h1 class="text-center">{$_labels.login.title}</h1>
-<form action="{$_request->meta('REQUEST_URI')}" method="post" role="form">
+<form action="{$_request->meta('REQUEST_URI')}" method="post">
   <div class="form-group">
     <label for="email"><i class="glyphicon glyphicon-user"></i> {$_labels.login.username}</label>
     <input name="email" type="email" id="email" class="form-control text-thin" placeholder="..." tabindex="1" value="{$_post.email|escape|default:''}">

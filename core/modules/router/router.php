@@ -183,7 +183,7 @@ final class Router
                         $route['pattern']
                     ),
                     Core\Config()->ROUTER['separator']
-                ) . ((!empty($options)) ? '?' . http_build_query($options, false, '&amp;') : '');
+                ) . ((!empty($options)) ? '?' . http_build_query($options) : '');
         }
 
         return $_cache[$_cache_key];

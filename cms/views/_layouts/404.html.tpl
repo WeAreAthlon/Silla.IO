@@ -4,7 +4,6 @@
   <meta charset="utf-8"/>
   <title>{$_labels.page_not_found.title} | {$_labels.title|default:'CMS'}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <link href="//fonts.googleapis.com/css?family=Open+Sans:400&amp;subset=latin" rel="stylesheet" type="text/css">
   {assets source=['vendor/components/bootstrap/css/bootstrap.css', 'cms/assets/css/bootstrap-theme.silla.css', 'cms/assets/css/default.silla.css'] media="all"}
   <link href="{$_urls.assets}img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>

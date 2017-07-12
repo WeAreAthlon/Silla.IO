@@ -77,6 +77,12 @@ class Authentication extends Base\Controller
                 }
             }
 
+            if (!$request->post('email') || !$request->post('password')) {
+                $this->processInvalidCredentials();
+
+                return;
+            }
+
             $user = Models\CMSUser::find()->where('email = ?', array($request->post('email')))->first();
 
             if (!$user) {
@@ -281,7 +287,7 @@ class Authentication extends Base\Controller
     protected function loginFailIncrement()
     {
         $attempts = Core\Session()->get('login_attempts')
-                    ? (int)Core\Session()->get('login_attempts') : 0;
+            ? (int)Core\Session()->get('login_attempts') : 0;
 
         Core\Session()->set('login_attempts', ++$attempts);
     }

@@ -22,5 +22,5 @@
  */
 function smarty_function_link_to(array $options, Smarty_Internal_Template $template)
 {
-    return \Core\Config()->urls('relative') . \Core\Router()->toUrl($options);
+    return \Core\Config()->urls('relative') . str_replace(array('&amp;', '&'), '&amp;', \Core\Router()->toUrl($options));
 }
