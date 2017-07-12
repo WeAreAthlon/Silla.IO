@@ -22,5 +22,9 @@
  */
 function smarty_function_full_link_to(array $options, Smarty_Internal_Template $template)
 {
-    return \Core\Config()->urls('full') . str_replace(array('&amp;', '&'), '&amp;', \Core\Router()->toUrl($options));
+    return \Core\Config()->urls('full') . str_replace(
+        array('&amp;', '&'),
+        '&amp;',
+        \Core\Router()->toUrl($options)
+    );
 }
