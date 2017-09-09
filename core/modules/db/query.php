@@ -237,8 +237,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
                             $items = $_items;
 
                             foreach ($this->items as &$item) {
-                                if (isset($items[$item->$include['meta']['key']])) {
-                                    $item->$field = $items[$item->$include['meta']['key']];
+                                if (isset($items[$item->{$include['meta']['key']}])) {
+                                    $item->$field = $items[$item->{$include['meta']['key']}];
                                 }
                             }
 
@@ -249,8 +249,8 @@ class Query implements \ArrayAccess, \Countable, \Iterator
                             $items = $include['meta']['class_name']::find()->all(true);
 
                             foreach ($this->items as &$item) {
-                                if (isset($items[$item->$include['meta']['key']])) {
-                                    $item->$field = $items[$item->$include['meta']['key']];
+                                if (isset($items[$item->{$include['meta']['key']}])) {
+                                    $item->$field = $items[$item->{$include['meta']['key']}];
                                 }
                             }
                             unset($item);
