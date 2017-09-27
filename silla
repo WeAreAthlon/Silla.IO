@@ -20,8 +20,10 @@ $mode = 'app';
 foreach ($argv as $key => $parameter) {
     if (strpos($parameter, '--environment') === 0) {
         $environment = str_replace('--environment=', '', $parameter);
+        unset($argv[$key]);
     } else if (strpos($parameter, '--mode') === 0) {
         $mode = str_replace('--mode=', '', $parameter);
+        unset($argv[$key]);
     }
 }
 
@@ -35,6 +37,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'boo
 Config()->setMode(Config()->modes($mode));
 
 if ($argc > 1) {
+    $argv    = array_values($argv);
     $parts   = explode(':', $argv[1]);
     $command = implode(':', array_slice($parts, 1));
     $class   = 'Core\CLI\\' . $parts[0];
