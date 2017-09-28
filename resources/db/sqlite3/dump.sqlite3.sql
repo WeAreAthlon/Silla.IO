@@ -9,12 +9,12 @@ BEGIN TRANSACTION;
 ----
 -- Table structure for cms_users
 ----
-CREATE TABLE 'cms_users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'role_id' INTEGER NOT NULL, 'password' TEXT NOT NULL, 'email' TEXT NOT NULL, 'name' TEXT NOT NULL, 'timezone' TEXT, 'created_on' DATETIME, 'updated_on' DATETIME, 'login_on' DATETIME);
+CREATE TABLE 'cms_users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'role_id' INTEGER NOT NULL, 'is_active' INTEGER NOT NULL, 'login_attempts' INTEGER NULL, 'password' TEXT NOT NULL, 'email' TEXT NOT NULL, 'name' TEXT NOT NULL, 'timezone' TEXT, 'created_on' DATETIME, 'updated_on' DATETIME, 'login_on' DATETIME);
 
 ----
 -- Data dump for cms_users, a total of 1 rows
 ----
-INSERT INTO "cms_users" ("id","role_id","password","email","name","timezone","created_on","updated_on","login_on") VALUES ('1','1','$2a$12$jusORAs9Ezt5wOH7iUy4oO4iRV0EKzRgrsXng4IQoF4Psd2Cbq1zW','demo@silla.io','Demo','Europe/Sofia','2012-06-19 11:40:16','2015-03-25 23:08:19','2015-03-25 23:08:19');
+INSERT INTO "cms_users" ("id","role_id","password","email","name","timezone","created_on","updated_on","login_on") VALUES ('1','1','1','0','$2a$12$dth4UtUefld7ZQcs/4tSu.ipr/E2C2fCd7pGzPdJ1PwRf0QeRvtHq','demo@silla.io','Demo','Europe/Sofia','2012-06-19 11:40:16','2015-03-25 23:08:19','2015-03-25 23:08:19');
 
 ----
 -- Table structure for cms_userroles
