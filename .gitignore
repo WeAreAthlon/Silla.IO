@@ -11,10 +11,6 @@
 # Windows
 Thumbs.db
 
-# For your application, you probably want to remove or comment this line
-# to store composer.lock in your repository
-composer.lock
-
 # Ignore all log files and temp files.
 /temp/*
 

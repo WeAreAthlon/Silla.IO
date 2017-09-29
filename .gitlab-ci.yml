@@ -25,7 +25,6 @@ before_script:
 
   # Install Composer and project dependencies.
   - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar update
   - php composer.phar install
 
 # Build stage jobs
