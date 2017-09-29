@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8"/>
   <title>{$_labels.sections.$_action} | {$_labels.title}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!-- Style Sheets -->
-  <link href="//fonts.googleapis.com/css?family=Open+Sans:300&amp;subset=latin" rel="stylesheet" type="text/css"/>
+  <link href="//fonts.googleapis.com/css?family=Open+Sans:300&amp;subset=latin" rel="stylesheet" type="text/css">
   {assets source=$_assets.styles media="all"}
-  <link href="{$_urls.assets}img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+  <link href="{$_urls.assets}img/favicon.ico" rel="shortcut icon" type="image/x-icon">
 </head>
 <body data-controller="{$_controller}" data-action="{$_action}">
   <div class="container">

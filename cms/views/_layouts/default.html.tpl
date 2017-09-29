@@ -4,10 +4,11 @@
   <meta charset="utf-8"/>
   <title>{$_labels.modules.$_controller.$_action|default:$_labels.sections.$_action}
     | {$_labels.modules.$_controller.title} | {$_labels.title|default:'CMS'}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//fonts.googleapis.com/css?family=Open+Sans:400&amp;subset=latin" rel="stylesheet" type="text/css">
   {assets source=$_assets.styles media="all"}
-  <link href="{$_urls.assets}img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+  <link href="{$_urls.assets}img/favicon.ico" rel="shortcut icon" type="image/x-icon">
   <script>
     var Silla = {
       token: '{$_request->token()}',
