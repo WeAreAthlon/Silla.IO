@@ -537,6 +537,9 @@ abstract class Controller
      */
     private static function assignVariablesToRender(Modules\Render\Render &$renderer)
     {
+        $locale =  Core\Registry()->get('locale');
+        $language = explode('_', $locale);
+
         $renderer->set('_mode', Core\Config()->paths('mode'));
         $renderer->set('_registry', Core\Registry());
         $renderer->set('_config', Core\Config());
@@ -548,6 +551,8 @@ abstract class Controller
         $renderer->set('_get', Core\Router()->request->get());
         $renderer->set('_post', Core\Router()->request->post());
         $renderer->set('_environment', SILLA_ENVIRONMENT);
+        $renderer->set('_locale', $locale);
+        $renderer->set('_language', current($language));
 
         return $renderer;
     }

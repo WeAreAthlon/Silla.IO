@@ -1,6 +1,6 @@
 <?php
 /**
- * Home Controller.
+ * App Controller.
  *
  * @package    Silla.IO
  * @subpackage App\Controllers
@@ -15,9 +15,9 @@ use Core\Base;
 use Core\Modules\Router\Request;
 
 /**
- * Home controller definition.
+ * App controller definition.
  */
-class Home extends Base\Controller
+class App extends Base\Controller
 {
     /**
      * Index action.

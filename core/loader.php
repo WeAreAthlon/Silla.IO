@@ -12,7 +12,6 @@
 /**
  * Define Silla.IO application framework variables.
  */
-
 if (getenv('ENV_SILLA_ENVIRONMENT')) {
     define('SILLA_ENVIRONMENT', getenv('ENV_SILLA_ENVIRONMENT'));
 } elseif (isset($_SERVER['ENV_SILLA_ENVIRONMENT']) && !empty($_SERVER['ENV_SILLA_ENVIRONMENT'])) {

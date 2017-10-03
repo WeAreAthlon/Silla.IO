@@ -3,7 +3,7 @@
 # Home
 - route: /
   maps:
-    controller: home
+    controller: app
     action    : index
 
 - route: /:controller
