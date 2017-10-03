@@ -208,8 +208,8 @@ class Ownership
         $query = new Core\Modules\DB\Query;
 
         Core\DB()->run($query->remove()->from('cms_ownership')->where(
-            'owner_id = ? AND model = ?',
-            array($owner->getPrimaryKeyValue(), get_class($resource))
+            'owner_id = ?',
+            array($owner->getPrimaryKeyValue())
         ));
     }
 }
