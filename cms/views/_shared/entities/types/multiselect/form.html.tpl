@@ -5,8 +5,8 @@
   {else}
     {if isset($resource->hasAndBelongsToMany.$field) and $resource->hasAndBelongsToMany.$field|is_array}
       {assign var=related_obj value=call_user_func(array($resource->hasAndBelongsToMany[$field]['class_name'], 'find'))}
-      {if $user->hasOwnershipOver($resource->hasAndBelongsToMany[$field]['class_name'])}
-        {assign var=related_obj value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $resource->hasAndBelongsToMany[$field]['class_name'])}
+      {if $user->owns($resource->hasAndBelongsToMany[$field]['class_name'])}
+        {assign var=related_obj value=call_user_func(array('\CMS\Helpers\Ownership', 'filter'), $resource->hasAndBelongsToMany[$field]['class_name'])}
       {/if}
       {$related_object_ids = array()}
       {foreach from=$resource->$field()->all() item=related_object}

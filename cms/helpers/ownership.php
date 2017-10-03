@@ -136,7 +136,7 @@ class Ownership
             $owner = Core\Registry()->get('current_cms_user');
         }
 
-        return self::checkById($resource->getPrimaryKeyValue(), get_class($resource), $owner);
+        return self::checkIds($resource->getPrimaryKeyValue(), get_class($resource), $owner);
     }
 
     /**

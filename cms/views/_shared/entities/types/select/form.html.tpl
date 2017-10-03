@@ -10,8 +10,8 @@
     {/foreach}
 
     {if $associations[$attr.name]|default:false}
-      {if $user->hasOwnershipOver($associations.$field.class_name)}
-        {assign var=related_resource value=call_user_func(array('\CMS\Helpers\CMSUsers', 'filterOwnResources'), $associations.$field.class_name)}
+      {if $user->owns($associations.$field.class_name)}
+        {assign var=related_resource value=call_user_func(array('\CMS\Helpers\Ownership', 'filter'), $associations.$field.class_name)}
       {else}
         {assign var=related_resource value=call_user_func(array($associations.$field.class_name, 'find'))}
       {/if}

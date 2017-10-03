@@ -465,7 +465,12 @@ abstract class Entity extends Controller
                 }
             }
 
-            $query      = Helpers\DataTables::toQuery($this->resource, array_keys($fieldsToExport), $request->get());
+            $query = Helpers\DataTables::toQuery($this->resource, array_keys($fieldsToExport), $request->get());
+
+            if (isset($this->user) && $this->user->owns($this->resourceModel)) {
+                $query = Helpers\Ownership::filter($this->resourceModel);
+            }
+
             $exportFile = Core\Config()->paths('tmp') . md5($this->resourceModel) . '.export.tmp';
 
             if (Helpers\Export::populateCsvfileCustomQuery(
