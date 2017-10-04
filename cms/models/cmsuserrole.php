@@ -41,9 +41,17 @@ class CMSUserRole extends Base\Model implements Interfaces\Serialization, Interf
     );
 
     /**
-     * Definition of the serializable fields.
+     * Definition of the timezone aware fields.
      *
-     * @static
+     * @return array
+     */
+    public static function timezoneAwareFields()
+    {
+        return array('created_on', 'updated_on');
+    }
+
+    /**
+     * Definition of the serializable fields.
      *
      * @return array
      */

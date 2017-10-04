@@ -14,12 +14,13 @@ namespace Core\Modules\DB\Decorators;
 use Core;
 use Core\Base;
 use Core\Helpers;
-use Core\Modules\DB\Interfaces;
+use Core\Modules\DB;
+use Core\Modules\DB\Decorators\Interfaces;
 
 /**
  * Class Attachment Decorator Implementation definition.
  */
-abstract class Attachment implements Interfaces\Decorator
+abstract class Attachment implements DB\Interfaces\Decorator
 {
     /**
      * Attachments container.
@@ -67,15 +68,14 @@ abstract class Attachment implements Interfaces\Decorator
     /**
      * Initialize attachments.
      *
-     * @param Base\Model $resource Currently processed resource.
-     * @param array      $params   Additional parameters.
+     * @param Interfaces\Attachment $resource Currently processed resource.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function init(Base\Model $resource, array $params)
+    public static function init(Interfaces\Attachment $resource)
     {
         self::$attachments = $resource::attachmentsFields();
 
@@ -88,23 +88,24 @@ abstract class Attachment implements Interfaces\Decorator
     /**
      * Validates attachment.
      *
-     * @param Base\Model $resource Currently processed resource.
-     * @param array      $params   Additional parameters.
+     * @param \Core\Base\Model $resource Currently processed resource.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function validate(Base\Model $resource, array $params)
+    public static function validate(Base\Model $resource)
     {
         foreach (self::$attachments as $name => $_attachment) {
             if (self::$isUploading[$name] && $resource->getError($name)) {
                 $resource->removeError($name);
             }
 
+            $file = Core\Router()->request->files($name);
+
             if (self::$isUploading[$name]) {
-                if (!Helpers\File::validate($_FILES[$name], $_attachment['type'], $_attachment['size'])) {
+                if (!Helpers\File::validate($file, $_attachment['type'], $_attachment['size'])) {
                     $resource->setError($name, 'invalid_type');
                 }
             }
@@ -115,20 +116,20 @@ abstract class Attachment implements Interfaces\Decorator
      * Formats filename of the attachment.
      *
      * @param Base\Model $resource Currently processed resource.
-     * @param array      $params   Additional parameters.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function format(Base\Model $resource, array $params)
+    public static function format(Base\Model $resource)
     {
         foreach (self::$attachments as $name => $_attachment) {
             if (self::$isUploading[$name]) {
+                $file = Core\Router()->request->files($name);
                 $resource->{$name} = isset($_attachment['filename']) ?
-                    Helpers\File::formatFilename($_attachment['filename'], $_FILES[$name]['name']) :
-                    Helpers\File::filterFilename($_FILES[$name]['name']);
+                    Helpers\File::formatFilename($_attachment['filename'], $file['name']) :
+                    Helpers\File::filterFilename($file['name']);
             }
         }
     }
@@ -136,25 +137,22 @@ abstract class Attachment implements Interfaces\Decorator
     /**
      * Upload attachment to server.
      *
-     * @param Base\Model $resource Currently processed resource.
+     * @param Interfaces\Attachment $resource Currently processed resource.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function upload(Base\Model $resource)
+    public static function upload(Interfaces\Attachment $resource)
     {
         foreach (self::$attachments as $name => $_attachment) {
             $_error_uploading = false;
             $_attachment_name = $resource->{$name};
+            $file = Core\Router()->request->files($name);
 
             if (self::$isUploading[$name]) {
-                $successful = Helpers\File::upload(
-                    $_FILES[$name],
-                    $resource->attachmentsStoragePath($name),
-                    $_attachment_name
-                );
+                $successful = Helpers\File::upload($file, $resource->attachmentsStoragePath($name), $_attachment_name);
                 if ($successful) {
                     /* Make thumbnails */
                     if ($_attachment['type'] === array('photo') &&
@@ -174,11 +172,11 @@ abstract class Attachment implements Interfaces\Decorator
                                        $resource->attachmentsStoragePath($name) .
                                        self::$attachmentsOld[$name];
 
-                if ((self::$attachmentsOld[$name] != $_attachment_name) && file_exists($attachment_old_file)) {
+                if (self::$attachmentsOld[$name] !== $_attachment_name) {
                     try {
                         Helpers\File::delete($attachment_old_file);
                     } catch (\Exception $e) {
-                        /* @todo Explain why we are not handling exception. */
+                        var_log($e->getMessage());
                     }
 
                     if ($_attachment['type'] === array('photo') &&
@@ -195,14 +193,14 @@ abstract class Attachment implements Interfaces\Decorator
     /**
      * Delete attachment.
      *
-     * @param Base\Model $resource Currently processed resource.
+     * @param Interfaces\Attachment $resource Currently processed resource.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function delete(Base\Model $resource)
+    public static function delete(Interfaces\Attachment $resource)
     {
         self::$attachments = $resource::attachmentsFields();
 
@@ -213,14 +211,11 @@ abstract class Attachment implements Interfaces\Decorator
 
             if (file_exists($attachment_file)) {
                 try {
-                    if (file_exists($attachment_file)) {
-                        Helpers\File::delete($attachment_file);
-                    }
+                    Helpers\File::delete($attachment_file);
                 } catch (\Exception $e) {
                     trigger_error($e->getMessage());
                 }
 
-                /* Delete thumbnails */
                 if ($_attachment['type'] === array('photo') &&
                     isset($_attachment['thumbnails']) &&
                     is_array($_attachment['thumbnails'])
@@ -234,31 +229,31 @@ abstract class Attachment implements Interfaces\Decorator
     /**
      * Create all related file thumbnails.
      *
-     * @param Base\Model $resource            Currently processed resource.
-     * @param string     $name                Name of the thumbnail.
-     * @param string     $attachment_filename Attachment file name.
-     * @param array      $thumbnails          Array of thumbnail sizes.
+     * @param Interfaces\Attachment            $resource   Currently processed resource.
+     * @param string                           $name       Name of the thumbnail.
+     * @param string                           $filename   Attachment file name.
+     * @param array                            $thumbnails Array of thumbnail sizes.
      *
      * @access private
      * @static
      *
      * @return void
      */
-    private static function createThumbnails(Base\Model $resource, $name, $attachment_filename, array $thumbnails)
+    private static function createThumbnails(Interfaces\Attachment $resource, $name, $filename, array $thumbnails)
     {
         foreach ($thumbnails as $thumbnail) {
             try {
                 switch ($thumbnail['type']) {
-                    case 'resize':
+                    case 'scaled':
                         Helpers\Image::createScaledThumbnail(
-                            $resource->attachmentsStoragePath($name) . $attachment_filename,
+                            $resource->attachmentsStoragePath($name) . $filename,
                             array($thumbnail['size'])
                         );
                         break;
 
-                    case 'crop':
+                    case 'cropped':
                         Helpers\Image::createCroppedThumbnail(
-                            $resource->attachmentsStoragePath($name) . $attachment_filename,
+                            $resource->attachmentsStoragePath($name) . $filename,
                             array($thumbnail['size'])
                         );
                         break;
@@ -272,23 +267,24 @@ abstract class Attachment implements Interfaces\Decorator
     /**
      * Deletes all related file to an attachment.
      *
-     * @param Base\Model $resource   Currently processed resource.
-     * @param string     $attachment Attachment file name.
-     * @param string     $name       Name of the file.
+     * @param Interfaces\Attachment $resource   Currently processed resource.
+     * @param string                $attachment Attachment file name.
+     * @param string                $name       Name of the file.
      *
      * @access private
      * @static
      *
      * @return void
      */
-    private static function deleteThumbnails(Base\Model $resource, $attachment, $name)
+    private static function deleteThumbnails(Interfaces\Attachment $resource, $attachment, $name)
     {
-        $_storage_path = $resource->attachmentsStoragePath($attachment);
+        $filename = $resource->attachmentsStoragePath($attachment) . $name;
+
         foreach (self::$attachments[$attachment]['thumbnails'] as $thumbnail) {
             try {
-                if (file_exists($_storage_path . "{$thumbnail['size']}-{$name}")) {
-                    Helpers\File::delete($_storage_path . "{$thumbnail['size']}-{$name}");
-                }
+                Helpers\File::delete(
+                    Core\Helpers\Image::getThumbnailFilePath($filename, $thumbnail['size'], $thumbnail['type'])
+                );
             } catch (\Exception $e) {
                 var_log($e->getMessage());
             }

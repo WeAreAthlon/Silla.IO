@@ -13,13 +13,14 @@ namespace Core\Modules\DB\Decorators;
 
 use Core;
 use Core\Base;
-use Core\Modules\DB\Interfaces;
+use Core\Modules\DB;
+use Core\Modules\DB\Decorators\Interfaces;
 use Core\Modules\Crypt\Crypt;
 
 /**
  * Class Encryption Decorator Implementation definition.
  */
-abstract class Encryption implements Interfaces\Decorator
+abstract class Encryption implements DB\Interfaces\Decorator
 {
     /**
      * Fields to encrypt.
@@ -41,33 +42,44 @@ abstract class Encryption implements Interfaces\Decorator
      */
     public static function decorate(Base\Model $resource)
     {
-        $_fields = $resource::encryptedFields();
-
-        foreach ($_fields as $key => $value) {
-            if ($key) {
-                self::$encryptedFields[$key] = $value;
-            } else {
-                self::$encryptedFields[$value] = 'AES-256-CBC';
-            }
-        }
-
+        $resource->on('beforeCreate', array(__CLASS__, 'init'));
         $resource->on('afterCreate', array(__CLASS__, 'decrypt'));
         $resource->on('beforeSave', array(__CLASS__, 'encrypt'));
         $resource->on('afterSave', array(__CLASS__, 'decrypt'));
     }
 
     /**
-     * Decrypt fields.
+     * Initialize encryption.
      *
-     * @param Base\Model $resource Currently processed resource.
-     * @param array      $params   Additional parameters.
+     * @param Interfaces\Encryption $resource Currently processed resource.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function decrypt(Base\Model $resource, array $params = array())
+    public static function init(Interfaces\Encryption $resource)
+    {
+        foreach ($resource::encryptedFields() as $key => $value) {
+            if ($key) {
+                self::$encryptedFields[$key] = $value;
+            } else {
+                self::$encryptedFields[$value] = 'AES-256-CBC';
+            }
+        }
+    }
+
+    /**
+     * Decrypt fields.
+     *
+     * @param Base\Model $resource Currently processed resource.
+     *
+     * @static
+     * @access public
+     *
+     * @return void
+     */
+    public static function decrypt(Base\Model $resource)
     {
         foreach (self::$encryptedFields as $field => $type) {
             $resource->{$field} = Crypt::decrypt($resource->{$field}, Core\Config()->DB['encryption_key'], $type);

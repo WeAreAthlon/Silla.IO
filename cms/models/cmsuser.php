@@ -53,8 +53,6 @@ class CMSUser extends Base\Model implements Interfaces\TimezoneAwareness
     /**
      * Definition of the timezone aware fields.
      *
-     * @static
-     *
      * @return array
      */
     public static function timezoneAwareFields()

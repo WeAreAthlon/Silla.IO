@@ -13,12 +13,13 @@ namespace Core\Modules\DB\Decorators;
 
 use Core;
 use Core\Base;
-use Core\Modules\DB\Interfaces;
+use Core\Modules\DB;
+use Core\Modules\DB\Decorators\Interfaces;
 
 /**
  * Class Formatting Decorator Implementation definition.
  */
-abstract class Formatting implements Interfaces\Decorator
+abstract class Formatting implements DB\Interfaces\Decorator
 {
     /**
      * Decorator entry point.
@@ -33,10 +34,8 @@ abstract class Formatting implements Interfaces\Decorator
     public static function decorate(Base\Model $resource)
     {
         $resource->on('afterCreate', array(__CLASS__, 'fetch'));
-
         $resource->on('beforeValidate', array(__CLASS__, 'format'));
         $resource->on('afterValidate', array(__CLASS__, 'fetch'));
-
         $resource->on('beforeSave', array(__CLASS__, 'format'));
         $resource->on('afterSave', array(__CLASS__, 'fetch'));
     }
@@ -44,14 +43,14 @@ abstract class Formatting implements Interfaces\Decorator
     /**
      * Retrieve both formats of the content fields.
      *
-     * @param Base\Model $resource Currently processed resource.
+     * @param Interfaces\Formatting $resource Currently processed resource.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function fetch(Base\Model $resource)
+    public static function fetch(Interfaces\Formatting $resource)
     {
         foreach ($resource::formattingFields() as $field => $formatter) {
             if ($resource->{$field}) {
@@ -65,7 +64,7 @@ abstract class Formatting implements Interfaces\Decorator
     /**
      * Formats the content fields.
      *
-     * @param Base\Model $resource Currently processed resource.
+     * @param Interfaces\Formatting $resource Currently processed resource.
      *
      * @throws \RuntimeException Missing method parse for the specified parser.
      * @static
@@ -73,7 +72,7 @@ abstract class Formatting implements Interfaces\Decorator
      *
      * @return void
      */
-    public static function format(Base\Model $resource)
+    public static function format(Interfaces\Formatting $resource)
     {
         foreach ($resource::formattingFields() as $field => $formatter) {
             $parser = new $formatter;

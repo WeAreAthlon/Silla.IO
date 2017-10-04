@@ -327,11 +327,46 @@ abstract class Model
             return $this->hasAndBelongsToMany($this->hasAndBelongsToMany[$name], $name);
         }
 
-        if (method_exists('\Core\Modules\DB\Observer', $name)) {
-            call_user_func_array(array('\Core\Modules\DB\Observer', $name), array_merge(array($this), $args));
-        }
-
         return array();
+    }
+
+    /**
+     * Attaches an event.
+     *
+     * @param string $event    Event name.
+     * @param mixed  $callback Callback function name to execute.
+     *
+     * @return void
+     */
+    final public function on($event, $callback)
+    {
+        Core\Modules\DB\Observer::on($this, $event, $callback);
+    }
+
+    /**
+     * Removes an event.
+     *
+     * @param string $event    Event name.
+     * @param mixed  $callback Callback function name to execute.
+     *
+     * @return void
+     */
+    final public function detach($event, $callback)
+    {
+        Core\Modules\DB\Observer::detach($this, $event, $callback);
+    }
+
+    /**
+     * Fires an event.
+     *
+     * @param string $event     Event name.
+     * @param array  $arguments Array of arguments.
+     *
+     * @return void
+     */
+    final public function fire($event, array $arguments = array())
+    {
+        Core\Modules\DB\Observer::fire($this, $event, $arguments);
     }
 
     /**
@@ -652,7 +687,7 @@ abstract class Model
     /**
      * Updates the object fields with content called on save method.
      *
-     * @param array $params Example [fields => values].
+     * @param array $params Example array(field => value).
      *
      * @access private
      *
@@ -664,12 +699,11 @@ abstract class Model
             $params = array_merge(array('updated_on' => date('Y-m-d H:i:s')), $params);
         }
 
-        $this->populateFields($params);
-
-        /* Automatic date value */
         if (empty($this->created_on) && array_key_exists('created_on', $this->fields)) {
-            $this->created_on = date('Y-m-d H:i:s');
+            $params = array_merge(array('created_on' => date('Y-m-d H:i:s')), $params);
         }
+
+        $this->populateFields($params);
     }
 
     /**

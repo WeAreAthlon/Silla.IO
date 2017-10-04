@@ -14,12 +14,12 @@ namespace Core\Modules\DB\Decorators;
 use Core;
 use Core\Base;
 use Core\Helpers;
-use Core\Modules\DB\Interfaces;
+use Core\Modules\DB;
 
 /**
  * Class Timezones Decorator Implementation definition.
  */
-abstract class TimezoneAwareness implements Interfaces\Decorator
+abstract class TimezoneAwareness implements DB\Interfaces\Decorator
 {
     /**
      * Timezone aware fields.
@@ -42,8 +42,7 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
     public static function decorate(Base\Model $resource)
     {
         if (date_default_timezone_get() !== 'UTC') {
-            self::$timezoneAwareFields = $resource::timezoneAwareFields();
-
+            $resource->on('beforePopulate', array(__CLASS__, 'init'));
             $resource->on('beforeSave', array(__CLASS__, 'remove'));
             $resource->on('afterSave', array(__CLASS__, 'add'));
             $resource->on('afterCreate', array(__CLASS__, 'add'));
@@ -51,16 +50,31 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
     }
 
     /**
-     * Removes timezone effect.
+     * Initialize serialization.
      *
-     * @param Base\Model $resource Currently processed resource.
+     * @param Interfaces\TimezoneAwareness $resource Currently processed resource.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function remove(Base\Model $resource)
+    public static function init(Interfaces\TimezoneAwareness $resource)
+    {
+        self::$timezoneAwareFields = $resource::timezoneAwareFields();
+    }
+
+    /**
+     * Removes timezone effect.
+     *
+     * @param Interfaces\TimezoneAwareness $resource Currently processed resource.
+     *
+     * @static
+     * @access public
+     *
+     * @return void
+     */
+    public static function remove(Interfaces\TimezoneAwareness $resource)
     {
         if (date_default_timezone_get() !== 'UTC') {
             self::removeTimezoneEffect($resource);
@@ -70,14 +84,14 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
     /**
      * Applies timezone effect.
      *
-     * @param Base\Model $resource Currently processed resource.
+     * @param Interfaces\TimezoneAwareness $resource Currently processed resource.
      *
      * @static
      * @access public
      *
      * @return void
      */
-    public static function add(Base\Model $resource)
+    public static function add(Interfaces\TimezoneAwareness $resource)
     {
         if (date_default_timezone_get() !== 'UTC') {
             self::applyTimezoneEffect($resource);
@@ -87,14 +101,14 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
     /**
      * Calculates timezone offset which needs to be added.
      *
-     * @param Base\Model $resource Currently processed resource.
+     * @param Interfaces\TimezoneAwareness $resource Currently processed resource.
      *
      * @static
      * @access private
      *
      * @return void
      */
-    private static function applyTimezoneEffect(Base\Model $resource)
+    private static function applyTimezoneEffect(Interfaces\TimezoneAwareness $resource)
     {
         foreach ($resource::timezoneAwareFields() as $datetime_field) {
             if ($resource->{$datetime_field}) {
@@ -106,14 +120,14 @@ abstract class TimezoneAwareness implements Interfaces\Decorator
     /**
      * Calculates timezone offset which needs to be removed.
      *
-     * @param Base\Model $resource Currently processed resource.
+     * @param Interfaces\TimezoneAwareness $resource Currently processed resource.
      *
      * @static
      * @access private
      *
      * @return void
      */
-    private static function removeTimezoneEffect(Base\Model $resource)
+    private static function removeTimezoneEffect(Interfaces\TimezoneAwareness $resource)
     {
         foreach ($resource::timezoneAwareFields() as $datetime_field) {
             if ($resource->{$datetime_field}) {

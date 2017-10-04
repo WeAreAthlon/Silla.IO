@@ -12,13 +12,15 @@
 namespace Core\Modules\DB\Decorators;
 
 use Core;
+use Spyc;
 use Core\Base;
-use Core\Modules\DB\Interfaces;
+use Core\Modules\DB;
+use Core\Modules\DB\Decorators\Interfaces;
 
 /**
  * Class Serialization Decorator Implementation definition.
  */
-abstract class Serialization implements Interfaces\Decorator
+abstract class Serialization implements DB\Interfaces\Decorator
 {
     /**
      * Fields to serialize.
@@ -40,23 +42,33 @@ abstract class Serialization implements Interfaces\Decorator
      */
     public static function decorate(Base\Model $resource)
     {
-        $_fields = $resource::serializableFields();
+        $resource->on('beforeCreate', array(__CLASS__, 'init'));
+        $resource->on('afterCreate', array(__CLASS__, 'unserialize'));
+        $resource->on('beforeValidate', array(__CLASS__, 'serialize'));
+        $resource->on('afterValidate', array(__CLASS__, 'unserialize'));
+        $resource->on('beforeSave', array(__CLASS__, 'serialize'));
+        $resource->on('afterSave', array(__CLASS__, 'unserialize'));
+    }
 
-        foreach ($_fields as $key => $value) {
+    /**
+     * Initialize serialization.
+     *
+     * @param Interfaces\Serialization $resource Currently processed resource.
+     *
+     * @static
+     * @access public
+     *
+     * @return void
+     */
+    public static function init(Interfaces\Serialization $resource)
+    {
+        foreach ($resource::serializableFields() as $key => $value) {
             if (!is_numeric($key)) {
                 self::$serializedFields[$key] = $value;
             } else {
                 self::$serializedFields[$value] = 'serialize';
             }
         }
-
-        $resource->on('afterCreate', array(__CLASS__, 'unserialize'));
-
-        $resource->on('beforeValidate', array(__CLASS__, 'serialize'));
-        $resource->on('afterValidate', array(__CLASS__, 'unserialize'));
-
-        $resource->on('beforeSave', array(__CLASS__, 'serialize'));
-        $resource->on('afterSave', array(__CLASS__, 'unserialize'));
     }
 
     /**
@@ -78,7 +90,7 @@ abstract class Serialization implements Interfaces\Decorator
                     break;
 
                 case 'yaml':
-                    $resource->{$field} = \Spyc::YAMLLoadString($resource->{$field});
+                    $resource->{$field} = Spyc::YAMLLoadString($resource->{$field});
                     break;
 
                 case 'serialize':
@@ -107,7 +119,7 @@ abstract class Serialization implements Interfaces\Decorator
                     break;
 
                 case 'yaml':
-                    $resource->{$field} = \Spyc::YAMLDump((array)$resource->{$field});
+                    $resource->{$field} = Spyc::YAMLDump((array)$resource->{$field});
                     break;
 
                 case 'serialize':

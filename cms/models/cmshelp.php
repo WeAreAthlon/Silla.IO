@@ -27,9 +27,17 @@ class CMSHelp extends Base\Model implements Interfaces\TimezoneAwareness, Interf
     public static $tableName = 'cms_help';
 
     /**
-     * Fields that support formatting.
+     * Definition of the timezone aware fields.
      *
-     * @static
+     * @return array
+     */
+    public static function timezoneAwareFields()
+    {
+        return array('created_on', 'updated_on');
+    }
+
+    /**
+     * Fields that support formatting.
      *
      * @return array
      */
