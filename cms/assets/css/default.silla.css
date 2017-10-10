@@ -711,3 +711,9 @@ table.data-table th[data-field="avatar"] {
 .account-profile-preview-wrapper {
     padding: 20px 0 0 0;
 }
+
+/* Fixes Chrome box-shadow width problem */
+.accent-last {
+    background: #FAFAFA linear-gradient(to bottom, #FFFFFF, #F2F2F2) repeat-x;
+    box-shadow: 0 1px 0px rgba(0, 0, 0, 0.067);
+}
