@@ -78,6 +78,10 @@ DataTable.prototype.fixCaption = function () {
 
         if (windowTop > (self.table.offset().top - offsetTop)) {
             $('thead', self.table).addClass('fixed').css({top: offsetTop + 'px'});
+            $('tbody tr:eq(0) td', self.table).each(function (i, v) {
+                $(v).width(thead[i]);
+            });
+            
             fixed = true;
         } else {
             $('thead', self.table).removeClass('fixed').css({top: 'auto'});
