@@ -24,7 +24,7 @@
     {/if}
   {/foreach}
   {if {user_can controller=$_controller action=show} or {user_can controller=$_controller action=edit} or {user_can controller=$_controller action=delete}}
-    <th class="column-caption column-type-heading-actions accent">
+    <th class="column-caption column-type-heading-actions accent-last">
       <span class="glyphicon glyphicon-cog"></span> {$_labels.general.actions}
     </th>
   {/if}
