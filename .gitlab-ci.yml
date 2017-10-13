@@ -13,25 +13,14 @@ cache:
     - vendor/
 
 before_script:
-  - apt-get update -yqq
-  - apt-get install git libcurl4-gnutls-dev libjpeg-dev libpng-dev zlib1g-dev libfreetype6-dev libsqlite3-dev libpcre3-dev -yqq
-
-  # Compile PHP, include these extensions.
-  - docker-php-ext-install mbstring pdo_mysql curl json gd zip
-
-  # Install and enable Xdebug
-  - pecl install xdebug
-  - docker-php-ext-enable xdebug
-
   # Install Composer and project dependencies.
   - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar update
   - php composer.phar install
 
 # Build stage jobs
 
 build:php5.6:
-  image: php:5.6
+  image: weareathlon/silla.io:struma-php5.6
   stage: build
   script:
     - php composer.phar require --dev jakub-onderka/php-parallel-lint
@@ -45,7 +34,7 @@ build:php5.6:
     - master
 
 build:php7.0:
-  image: php:7.0
+  image: weareathlon/silla.io:struma-php7.0
   stage: build
   script:
     - php composer.phar require --dev jakub-onderka/php-parallel-lint
@@ -59,7 +48,7 @@ build:php7.0:
     - master
 
 build:php-latest:
-  image: php:latest
+  image: weareathlon/silla.io:latest
   stage: build
   script:
     - php composer.phar require --dev jakub-onderka/php-parallel-lint
@@ -74,7 +63,7 @@ build:php-latest:
 
 # Test Stage jobs
 test:php5.6:mysql5.6:
-  image: php:5.6
+  image: weareathlon/silla.io:struma-php5.6
   stage: test
   dependencies:
     - build:php5.6
@@ -89,7 +78,7 @@ test:php5.6:mysql5.6:
     - master
 
 test:php7.0:mysql5.7:
-  image: php:7.0
+  image: weareathlon/silla.io:struma-php7.0
   stage: test
   dependencies:
     - build:php7.0
@@ -104,7 +93,7 @@ test:php7.0:mysql5.7:
     - master
 
 test:php-latest:mysql-latest:
-  image: php:latest
+  image: weareathlon/silla.io:latest
   stage: test
   dependencies:
     - build:php-latest
@@ -119,7 +108,7 @@ test:php-latest:mysql-latest:
     - master
 
 report:php5.6:
-  image: php:5.6
+  image: weareathlon/silla.io:struma-php5.6
   stage: report
   allow_failure: true
   dependencies:
@@ -143,7 +132,7 @@ report:php5.6:
     - master
 
 report:php7.0:
-  image: php:7.0
+  image: weareathlon/silla.io:struma-php7.0
   stage: report
   allow_failure: true
   dependencies:
@@ -167,7 +156,7 @@ report:php7.0:
     - master
 
 report:php-latest:
-  image: php:latest
+  image: weareathlon/silla.io:latest
   stage: report
   allow_failure: true
   dependencies:
