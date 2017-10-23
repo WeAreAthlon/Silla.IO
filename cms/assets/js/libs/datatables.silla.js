@@ -78,8 +78,14 @@ DataTable.prototype.fixCaption = function () {
 
         if (windowTop > (self.table.offset().top - offsetTop)) {
             $('thead', self.table).addClass('fixed').css({top: offsetTop + 'px'});
-            $('tbody tr:eq(0) td', self.table).each(function (i, v) {
-                $(v).width(thead[i]);
+            
+            $('tbody tr', self.table).each(function (index, row) {
+                var $children = $(row).children('td');
+                if ($children.length > 1) {
+                    $children.each(function (i, v) {
+                        $(v).width(thead[i]);
+                    });
+                }
             });
             
             fixed = true;
