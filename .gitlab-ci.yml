@@ -15,8 +15,6 @@ cache:
 before_script:
   # Install Composer and project dependencies.
   - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar update
-  - php composer.phar install
 
 # Build stage jobs
 
@@ -24,9 +22,9 @@ build:php5.6:
   image: weareathlon/silla.io:struma-php5.6
   stage: build
   script:
-    - php composer.phar require --dev jakub-onderka/php-parallel-lint
+    - COMPOSER=composer.build.json php composer.phar require jakub-onderka/php-parallel-lint
     - ./vendor/bin/parallel-lint --exclude vendor .
-    - php composer.phar require --dev squizlabs/php_codesniffer:2.9.0
+    - COMPOSER=composer.build.json php composer.phar require squizlabs/php_codesniffer:2.9.0
     - ./vendor/bin/phpcs --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
   cache:
     untracked: true
@@ -38,9 +36,9 @@ build:php7.0:
   image: weareathlon/silla.io:struma-php7.0
   stage: build
   script:
-    - php composer.phar require --dev jakub-onderka/php-parallel-lint
+    - COMPOSER=composer.build.json php composer.phar require jakub-onderka/php-parallel-lint
     - ./vendor/bin/parallel-lint --exclude vendor .
-    - php composer.phar require --dev squizlabs/php_codesniffer:2.9.0
+    - COMPOSER=composer.build.json php composer.phar require squizlabs/php_codesniffer:2.9.0
     - ./vendor/bin/phpcs --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
   cache:
     untracked: true
@@ -52,9 +50,9 @@ build:php-latest:
   image: weareathlon/silla.io:latest
   stage: build
   script:
-    - php composer.phar require --dev jakub-onderka/php-parallel-lint
+    - COMPOSER=composer.build.json php composer.phar require jakub-onderka/php-parallel-lint
     - ./vendor/bin/parallel-lint --exclude vendor .
-    - php composer.phar require --dev squizlabs/php_codesniffer:2.9.0
+    - COMPOSER=composer.build.json php composer.phar require squizlabs/php_codesniffer:2.9.0
     - ./vendor/bin/phpcs --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
   cache:
     untracked: true
@@ -72,6 +70,7 @@ test:php5.6:mysql5.6:
     - mysql:5.6
     - redis:latest
   script:
+    - php composer.phar install
     - ./silla tasks:db:create ./resources/db/mysql/dump.mysql.sql
     - ./vendor/bin/phpunit --stderr --coverage-text --colors=never --configuration ./build/configurations/phpunit.xml
   only:
@@ -87,6 +86,7 @@ test:php7.0:mysql5.7:
     - mysql:5.7
     - redis:latest
   script:
+    - php composer.phar install
     - ./silla tasks:db:create ./resources/db/mysql/dump.mysql.sql
     - ./vendor/bin/phpunit --stderr --coverage-text --colors=never --configuration ./build/configurations/phpunit.xml
   only:
@@ -102,6 +102,7 @@ test:php-latest:mysql-latest:
     - mysql:latest
     - redis:latest
   script:
+    - php composer.phar install
     - ./silla tasks:db:create ./resources/db/mysql/dump.mysql.sql
     - ./vendor/bin/phpunit --stderr --coverage-text --colors=never --configuration ./build/configurations/phpunit.xml
   only:
@@ -116,6 +117,7 @@ report:php5.6:
       - build:php5.6
       - test:php5.6:mysql5.6
   script:
+    - php composer.phar install
     - ./vendor/bin/apigen generate --quiet --config ./build/configurations/apigen.yaml
     - ./vendor/bin/phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
     - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public --ignore-violations-on-exit
@@ -140,6 +142,7 @@ report:php7.0:
       - build:php7.0
       - test:php7.0:mysql5.7
   script:
+    - php composer.phar install
     - ./vendor/bin/apigen generate --quiet --config ./build/configurations/apigen.yaml
     - ./vendor/bin/phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
     - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public --ignore-violations-on-exit
@@ -164,6 +167,7 @@ report:php-latest:
       - build:php-latest
       - test:php-latest:mysql-latest
   script:
+    - php composer.phar install
     - ./vendor/bin/apigen generate --quiet --config ./build/configurations/apigen.yaml
     - ./vendor/bin/phploc --exclude vendor --exclude temp --exclude public --count-tests --log-csv ./build/logs/phploc.csv --log-xml ./build/logs/phploc.xml .
     - ./vendor/bin/phpmd . html codesize --reportfile build/logs/pmd.html --exclude vendor,tests,temp,public --ignore-violations-on-exit
