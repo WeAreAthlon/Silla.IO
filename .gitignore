@@ -8,6 +8,8 @@
 .DS_Store
 ._.*
 
+composer.lock
+
 # Windows
 Thumbs.db
 
