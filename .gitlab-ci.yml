@@ -22,8 +22,6 @@ build:php5.6:
     - ./vendor/bin/parallel-lint --exclude vendor .
     - COMPOSER=composer.build.json php composer.phar require squizlabs/php_codesniffer:2.9.0
     - ./vendor/bin/phpcs --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
-  cache:
-    untracked: true
   only:
     - develop
     - master
@@ -36,8 +34,6 @@ build:php7.0:
     - ./vendor/bin/parallel-lint --exclude vendor .
     - COMPOSER=composer.build.json php composer.phar require squizlabs/php_codesniffer:2.9.0
     - ./vendor/bin/phpcs --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
-  cache:
-    untracked: true
   only:
     - develop
     - master
@@ -50,8 +46,6 @@ build:php-latest:
     - ./vendor/bin/parallel-lint --exclude vendor .
     - COMPOSER=composer.build.json php composer.phar require squizlabs/php_codesniffer:2.9.0
     - ./vendor/bin/phpcs --extensions=php --standard=PSR2 --ignore=vendor,public,temp .
-  cache:
-    untracked: true
   only:
     - develop
     - master
@@ -132,8 +126,6 @@ report:php5.6:
       - ./public/doc/
       - ./build/logs/
     expire_in: 1 week
-  cache:
-    untracked: true
   only:
     - master
 
@@ -161,8 +153,6 @@ report:php7.0:
       - ./public/doc/
       - ./build/logs/
     expire_in: 1 week
-  cache:
-    untracked: true
   only:
     - master
 
@@ -190,7 +180,5 @@ report:php-latest:
       - ./public/doc/
       - ./build/logs/
     expire_in: 1 week
-  cache:
-    untracked: true
   only:
     - master
