@@ -68,7 +68,7 @@
         "components/bootstrap"  : "3.3.7",
         "drmonty/ekko-lightbox" : "5.2.0",
         "pnikolov/bootstrap-chosen" : "1.5.1",
-        "pnikolov/bootstrap-daterangepicker" : "2.1.19",
+        "pnikolov/bootstrap-daterangepicker" : "*",
         "pnikolov/bootbox"      : "4.4.0",
         "pnikolov/bootstrap-maxlength" : "1.7.0",
         "pnikolov/jquery-serialize-object": "2.5.0",

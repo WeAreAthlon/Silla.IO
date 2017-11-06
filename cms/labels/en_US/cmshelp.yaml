@@ -20,6 +20,18 @@ attributes:
         rows    : 15
         list    : false
         icon    : font
+      created_on:
+        title   : Created on
+        type    : datetime
+        desc    : Date and time of creation.
+        icon    : time
+        readonly: true
+      updated_on:
+        title   : Updated on
+        desc    : Date and time of last update.
+        type    : datetime
+        icon    : time
+        readonly: true
   preview:
     meta:
       title     : Preview
