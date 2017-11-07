@@ -200,8 +200,8 @@ abstract class CMS extends Core\Base\Entity
             'vendor/eonasdan/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
             'vendor/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
             'vendor/pnikolov/jquery-serialize-object/js/jquery.serialize-object.js',
-            'cms/assets/js/libs/obj.silla.js',
-            'cms/assets/js/libs/datatables.silla.js',
+            'cms/assets/js/obj.silla.js',
+            'cms/assets/js/datatables.silla.js',
         ));
     }
 
