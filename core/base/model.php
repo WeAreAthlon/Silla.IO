@@ -429,6 +429,16 @@ abstract class Model
     }
 
     /**
+     * Retrieve resource model name.
+     *
+     * @return string
+     */
+    final public function __toString()
+    {
+        return get_called_class();
+    }
+
+    /**
      * Attaches all registered listeners.
      *
      * @return void

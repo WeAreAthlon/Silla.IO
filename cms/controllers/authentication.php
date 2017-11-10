@@ -168,6 +168,7 @@ class Authentication extends Base\Controller
      */
     public function reset_form(Request $request)
     {
+
     }
 
     /**

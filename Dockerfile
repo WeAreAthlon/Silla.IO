@@ -6,4 +6,3 @@ RUN apt-get install git libcurl4-gnutls-dev libjpeg-dev libpng-dev zlib1g-dev li
 RUN docker-php-ext-install mbstring pdo_mysql curl json gd zip
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
-

@@ -81,7 +81,7 @@ abstract class Entity extends Controller
 
         if ($this->resourceModel) {
             $this->addBeforeFilters(array('loadDefaultResource'));
-            $this->addBeforeFilters(array('loadResource'), array('only' => array('show', 'edit', 'delete')));
+            $this->addBeforeFilters(array('loadResource'), array('only' => array('read', 'edit', 'update', 'delete')));
             $this->addBeforeFilters(array('loadAttributeSections'), array('except' => 'delete'));
             $this->addAfterFilters(array('loadFlashMessage'));
         }
@@ -105,7 +105,7 @@ abstract class Entity extends Controller
     }
 
     /**
-     * Default index listing function.
+     * Default browse index listing function.
      *
      * @param Request $request Current Http request.
      *
@@ -165,7 +165,7 @@ abstract class Entity extends Controller
     }
 
     /**
-     * Show resource.
+     * Read resource.
      *
      * @param Request $request Current Http request.
      *
@@ -183,6 +183,13 @@ abstract class Entity extends Controller
         $this->afterRead($request);
     }
 
+    /**
+     * Adds a new resource.
+     *
+     * @param Request $request Current Http request.
+     *
+     * @return void
+     */
     public function add(Request $request)
     {
         $this->beforeAdd($request);
@@ -190,6 +197,8 @@ abstract class Entity extends Controller
         if (!$this->renderer->getView()) {
             $this->renderer->setView('_shared/entities/form/form');
         }
+
+        $this->afterAdd($request);
     }
 
     /**
@@ -220,6 +229,8 @@ abstract class Entity extends Controller
         if (!$this->renderer->getView()) {
             $this->renderer->setView('_shared/entities/form/form');
         }
+
+        $this->afterEdit($request);
     }
 
     /**
@@ -248,7 +259,7 @@ abstract class Entity extends Controller
      */
     public function delete(Request $request)
     {
-        if ($request->is('post') || $request->is('xhr') || $request->is('delete')) {
+        if ($request->is('delete')) {
             if ($this->resource->exists()) {
                 $this->beforeDelete($request);
                 $this->resource->delete();
@@ -266,7 +277,7 @@ abstract class Entity extends Controller
     }
 
     /**
-     * Hook - executes before index query.
+     * Hook - executes before browse action.
      *
      * @param DB\Query $query   Current query object.
      * @param Request  $request Current Http request.
@@ -278,7 +289,7 @@ abstract class Entity extends Controller
     }
 
     /**
-     * Hook - executes after index action.
+     * Hook - executes after browse action.
      *
      * @param Request $request Current Http request.
      *
@@ -289,7 +300,7 @@ abstract class Entity extends Controller
     }
 
     /**
-     * Hook - executes on show action.
+     * Hook - executes before read action.
      *
      * @param Request $request Current Http request.
      *
@@ -300,7 +311,7 @@ abstract class Entity extends Controller
     }
 
     /**
-     * Hook - executes on show action.
+     * Hook - executes after read action.
      *
      * @param Request $request Current Http request.
      *
@@ -311,13 +322,24 @@ abstract class Entity extends Controller
     }
 
     /**
-     * Hook - executes before create action.
+     * Hook - executes before add action.
      *
      * @param Request $request Current Http request.
      *
      * @return void
      */
     protected function beforeAdd(Request $request)
+    {
+    }
+
+    /**
+     * Hook - executes after add action.
+     *
+     * @param Request $request Current Http request.
+     *
+     * @return void
+     */
+    protected function afterAdd(Request $request)
     {
     }
 
@@ -399,6 +421,17 @@ abstract class Entity extends Controller
      * @return void
      */
     protected function beforeEdit(Request $request)
+    {
+    }
+
+    /**
+     * Hook - executes after edit action.
+     *
+     * @param Request $request Current Http request.
+     *
+     * @return void
+     */
+    protected function afterEdit(Request $request)
     {
     }
 

@@ -24,7 +24,6 @@ abstract class Controller
      * Render instance.
      *
      * @var Core\Modules\Render\Render
-     * @access public
      */
     public $renderer;
 
@@ -32,7 +31,6 @@ abstract class Controller
      * Renderer adapter name.
      *
      * @var string
-     * @access public
      */
     public $rendererAdapter;
 
@@ -40,7 +38,6 @@ abstract class Controller
      * Labels name.
      *
      * @var array|bool
-     * @access public
      */
     public $labels;
 
@@ -48,7 +45,6 @@ abstract class Controller
      * Controller meta data.
      *
      * @var array
-     * @access protected
      */
     protected $meta = array(
         'filters' => array(
@@ -70,14 +66,11 @@ abstract class Controller
      * Example format: [action:string -> lifetime:integer(seconds)]
      *
      * @var array
-     * @access protected
      */
     protected $cachingOutput = array();
 
     /**
      * Base Controller Constructor definition.
-     *
-     * @access public
      */
     public function __construct()
     {
@@ -162,13 +155,11 @@ abstract class Controller
      *
      * Displayed when a requested controller action does not exist.
      *
-     * @param Modules\Router\Request $request Request object.
-     *
-     * @access public
+     * @param \Core\Modules\Http\Request $request Request object.
      *
      * @return void
      */
-    public function actionNotFound(Modules\Router\Request $request)
+    public function actionNotFound(Modules\Http\Request $request)
     {
         if ($this->renderer) {
             $this->renderer->setLayout('404');
@@ -186,10 +177,9 @@ abstract class Controller
      *
      * Displayed when a requested controller does not exist.
      *
-     * @param Modules\Router\Request $request Request object.
+     * @param \Core\Modules\Http\Request $request Request object.
      *
      * @static
-     * @access public
      * @final
      *
      * @return void
@@ -247,7 +237,6 @@ abstract class Controller
      * @param array $methods Array with method names to be executed.
      * @param array $scope   Execution scope conditions.
      *
-     * @access protected
      * @final
      *
      * @return void
@@ -274,7 +263,6 @@ abstract class Controller
      * @param array $methods Array with method names to be executed.
      * @param array $scope   Execution scope conditions.
      *
-     * @access protected
      * @final
      *
      * @return void
@@ -298,7 +286,6 @@ abstract class Controller
     /**
      * Gets current controller name.
      *
-     * @access protected
      * @final
      *
      * @return string
@@ -311,7 +298,6 @@ abstract class Controller
     /**
      * Gets current action name.
      *
-     * @access protected
      * @final
      *
      * @return string
@@ -326,8 +312,6 @@ abstract class Controller
      *
      * Manages static template caching. See see http://www.smarty.net/docs/en/caching.tpl
      *
-     * @access protected
-     *
      * @return void
      */
     protected function processOutput()
@@ -341,7 +325,6 @@ abstract class Controller
      *
      * @param string $name Name of the partial template for render.
      *
-     * @access protected
      * @final
      *
      * @return mixed
@@ -372,10 +355,9 @@ abstract class Controller
     /**
      * Executes the queued before action filters.
      *
-     * @param string  $action  Current action.
-     * @param Request $request Current Router Request.
+     * @param string                     $action  Current action.
+     * @param \Core\Modules\HTTP\Request $request Current Router Request.
      *
-     * @access private
      * @throws \BadMethodCallException When specifying non-existing method.
      *
      * @return void
@@ -413,9 +395,8 @@ abstract class Controller
      * Executes the queued after action filters.
      *
      * @param string  $action  Current action.
-     * @param Request $request Current Router Request.
+     * @param \Core\Modules\HTTP\Request $request Current Router Request.
      *
-     * @access private
      * @throws \BadMethodCallException When specifying non-existing method.
      *
      * @return void
@@ -450,8 +431,6 @@ abstract class Controller
     /**
      * Load labels for the controller.
      *
-     * @access private
-     *
      * @return void
      */
     protected function loadLabels()
@@ -469,8 +448,6 @@ abstract class Controller
      * Load Labels file.
      *
      * @param string $fileName Labels file name.
-     *
-     * @access private
      *
      * @return array
      */
@@ -495,7 +472,6 @@ abstract class Controller
     /**
      * Assign easy to use template vars.
      *
-     * @access private
      * @see    get_object_vars()
      *
      * @return void
@@ -530,8 +506,6 @@ abstract class Controller
      * Assigns common template engine vars.
      *
      * @param Modules\Render\Render $renderer Render module object.
-     *
-     * @access private
      *
      * @return Modules\Render\Render
      */

@@ -70,7 +70,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
  * @param string|null The block content (or null for the opening tag).
  * @param Smarty $smarty The Smarty object.
  *
- * @return string|void
+ * @return string|bool
  */
 function smarty_block_form($params, $content, $smarty)
 {

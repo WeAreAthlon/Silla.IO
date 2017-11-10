@@ -106,25 +106,30 @@ class CMSUsers extends CMS
         }
 
         if ($request->is('post')) {
-            if (!Crypt::hashCompare($this->user->password, $request->post('current_password'))) {
+            if ( ! Crypt::hashCompare($this->user->password, $request->post('current_password'))) {
                 $this->resource->setError('current_password', 'mismatch');
             }
 
-        if ($request->post('password') !== $request->post('password_confirm')) {
-            $this->resource->setError('password_confirm', 'mismatch');
+            if ($request->post('password') !== $request->post('password_confirm')) {
+                $this->resource->setError('password_confirm', 'mismatch');
+            }
         }
     }
 
     /**
      * Reloads current user info stored in the application session.
      *
-     * @inheritdoc
+     * @param Request $request  Current router request.
+     * @param mixed   $redirect Request redirect destination.
+     *
+     * @return void
      */
-    protected function afterUpdate(Request $request)
+    protected function afterUpdate(Request $request, $redirect = false)
     {
-        parent::afterUpdate($request);
+        parent::afterUpdate($request, $redirect);
 
-        if (!$this->resource->hasErrors() && ($this->resource->id == $this->user->id)) {
+        if (!$this->resource->hasErrors() &&
+            ($this->resource->getPrimaryKeyValue() == $this->user->getPrimaryKeyValue())) {
             Core\Session()->set('cms_user_info', rawurlencode(serialize($this->resource)));
             $this->user = $this->resource;
         }

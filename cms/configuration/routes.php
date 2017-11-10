@@ -44,7 +44,7 @@ final class Routes extends Core\Modules\Http\Routes
         /* Forgotten password */
         $this->routes->addGet('authentication_reset_form', '/authentication/reset')
             ->addValues(array('controller' => 'Authentication', 'action' => 'reset_form'));
-        $this->routes->addPost('password_reset', '/authentication/reset')
+        $this->routes->addPost('authentication_reset', '/authentication/reset')
             ->addValues(array('controller' => 'Authentication', 'action' => 'reset'));
 
         /* Resources */

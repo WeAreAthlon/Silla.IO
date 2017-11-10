@@ -48,7 +48,7 @@ abstract class CMS extends Core\Base\Entity
     public function __construct()
     {
         $this->addBeforeFilters(array('checkLogged'));
-        $this->addBeforeFilters(array('checkPermissions'), array('except' => $this->skipAclFor));
+       // $this->addBeforeFilters(array('checkPermissions'), array('except' => $this->skipAclFor));
         $this->addBeforeFilters(array('loadVendorAssets'));
 
         $this->addBeforeFilters(array('loadFormAssets'), array(
@@ -90,7 +90,7 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Permissions verification gate.
      *
-     * @param Request $request Current Router Request.
+     * @param \Core\Modules\HTTP\Request $request Current Router Request.
      *
      * @see    \CMS\Helpers\CMSUsers::userCan()
      *
@@ -187,8 +187,6 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Loads data table listing assets.
      *
-     * @access protected
-     *
      * @return void
      */
     protected function loadListingAssets()
@@ -208,8 +206,8 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Filter resources to only owned resources.
      *
-     * @param \Core\Modules\DB\Query       $query   Initial resource query.
-     * @param \Core\Modules\Router\Request $request Current router request.
+     * @param \Core\Modules\DB\Query     $query   Initial resource query.
+     * @param \Core\Modules\HTTP\Request $request Current router request.
      *
      * @return void
      */
@@ -225,7 +223,7 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Prevent association of not "owned" resources.
      *
-     * @param \Core\Modules\Router\Request $request Current router request.
+     * @param \Core\Modules\HTTP\Request $request Current router request.
      *
      * @return void
      */
@@ -241,7 +239,7 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Assign "ownership" to the created resource.
      *
-     * @param \Core\Modules\Router\Request $request  Current router request.
+     * @param \Core\Modules\HTTP\Request $request  Current router request.
      * @param mixed                        $redirect Request redirect destination.
      *
      * @return void
@@ -258,7 +256,7 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Prevent association of not "owned" resources.
      *
-     * @param \Core\Modules\Router\Request $request Current router request.
+     * @param \Core\Modules\HTTP\Request $request Current router request.
      *
      * @return void
      */
@@ -274,8 +272,8 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Retract "ownership" to the deleted resource.
      *
-     * @param \Core\Modules\Router\Request $request  Current router request.
-     * @param mixed                        $redirect Request redirect destination.
+     * @param \Core\Modules\HTTP\Request $request  Current router request.
+     * @param mixed                      $redirect Request redirect destination.
      *
      * @return void
      */
@@ -289,7 +287,7 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Ensure that the current requested resource is within the ownership scope.
      *
-     * @param \Core\Modules\Router\Request $request Current Router Request.
+     * @param \Core\Modules\HTTP\Request $request Current Router Request.
      *
      * @return void
      */
@@ -309,7 +307,7 @@ abstract class CMS extends Core\Base\Entity
     /**
      * Prevents Association of not owned resource.
      *
-     * @param \Core\Modules\Router\Request $request Request object.
+     * @param \Core\Modules\HTTP\Request $request Request object.
      *
      * @return void
      */

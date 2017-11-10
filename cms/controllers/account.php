@@ -11,7 +11,7 @@
 
 namespace CMS\Controllers;
 
-use Core\Modules\Router\Request;
+use Core\Modules\Http\Request;
 
 /**
  * Class Account Controller definition.
@@ -63,7 +63,7 @@ class Account extends CMSUsers
     /**
      * Assign current user as a resource object.
      *
-     * @param Request $request Current Router Request.
+     * @param \Core\Modules\HTTP\Request $request Current Router Request.
      *
      * @return void
      */

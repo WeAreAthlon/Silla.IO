@@ -23,8 +23,7 @@ final class Inflection
     /**
      * Reference to the current instance of the Registry object.
      *
-     * @var Inflector
-     * @access private
+     * @var Inflection
      * @static
      */
     private static $instance = null;
@@ -32,18 +31,16 @@ final class Inflection
     /**
      * Inflector instance.
      *
-     * @var Inflector;
+     * @var Inflector
      */
-    private $inflector;
+    private $inflection;
 
     /**
      * Constructor, does nothing.
-     *
-     * @access private
      */
     private function __construct()
     {
-        $this->inflector = Inflector::get(Inflector::DEFAULT_LOCALE);
+        $this->inflection = Inflector::get(Inflector::DEFAULT_LOCALE);
     }
 
     /**
@@ -57,7 +54,7 @@ final class Inflection
      */
     public function pluralize($word)
     {
-        return $this->inflector->pluralize($word);
+        return $this->inflection->pluralize($word);
     }
 
     /**
@@ -71,7 +68,7 @@ final class Inflection
      */
     public function singularize($word)
     {
-        return $this->inflector->singularize($word);
+        return $this->inflection->singularize($word);
     }
 
     /**
@@ -87,9 +84,9 @@ final class Inflection
     public function camelize($word, $upCaseFirstLetter = true)
     {
         if ($upCaseFirstLetter) {
-            return $this->inflector->camelize($word, Inflector::UPCASE_FIRST_LETTER);
+            return $this->inflection->camelize($word, Inflector::UPCASE_FIRST_LETTER);
         } else {
-            return $this->inflector->camelize($word, Inflector::DOWNCASE_FIRST_LETTER);
+            return $this->inflection->camelize($word, Inflector::DOWNCASE_FIRST_LETTER);
         }
 
     }
@@ -105,7 +102,7 @@ final class Inflection
      */
     public function underscore($word)
     {
-        return $this->inflector->underscore($word);
+        return $this->inflection->underscore($word);
     }
 
     /**
@@ -119,7 +116,7 @@ final class Inflection
      */
     public function humanize($word)
     {
-        return $this->inflector->humanize($word);
+        return $this->inflection->humanize($word);
     }
 
     /**
@@ -133,7 +130,7 @@ final class Inflection
      */
     public function titleize($word)
     {
-        return $this->inflector->titleize($word);
+        return $this->inflection->titleize($word);
     }
 
     /**
@@ -147,7 +144,7 @@ final class Inflection
      */
     public function ordinal($number)
     {
-        return $this->inflector->ordinal($number);
+        return $this->inflection->ordinal($number);
     }
 
     /**
@@ -161,7 +158,7 @@ final class Inflection
      */
     public function ordinalize($number)
     {
-        return $this->inflector->ordinalize($number);
+        return $this->inflection->ordinalize($number);
     }
 
     /**
