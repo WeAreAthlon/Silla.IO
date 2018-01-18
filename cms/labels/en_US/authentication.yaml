@@ -18,7 +18,7 @@ reset:
 captcha :
   text : Enter the words above
   audio: Enter the numbers you hear
-  error: Invalid CAPTCHA code
+  error: Invalid CAPTCHA verification
 
 reset_access:
   title    : Reset user access to the CMS

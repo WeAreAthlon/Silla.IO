@@ -58,7 +58,7 @@
         "mustangostang/spyc"    : "0.6.2",
         "imagine/imagine"       : "v0.7.1",
         "tecnickcom/tcpdf"      : "6.2.13",
-        "recaptcha/php5"        : "v1.0.0",
+        "recaptcha/php5"        : "2.0.0",
         "kriswallsmith/assetic" : "1.4.0",
         "lmammino/jsmin4assetic": "1.0.0",
         "natxet/CssMin"         : "v3.0.4",
