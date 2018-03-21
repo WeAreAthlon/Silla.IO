@@ -24,6 +24,8 @@ class Mailer
      * @param array   $params Array containing the sender, receiver, and mail content details.
      * @param boolean $auth   Enable authentication (only applicable for SMTP mailer type).
      *
+     * @throws \Exception When mail cannot be processed.
+     *
      * @return boolean Result TRUE if the email was successfully sent, FALSE otherwise.
      */
     public static function send(array $params, $auth = true)
@@ -34,8 +36,10 @@ class Mailer
                 break;
 
             case 'Sendmail':
-            default:
                 $sent = self::processSendmail($params);
+                break;
+            default:
+                $sent = self::processDefault($params);
                 break;
         }
 
@@ -46,6 +50,24 @@ class Mailer
      * Sends email via standard PHP mailer.
      *
      * @param array $params Sending parameters.
+     * @throws \Exception When mail cannot be processed.
+     *
+     * @return boolean Result TRUE if the email was successfully sent, FALSE otherwise.
+     */
+    private static function processDefault(array $params)
+    {
+        $mail = new \PHPMailer(Core\Config()->MAILER['debug']);
+
+        return self::processEmail($mail, $params);
+    }
+
+
+    /**
+     * Sends email via standard PHP mailer.
+     *
+     * @param array $params Sending parameters.
+     *
+     * @throws \Exception When mail cannot be processed.
      *
      * @return boolean Result TRUE if the email was successfully sent, FALSE otherwise.
      */
@@ -65,6 +87,7 @@ class Mailer
      * @param boolean $auth   Flag for usage of SMTP authentication or not.
      *
      * @uses Core\Config()
+     * @throws \Exception When mail cannot be processed.
      *
      * @return boolean Result TRUE if the email was successfully sent, FALSE otherwise.
      */
@@ -97,6 +120,7 @@ class Mailer
      * @param array      $params Sending parameters.
      *
      * @uses   Core\Config()
+     * @throws \Exception When mail cannot be processed.
      *
      * @return boolean Result TRUE if the email was successfully sent, FALSE otherwise.
      */

@@ -77,7 +77,7 @@ class Configuration extends Configurations\Staging\Configuration
     /**
      * @var     (int|string)[] $MAILER Mailer configuration options.
      *
-     * @example type        Type of the mailing infrastructure to use(Sendmail|SMTP).
+     * @example type        Type of the mailing infrastructure to use(default|Sendmail|SMTP).
      * @example identity    Mailer identity signature.
      * @example credentials Mailer service credentials.
      */
