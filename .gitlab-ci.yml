@@ -52,7 +52,7 @@ build:php-latest:
 
 # Test stage jobs
 
-test:php5.6:mysql5.6:
+.test:php5.6:mysql5.6:
   image: weareathlon/silla.io:struma-php5.6
   stage: test
   dependencies:
@@ -102,7 +102,7 @@ test:php-latest:mysql-latest:
 
 # Report stage jobs
 
-report:php5.6:
+.report:php5.6:
   image: weareathlon/silla.io:struma-php5.6
   stage: report
   allow_failure: true
