@@ -1,7 +1,6 @@
 {if $flash.message|default:false}
   <div class="alert fade in alert-{$flash.layout}{if $flash.layout eq 'danger'} save-errors{/if}">
-    <button type="button" id="flash-message-close" class="close" data-dismiss="alert" aria-hidden="true">&times;
-    </button>
+    <button type="button" id="flash-message-close" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <p class="no-margin-bottom font-size-bigger text-thin">{$flash.message}</p>
     {if $flash.additional|default:false}
       <dl class="clearfix no-padding-left">
@@ -26,9 +25,11 @@
       </dl>
     {/if}
     {if $flash.layout neq 'danger'}
-      <script>setTimeout(function () {
-              document.getElementById('flash-message-close').click();
-          }, 3500);</script>
+      <script>
+        setTimeout(function () {
+          document.getElementById('flash-message-close').click();
+        }, 3500);
+      </script>
     {/if}
   </div>
 {/if}

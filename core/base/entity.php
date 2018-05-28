@@ -454,7 +454,9 @@ abstract class Entity extends Controller
             $sections = $this->labels['attributes'];
 
             foreach ($sections as $section) {
-                $attributes = array_merge($attributes, $section['fields']);
+                if (isset($section['fields']) && is_array($section['fields'])) {
+                    $attributes = array_merge($attributes, $section['fields']);
+                }
             }
 
             foreach ($attributes as $key => $attr) {

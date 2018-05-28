@@ -13,12 +13,15 @@
   {/if}
   <div class="form-group clearfix">
     <div class="text-center">
-      <label class="forgotten-password text-thin"><a href="{link_to controller=authentication action=reset}" tabindex="5">{$_labels.login.forgotten_password}</a></label>
+      <label class="forgotten-password text-thin">
+        <a href="{link_to controller=authentication action=reset}" tabindex="5">{$_labels.login.forgotten_password}</a>
+      </label>
     </div>
   </div>
   <div class="text-center">
     <button class="btn btn-outline btn-primary text-thin" type="submit" tabindex="4">
-      <i class="glyphicon glyphicon-log-in"></i> &nbsp;{$_labels.buttons.login}</button>
+      <i class="glyphicon glyphicon-log-in"></i> &nbsp;{$_labels.buttons.login}
+    </button>
   </div>
   <input type="hidden" name="_token" value="{$_request->token()}"/>
 </form>

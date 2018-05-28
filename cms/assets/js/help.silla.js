@@ -9,16 +9,16 @@
  */
 
 $(function () {
-    $('.help-link').on('click', function (e) {
-        e.preventDefault();
+  $('.help-link').on('click', function (e) {
+    e.preventDefault();
 
-        window.open($(this).attr('href'), '_blank', 'width=600,scrollbars=yes');
-    });
+    window.open($(this).attr('href'), '_blank', 'width=600,scrollbars=yes');
+  });
 
-    $('a[data-section="preview"]').on('click', function () {
-        var content = $('textarea[name="content"]');
-        $.post(content.data('urlPreview'), {content: content.val()}, function (response) {
-            $('fieldset[data-section="preview"] .form-fields-wrapper').html('').append(response).fadeIn();
-        });
+  $('a[data-section="preview"]').on('click', function () {
+    var content = $('textarea[name="content"]');
+    $.post(content.data('urlPreview'), {content: content.val()}, function (response) {
+      $('fieldset[data-section="preview"] .form-fields-wrapper').html('').append(response).fadeIn();
     });
+  });
 });

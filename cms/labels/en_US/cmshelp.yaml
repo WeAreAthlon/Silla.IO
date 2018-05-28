@@ -20,6 +20,7 @@ attributes:
         rows    : 15
         list    : false
         icon    : font
+        export  : false
       created_on:
         title   : Created on
         type    : datetime

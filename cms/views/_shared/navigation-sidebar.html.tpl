@@ -13,12 +13,17 @@
           <div class="panel-body no-border">
             <ul class="list-unstyled no-margin">
               <li{if $_controller eq $module and $_action eq 'index'} class="active"{/if}>
-                <a href="{link_to controller=$module}"><i class="glyphicon glyphicon-align-justify"></i> {$_labels.modules.$module.index}
-                </a></li>
+                <a href="{link_to controller=$module}">
+                  <i class="glyphicon glyphicon-align-justify"></i> {$_labels.modules.$module.index}
+                </a>
+              </li>
               {if {user_can controller=$module action=create}}
-              <li{if $_controller eq $module and $_action eq 'create'} class="active"{/if}>
-                <a href="{link_to controller=$module action=create}"><i class="glyphicon glyphicon-plus"></i> {$_labels.modules.$module.create}
-                </a></li>{/if}
+                <li{if $_controller eq $module and $_action eq 'create'} class="active"{/if}>
+                  <a href="{link_to controller=$module action=create}">
+                    <i class="glyphicon glyphicon-plus"></i> {$_labels.modules.$module.create}
+                  </a>
+                </li>
+              {/if}
             </ul>
           </div>
         </div>

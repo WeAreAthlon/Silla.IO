@@ -23,12 +23,12 @@
       <div class="tab-pane {if $smarty.foreach.form_sections_contents.first} in active{/if}" id="form-section-{$section_key}">
         <fieldset data-section="{$section_key}">
           <legend class="no-border no-margin-bottom font-size-normal">
-                    <span class="row block">
-                        <span class="ath-callout no-margin-top">
-                            <span class="visible-xs"><strong class="font-size-bigger">{$section.meta.title}</strong></span>
-                            <span class="text-thin">{$section.meta.desc}</span>
-                        </span>
-                    </span>
+            <span class="row block">
+                <span class="ath-callout no-margin-top">
+                    <span class="visible-xs"><strong class="font-size-bigger">{$section.meta.title}</strong></span>
+                    <span class="text-thin">{$section.meta.desc}</span>
+                </span>
+            </span>
           </legend>
           <div class="form-fields-wrapper">
             {include '_shared/entities/form/_fields.html.tpl' section=$section_key attributes=$section.fields|default:array() serialize=$section.meta.serialize|default:false}

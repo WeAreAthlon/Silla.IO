@@ -9,12 +9,12 @@
       <th data-field="{$field}" class="column-caption column-type-heading-{$attr.type} accent">
         {if $attr.sort !== false}
           <a href="{link_to action=index page={$_get.page|default:1} sort=$field order="{if $_get.order|default:'' neq 'asc'}asc{else}desc{/if}"}" class="row sort{if $_get.sort|default:'' eq $field} {$_get.order|default:'asc'}{/if}">
-                       <span class="col-lg-9 col-md-9 no-padding-right">
-                           <span class="glyphicon glyphicon-{$attr.icon|default:'th'}"></span> {if $attr.caption|default:true}{$attr.title}{/if}
-                       </span>
+            <span class="col-lg-9 col-md-9 no-padding-right">
+              <span class="glyphicon glyphicon-{$attr.icon|default:'th'}"></span> {if $attr.caption|default:true}{$attr.title}{/if}
+            </span>
             <span class="col-lg-3 col-md-3 text-right">
-                           <span class="sort-btn text-muted glyphicon {if $_get.sort|default:false eq $field}accent-cta glyphicon-chevron-{if $_get.order eq 'asc'}up{else}down{/if}{else}glyphicon-sort{/if}"></span>
-                       </span>
+              <span class="sort-btn text-muted glyphicon {if $_get.sort|default:false eq $field}accent-cta glyphicon-chevron-{if $_get.order eq 'asc'}up{else}down{/if}{else}glyphicon-sort{/if}"></span>
+            </span>
           </a>
         {else}
           <span class="glyphicon glyphicon-{$attr.icon|default:'th'}" title="{$attr.title|escape}"></span>

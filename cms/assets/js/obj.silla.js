@@ -8,16 +8,16 @@
  * @version 1.0
  */
 var Obj = function (obj) {
-    'use strict';
+  'use strict';
 
-    if (obj && !(obj instanceof Object)) {
-        throw 'Invalid argument. Obj must be an object.';
-    }
+  if (obj && !(obj instanceof Object)) {
+    throw 'Invalid argument. Obj must be an object.';
+  }
 
-    var i;
-    for (i in obj) {
-        this[i] = obj[i];
-    }
+  var i;
+  for (i in obj) {
+    this[i] = obj[i];
+  }
 };
 
 /**
@@ -31,21 +31,21 @@ var Obj = function (obj) {
  * @TODO add attaching of multiple handlers
  */
 Obj.prototype.attach = function (event, handler, scope) {
-    'use strict';
-    if (!(this.events instanceof Object)) {
-        this.events = {};
-    }
+  'use strict';
+  if (!(this.events instanceof Object)) {
+    this.events = {};
+  }
 
-    if (!this.events[event]) {
-        this.events[event] = [];
-    }
+  if (!this.events[event]) {
+    this.events[event] = [];
+  }
 
-    this.events[event].push({
-        scope: scope || null,
-        handler: handler
-    });
+  this.events[event].push({
+    scope: scope || null,
+    handler: handler
+  });
 
-    return this;
+  return this;
 };
 
 /**
@@ -55,20 +55,20 @@ Obj.prototype.attach = function (event, handler, scope) {
  * @param {Object} handler
  */
 Obj.prototype.detach = function (event, handler) {
-    'use strict';
-    if (handler !== undefined) {
-        var i;
-        for (i = 0; i < this.events[event].length; i++) {
-            if (this.events[event][i].handler === handler) {
-                this.events[event].splice(i, 1);
-                break;
-            }
-        }
-    } else {
-        if (this.events) {
-            this.events[event] = [];
-        }
+  'use strict';
+  if (handler !== undefined) {
+    var i;
+    for (i = 0; i < this.events[event].length; i++) {
+      if (this.events[event][i].handler === handler) {
+        this.events[event].splice(i, 1);
+        break;
+      }
     }
+  } else {
+    if (this.events) {
+      this.events[event] = [];
+    }
+  }
 };
 
 /**
@@ -78,28 +78,28 @@ Obj.prototype.detach = function (event, handler) {
  * @param {Object} param Value to be received in the handlers
  */
 Obj.prototype.fire = function (event, param) {
-    'use strict';
+  'use strict';
 
-    if (!this.events || !this.events[event]) {
-        return;
+  if (!this.events || !this.events[event]) {
+    return;
+  }
+
+  try {
+    var i, toCall = [];
+    for (i = 0; i < this.events[event].length; i++) {
+      toCall.push(this.events[event][i]);
     }
 
-    try {
-        var i, toCall = [];
-        for (i = 0; i < this.events[event].length; i++) {
-            toCall.push(this.events[event][i]);
+    for (i = 0; i < toCall.length; i++) {
+      if (toCall[i]) {
+        if (param instanceof Array) {
+          toCall[i].handler.apply(toCall[i].scope || this, param);
+        } else {
+          toCall[i].handler.call(toCall[i].scope || this, param);
         }
-
-        for (i = 0; i < toCall.length; i++) {
-            if (toCall[i]) {
-                if (param instanceof Array) {
-                    toCall[i].handler.apply(toCall[i].scope || this, param);
-                } else {
-                    toCall[i].handler.call(toCall[i].scope || this, param);
-                }
-            }
-        }
-    } catch (e) {
-        console.log(e, e.message);
+      }
     }
+  } catch (e) {
+    console.log(e, e.message);
+  }
 };

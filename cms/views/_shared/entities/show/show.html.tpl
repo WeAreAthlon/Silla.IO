@@ -53,7 +53,7 @@
         {/foreach}
         </tbody>
       </table>
-      <hr/>
+      <hr>
     {/if}
   {/if}
 {/foreach}

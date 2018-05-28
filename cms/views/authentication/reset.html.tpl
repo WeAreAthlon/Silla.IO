@@ -10,7 +10,8 @@
     {/if}
     <div class="text-center">
       <button class="btn btn-outline btn-primary text-thin" type="submit">
-        <i class="glyphicon glyphicon-send"></i> {$_labels.reset.send}</button>
+        <i class="glyphicon glyphicon-send"></i> {$_labels.reset.send}
+      </button>
     </div>
     <input type="hidden" name="_token" value="{$_request->token()}"/>
   </fieldset>

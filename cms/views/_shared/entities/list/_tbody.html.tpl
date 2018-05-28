@@ -40,10 +40,11 @@
   <tr>
     <td colspan="{1 + $fields_to_display|@count}" class="text-muted text-center text-thin">
       <p>
-        <br/>
-        <i class="font-size-bigger glyphicon glyphicon-{$_labels.modules.$_controller.icon}"></i><br/>
+        <br>
+        <i class="font-size-bigger glyphicon glyphicon-{$_labels.modules.$_controller.icon}"></i>
+        <br>
         {$_labels.general.no_results}
-        <br/>
+        <br>
       </p>
     </td>
   </tr>
