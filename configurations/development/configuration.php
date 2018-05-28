@@ -113,11 +113,11 @@ class Configuration extends Configurations\Staging\Configuration
      */
     public $DB = array(
         'adapter'        => 'pdo_mysql',
-        'host'           => 'localhost',
+        'host'           => '<DB_HOST>',
         'port'           => 3306,
-        'user'           => 'root',
-        'password'       => 'Erovete13!',
-        'name'           => 'silla_io',
+        'user'           => '<DB_USER>',
+        'password'       => '<DB_PASSWORD>',
+        'name'           => '<DB_NAME>',
         'tables_prefix'  => '',
         'encryption_key' => '25c6c7ff35bd13b0ff9979b151f2136c',
         'crypt_vector'   => 'dasn312321nssa1k',
