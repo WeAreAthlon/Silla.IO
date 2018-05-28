@@ -115,7 +115,7 @@ final class Standard implements Interfaces\Adapter
             }
 
             session_set_cookie_params(
-                null,
+                Core\Config()->SESSION['ttl'],
                 $this->cookie_path,
                 $_SERVER['SERVER_NAME'],
                 Core\Config()->urls('protocol') === 'https',
