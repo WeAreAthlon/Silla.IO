@@ -162,8 +162,8 @@ class Configuration extends Core\Base\Configuration
      */
     public $CAPTCHA = array(
         'enabled'     => true,
-        'public_key'  => '6LfSevQSAAAAAHUbl-gTGwQHi4C9UW219V0Nn6J5',
-        'private_key' => '6LfSevQSAAAAAB6H3f9OznBVUGBp0iMMZWX2OSFH',
+        'public_key'  => '6LfV6FsUAAAAAPrsgC_H4P_phEpPHH-xCxq040fs',
+        'private_key' => '6LfV6FsUAAAAAHnyx4mqp_zVD23N6KQ7MXwCnZhk',
     );
 
     /**

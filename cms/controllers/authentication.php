@@ -141,6 +141,7 @@ class Authentication extends Base\Controller
      */
     public function logout(Request $request)
     {
+        Core\Session()->regenerateKey();
         Core\Session()->destroy();
 
         $request->redirectTo('login');
@@ -150,6 +151,8 @@ class Authentication extends Base\Controller
      * Password reset action.
      *
      * @param Request $request Current router request.
+     *
+     * @throws \Exception Missing private key.
      *
      * @return void
      */
@@ -242,6 +245,8 @@ class Authentication extends Base\Controller
      *
      * @param array $configuration Captcha Configuration data.
      *
+     * @throws \Exception Missing public key.
+     *
      * @return void
      */
     private function loadCaptcha(array $configuration)
@@ -294,6 +299,8 @@ class Authentication extends Base\Controller
 
     /**
      * Set error message, increment session fail attempts and show captcha if needed.
+     *
+     * @throws \Exception Missing public key.
      *
      * @return void
      */

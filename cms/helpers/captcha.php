@@ -48,6 +48,8 @@ class Captcha
      *
      * @param \Captcha\Captcha $captcha Captcha instance.
      *
+     * @throws \Exception Missing private key.
+     *
      * @return boolean
      */
     public static function isValid(\Captcha\Captcha $captcha)
@@ -56,9 +58,11 @@ class Captcha
     }
 
     /**
-     * Retrieve captcha Template.
+     * Retrieve Captcha Template.
      *
      * @param \Captcha\Captcha $captcha Captcha instance.
+     *
+     * @throws \Exception Missing public key.
      *
      * @return string
      */
