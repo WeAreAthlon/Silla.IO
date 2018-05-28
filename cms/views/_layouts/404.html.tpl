@@ -10,7 +10,7 @@
   <link href="{$_urls.assets}img/favicon.ico" rel="shortcut icon" type="image/x-icon">
 </head>
 <body>
-{include '_shared/navigation-top.html.tpl' inline}
+{include '_shared/navigation-top.html.tpl'}
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
@@ -23,7 +23,7 @@
       </p>
     </div>
   </div>
-  {include '_shared/footer.html.tpl' inline}
+  {include '_shared/footer.html.tpl'}
 </div>
 <!--[if lt IE 9]>
 {assets source=['vendor/afarkas/html5shiv/dist/html5shiv.min.js','vendor/rogeriopradoj/respond/dest/respond.min.js']}

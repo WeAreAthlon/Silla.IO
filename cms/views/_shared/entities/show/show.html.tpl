@@ -61,11 +61,11 @@
 {if "{$_controller}/_show/footer.html.tpl"|template_exists}
   {include "{$_controller}/_show/footer.html.tpl"}
 {else}
-  {include '_shared/entities/show/footer.html.tpl' inline}
+  {include '_shared/entities/show/footer.html.tpl'}
 {/if}
 
 {if "{$_controller}/_show/actions.html.tpl"|template_exists}
   {include "{$_controller}/_show/actions.html.tpl"}
 {else}
-  {include '_shared/entities/show/actions.html.tpl' inline}
+  {include '_shared/entities/show/actions.html.tpl'}
 {/if}

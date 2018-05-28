@@ -30,6 +30,8 @@ class Smarty implements Core\Modules\Render\Interfaces\Adapter
      *
      * @param array $config  Template configuration.
      * @param array $options Additional options.
+     *
+     * @throws \SmartyException if filter could not be loaded
      */
     public function __construct(array $config, array $options = array())
     {

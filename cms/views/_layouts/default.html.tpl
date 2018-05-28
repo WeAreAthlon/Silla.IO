@@ -17,21 +17,21 @@
   </script>
 </head>
 <body>
-{include '_shared/navigation-top.html.tpl' inline}
+{include '_shared/navigation-top.html.tpl'}
 <div class="row no-margin row-offcanvas row-offcanvas-left">
   <div class="col-md-2 no-padding" role="navigation">
-    {include file='_shared/navigation-sidebar.html.tpl' inline}
+    {include file='_shared/navigation-sidebar.html.tpl'}
   </div>
   <div class="col-md-10 col-sm-12 col-xs-12">
     <div class="caption">
       {$smarty.capture.caption|default:{include file='_shared/caption.html.tpl'}}
     </div>
 
-    {include '_shared/flash-message.html.tpl' inline}
+    {include '_shared/flash-message.html.tpl'}
 
     {$_content_view_yield}
 
-    {include '_shared/footer.html.tpl' inline}
+    {include '_shared/footer.html.tpl'}
   </div>
 </div>
 {include '_shared/modals/default.html.tpl' type='inline'}

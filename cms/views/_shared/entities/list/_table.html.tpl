@@ -32,7 +32,7 @@
 </thead>
 <tfoot>
 <tr>
-  <td colspan="{1 + $fields_to_display|@count}" class="table-actions">
+  <td colspan="{1 + {$fields_to_display|@count}}" class="table-actions">
     <div class="navbar navbar-default navbar-fixed-bottom navbar-listing-tools" role="navigation">
       <div class="navbar-header width-full padding-full">
         <div class="row">

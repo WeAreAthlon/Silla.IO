@@ -38,7 +38,7 @@
   </tr>
   {foreachelse}
   <tr>
-    <td colspan="{1 + $fields_to_display|@count}" class="text-muted text-center text-thin">
+    <td colspan="{1 + {$fields_to_display|@count}}" class="text-muted text-center text-thin">
       <p>
         <br>
         <i class="font-size-bigger glyphicon glyphicon-{$_labels.modules.$_controller.icon}"></i>
@@ -51,7 +51,7 @@
 {/foreach}
 {if $resources->getCount()}
   <tr>
-    <td colspan="{1 + $fields_to_display|@count}" class="table-summary text-thin accent text-muted">
+    <td colspan="{1 + {$fields_to_display|@count}}" class="table-summary text-thin accent text-muted">
       {assign var=per_page value={$_get.query.pagination.limit|default:current($_labels.pagination.limits)}}
       {$_labels.datatable.totals|sprintf:{max(($resources->paginate()->current()->pageNumber - 1) * $per_page + 1, 1)}:{min($resources->paginate()->current()->pageNumber * $per_page, $resources->paginate()->totalItems())}:{$resources->paginate()->totalItems()}}
     </td>

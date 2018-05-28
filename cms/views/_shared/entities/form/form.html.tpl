@@ -1,7 +1,7 @@
 {if "{$_controller}/_form/header.html.tpl"|template_exists}
   {capture name='caption'}{include "{$_controller}/_form/header.html.tpl"}{/capture}
 {else}
-  {capture name='caption'}{include '_shared/entities/form/header.html.tpl' inline}{/capture}
+  {capture name='caption'}{include '_shared/entities/form/header.html.tpl'}{/capture}
 {/if}
 <div class="row">
   <div class="position-fixed-static" data-offset-top="50">
@@ -44,7 +44,7 @@
         {if "{$_controller}/_form/actions.html.tpl"|template_exists}
           {include "{$_controller}/_form/actions.html.tpl"}
         {else}
-          {include '_shared/entities/form/actions.html.tpl' inline}
+          {include '_shared/entities/form/actions.html.tpl'}
         {/if}
       </div>
     </div>
@@ -55,5 +55,5 @@
 {if "{$_controller}/_form/footer.html.tpl"|template_exists}
   {include "{$_controller}/_form/footer.html.tpl"}
 {else}
-  {include '_shared/entities/form/footer.html.tpl' inline}
+  {include '_shared/entities/form/footer.html.tpl'}
 {/if}

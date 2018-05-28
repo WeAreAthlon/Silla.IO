@@ -9,7 +9,7 @@
     <input name="password" type="password" id="password" class="form-control text-thin" placeholder="..." autocomplete="off" tabindex="2">
   </div>
   {if $captchaTemplate|default:false}
-    {include 'authentication/_captcha.html.tpl' inline}
+    {include 'authentication/_captcha.html.tpl'}
   {/if}
   <div class="form-group clearfix">
     <div class="text-center">

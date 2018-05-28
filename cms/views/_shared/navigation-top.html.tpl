@@ -14,9 +14,7 @@
     {if $_action neq '404'}
       <ol class="navbar-nav breadcrumb no-margin no-background text-thin hidden-xs">
         <li></li>
-        <li>
-          <a href="{link_to controller=$_controller action=index}">{$_labels.modules.$_controller.title|default:''}</a>
-        </li>
+        <li><a href="{link_to controller=$_controller action=index}">{$_labels.modules.$_controller.title|default:''}</a></li>
         <li class="active">{$_labels.modules.$_controller.$_action|default:$_labels.sections.$_action|default:''}</li>
       </ol>
     {/if}
