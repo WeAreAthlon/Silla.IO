@@ -27,7 +27,7 @@ _Silla.IO_ is a lightweight PHP application development framework based on the *
 The framework includes *CMS Application* to provide assistance building custom content management systems.
 
 The code base features *Model-View-Controller* pattern with additional support for:
-* `Configuration per environment`
+* `Configuration Per Environment`
 * `ORM` layer for persistent data management
 * `Template rendering` engine support for output management
 * `URL Routing`
@@ -53,16 +53,16 @@ The code base features *Model-View-Controller* pattern with additional support f
     * `mod_env` - *in order to easily switch configuration environments*
 * **PHP**
   * *Type:* `Standard` (*SAPI - Apache Handler or CLI/CGI/FCGI*)
-  * *Version:* `5.3.7` (*or newer*)
+  * *Version:* `5.3.7` (*or newer, compatible up to `7.2.x`*)
   * *Configuration:*
     * Runtime change enabled via `ini_set()`
     * *Extensions*
-      * `mbstring` - *Provides multibyte specific string functions that help dealing with multi-byte encodings.*
+      * `mbstring` - *Provides multi-byte specific string functions that help dealing with multi-byte encodings.*
       * `PDO`, `PDO_mysql`, `mysqli`, `SQLite3` (*depends on on the configured database adapter*)
       * `GD` - *in order to work with media*
 * **Database**
   * *Type:* `MySQL` (*depends on on the configured database adapter*)
-  * *Version:* `5` (*or newer, recommended `5.5+`*)
+  * *Version:* `5` (*or newer, recommended `5.6+`*)
 * **File System**
   * *Type:* Standard file system(*all `PHP` file functions should work as expected*)
   * *Permissions:* `Writable` directories:
