@@ -9,6 +9,11 @@ variables:
   MYSQL_ROOT_PASSWORD: dbs1cret
   DOCKER_DRIVER: overlay2
 
+cache:
+  key: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+  paths:
+    - ./vendor
+
 before_script:
   # Install Composer
   - curl -sS https://getcomposer.org/installer | php
