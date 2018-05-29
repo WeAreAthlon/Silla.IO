@@ -7,6 +7,7 @@ variables:
   ENV_SILLA_ENVIRONMENT: ci
   MYSQL_DATABASE: silla_io
   MYSQL_ROOT_PASSWORD: dbs1cret
+  DOCKER_DRIVER: overlay2
 
 before_script:
   # Install Composer
@@ -52,7 +53,7 @@ build:php-latest:
 
 # Test stage jobs
 
-.test:php5.6:mysql5.6:
+test:php5.6:mysql5.6:
   image: weareathlon/silla.io:struma-php5.6
   stage: test
   dependencies:
@@ -102,7 +103,7 @@ test:php-latest:mysql-latest:
 
 # Report stage jobs
 
-.report:php5.6:
+report:php5.6:
   image: weareathlon/silla.io:struma-php5.6
   stage: report
   allow_failure: true
