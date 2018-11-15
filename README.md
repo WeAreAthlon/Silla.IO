@@ -7,14 +7,14 @@
 [![Packagist](https://img.shields.io/packagist/dt/weareathlon/silla.io.svg?style=flat-square)](https://packagist.org/packages/weareathlon/silla.io)
 [![Release](https://img.shields.io/github/release/WeAreAthlon/silla.io.svg?style=flat-square)](https://github.com/WeAreAthlon/silla.io/releases)
 
-http://silla.io by [Athlon](http://weareathlon.com)
+https://silla.io by [Athlon](http://weareathlon.com)
 
 ***
 
 ### Reference
 
-* **Code API Reference:** http://api.silla.io
-* **Demo of the CMS app:** http://demo.silla.io/cms/
+* **Code API Reference:** https://api.silla.io
+* **Demo of the CMS app:** https://demo.silla.io/cms/
     * *Credentials*
         * **email:** _demo@silla.io_
         * **password:** _DemoDemo1!_
