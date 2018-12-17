@@ -8,6 +8,9 @@
 .DS_Store
 ._.*
 
+# Remove this for your project
+composer.lock
+
 # Windows
 Thumbs.db
 
