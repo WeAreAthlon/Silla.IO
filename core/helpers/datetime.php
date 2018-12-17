@@ -21,6 +21,8 @@ class DateTime
     /**
      * Fetches all available timezone codes.
      *
+     * @throws |Exception Invalid Timezone identifier.
+     *
      * @return array Timezones with locations and location offsets from GMT.
      */
     public static function getTimezonesList()
@@ -67,6 +69,8 @@ class DateTime
      * @param string $datetime String representation of a datetime object.
      * @param string $format   Format of the returned date.
      *
+     * @throws \Exception Invalid date or time format.
+     *
      * @return string Formatted according to the given format using the given Unix timestamp.
      */
     public static function format($datetime, $format = 'Y-m-d H:i:s')
@@ -84,6 +88,8 @@ class DateTime
      *
      * @param string $datetime String representation of a datetime object.
      * @param string $format   Format of the returned date.
+     *
+     * @throws \Exception Invalid input date or time.
      *
      * @return string
      */

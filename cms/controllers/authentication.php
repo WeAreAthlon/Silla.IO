@@ -38,6 +38,8 @@ class Authentication extends Base\Controller
     public $captcha;
 
     /**
+     * Authentication errors container.
+     *
      * @var array
      */
     public $errors = array();
@@ -53,7 +55,11 @@ class Authentication extends Base\Controller
         $this->addAfterFilters(array('loadFlashMessage'));
 
         if (Core\Config()->CAPTCHA['enabled'] && in_array(Core\Router()->request->action(), array('login', 'reset'))) {
-            $this->loadCaptcha(Core\Config()->CAPTCHA);
+            try {
+                $this->loadCaptcha(Core\Config()->CAPTCHA);
+            } catch (\Exception $e) {
+                var_log('Cannot load captcha: ' . $e->getMessage());
+            }
         }
     }
 
@@ -63,6 +69,8 @@ class Authentication extends Base\Controller
      * Updates the user login time.
      *
      * @param Request $request Current router request.
+     *
+     * @throws \Exception Missing private key.
      *
      * @return void
      */

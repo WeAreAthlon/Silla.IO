@@ -57,7 +57,7 @@ class FlashMessage
      * @access public
      * @static
      *
-     * @return string
+     * @return array
      */
     public static function get()
     {
@@ -84,7 +84,7 @@ class FlashMessage
             return $flash_data;
         }
 
-        return false;
+        return array();
     }
 
     /**

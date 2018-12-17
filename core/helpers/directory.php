@@ -49,7 +49,7 @@ class Directory
      *
      * @throws \InvalidArgumentException If path is empty or is not a directory.
      * @uses   File::getFullPath To format path to file.
-     * @uses   self::delete To recursively delete subdirectories.
+     * @uses   delete To recursively delete subdirectories.
      * @uses   File::delete To delete files in directories.
      *
      * @return boolean Result of the operation.
@@ -95,9 +95,9 @@ class Directory
      * @param string $to   Full or relative path to destination directory.
      *
      * @uses   File::getFullPath To format path to file.
-     * @uses   self::create To create a directory.
-     * @uses   self::copy To recursively copy subdirectories.
-     * @uses   File::copy To copy files to the destination.
+     * @uses   create To create a directory.
+     * @uses   copy To recursively copy subdirectories.
+     * @uses   copy To copy files to the destination.
      *
      * @return boolean If the directory and its contents were copied successfully.
      */

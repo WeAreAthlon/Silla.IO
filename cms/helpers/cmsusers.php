@@ -33,6 +33,8 @@ class CMSUsers
      * @static
      * @uses   Core\Config()
      *
+     * @throws \Exception \ReflectionException Unreachable controller.
+     *
      * @return array
      */
     public static function getAccessibilityScope()
@@ -139,6 +141,8 @@ class CMSUsers
      *
      * @param \CMS\Models\CMSUser $user   User instance
      * @param string              $action Type of notification action.
+     *
+     * @throws \Exception Mailer Cannot process mail sending.
      *
      * @return void
      */

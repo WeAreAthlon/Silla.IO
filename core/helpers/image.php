@@ -28,7 +28,7 @@ class Image
      * @param array   $thumbsSizes Array with thumb sizes. Example: ['150x150', '240x320', '640x480'].
      * @param integer $quality     Image compression quality (only for JPG and PNG).
      *
-     * @uses self::createThumbnail To create a thumbnail from the given image.
+     * @uses createThumbnail To create a thumbnail from the given image.
      *
      * @return array Of paths to the newly created thumbnails.
      */
@@ -44,7 +44,7 @@ class Image
      * @param array   $thumbsSizes Array with thumb sizes. Example: ['150x150', '240x320', '640x480'].
      * @param integer $quality     Image compression quality (only for JPG and PNG).
      *
-     * @uses self::createThumbnail To create a thumbnail from the given image.
+     * @uses createThumbnail To create a thumbnail from the given image.
      *
      * @return array Of paths to the newly created thumbnails.
      */

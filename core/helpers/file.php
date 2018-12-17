@@ -223,7 +223,7 @@ class File
      * @param string $path    Full or relative path to file.
      * @param mixed  $content Content to be persisted.
      *
-     * @uses self::getFullPath To format path to file.
+     * @uses getFullPath To format path to file.
      * @uses Directory::create To create a directory for the file, if necessary.
      *
      * @return integer Number of bytes written to the file, or FALSE on failure.
@@ -245,7 +245,7 @@ class File
      * @param string $path Full or relative path to file.
      *
      * @throws \InvalidArgumentException If path does not lead to a file.
-     * @uses self::getFullPath To format path to file.
+     * @uses getFullPath To format path to file.
      *
      * @return string The read data.
      */
@@ -298,7 +298,7 @@ class File
      * @param string $path Full or relative path to file.
      *
      * @throws \InvalidArgumentException If path does not lead to a file.
-     * @uses self::getFullPath To format path to file.
+     * @uses getFullPath To format path to file.
      *
      * @return boolean Result of the operation.
      */
@@ -319,7 +319,7 @@ class File
      * @param string $from Full or relative path to file.
      * @param string $to   Full or relative path to destination.
      *
-     * @uses self::getRestrictedPath To format path to file.
+     * @uses getRestrictedPath To format path to file.
      * @uses Directory::create To create a directory for the file, if necessary.
      *
      * @todo Consider using built-in copy function.
@@ -345,7 +345,7 @@ class File
      * @param string $saveName  Filename in storage.
      *
      * @throws \DomainException If upload file is not valid or cannot be moved.
-     * @uses self::filterFilename To filter the filename used in storage.
+     * @uses filterFilename To filter the filename used in storage.
      * @uses Directory::create()  To create a directory for the file, if necessary.
      *
      * @return boolean If the file was successfully uploaded.
@@ -375,7 +375,7 @@ class File
      * @param integer $maxAllowedSize Maximum allowed file size in kilobytes.
      *
      * @throws \InvalidArgumentException If path does not lead to a file.
-     * @uses self::isValidMimeType To check if file is one of the allowed MIME types.
+     * @uses isValidMimeType To check if file is one of the allowed MIME types.
      *
      * @todo Distinct the errors from size and type.
      *
@@ -419,7 +419,7 @@ class File
      * @param string $type MIME type to check against.
      *
      * @throws \InvalidArgumentException If invalid MIME type is provided.
-     * @uses self::getMimeType To retrieve the MIME type of the file.
+     * @uses getMimeType To retrieve the MIME type of the file.
      *
      * @return boolean Result of the operation.
      */
@@ -594,7 +594,7 @@ class File
      *
      * @param string $path Path to file.
      *
-     * @uses self::getFullPath To format path to file.
+     * @uses getFullPath To format path to file.
      *
      * @return string Restricted path.
      */

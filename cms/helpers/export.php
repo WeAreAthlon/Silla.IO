@@ -88,7 +88,6 @@ class Export
      * @access public
      * @static
      * @uses   Core\Base\Model
-     * @uses   Core\DB()
      *
      * @return boolean
      */
